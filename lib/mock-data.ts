@@ -293,5 +293,21 @@ export const keySpecials = [
   { name: "研发安全合规治理专项", status: "进行中", progress: 42, dept: "信息安全部", start: "2026-02-20", plan: "2026-11-30", actual: "—", duration: "—" },
 ]
 
+export const deliveryQualityStats = [
+  { label: "交付达标率", value: 94.2, unit: "%", trend: "up" },
+  { label: "线上问题解决率", value: 98.5, unit: "%", trend: "up" },
+  { label: "代码千行Bug率", value: 0.24, unit: "‰", trend: "down" },
+  { label: "自动化测试覆盖率", value: 72.8, unit: "%", trend: "up" },
+]
+
+export const qualityTrend = [
+  { month: "1月", bug: 0.32, coverage: 65 },
+  { month: "2月", bug: 0.30, coverage: 66 },
+  { month: "3月", bug: 0.28, coverage: 68 },
+  { month: "4月", bug: 0.29, coverage: 69 },
+  { month: "5月", bug: 0.26, coverage: 71 },
+  { month: "6月", bug: 0.24, coverage: 73 },
+]
+
 export const statisticsPeriod = "2026年度"
 export const lastUpdatedAt = "20260622"

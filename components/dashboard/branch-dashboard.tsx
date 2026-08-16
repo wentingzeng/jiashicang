@@ -1,0 +1,628 @@
+"use client"
+
+import { useEffect, useState, type ReactNode } from "react"
+import { ArrowUpRight, ChevronDown, Cloud, Gauge, ShieldCheck, UsersRound } from "lucide-react"
+
+import { Badge } from "@/components/ui/badge"
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
+import { TopNav } from "@/components/dashboard/top-nav"
+import { HeroBanner } from "@/components/dashboard/hero-banner"
+import { useLiveClock } from "@/lib/use-live-value"
+import { cn } from "@/lib/utils"
+
+type MetricTone = "primary" | "accent" | "chart-4"
+
+type MetricItem = {
+  label: string
+  value: number
+  unit: string
+  tone: MetricTone
+}
+
+type RowItem = {
+  name: string
+  development: number
+  operations: number
+  architecture: number
+  innovation: number
+  data: number
+  security: number
+  management: number
+  total: number
+}
+
+type BranchData = {
+  label: string
+  quickStats: Array<{ label: string; value: number; suffix: string }>
+  operationMetrics: MetricItem[]
+  innovation: { title: string; value: number; done: number; remaining: number }
+  cloud: { value: number; total: number; note: string }
+  personnelTotal: number
+  personnelDelta: string
+  personnelRoles: Array<{ label: string; value: number; tone: MetricTone }>
+  tableRows: RowItem[]
+}
+
+const gradeOptions = [
+  { key: "level-1", label: "一级分行" },
+  { key: "level-2", label: "二级分行" },
+  { key: "level-3", label: "三级分行" },
+]
+
+const branchOptions = [
+  { key: "nanjing", label: "南京分行" },
+  { key: "hangzhou", label: "杭州分行" },
+  { key: "guangzhou", label: "广州分行" },
+  { key: "fuzhou", label: "福州分行" },
+]
+
+const branchData: Record<string, BranchData> = {
+  nanjing: {
+    label: "南京分行",
+    quickStats: [
+      { label: "重点分行", value: 12, suffix: "家" },
+      { label: "接入系统", value: 328, suffix: "个" },
+      { label: "治理项", value: 86, suffix: "项" },
+    ],
+    operationMetrics: [
+      { label: "父系统数", value: 230, unit: "个", tone: "primary" },
+      { label: "子系统数", value: 522, unit: "个", tone: "accent" },
+      { label: "服务器主机数", value: 2299, unit: "台", tone: "primary" },
+      { label: "网络设备数", value: 12460, unit: "台", tone: "accent" },
+      { label: "专线数", value: 8075, unit: "条", tone: "chart-4" },
+      { label: "存储数", value: 7608310, unit: "GB", tone: "primary" },
+      { label: "CPU数", value: 5987, unit: "核", tone: "accent" },
+      { label: "机柜数", value: 1821, unit: "个", tone: "chart-4" },
+    ],
+    innovation: { title: "年度计划数", value: 95, done: 81, remaining: 14 },
+    cloud: { value: 33, total: 48, note: "单台式与双台式上云系统占比" },
+    personnelTotal: 928,
+    personnelDelta: "+6.3%",
+    personnelRoles: [
+      { label: "研发岗位", value: 200, tone: "primary" },
+      { label: "运维岗位", value: 207, tone: "accent" },
+      { label: "数据岗位", value: 134, tone: "chart-4" },
+      { label: "架构岗位", value: 201, tone: "primary" },
+      { label: "安全岗位", value: 82, tone: "accent" },
+    ],
+    tableRows: [
+      { name: "南京分行", development: 19, operations: 5, architecture: 1, innovation: 0, data: 3, security: 2, management: 29, total: 59 },
+      { name: "苏州分行", development: 16, operations: 12, architecture: 0, innovation: 0, data: 8, security: 3, management: 10, total: 49 },
+      { name: "无锡分行", development: 11, operations: 9, architecture: 0, innovation: 0, data: 12, security: 4, management: 2, total: 38 },
+      { name: "常州分行", development: 9, operations: 2, architecture: 2, innovation: 2, data: 5, security: 2, management: 22, total: 44 },
+      { name: "南通分行", development: 7, operations: 6, architecture: 0, innovation: 1, data: 4, security: 2, management: 8, total: 28 },
+    ],
+  },
+  hangzhou: {
+    label: "杭州分行",
+    quickStats: [
+      { label: "重点分行", value: 10, suffix: "家" },
+      { label: "接入系统", value: 286, suffix: "个" },
+      { label: "治理项", value: 74, suffix: "项" },
+    ],
+    operationMetrics: [
+      { label: "父系统数", value: 198, unit: "个", tone: "primary" },
+      { label: "子系统数", value: 480, unit: "个", tone: "accent" },
+      { label: "服务器主机数", value: 1864, unit: "台", tone: "primary" },
+      { label: "网络设备数", value: 10902, unit: "台", tone: "accent" },
+      { label: "专线数", value: 6490, unit: "条", tone: "chart-4" },
+      { label: "存储数", value: 5892100, unit: "GB", tone: "primary" },
+      { label: "CPU数", value: 4210, unit: "核", tone: "accent" },
+      { label: "机柜数", value: 1360, unit: "个", tone: "chart-4" },
+    ],
+    innovation: { title: "年度计划数", value: 82, done: 67, remaining: 15 },
+    cloud: { value: 28, total: 41, note: "杭州分行系统上云推进进度" },
+    personnelTotal: 804,
+    personnelDelta: "+5.2%",
+    personnelRoles: [
+      { label: "研发岗位", value: 172, tone: "primary" },
+      { label: "运维岗位", value: 186, tone: "accent" },
+      { label: "数据岗位", value: 121, tone: "chart-4" },
+      { label: "架构岗位", value: 168, tone: "primary" },
+      { label: "安全岗位", value: 61, tone: "accent" },
+    ],
+    tableRows: [
+      { name: "杭州分行", development: 18, operations: 10, architecture: 1, innovation: 0, data: 4, security: 2, management: 21, total: 56 },
+      { name: "宁波分行", development: 14, operations: 11, architecture: 0, innovation: 1, data: 6, security: 2, management: 9, total: 43 },
+      { name: "绍兴分行", development: 10, operations: 8, architecture: 0, innovation: 0, data: 5, security: 2, management: 7, total: 32 },
+      { name: "嘉兴分行", development: 8, operations: 4, architecture: 0, innovation: 0, data: 3, security: 1, management: 6, total: 22 },
+      { name: "湖州分行", development: 7, operations: 3, architecture: 0, innovation: 0, data: 2, security: 1, management: 5, total: 18 },
+    ],
+  },
+  guangzhou: {
+    label: "广州分行",
+    quickStats: [
+      { label: "重点分行", value: 9, suffix: "家" },
+      { label: "接入系统", value: 264, suffix: "个" },
+      { label: "治理项", value: 69, suffix: "项" },
+    ],
+    operationMetrics: [
+      { label: "父系统数", value: 176, unit: "个", tone: "primary" },
+      { label: "子系统数", value: 438, unit: "个", tone: "accent" },
+      { label: "服务器主机数", value: 1712, unit: "台", tone: "primary" },
+      { label: "网络设备数", value: 9914, unit: "台", tone: "accent" },
+      { label: "专线数", value: 5968, unit: "条", tone: "chart-4" },
+      { label: "存储数", value: 4882100, unit: "GB", tone: "primary" },
+      { label: "CPU数", value: 3510, unit: "核", tone: "accent" },
+      { label: "机柜数", value: 1220, unit: "个", tone: "chart-4" },
+    ],
+    innovation: { title: "年度计划数", value: 76, done: 60, remaining: 16 },
+    cloud: { value: 24, total: 36, note: "广州分行上云与治理同步推进" },
+    personnelTotal: 742,
+    personnelDelta: "+4.8%",
+    personnelRoles: [
+      { label: "研发岗位", value: 160, tone: "primary" },
+      { label: "运维岗位", value: 174, tone: "accent" },
+      { label: "数据岗位", value: 108, tone: "chart-4" },
+      { label: "架构岗位", value: 154, tone: "primary" },
+      { label: "安全岗位", value: 56, tone: "accent" },
+    ],
+    tableRows: [
+      { name: "广州分行", development: 17, operations: 8, architecture: 1, innovation: 1, data: 4, security: 2, management: 18, total: 51 },
+      { name: "深圳分行", development: 15, operations: 10, architecture: 1, innovation: 0, data: 5, security: 3, management: 14, total: 48 },
+      { name: "佛山分行", development: 11, operations: 7, architecture: 0, innovation: 0, data: 3, security: 2, management: 8, total: 31 },
+      { name: "东莞分行", development: 8, operations: 5, architecture: 0, innovation: 0, data: 2, security: 1, management: 7, total: 23 },
+      { name: "珠海分行", development: 6, operations: 4, architecture: 0, innovation: 0, data: 1, security: 1, management: 5, total: 17 },
+    ],
+  },
+  fuzhou: {
+    label: "福州分行",
+    quickStats: [
+      { label: "重点分行", value: 7, suffix: "家" },
+      { label: "接入系统", value: 203, suffix: "个" },
+      { label: "治理项", value: 58, suffix: "项" },
+    ],
+    operationMetrics: [
+      { label: "父系统数", value: 138, unit: "个", tone: "primary" },
+      { label: "子系统数", value: 322, unit: "个", tone: "accent" },
+      { label: "服务器主机数", value: 1286, unit: "台", tone: "primary" },
+      { label: "网络设备数", value: 7420, unit: "台", tone: "accent" },
+      { label: "专线数", value: 4511, unit: "条", tone: "chart-4" },
+      { label: "存储数", value: 3568400, unit: "GB", tone: "primary" },
+      { label: "CPU数", value: 2390, unit: "核", tone: "accent" },
+      { label: "机柜数", value: 890, unit: "个", tone: "chart-4" },
+    ],
+    innovation: { title: "年度计划数", value: 58, done: 44, remaining: 14 },
+    cloud: { value: 18, total: 27, note: "福州分行系统纳管情况" },
+    personnelTotal: 536,
+    personnelDelta: "+3.9%",
+    personnelRoles: [
+      { label: "研发岗位", value: 112, tone: "primary" },
+      { label: "运维岗位", value: 126, tone: "accent" },
+      { label: "数据岗位", value: 78, tone: "chart-4" },
+      { label: "架构岗位", value: 109, tone: "primary" },
+      { label: "安全岗位", value: 42, tone: "accent" },
+    ],
+    tableRows: [
+      { name: "福州分行", development: 14, operations: 6, architecture: 0, innovation: 0, data: 3, security: 1, management: 14, total: 38 },
+      { name: "厦门分行", development: 10, operations: 5, architecture: 0, innovation: 0, data: 2, security: 1, management: 9, total: 27 },
+      { name: "泉州分行", development: 9, operations: 4, architecture: 0, innovation: 1, data: 2, security: 1, management: 7, total: 24 },
+      { name: "漳州分行", development: 6, operations: 3, architecture: 0, innovation: 0, data: 1, security: 1, management: 5, total: 16 },
+      { name: "龙岩分行", development: 5, operations: 2, architecture: 0, innovation: 0, data: 1, security: 1, management: 4, total: 13 },
+    ],
+  },
+}
+
+function SectionHeader({ title, icon }: { title: string; icon: ReactNode }) {
+  return (
+    <div className="flex items-center gap-2 rounded-t-[10px] bg-[#2456c7] px-4 py-2.5 text-white shadow-[inset_0_1px_0_rgba(255,255,255,0.16)]">
+      <span className="flex size-6 items-center justify-center rounded-full bg-white/12 ring-1 ring-white/20">{icon}</span>
+      <span className="text-[15px] font-semibold tracking-wide">{title}</span>
+    </div>
+  )
+}
+
+function SelectBox({
+  label,
+  value,
+  onChange,
+  options,
+}: {
+  label: string
+  value: string
+  onChange: (next: string) => void
+  options: Array<{ key: string; label: string }>
+}) {
+  return (
+    <label className="flex min-w-[240px] flex-1 items-center gap-3 rounded-[6px] border border-border/80 bg-card/90 px-4 py-3 shadow-[0_0_0_1px_oklch(0.72_0.15_220/6%),0_10px_28px_oklch(0_0_0/10%)]">
+      <div className="min-w-0 flex-1">
+        <div className="text-[11px] text-muted-foreground">{label}</div>
+        <select
+          value={value}
+          onChange={(event) => onChange(event.target.value)}
+          className="mt-1 w-full appearance-none bg-transparent pr-6 text-sm font-semibold text-foreground outline-none"
+        >
+          {options.map((option) => (
+            <option key={option.key} value={option.key}>
+              {option.label}
+            </option>
+          ))}
+        </select>
+      </div>
+      <ChevronDown className="size-4 shrink-0 text-slate-500" aria-hidden="true" />
+    </label>
+  )
+}
+
+function MetricTile({ item }: { item: MetricItem }) {
+  const className =
+    item.tone === "accent"
+      ? "from-accent to-accent/70"
+      : item.tone === "chart-4"
+        ? "from-chart-4 to-chart-4/70"
+        : "from-primary to-primary/80"
+
+  return (
+    <div className="rounded-[10px] px-2 py-2.5">
+      <div className="flex items-start gap-2.5">
+        <span className={cn("mt-1 h-2 w-2 rounded-full bg-gradient-to-r", className)} />
+        <div className="min-w-0">
+          <div className="text-[11px] text-foreground/75">{item.label}</div>
+          <div className="mt-0.5 flex items-baseline gap-1.5">
+            <span className="font-mono text-[18px] font-bold text-white">{item.value.toLocaleString()}</span>
+            <span className="text-[10px] text-muted-foreground">{item.unit}</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  )
+}
+
+function DotLegend({ color, text }: { color: string; text: string }) {
+  return (
+    <div className="flex items-center gap-2 text-[12px] text-slate-600">
+      <span className="inline-flex size-2 rounded-full" style={{ backgroundColor: color }} />
+      <span>{text}</span>
+    </div>
+  )
+}
+
+function RingChart({ value, total, label }: { value: number; total: number; label: string }) {
+  const percent = total > 0 ? Math.min((value / total) * 100, 100) : 0
+  const dash = 283
+  const offset = dash - (dash * percent) / 100
+
+  return (
+    <div className="relative h-[132px] w-[132px] shrink-0">
+      <svg viewBox="0 0 120 120" className="h-full w-full -rotate-90">
+        <circle cx="60" cy="60" r="45" fill="none" stroke="#d8e1ef" strokeWidth="10" />
+        <circle
+          cx="60"
+          cy="60"
+          r="45"
+          fill="none"
+          stroke="url(#ringGrad)"
+          strokeWidth="10"
+          strokeLinecap="round"
+          strokeDasharray={dash}
+          strokeDashoffset={offset}
+        />
+        <defs>
+          <linearGradient id="ringGrad" x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0%" stopColor="#2381df" />
+            <stop offset="100%" stopColor="#2dc2be" />
+          </linearGradient>
+        </defs>
+      </svg>
+      <div className="absolute inset-0 flex flex-col items-center justify-center text-center">
+        <div className="text-[11px] text-muted-foreground">{label}</div>
+        <div className="mt-1 font-mono text-[28px] font-black leading-none text-[#d9ff66]">{value}</div>
+      </div>
+      <div className="absolute right-1 top-2 text-[11px] text-muted-foreground">{Math.round(percent)}%</div>
+    </div>
+  )
+}
+
+function CloudCircle({ value }: { value: number }) {
+  return (
+    <div className="relative flex h-[128px] w-[128px] items-center justify-center rounded-full bg-gradient-to-br from-primary via-primary to-accent shadow-[inset_0_0_0_12px_rgba(255,255,255,0.16)]">
+      <div className="text-center text-white">
+        <div className="font-mono text-[36px] font-black leading-none">{value}</div>
+        <div className="mt-1 text-[11px] tracking-[0.2em]">上云系统数</div>
+      </div>
+    </div>
+  )
+}
+
+function GaugeMeter() {
+  return (
+    <div className="relative h-[118px] w-full max-w-[220px]">
+      <svg viewBox="0 0 220 120" className="absolute inset-0 h-full w-full">
+        <path d="M26 90 A84 84 0 0 1 194 90" fill="none" stroke="#d9e1ee" strokeWidth="10" strokeLinecap="round" />
+        <path d="M26 90 A84 84 0 0 1 194 90" fill="none" stroke="url(#gaugeGrad)" strokeWidth="10" strokeLinecap="round" strokeDasharray="120 300" />
+        <defs>
+          <linearGradient id="gaugeGrad" x1="0" y1="0" x2="1" y2="0">
+            <stop offset="0%" stopColor="#2dc2be" />
+            <stop offset="100%" stopColor="#f3c46b" />
+          </linearGradient>
+        </defs>
+      </svg>
+      <div className="absolute inset-x-4 bottom-5 h-1 rounded-full bg-[#d9e1ee]" />
+      <div className="absolute inset-x-6 bottom-5 h-1 rounded-full bg-gradient-to-r from-[#2dc2be] via-[#7ac5ff] to-[#d6dbe7]" />
+      <div className="absolute left-1/2 top-[40%] -translate-x-1/2 text-center">
+        <div className="text-[11px] text-muted-foreground">中心机房配套率</div>
+        <div className="mt-1 font-mono text-[24px] font-black text-[#d9ff66]">22.22%</div>
+      </div>
+      <div className="absolute left-[8px] bottom-3 text-[10px] text-muted-foreground">0</div>
+      <div className="absolute left-[54px] bottom-3 text-[10px] text-muted-foreground">10</div>
+      <div className="absolute left-[100px] bottom-3 text-[10px] text-muted-foreground">20</div>
+      <div className="absolute left-[146px] bottom-3 text-[10px] text-muted-foreground">30</div>
+      <div className="absolute right-[8px] bottom-3 text-[10px] text-muted-foreground">40</div>
+    </div>
+  )
+}
+
+function RoleBar({ label, value, tone }: { label: string; value: number; tone: MetricTone }) {
+  const maxValue = 250
+  const width = Math.min((value / maxValue) * 100, 100)
+  const fill =
+    tone === "accent"
+      ? "bg-gradient-to-r from-accent to-accent/80"
+      : tone === "chart-4"
+        ? "bg-gradient-to-r from-chart-4 to-chart-4/80"
+        : "bg-gradient-to-r from-primary to-primary/80"
+
+  return (
+    <div className="grid gap-1.5">
+      <div className="flex items-center justify-between gap-3 text-[12px]">
+        <span className="truncate text-slate-700">{label}</span>
+        <span className="font-mono font-bold text-[#d9ff66]">{value}</span>
+      </div>
+      <div className="h-2.5 overflow-hidden rounded-full bg-[#e7edf8]">
+        <div className={cn("h-full rounded-full", fill)} style={{ width: `${width}%` }} />
+      </div>
+    </div>
+  )
+}
+
+function PanelCard({ title, icon, children, className }: { title: string; icon: ReactNode; children: ReactNode; className?: string }) {
+  return (
+    <section className={cn("h-full overflow-hidden rounded-xl border border-border/80 bg-card/90 shadow-[0_0_0_1px_oklch(0.72_0.15_220/6%),0_12px_40px_oklch(0_0_0/18%)] backdrop-blur-sm", className)}>
+      <div className="relative flex items-center gap-3 border-b border-border/60 bg-gradient-to-r from-primary/12 via-card to-card px-4 py-3">
+        <div className="flex items-center gap-1 opacity-70" aria-hidden="true">
+          {[0, 1, 2].map((i) => (
+            <span key={i} className="h-4 w-1 skew-x-[-18deg] rounded-sm bg-primary/80" />
+          ))}
+        </div>
+        <span className="flex size-7 shrink-0 items-center justify-center rounded-md bg-primary/15 text-primary">{icon}</span>
+        <span className="min-w-0 flex-1 truncate text-sm font-semibold tracking-wide text-foreground">{title}</span>
+      </div>
+      <div className="p-4">{children}</div>
+    </section>
+  )
+}
+
+export function BranchDashboard() {
+  const now = useLiveClock()
+  const [selectedGrade, setSelectedGrade] = useState(gradeOptions[0].key)
+  const [selectedBranch, setSelectedBranch] = useState(branchOptions[0].key)
+
+  useEffect(() => {
+    setSelectedBranch(branchOptions[0].key)
+  }, [selectedGrade])
+
+  const current = branchData[selectedBranch] ?? branchData.nanjing
+  const liveTime = now ? now.toTimeString().slice(0, 8) : "--:--:--"
+
+  return (
+    <main className="min-h-screen bg-background text-foreground selection:bg-primary/30">
+      <div
+        className="pointer-events-none fixed inset-0 opacity-40"
+        style={{
+          backgroundImage:
+            "radial-gradient(circle at 10% 0%, oklch(0.72 0.15 220 / 12%), transparent 40%), radial-gradient(circle at 90% 10%, oklch(0.75 0.14 195 / 10%), transparent 35%), radial-gradient(circle at 50% 100%, oklch(0.65 0.12 280 / 8%), transparent 30%)",
+        }}
+        aria-hidden="true"
+      />
+
+      <TopNav />
+
+      <div className="relative mx-auto flex max-w-[1720px] flex-col gap-6 px-4 py-6 md:px-8 lg:px-10">
+        <HeroBanner title="分行管理驾驶舱" subtitle="分行科技画像 · 运维监控 · 信创建设 · 系统上云" />
+
+        <section aria-labelledby="branch-overview-title" className="animate-in fade-in slide-in-from-bottom-4 duration-700">
+          <div className="flex min-w-0 flex-col gap-5">
+            <div className="grid gap-3 pt-1 md:grid-cols-2 xl:grid-cols-[0.9fr_1.1fr]">
+              <SelectBox label="请选择等级" value={selectedGrade} onChange={setSelectedGrade} options={gradeOptions} />
+              <SelectBox label="请选择分行" value={selectedBranch} onChange={setSelectedBranch} options={branchOptions} />
+            </div>
+
+            <div className="grid gap-3 xl:grid-cols-[0.75fr_1.25fr] xl:items-start">
+              <PanelCard className="h-full" title="运维指标" icon={<Gauge className="size-4" />}>
+                <div className="grid grid-cols-2 gap-x-2 gap-y-1 md:grid-cols-3">
+                  {current.operationMetrics.map((item) => (
+                    <MetricTile key={item.label} item={item} />
+                  ))}
+                </div>
+
+                <div className="mt-2 border-t border-dashed border-border/70 pt-3">
+                  <div className="grid gap-2 text-[12px] text-foreground/80 md:grid-cols-2">
+                    <DotLegend color="#2456c7" text="45家分行，均配备中心机房" />
+                    <DotLegend color="#2dc2be" text="其中10家分行，配备灾备机房" />
+                  </div>
+                  <div className="mt-1 text-[11px] text-muted-foreground">单击图形可切换查看中心机房与灾备机房情况。</div>
+
+                  <div className="mt-4 grid gap-3 md:grid-cols-[0.86fr_1.14fr]">
+                    <div className="rounded-[12px] border border-border/80 bg-card/80 px-3 py-3 shadow-[inset_0_1px_0_oklch(0.72_0.15_220/6%)]">
+                      <div className="flex items-center gap-3">
+                        <div className="relative h-[98px] w-[122px] shrink-0">
+                          <svg viewBox="0 0 120 120" className="h-full w-full -rotate-90">
+                            <circle cx="60" cy="60" r="42" fill="none" stroke="#d9e1ee" strokeWidth="10" />
+                            <circle cx="60" cy="60" r="42" fill="none" stroke="#2dc2be" strokeWidth="10" strokeLinecap="round" strokeDasharray="41 300" />
+                            <circle cx="60" cy="60" r="42" fill="none" stroke="#2456c7" strokeWidth="10" strokeLinecap="round" strokeDasharray="259 300" strokeDashoffset="41" />
+                          </svg>
+                          <div className="absolute inset-0 flex flex-col items-center justify-center text-center">
+                            <div className="font-mono text-[20px] font-black text-[#184db6]">42</div>
+                            <div className="text-[10px] text-slate-500">自建</div>
+                          </div>
+                        </div>
+                        <div className="grid gap-2 text-[12px] text-foreground/75">
+                          <div className="flex items-center gap-2">
+                            <span className="inline-flex size-2 rounded-full bg-[#2456c7]" />
+                            自建 <span className="font-mono text-[#d9ff66]">42</span><span>（93.33%）</span>
+                          </div>
+                          <div className="flex items-center gap-2">
+                            <span className="inline-flex size-2 rounded-full bg-[#2dc2be]" />
+                            租赁 <span className="font-mono text-[#d9ff66]">3</span><span>（6.67%）</span>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div className="flex items-center justify-center rounded-[12px] border border-border/80 bg-card/80 px-3 py-3 shadow-[inset_0_1px_0_oklch(0.72_0.15_220/6%)]">
+                      <GaugeMeter />
+                    </div>
+                  </div>
+
+                  <div className="mt-4 flex items-end justify-between gap-4 rounded-[12px] border border-border/80 bg-card/80 px-4 py-3 shadow-[inset_0_1px_0_oklch(0.72_0.15_220/6%)]">
+                    <div className="text-[12px] text-foreground/80">
+                      <div className="text-muted-foreground">机柜数</div>
+                      <div className="mt-1 flex items-end gap-2">
+                        <span className="font-mono text-[28px] font-black text-[#d9ff66]">1,821</span>
+                        <span className="pb-1 text-[12px] text-muted-foreground">个</span>
+                      </div>
+                    </div>
+                    <div className="text-right text-[11px] leading-5 text-muted-foreground">
+                      <div>统计口径与原型图保持一致。</div>
+                      <div>此区域后续可直接替换实时接口。</div>
+                    </div>
+                  </div>
+                </div>
+              </PanelCard>
+
+              <div className="flex flex-col gap-3">
+                <div className="grid gap-3 md:grid-cols-2">
+                  <PanelCard className="h-full" title="信创改造" icon={<ShieldCheck className="size-4" />}>
+                    <div className="flex items-center justify-between gap-4">
+                      <div className="flex flex-1 items-center justify-center">
+                        <RingChart value={current.innovation.value} total={current.innovation.value} label={current.innovation.title} />
+                      </div>
+                      <div className="flex-1 space-y-3">
+                        <div className="flex items-center justify-between text-[12px] text-slate-600">
+                          <span>已完成</span>
+                          <span className="font-mono text-[22px] font-black text-[#d9ff66]">{current.innovation.done}</span>
+                        </div>
+                        <div className="h-2 overflow-hidden rounded-full bg-[#e7edf8]">
+                          <div className="h-full rounded-full bg-gradient-to-r from-[#2456c7] to-[#2dc2be]" style={{ width: `${(current.innovation.done / current.innovation.value) * 100}%` }} />
+                        </div>
+                        <div className="flex items-center justify-between text-[12px] text-slate-600">
+                          <span>未完成</span>
+                          <span className="font-mono text-[22px] font-black text-[#d9ff66]">{current.innovation.remaining}</span>
+                        </div>
+                        <div className="h-2 overflow-hidden rounded-full bg-[#e7edf8]">
+                          <div className="h-full rounded-full bg-gradient-to-r from-[#2dc2be] to-[#86e1de]" style={{ width: `${(current.innovation.remaining / current.innovation.value) * 100}%` }} />
+                        </div>
+                      </div>
+                    </div>
+                    <div className="mt-3 flex flex-wrap items-center justify-center gap-4 text-[11px] text-slate-500">
+                      <div className="flex items-center gap-1.5">
+                        <span className="size-2 rounded-full bg-[#2456c7]" />已完成信创改造
+                      </div>
+                      <div className="flex items-center gap-1.5">
+                        <span className="size-2 rounded-full bg-[#2dc2be]" />未完成信创改造
+                      </div>
+                    </div>
+                    <div className="mt-2 text-center text-[11px] text-slate-500">单击可查看信创改造完成度排序十名。</div>
+                  </PanelCard>
+
+                  <PanelCard className="h-full" title="系统上云" icon={<Cloud className="size-4" />}>
+                    <div className="flex flex-col items-center gap-3">
+                      <CloudCircle value={current.cloud.value} />
+                      <div className="text-center text-[12px] text-slate-500">{current.cloud.note}</div>
+                      <div className="grid w-full grid-cols-2 gap-3">
+                        <div className="rounded-[12px] border border-border/80 bg-card/80 px-3 py-3 text-center shadow-[inset_0_1px_0_oklch(0.72_0.15_220/6%)]">
+                          <div className="text-[11px] text-muted-foreground">待上云</div>
+                          <div className="mt-1 font-mono text-[22px] font-black text-white">{current.cloud.total - current.cloud.value}</div>
+                        </div>
+                        <div className="rounded-[12px] border border-border/80 bg-card/80 px-3 py-3 text-center shadow-[inset_0_1px_0_oklch(0.72_0.15_220/6%)]">
+                          <div className="text-[11px] text-muted-foreground">完成率</div>
+                          <div className="mt-1 font-mono text-[22px] font-black text-[#d9ff66]">{Math.round((current.cloud.value / current.cloud.total) * 100)}%</div>
+                        </div>
+                      </div>
+                      <div className="text-center text-[11px] text-muted-foreground">单击可查看上云系统前十名。</div>
+                    </div>
+                  </PanelCard>
+                </div>
+
+                <PanelCard className="h-full" title="科技人员数量" icon={<UsersRound className="size-4" />}>
+                  <div className="grid gap-4 xl:grid-cols-[0.92fr_1.08fr]">
+                    <div className="space-y-4">
+                      <div className="rounded-[12px] border border-border/80 bg-card/80 px-4 py-4 shadow-[inset_0_1px_0_oklch(0.72_0.15_220/6%)]">
+                        <div className="text-[12px] text-foreground/80">科技人员总数</div>
+                        <div className="mt-2 flex items-end gap-2">
+                          <span className="font-mono text-[34px] font-black leading-none text-[#d9ff66]">{current.personnelTotal}</span>
+                          <span className="pb-1 text-[14px] text-muted-foreground">人</span>
+                        </div>
+                        <Badge variant="outline" className="mt-3 rounded-full border-primary/20 bg-primary/5 px-3 py-1.5 text-[12px] font-semibold text-primary">
+                          <ArrowUpRight className="mr-1 size-3.5" />
+                          较上月 {current.personnelDelta}
+                        </Badge>
+                      </div>
+
+                      <div className="rounded-[12px] border border-border/80 bg-card/80 px-4 py-4 shadow-[inset_0_1px_0_oklch(0.72_0.15_220/6%)]">
+                        <div className="grid gap-3">
+                          {current.personnelRoles.map((role) => (
+                            <RoleBar key={role.label} label={role.label} value={role.value} tone={role.tone} />
+                          ))}
+                        </div>
+                      </div>
+                    </div>
+
+                    <div className="overflow-hidden rounded-[12px] border border-border/80 bg-card/80 shadow-[inset_0_1px_0_oklch(0.72_0.15_220/6%)]">
+                      <div className="overflow-x-auto">
+                        <Table className="min-w-[860px] text-sm">
+                          <TableHeader className="bg-gradient-to-r from-primary via-primary to-accent">
+                            <TableRow className="border-transparent hover:bg-transparent">
+                              <TableHead className="px-3 py-3 text-[12px] font-semibold text-white">分行名称</TableHead>
+                              <TableHead className="px-3 py-3 text-center text-[12px] font-semibold text-white">研发</TableHead>
+                              <TableHead className="px-3 py-3 text-center text-[12px] font-semibold text-white">运维</TableHead>
+                              <TableHead className="px-3 py-3 text-center text-[12px] font-semibold text-white">架构</TableHead>
+                              <TableHead className="px-3 py-3 text-center text-[12px] font-semibold text-white">创新</TableHead>
+                              <TableHead className="px-3 py-3 text-center text-[12px] font-semibold text-white">数据</TableHead>
+                              <TableHead className="px-3 py-3 text-center text-[12px] font-semibold text-white">安全</TableHead>
+                              <TableHead className="px-3 py-3 text-center text-[12px] font-semibold text-white">管理</TableHead>
+                              <TableHead className="px-3 py-3 text-center text-[12px] font-semibold text-white">干部</TableHead>
+                              <TableHead className="px-3 py-3 text-center text-[12px] font-semibold text-white">总数</TableHead>
+                            </TableRow>
+                          </TableHeader>
+                          <TableBody>
+                            {current.tableRows.map((row, index) => (
+                              <TableRow key={row.name} className={cn("border-border/60 hover:bg-primary/5", index % 2 === 1 && "bg-primary/3")}>
+                                <TableCell className="px-3 py-3 font-medium text-foreground/90">{row.name}</TableCell>
+                                <TableCell className="px-3 py-3 text-center font-mono text-foreground/80">{row.development}</TableCell>
+                                <TableCell className="px-3 py-3 text-center font-mono text-foreground/80">{row.operations}</TableCell>
+                                <TableCell className="px-3 py-3 text-center font-mono text-foreground/80">{row.architecture}</TableCell>
+                                <TableCell className="px-3 py-3 text-center font-mono text-foreground/80">{row.innovation}</TableCell>
+                                <TableCell className="px-3 py-3 text-center font-mono text-foreground/80">{row.data}</TableCell>
+                                <TableCell className="px-3 py-3 text-center font-mono text-foreground/80">{row.security}</TableCell>
+                                <TableCell className="px-3 py-3 text-center font-mono text-foreground/80">{row.management}</TableCell>
+                                <TableCell className="px-3 py-3 text-center font-mono text-foreground/80">{Math.max(row.total - (row.development + row.operations + row.architecture + row.innovation + row.data + row.security + row.management), 0)}</TableCell>
+                                <TableCell className="px-3 py-3 text-center">
+                                  <span className="inline-flex min-w-[2.5rem] justify-center rounded-md bg-primary/10 px-2.5 py-1 font-mono text-[12px] font-bold text-primary">{row.total}</span>
+                                </TableCell>
+                              </TableRow>
+                            ))}
+                          </TableBody>
+                        </Table>
+                      </div>
+                      <div className="flex items-center justify-between border-t border-border/60 bg-card/80 px-4 py-2.5 text-[11px] text-muted-foreground">
+                        <span>单击表格，字号自动切换为分行专班下钻数据</span>
+                        <div className="flex items-center gap-1.5">
+                          <span className="inline-flex size-5 items-center justify-center rounded-md bg-primary text-[11px] font-semibold text-white">1</span>
+                          <span className="inline-flex size-5 items-center justify-center rounded-md bg-card text-[11px] font-semibold text-muted-foreground ring-1 ring-border/80">2</span>
+                          <span className="inline-flex size-5 items-center justify-center rounded-md bg-card text-[11px] font-semibold text-muted-foreground ring-1 ring-border/80">3</span>
+                          <span className="inline-flex size-5 items-center justify-center rounded-md bg-card text-[11px] font-semibold text-muted-foreground ring-1 ring-border/80">4</span>
+                          <span className="inline-flex size-5 items-center justify-center rounded-md bg-card text-[11px] font-semibold text-muted-foreground ring-1 ring-border/80">5</span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </PanelCard>
+              </div>
+            </div>
+          </div>
+        </section>
+      </div>
+    </main>
+  )
+}

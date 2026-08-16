@@ -8,7 +8,24 @@ import { BrainCircuit } from "lucide-react"
 
 export function TopNav() {
   const pathname = usePathname()
-  const active = pathname.startsWith("/research") ? "rd" : navItems[0].key
+  const active = pathname.startsWith("/research")
+    ? "rd"
+    : pathname.startsWith("/branch")
+      ? "branch"
+      : pathname.startsWith("/security")
+        ? "security"
+        : navItems[0].key
+      
+
+  const routeMap: Record<string, string> = {
+    "ai-plus": "/",
+    project: "/",
+    rd: "/research",
+    resource: "/",
+    branch: "/branch",
+    security: "/security",
+    trusted: "/",
+  }
 
   return (
     <header className="sticky top-0 z-20 border-b border-border/80 bg-background/90 backdrop-blur-md">
@@ -21,7 +38,7 @@ export function TopNav() {
           return (
             <Link
               key={item.key}
-              href={item.key === "rd" ? "/research" : "/"}
+              href={routeMap[item.key] ?? "/"}
               className={cn(
                 "relative flex items-center gap-2 whitespace-nowrap rounded-md px-3 py-2 text-sm font-medium transition-colors",
                 isActive ? "text-accent" : "text-muted-foreground hover:text-foreground",
