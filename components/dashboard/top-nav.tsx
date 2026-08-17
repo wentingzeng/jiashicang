@@ -8,7 +8,9 @@ import { BrainCircuit } from "lucide-react"
 
 export function TopNav() {
   const pathname = usePathname()
-  const active = pathname.startsWith("/research")
+  const active = pathname.startsWith("/project")
+    ? "project"
+    : pathname.startsWith("/research")
     ? "rd"
     : pathname.startsWith("/branch")
       ? "branch"
@@ -23,7 +25,7 @@ export function TopNav() {
 
   const routeMap: Record<string, string> = {
     "ai-plus": "/",
-    project: "/",
+    project: "/project",
     rd: "/research",
     resource: "/resource",
     branch: "/branch",
