@@ -159,7 +159,7 @@ const branchData: Record<string, BranchData> = {
     ],
     tableRows: [
       { name: "广州分行", development: 17, operations: 8, architecture: 1, innovation: 1, data: 4, security: 2, management: 18, total: 51 },
-      { name: "深圳分行", development: 15, operations: 10, architecture: 1, innovation: 0, data: 5, security: 3, management: 14, total: 48 },
+      { name: "深圳��行", development: 15, operations: 10, architecture: 1, innovation: 0, data: 5, security: 3, management: 14, total: 48 },
       { name: "佛山分行", development: 11, operations: 7, architecture: 0, innovation: 0, data: 3, security: 2, management: 8, total: 31 },
       { name: "东莞分行", development: 8, operations: 5, architecture: 0, innovation: 0, data: 2, security: 1, management: 7, total: 23 },
       { name: "珠海分行", development: 6, operations: 4, architecture: 0, innovation: 0, data: 1, security: 1, management: 5, total: 17 },
@@ -205,7 +205,7 @@ const branchData: Record<string, BranchData> = {
 
 function SectionHeader({ title, icon }: { title: string; icon: ReactNode }) {
   return (
-    <div className="flex items-center gap-2 rounded-t-[10px] bg-[#2456c7] px-4 py-2.5 text-white shadow-[inset_0_1px_0_rgba(255,255,255,0.16)]">
+    <div className="flex items-center gap-2 rounded-t-[10px] bg-[#2456c7] px-4 py-2.5 text-foreground shadow-[inset_0_1px_0_rgba(255,255,255,0.16)]">
       <span className="flex size-6 items-center justify-center rounded-full bg-white/12 ring-1 ring-white/20">{icon}</span>
       <span className="text-[15px] font-semibold tracking-wide">{title}</span>
     </div>
@@ -259,7 +259,7 @@ function MetricTile({ item }: { item: MetricItem }) {
         <div className="min-w-0">
           <div className="text-[11px] text-foreground/75">{item.label}</div>
           <div className="mt-0.5 flex items-baseline gap-1.5">
-            <span className="font-mono text-[18px] font-bold text-white">{item.value.toLocaleString()}</span>
+            <span className="font-mono text-[18px] font-bold text-foreground">{item.value.toLocaleString()}</span>
             <span className="text-[10px] text-muted-foreground">{item.unit}</span>
           </div>
         </div>
@@ -283,8 +283,10 @@ function RingChart({ value, total, label }: { value: number; total: number; labe
   const offset = dash - (dash * percent) / 100
 
   return (
-    <div className="relative h-[132px] w-[132px] shrink-0">
-      <svg viewBox="0 0 120 120" className="h-full w-full -rotate-90">
+    <div className="relative h-[148px] w-[148px] shrink-0">
+      <svg viewBox="0 0 120 120" className="h-full w-full -rotate-90 drop-shadow-[0_5px_10px_rgba(36,86,199,0.14)]">
+        <circle cx="60" cy="60" r="49" fill="none" stroke="#edf2f8" strokeWidth="13" />
+        <circle cx="60" cy="60" r="49" fill="none" stroke="#d5e0ef" strokeWidth="2" />
         <circle cx="60" cy="60" r="45" fill="none" stroke="#d8e1ef" strokeWidth="10" />
         <circle
           cx="60"
@@ -306,19 +308,34 @@ function RingChart({ value, total, label }: { value: number; total: number; labe
       </svg>
       <div className="absolute inset-0 flex flex-col items-center justify-center text-center">
         <div className="text-[11px] text-muted-foreground">{label}</div>
-        <div className="mt-1 font-mono text-[28px] font-black leading-none text-[#d9ff66]">{value}</div>
+        <div className="mt-1 font-mono text-[28px] font-black leading-none text-primary">{value}</div>
       </div>
       <div className="absolute right-1 top-2 text-[11px] text-muted-foreground">{Math.round(percent)}%</div>
     </div>
   )
 }
 
-function CloudCircle({ value }: { value: number }) {
+function CloudCircle({ value, total }: { value: number; total: number }) {
+  const percent = total > 0 ? Math.round((value / total) * 100) : 0
+  const circumference = 2 * Math.PI * 48
+  const offset = circumference - (circumference * percent) / 100
+
   return (
-    <div className="relative flex h-[128px] w-[128px] items-center justify-center rounded-full bg-gradient-to-br from-primary via-primary to-accent shadow-[inset_0_0_0_12px_rgba(255,255,255,0.16)]">
-      <div className="text-center text-white">
-        <div className="font-mono text-[36px] font-black leading-none">{value}</div>
-        <div className="mt-1 text-[11px] tracking-[0.2em]">上云系统数</div>
+    <div className="relative flex h-[148px] w-[148px] items-center justify-center">
+      <svg viewBox="0 0 120 120" className="absolute inset-0 h-full w-full -rotate-90 drop-shadow-[0_5px_10px_rgba(45,194,190,0.16)]">
+        <circle cx="60" cy="60" r="48" fill="none" stroke="#edf2f8" strokeWidth="12" />
+        <circle cx="60" cy="60" r="48" fill="none" stroke="url(#cloudGrad)" strokeWidth="12" strokeLinecap="round" strokeDasharray={circumference} strokeDashoffset={offset} />
+        <defs>
+          <linearGradient id="cloudGrad" x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0%" stopColor="#2456c7" />
+            <stop offset="100%" stopColor="#2dc2be" />
+          </linearGradient>
+        </defs>
+      </svg>
+      <div className="relative text-center">
+        <div className="font-mono text-[32px] font-black leading-none text-primary">{value}</div>
+        <div className="mt-1 text-[11px] font-medium tracking-[0.12em] text-muted-foreground">上云系统数</div>
+        <div className="mt-1 text-[10px] text-accent">完成率 {percent}%</div>
       </div>
     </div>
   )
@@ -341,7 +358,7 @@ function GaugeMeter() {
       <div className="absolute inset-x-6 bottom-5 h-1 rounded-full bg-gradient-to-r from-[#2dc2be] via-[#7ac5ff] to-[#d6dbe7]" />
       <div className="absolute left-1/2 top-[40%] -translate-x-1/2 text-center">
         <div className="text-[11px] text-muted-foreground">中心机房配套率</div>
-        <div className="mt-1 font-mono text-[24px] font-black text-[#d9ff66]">22.22%</div>
+        <div className="mt-1 font-mono text-[24px] font-black text-primary">22.22%</div>
       </div>
       <div className="absolute left-[8px] bottom-3 text-[10px] text-muted-foreground">0</div>
       <div className="absolute left-[54px] bottom-3 text-[10px] text-muted-foreground">10</div>
@@ -366,7 +383,7 @@ function RoleBar({ label, value, tone }: { label: string; value: number; tone: M
     <div className="grid gap-1.5">
       <div className="flex items-center justify-between gap-3 text-[12px]">
         <span className="truncate text-slate-700">{label}</span>
-        <span className="font-mono font-bold text-[#d9ff66]">{value}</span>
+        <span className="font-mono font-bold text-primary">{value}</span>
       </div>
       <div className="h-2.5 overflow-hidden rounded-full bg-[#e7edf8]">
         <div className={cn("h-full rounded-full", fill)} style={{ width: `${width}%` }} />
@@ -452,18 +469,18 @@ export function BranchDashboard() {
                             <circle cx="60" cy="60" r="42" fill="none" stroke="#2456c7" strokeWidth="10" strokeLinecap="round" strokeDasharray="259 300" strokeDashoffset="41" />
                           </svg>
                           <div className="absolute inset-0 flex flex-col items-center justify-center text-center">
-                            <div className="font-mono text-[20px] font-black text-[#184db6]">42</div>
+                            <div className="font-mono text-[20px] font-black text-primary">42</div>
                             <div className="text-[10px] text-slate-500">自建</div>
                           </div>
                         </div>
                         <div className="grid gap-2 text-[12px] text-foreground/75">
                           <div className="flex items-center gap-2">
                             <span className="inline-flex size-2 rounded-full bg-[#2456c7]" />
-                            自建 <span className="font-mono text-[#d9ff66]">42</span><span>（93.33%）</span>
+                            自建 <span className="font-mono text-primary">42</span><span>（93.33%）</span>
                           </div>
                           <div className="flex items-center gap-2">
                             <span className="inline-flex size-2 rounded-full bg-[#2dc2be]" />
-                            租赁 <span className="font-mono text-[#d9ff66]">3</span><span>（6.67%）</span>
+                            租赁 <span className="font-mono text-primary">3</span><span>（6.67%）</span>
                           </div>
                         </div>
                       </div>
@@ -478,7 +495,7 @@ export function BranchDashboard() {
                     <div className="text-[12px] text-foreground/80">
                       <div className="text-muted-foreground">机柜数</div>
                       <div className="mt-1 flex items-end gap-2">
-                        <span className="font-mono text-[28px] font-black text-[#d9ff66]">1,821</span>
+                        <span className="font-mono text-[28px] font-black text-primary">1,821</span>
                         <span className="pb-1 text-[12px] text-muted-foreground">个</span>
                       </div>
                     </div>
@@ -500,14 +517,14 @@ export function BranchDashboard() {
                       <div className="flex-1 space-y-3">
                         <div className="flex items-center justify-between text-[12px] text-slate-600">
                           <span>已完成</span>
-                          <span className="font-mono text-[22px] font-black text-[#d9ff66]">{current.innovation.done}</span>
+                          <span className="font-mono text-[22px] font-black text-primary">{current.innovation.done}</span>
                         </div>
                         <div className="h-2 overflow-hidden rounded-full bg-[#e7edf8]">
                           <div className="h-full rounded-full bg-gradient-to-r from-[#2456c7] to-[#2dc2be]" style={{ width: `${(current.innovation.done / current.innovation.value) * 100}%` }} />
                         </div>
                         <div className="flex items-center justify-between text-[12px] text-slate-600">
                           <span>未完成</span>
-                          <span className="font-mono text-[22px] font-black text-[#d9ff66]">{current.innovation.remaining}</span>
+                          <span className="font-mono text-[22px] font-black text-primary">{current.innovation.remaining}</span>
                         </div>
                         <div className="h-2 overflow-hidden rounded-full bg-[#e7edf8]">
                           <div className="h-full rounded-full bg-gradient-to-r from-[#2dc2be] to-[#86e1de]" style={{ width: `${(current.innovation.remaining / current.innovation.value) * 100}%` }} />
@@ -527,16 +544,16 @@ export function BranchDashboard() {
 
                   <PanelCard className="h-full" title="系统上云" icon={<Cloud className="size-4" />}>
                     <div className="flex flex-col items-center gap-3">
-                      <CloudCircle value={current.cloud.value} />
+                      <CloudCircle value={current.cloud.value} total={current.cloud.total} />
                       <div className="text-center text-[12px] text-slate-500">{current.cloud.note}</div>
                       <div className="grid w-full grid-cols-2 gap-3">
                         <div className="rounded-[12px] border border-border/80 bg-card/80 px-3 py-3 text-center shadow-[inset_0_1px_0_oklch(0.72_0.15_220/6%)]">
                           <div className="text-[11px] text-muted-foreground">待上云</div>
-                          <div className="mt-1 font-mono text-[22px] font-black text-white">{current.cloud.total - current.cloud.value}</div>
+                          <div className="mt-1 font-mono text-[22px] font-black text-foreground">{current.cloud.total - current.cloud.value}</div>
                         </div>
                         <div className="rounded-[12px] border border-border/80 bg-card/80 px-3 py-3 text-center shadow-[inset_0_1px_0_oklch(0.72_0.15_220/6%)]">
                           <div className="text-[11px] text-muted-foreground">完成率</div>
-                          <div className="mt-1 font-mono text-[22px] font-black text-[#d9ff66]">{Math.round((current.cloud.value / current.cloud.total) * 100)}%</div>
+                          <div className="mt-1 font-mono text-[22px] font-black text-primary">{Math.round((current.cloud.value / current.cloud.total) * 100)}%</div>
                         </div>
                       </div>
                       <div className="text-center text-[11px] text-muted-foreground">单击可查看上云系统前十名。</div>
@@ -550,7 +567,7 @@ export function BranchDashboard() {
                       <div className="rounded-[12px] border border-border/80 bg-card/80 px-4 py-4 shadow-[inset_0_1px_0_oklch(0.72_0.15_220/6%)]">
                         <div className="text-[12px] text-foreground/80">科技人员总数</div>
                         <div className="mt-2 flex items-end gap-2">
-                          <span className="font-mono text-[34px] font-black leading-none text-[#d9ff66]">{current.personnelTotal}</span>
+                          <span className="font-mono text-[34px] font-black leading-none text-primary">{current.personnelTotal}</span>
                           <span className="pb-1 text-[14px] text-muted-foreground">人</span>
                         </div>
                         <Badge variant="outline" className="mt-3 rounded-full border-primary/20 bg-primary/5 px-3 py-1.5 text-[12px] font-semibold text-primary">
@@ -573,16 +590,16 @@ export function BranchDashboard() {
                         <Table className="min-w-[860px] text-sm">
                           <TableHeader className="bg-gradient-to-r from-primary via-primary to-accent">
                             <TableRow className="border-transparent hover:bg-transparent">
-                              <TableHead className="px-3 py-3 text-[12px] font-semibold text-white">分行名称</TableHead>
-                              <TableHead className="px-3 py-3 text-center text-[12px] font-semibold text-white">研发</TableHead>
-                              <TableHead className="px-3 py-3 text-center text-[12px] font-semibold text-white">运维</TableHead>
-                              <TableHead className="px-3 py-3 text-center text-[12px] font-semibold text-white">架构</TableHead>
-                              <TableHead className="px-3 py-3 text-center text-[12px] font-semibold text-white">创新</TableHead>
-                              <TableHead className="px-3 py-3 text-center text-[12px] font-semibold text-white">数据</TableHead>
-                              <TableHead className="px-3 py-3 text-center text-[12px] font-semibold text-white">安全</TableHead>
-                              <TableHead className="px-3 py-3 text-center text-[12px] font-semibold text-white">管理</TableHead>
-                              <TableHead className="px-3 py-3 text-center text-[12px] font-semibold text-white">干部</TableHead>
-                              <TableHead className="px-3 py-3 text-center text-[12px] font-semibold text-white">总数</TableHead>
+                              <TableHead className="px-3 py-3 text-[12px] font-semibold text-foreground">分行名称</TableHead>
+                              <TableHead className="px-3 py-3 text-center text-[12px] font-semibold text-foreground">研发</TableHead>
+                              <TableHead className="px-3 py-3 text-center text-[12px] font-semibold text-foreground">运维</TableHead>
+                              <TableHead className="px-3 py-3 text-center text-[12px] font-semibold text-foreground">架构</TableHead>
+                              <TableHead className="px-3 py-3 text-center text-[12px] font-semibold text-foreground">创新</TableHead>
+                              <TableHead className="px-3 py-3 text-center text-[12px] font-semibold text-foreground">数据</TableHead>
+                              <TableHead className="px-3 py-3 text-center text-[12px] font-semibold text-foreground">安全</TableHead>
+                              <TableHead className="px-3 py-3 text-center text-[12px] font-semibold text-foreground">管理</TableHead>
+                              <TableHead className="px-3 py-3 text-center text-[12px] font-semibold text-foreground">干部</TableHead>
+                              <TableHead className="px-3 py-3 text-center text-[12px] font-semibold text-foreground">总数</TableHead>
                             </TableRow>
                           </TableHeader>
                           <TableBody>
@@ -608,7 +625,7 @@ export function BranchDashboard() {
                       <div className="flex items-center justify-between border-t border-border/60 bg-card/80 px-4 py-2.5 text-[11px] text-muted-foreground">
                         <span>单击表格，字号自动切换为分行专班下钻数据</span>
                         <div className="flex items-center gap-1.5">
-                          <span className="inline-flex size-5 items-center justify-center rounded-md bg-primary text-[11px] font-semibold text-white">1</span>
+                          <span className="inline-flex size-5 items-center justify-center rounded-md bg-primary text-[11px] font-semibold text-foreground">1</span>
                           <span className="inline-flex size-5 items-center justify-center rounded-md bg-card text-[11px] font-semibold text-muted-foreground ring-1 ring-border/80">2</span>
                           <span className="inline-flex size-5 items-center justify-center rounded-md bg-card text-[11px] font-semibold text-muted-foreground ring-1 ring-border/80">3</span>
                           <span className="inline-flex size-5 items-center justify-center rounded-md bg-card text-[11px] font-semibold text-muted-foreground ring-1 ring-border/80">4</span>
