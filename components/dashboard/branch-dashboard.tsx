@@ -457,9 +457,8 @@ export function BranchDashboard() {
 
                 <div className="mt-2 border-t border-dashed border-border/70 pt-3">
                   <div className="grid gap-2 text-[12px] text-foreground/80 md:grid-cols-2">
-                    <button type="button" onClick={() => setRoomMode(roomMode === "central" ? "disaster" : "central")} className="grid w-full gap-2 text-left text-[12px] text-slate-600 transition-colors hover:text-primary">
+                    <button type="button" onClick={() => setRoomMode(roomMode === "central" ? "disaster" : "central")} className="w-full text-left text-[12px] text-slate-600 transition-colors hover:text-primary">
                       <DotLegend color="#2456c7" text="45家分行，均配备中心机房" />
-                      <DotLegend color="#2dc2be" text="其中10家分行，配备灾备机房" />
                     </button>
                   </div>
                   <div className="mt-1 text-[11px] text-muted-foreground">单击上方状态或图形，可切换查看中心机房与灾备机房情况。</div>
@@ -481,18 +480,17 @@ export function BranchDashboard() {
                         <div className="grid gap-2 text-[12px] text-foreground/75">
                           <div className="flex items-center gap-2">
                             <span className="inline-flex size-2 rounded-full bg-[#2456c7]" />
-                            {roomMode === "central" ? "中心机房" : "灾备机房"} <span className="font-mono text-primary">{roomMode === "central" ? "45" : "10"}</span><span>（{roomMode === "central" ? "100" : "22.22"}%）</span>
-                          </div>
-                          <div className="flex items-center gap-2">
-                            <span className="inline-flex size-2 rounded-full bg-[#2dc2be]" />
-                            租赁 <span className="font-mono text-primary">3</span><span>（6.67%）</span>
+                            中心机房 <span className="font-mono text-primary">45</span><span>（100%）</span>
                           </div>
                         </div>
                       </div>
                     </div>
 
-                    <div className="flex items-center justify-center rounded-[12px] border border-border/80 bg-card/80 px-3 py-3 shadow-[inset_0_1px_0_oklch(0.72_0.15_220/6%)]">
-                      <button type="button" onClick={() => setRoomMode(roomMode === "central" ? "disaster" : "central")} className="w-full" aria-label="切换机房类型"><GaugeMeter roomMode={roomMode} /></button>
+                    <div className="grid gap-2 rounded-[12px] border border-border/80 bg-card/80 px-3 py-3 shadow-[inset_0_1px_0_oklch(0.72_0.15_220/6%)]">
+                      <button type="button" onClick={() => setRoomMode(roomMode === "central" ? "disaster" : "central")} className="w-full text-left text-[12px] text-slate-600 transition-colors hover:text-primary">
+                        <DotLegend color="#2dc2be" text="其中10家分行，配备灾备机房" />
+                      </button>
+                      <button type="button" onClick={() => setRoomMode(roomMode === "central" ? "disaster" : "central")} className="flex items-center justify-center" aria-label="切换机房类型"><GaugeMeter roomMode={roomMode} /></button>
                     </div>
                   </div>
 
