@@ -72,7 +72,7 @@ const branchData: Record<string, BranchData> = {
       { label: "专线数", value: 8075, unit: "条", tone: "chart-4" },
       { label: "存储数", value: 7608310, unit: "GB", tone: "primary" },
       { label: "CPU数", value: 5987, unit: "核", tone: "accent" },
-      { label: "机柜数", value: 1821, unit: "个", tone: "chart-4" },
+      { label: "分行办公终端数", value: 1821, unit: "台", tone: "chart-4" },
     ],
     innovation: { title: "年度计划数", value: 95, done: 81, remaining: 14 },
     cloud: { value: 33, total: 48, note: "单台式与双台式上云系统占比" },
@@ -159,7 +159,7 @@ const branchData: Record<string, BranchData> = {
     ],
     tableRows: [
       { name: "广州分行", development: 17, operations: 8, architecture: 1, innovation: 1, data: 4, security: 2, management: 18, total: 51 },
-      { name: "深圳���行", development: 15, operations: 10, architecture: 1, innovation: 0, data: 5, security: 3, management: 14, total: 48 },
+      { name: "深圳����行", development: 15, operations: 10, architecture: 1, innovation: 0, data: 5, security: 3, management: 14, total: 48 },
       { name: "佛山分行", development: 11, operations: 7, architecture: 0, innovation: 0, data: 3, security: 2, management: 8, total: 31 },
       { name: "东莞分行", development: 8, operations: 5, architecture: 0, innovation: 0, data: 2, security: 1, management: 7, total: 23 },
       { name: "珠海分行", development: 6, operations: 4, architecture: 0, innovation: 0, data: 1, security: 1, management: 5, total: 17 },
@@ -341,7 +341,7 @@ function CloudCircle({ value, total }: { value: number; total: number }) {
   )
 }
 
-function GaugeMeter() {
+function GaugeMeter({ roomMode }: { roomMode: "central" | "disaster" }) {
   return (
     <div className="relative h-[118px] w-full max-w-[220px]">
       <svg viewBox="0 0 220 120" className="absolute inset-0 h-full w-full">
@@ -357,8 +357,8 @@ function GaugeMeter() {
       <div className="absolute inset-x-4 bottom-5 h-1 rounded-full bg-[#d9e1ee]" />
       <div className="absolute inset-x-6 bottom-5 h-1 rounded-full bg-gradient-to-r from-[#2dc2be] via-[#7ac5ff] to-[#d6dbe7]" />
       <div className="absolute left-1/2 top-[40%] -translate-x-1/2 text-center">
-        <div className="text-[11px] text-muted-foreground">中心机房配套率</div>
-        <div className="mt-1 font-mono text-[24px] font-black text-primary">22.22%</div>
+        <div className="text-[11px] text-muted-foreground">{roomMode === "central" ? "中心机房配套率" : "灾备机房配套率"}</div>
+        <div className="mt-1 font-mono text-[24px] font-black text-primary">{roomMode === "central" ? "100%" : "22.22%"}</div>
       </div>
       <div className="absolute left-[8px] bottom-3 text-[10px] text-muted-foreground">0</div>
       <div className="absolute left-[54px] bottom-3 text-[10px] text-muted-foreground">10</div>
@@ -413,6 +413,9 @@ export function BranchDashboard() {
   const now = useLiveClock()
   const [selectedGrade, setSelectedGrade] = useState(gradeOptions[0].key)
   const [selectedBranch, setSelectedBranch] = useState(branchOptions[0].key)
+  const [roomMode, setRoomMode] = useState<"central" | "disaster">("central")
+  const [innovationRanking, setInnovationRanking] = useState(false)
+  const [cloudRanking, setCloudRanking] = useState(false)
 
   useEffect(() => {
     setSelectedBranch(branchOptions[0].key)
@@ -454,10 +457,12 @@ export function BranchDashboard() {
 
                 <div className="mt-2 border-t border-dashed border-border/70 pt-3">
                   <div className="grid gap-2 text-[12px] text-foreground/80 md:grid-cols-2">
-                    <DotLegend color="#2456c7" text="45家分行，均配备中心机房" />
-                    <DotLegend color="#2dc2be" text="其中10家分行，配备灾备机房" />
+                    <button type="button" onClick={() => setRoomMode(roomMode === "central" ? "disaster" : "central")} className="grid w-full gap-2 text-left text-[12px] text-slate-600 transition-colors hover:text-primary">
+                      <DotLegend color="#2456c7" text="45家分行，均配备中心机房" />
+                      <DotLegend color="#2dc2be" text="其中10家分行，配备灾备机房" />
+                    </button>
                   </div>
-                  <div className="mt-1 text-[11px] text-muted-foreground">单击图形可切换查看中心机房与灾备机房情况。</div>
+                  <div className="mt-1 text-[11px] text-muted-foreground">单击上方状态或图形，可切换查看中心机房与灾备机房情况。</div>
 
                   <div className="mt-4 grid gap-3 md:grid-cols-[0.86fr_1.14fr]">
                     <div className="rounded-[12px] border border-border/80 bg-card/80 px-3 py-3 shadow-[inset_0_1px_0_oklch(0.72_0.15_220/6%)]">
@@ -465,18 +470,18 @@ export function BranchDashboard() {
                         <div className="relative h-[98px] w-[122px] shrink-0">
                           <svg viewBox="0 0 120 120" className="h-full w-full -rotate-90">
                             <circle cx="60" cy="60" r="42" fill="none" stroke="#d9e1ee" strokeWidth="10" />
-                            <circle cx="60" cy="60" r="42" fill="none" stroke="#2dc2be" strokeWidth="10" strokeLinecap="round" strokeDasharray="41 300" />
+                            <circle cx="60" cy="60" r="42" fill="none" stroke="#2dc2be" strokeWidth="10" strokeLinecap="round" strokeDasharray={roomMode === "central" ? "41 300" : "68 300"} />
                             <circle cx="60" cy="60" r="42" fill="none" stroke="#2456c7" strokeWidth="10" strokeLinecap="round" strokeDasharray="259 300" strokeDashoffset="41" />
                           </svg>
                           <div className="absolute inset-0 flex flex-col items-center justify-center text-center">
-                            <div className="font-mono text-[20px] font-black text-primary">42</div>
-                            <div className="text-[10px] text-slate-500">自建</div>
+                            <div className="font-mono text-[20px] font-black text-primary">{roomMode === "central" ? "45" : "10"}</div>
+                            <div className="text-[10px] text-slate-500">{roomMode === "central" ? "中心机房" : "灾备机房"}</div>
                           </div>
                         </div>
                         <div className="grid gap-2 text-[12px] text-foreground/75">
                           <div className="flex items-center gap-2">
                             <span className="inline-flex size-2 rounded-full bg-[#2456c7]" />
-                            自建 <span className="font-mono text-primary">42</span><span>（93.33%）</span>
+                            {roomMode === "central" ? "中心机房" : "灾备机房"} <span className="font-mono text-primary">{roomMode === "central" ? "45" : "10"}</span><span>（{roomMode === "central" ? "100" : "22.22"}%）</span>
                           </div>
                           <div className="flex items-center gap-2">
                             <span className="inline-flex size-2 rounded-full bg-[#2dc2be]" />
@@ -487,7 +492,7 @@ export function BranchDashboard() {
                     </div>
 
                     <div className="flex items-center justify-center rounded-[12px] border border-border/80 bg-card/80 px-3 py-3 shadow-[inset_0_1px_0_oklch(0.72_0.15_220/6%)]">
-                      <GaugeMeter />
+                      <button type="button" onClick={() => setRoomMode(roomMode === "central" ? "disaster" : "central")} className="w-full" aria-label="切换机房类型"><GaugeMeter roomMode={roomMode} /></button>
                     </div>
                   </div>
 
@@ -510,9 +515,10 @@ export function BranchDashboard() {
               <div className="flex flex-col gap-2">
                 <div className="grid gap-2 md:grid-cols-2">
                   <PanelCard className="h-full" bodyClassName="p-3" title="信创改造" icon={<ShieldCheck className="size-4" />}>
-                    <div className="flex items-center justify-between gap-3">
+                    <button type="button" onClick={() => setInnovationRanking(!innovationRanking)} className="w-full text-left" aria-label="切换信创改造完成度排行">
+                    {innovationRanking ? <div className="grid gap-2 py-1">{["上海分行", "成都分行", "呼和浩特分行", "北京分行", "哈尔滨分行"].map((name, index) => <div key={name} className="grid grid-cols-[1.2fr_1fr_auto] items-center gap-2 text-[11px]"><span>{String(index + 1).padStart(2, "0")} {name}</span><span className="h-2 rounded-full bg-gradient-to-r from-primary to-accent" style={{ width: `${100 - index * 14}%` }} /><strong className="font-mono text-primary">{7 - Math.min(index, 4)}</strong></div>)}</div> : <div className="flex items-center justify-between gap-3">
                       <div className="flex flex-1 items-center justify-center">
-                        <RingChart value={current.innovation.value} total={current.innovation.value} label={current.innovation.title} />
+                        <RingChart value={current.innovation.done} total={current.innovation.value} label="已完成" />
                       </div>
                       <div className="flex-1 space-y-3">
                         <div className="flex items-center justify-between text-[12px] text-slate-600">
@@ -530,8 +536,9 @@ export function BranchDashboard() {
                           <div className="h-full rounded-full bg-gradient-to-r from-[#2dc2be] to-[#86e1de]" style={{ width: `${(current.innovation.remaining / current.innovation.value) * 100}%` }} />
                         </div>
                       </div>
-                    </div>
-                    <div className="mt-3 flex flex-wrap items-center justify-center gap-4 text-[11px] text-slate-500">
+                    </div>}
+                    </button>
+                    {!innovationRanking && <><div className="mt-3 flex flex-wrap items-center justify-center gap-4 text-[11px] text-slate-500">
                       <div className="flex items-center gap-1.5">
                         <span className="size-2 rounded-full bg-[#2456c7]" />已完成信创改造
                       </div>
@@ -539,25 +546,16 @@ export function BranchDashboard() {
                         <span className="size-2 rounded-full bg-[#2dc2be]" />未完成信创改造
                       </div>
                     </div>
-                    <div className="mt-2 text-center text-[11px] text-slate-500">单击可查看信创改造完成度排序十名。</div>
+                    <div className="mt-2 text-center text-[11px] text-slate-500">单击可查看信创改造完成度排序十名。</div></>}
                   </PanelCard>
 
                   <PanelCard className="h-full" bodyClassName="p-3" title="系统上云" icon={<Cloud className="size-4" />}>
-                    <div className="flex flex-col items-center gap-2">
+                    <button type="button" onClick={() => setCloudRanking(!cloudRanking)} className="w-full text-left" aria-label="切换上云系统前十名">
+                    {cloudRanking ? <div className="grid gap-2 py-1">{["上海分行", "成都分行", "呼和浩特分行", "北京分行", "哈尔滨分行"].map((name, index) => <div key={name} className="grid grid-cols-[1.2fr_1fr_auto] items-center gap-2 text-[11px]"><span>{String(index + 1).padStart(2, "0")} {name}</span><span className="h-2 rounded-full bg-gradient-to-r from-accent to-primary" style={{ width: `${100 - index * 14}%` }} /><strong className="font-mono text-primary">{7 - Math.min(index, 4)}</strong></div>)}</div> : <div className="flex flex-col items-center gap-2">
                       <CloudCircle value={current.cloud.value} total={current.cloud.total} />
                       <div className="text-center text-[12px] text-slate-500">{current.cloud.note}</div>
-                      <div className="grid w-full grid-cols-2 gap-3">
-                        <div className="rounded-[12px] border border-border/80 bg-card/80 px-3 py-3 text-center shadow-[inset_0_1px_0_oklch(0.72_0.15_220/6%)]">
-                          <div className="text-[11px] text-muted-foreground">待上云</div>
-                          <div className="mt-1 font-mono text-[22px] font-black text-foreground">{current.cloud.total - current.cloud.value}</div>
-                        </div>
-                        <div className="rounded-[12px] border border-border/80 bg-card/80 px-3 py-3 text-center shadow-[inset_0_1px_0_oklch(0.72_0.15_220/6%)]">
-                          <div className="text-[11px] text-muted-foreground">完成率</div>
-                          <div className="mt-1 font-mono text-[22px] font-black text-primary">{Math.round((current.cloud.value / current.cloud.total) * 100)}%</div>
-                        </div>
-                      </div>
-                      <div className="text-center text-[11px] text-muted-foreground">单击可查看上云系统前十名。</div>
-                    </div>
+                      <div className="text-center text-[11px] text-muted-foreground">单击可查看上云系统前十名。</div></div>}
+                    </button>
                   </PanelCard>
                 </div>
 
