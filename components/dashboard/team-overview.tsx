@@ -8,7 +8,7 @@ import { TopNav } from "@/components/dashboard/top-nav"
 
 const teams = [
   { name: "风险管理智能化专班", icon: ShieldCheck, metrics: [["数智化授信审查使用率", "92%"], ["存续期监测客户数量", "486 个"]], milestone: 8, task: 15, done: 3, doing: 9, pending: 3 },
-  { name: "资管财富智能化专班", icon: LineChart, metrics: [["大资管产品购买转化率", "38%"], ["私行营销模型转化率提升", "26%"]], milestone: 6, task: 12, done: 2, doing: 8, pending: 2 },
+  { name: "资管财富智能化专班", icon: LineChart, metrics: [["钱大理财产品购买转化率", "38%"], ["私行营销模型转化率提升", "26%"]], milestone: 6, task: 12, done: 2, doing: 8, pending: 2 },
   { name: "集中作业智能化专班", icon: Layers3, metrics: [["平台日均调用次数", "1.8 万次"], ["推广场景数", "32 个"]], milestone: 7, task: 13, done: 4, doing: 7, pending: 2 },
   { name: "同业金市智能化专班", icon: Landmark, metrics: [["小类兴成交总量", "42 亿元"], ["划款指令智能审核金额", "18 亿元"]], milestone: 4, task: 5, done: 1, doing: 3, pending: 1 },
   { name: "零售金融智能化专班", icon: UsersRound, metrics: [["智能管客带动资产规模", "109.9 亿元"], ["智能管客触客人次", "1373 万人次"]], milestone: 6, task: 16, done: 1, doing: 15, pending: 0 },
