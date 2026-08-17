@@ -415,6 +415,7 @@ export function BranchDashboard() {
   const [selectedBranch, setSelectedBranch] = useState(branchOptions[0].key)
   const [roomMode, setRoomMode] = useState<"central" | "disaster">("central")
   const [roomDetails, setRoomDetails] = useState(false)
+  const [disasterDetails, setDisasterDetails] = useState(false)
   const [innovationRanking, setInnovationRanking] = useState(false)
   const [cloudRanking, setCloudRanking] = useState(false)
 
@@ -477,10 +478,11 @@ export function BranchDashboard() {
                     </div>
 
                     <div className="grid gap-2 rounded-[12px] border border-border/80 bg-card/80 px-3 py-3 shadow-[inset_0_1px_0_oklch(0.72_0.15_220/6%)]">
-                      <button type="button" onClick={() => setRoomMode(roomMode === "central" ? "disaster" : "central")} className="w-full text-left text-[12px] font-semibold text-slate-700 transition-colors hover:text-primary">
+                      <div className="text-[11px] text-muted-foreground">单击可查看中心机房建设模式总览及详情。</div>
+                      <button type="button" onClick={() => setDisasterDetails(!disasterDetails)} className="w-full text-left text-[12px] font-semibold text-slate-700 transition-colors hover:text-primary">
                         <span className="mr-2 inline-flex size-2 rounded-full bg-[#2dc2be]" />其中10家分行，配备灾备机房
                       </button>
-                      <button type="button" onClick={() => setRoomMode(roomMode === "central" ? "disaster" : "central")} className="flex items-center justify-center" aria-label="切换机房类型"><GaugeMeter roomMode={roomMode} /></button>
+                      {disasterDetails ? <div className="grid gap-2 py-1 text-[11px] text-foreground/80"><div className="font-semibold text-primary">配备灾备机房的分行</div>{["上海分行", "成都分行", "北京分行", "深圳分行", "广州分行", "武汉分行", "西安分行", "南京分行", "杭州分行", "重庆分行"].map((name) => <div key={name} className="flex items-center justify-between border-t border-border/50 py-1.5"><span>{name}</span><span className="text-muted-foreground">已配备</span></div>)}</div> : <button type="button" onClick={() => setRoomMode(roomMode === "central" ? "disaster" : "central")} className="flex items-center justify-center" aria-label="查看灾备机房配套率"><GaugeMeter roomMode={roomMode} /></button>}
                     </div>
                   </div>
 
