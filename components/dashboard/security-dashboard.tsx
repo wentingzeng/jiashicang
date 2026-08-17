@@ -409,8 +409,8 @@ export function SecurityDashboard() {
           />
         </section>
 
-        <div className="grid items-stretch gap-5 xl:grid-cols-3">
-          <section className="flex h-full min-w-0 flex-col gap-4">
+        <div className="grid items-stretch gap-5 xl:grid-cols-3 xl:auto-rows-fr">
+          <section className="flex h-full min-h-0 min-w-0 flex-col gap-4">
               <Panel title="网络安全综合能力" tone="primary">
                 <ChartBox
                   data={capabilityData}
@@ -459,7 +459,7 @@ export function SecurityDashboard() {
               </Panel>
           </section>
 
-          <section className="flex h-full min-w-0 flex-col gap-4">
+          <section className="flex h-full min-h-0 min-w-0 flex-col gap-4">
               <Panel title="网络安全综合能力视图" tone="accent">
                 <ChinaSecurityMap />
               </Panel>
@@ -476,7 +476,7 @@ export function SecurityDashboard() {
               </Panel>
           </section>
 
-          <section className="flex h-full min-w-0 flex-col gap-4">
+          <section className="flex h-full min-h-0 min-w-0 flex-col gap-4">
               <Panel title="网络安全考评" tone="chart-4" compact bodyClassName="p-2.5">
                 <ChartBox
                   data={securityAssessmentData}
