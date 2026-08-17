@@ -48,12 +48,14 @@ function Panel({
   tone = "primary",
   bodyClassName,
   compact = false,
+  className,
   children,
 }: {
   title: string
   tone?: "primary" | "accent" | "chart-4"
   bodyClassName?: string
   compact?: boolean
+  className?: string
   children: ReactNode
 }) {
   const toneStyles = {
@@ -75,7 +77,7 @@ function Panel({
   }
 
   return (
-    <section className="overflow-hidden rounded-xl border border-border/70 bg-card/90 shadow-[0_8px_28px_oklch(0.35_0.06_240/8%)] backdrop-blur-sm">
+    <section className={["overflow-hidden rounded-xl border border-border/70 bg-card/90 shadow-[0_8px_28px_oklch(0.35_0.06_240/8%)] backdrop-blur-sm", className].filter(Boolean).join(" ")}>
       <header
         className={[
           "relative flex items-center gap-3 border-b border-border/60",
@@ -464,7 +466,8 @@ export function SecurityDashboard() {
                 <ChinaSecurityMap />
               </Panel>
 
-              <Panel title="网络安全管理指标" tone="primary">
+              <Panel title="网络安全管理指标" tone="primary" className="flex flex-1 flex-col">
+                <div className="flex-1">
                 <ul className="space-y-2.5 text-sm leading-6 text-muted-foreground">
                   {securityManagementIndicators.map((item) => (
                     <li key={item} className="flex gap-2.5">
@@ -473,6 +476,7 @@ export function SecurityDashboard() {
                     </li>
                   ))}
                 </ul>
+                </div>
               </Panel>
           </section>
 
