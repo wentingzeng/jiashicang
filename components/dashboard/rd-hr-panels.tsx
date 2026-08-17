@@ -22,16 +22,16 @@ const maxUnitValue = Math.max(...unitPersonnel.map((u) => u.value))
 export function HrPersonnelMix() {
   return (
     <PanelCard icon={UsersRound} title="研发人员构成" className="h-full">
-      <div className="flex min-h-[240px] flex-col items-center gap-3 sm:flex-row sm:items-center sm:justify-between">
-        <div className="relative w-full text-[12px] sm:w-[52%]">
-          <ResponsiveContainer width="100%" height={240}>
+      <div className="flex min-h-[190px] flex-col items-center gap-2 sm:flex-row sm:items-center sm:justify-between">
+        <div className="relative w-full text-[12px] sm:w-[48%]">
+          <ResponsiveContainer width="100%" height={190}>
             <PieChart>
               <Pie
                 data={hrPersonnelMix}
                 dataKey="value"
                 nameKey="name"
-                innerRadius={70}
-                outerRadius={95}
+                innerRadius={54}
+                outerRadius={76}
                 paddingAngle={4}
                 strokeWidth={0}
               >
@@ -53,11 +53,11 @@ export function HrPersonnelMix() {
             <span className="text-sm font-medium text-muted-foreground uppercase tracking-widest">总人数</span>
           </div>
         </div>
-        <div className="flex w-full flex-col gap-3.5 sm:w-[44%]">
+        <div className="flex w-full flex-col gap-2 sm:w-[48%]">
           {hrPersonnelMix.map((item) => (
             <div
               key={item.name}
-              className="group flex items-center gap-3 rounded-xl border border-border/60 bg-background/20 px-4 py-4 transition-all hover:border-primary/40 hover:bg-background/40"
+              className="group flex items-center gap-3 rounded-xl border border-border/60 bg-background/20 px-3 py-2 transition-all hover:border-primary/40 hover:bg-background/40"
             >
               <span className="size-3 shrink-0 rounded-full ring-4 ring-background shadow-sm" style={{ backgroundColor: item.color }} />
               <div className="min-w-0 flex-1">
