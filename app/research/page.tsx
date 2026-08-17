@@ -63,7 +63,7 @@ export default function ResearchManagementPage() {
                 <strong className="font-mono text-lg font-bold text-primary">{hrPersonnelTotal.toLocaleString()}</strong> 人
               </div>
             </div>
-            <div className="grid gap-4 xl:grid-cols-[1fr_1.15fr_0.95fr]">
+            <div className="grid gap-4 xl:grid-cols-3">
               <HrPersonnelMix />
               <HrRegionalDistribution />
               <HrUnitDistribution />
