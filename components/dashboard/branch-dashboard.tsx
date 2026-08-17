@@ -357,8 +357,8 @@ function GaugeMeter({ roomMode }: { roomMode: "central" | "disaster" }) {
       <div className="absolute inset-x-4 bottom-5 h-1 rounded-full bg-[#d9e1ee]" />
       <div className="absolute inset-x-6 bottom-5 h-1 rounded-full bg-gradient-to-r from-[#2dc2be] via-[#7ac5ff] to-[#d6dbe7]" />
       <div className="absolute left-1/2 top-[40%] -translate-x-1/2 text-center">
-        <div className="text-[11px] text-muted-foreground">{roomMode === "central" ? "中心机房配套率" : "灾备机房配套率"}</div>
-        <div className="mt-1 font-mono text-[24px] font-black text-primary">{roomMode === "central" ? "100%" : "22.22%"}</div>
+        <div className="text-[11px] text-muted-foreground">中心机房配套率</div>
+        <div className="mt-1 font-mono text-[24px] font-black text-primary">22.22%</div>
       </div>
       <div className="absolute left-[8px] bottom-3 text-[10px] text-muted-foreground">0</div>
       <div className="absolute left-[54px] bottom-3 text-[10px] text-muted-foreground">10</div>
@@ -456,15 +456,12 @@ export function BranchDashboard() {
                 </div>
 
                 <div className="mt-2 border-t border-dashed border-border/70 pt-3">
-                  <div className="grid gap-2 text-[12px] text-foreground/80 md:grid-cols-2">
-                    <button type="button" onClick={() => setRoomMode(roomMode === "central" ? "disaster" : "central")} className="w-full text-left text-[12px] text-slate-600 transition-colors hover:text-primary">
-                      <DotLegend color="#2456c7" text="45家分行，均配备中心机房" />
-                    </button>
-                  </div>
-                  <div className="mt-1 text-[11px] text-muted-foreground">单击上方状态或图形，可切换查看中心机房与灾备机房情况。</div>
-
-                  <div className="mt-4 grid gap-3 md:grid-cols-[0.86fr_1.14fr]">
+                  <div className="mb-2 text-[11px] text-muted-foreground">单击任一图形可切换查看中心机房与灾备机房情况。</div>
+                  <div className="mt-3 grid gap-3 md:grid-cols-2">
                     <div className="rounded-[12px] border border-border/80 bg-card/80 px-3 py-3 shadow-[inset_0_1px_0_oklch(0.72_0.15_220/6%)]">
+                      <button type="button" onClick={() => setRoomMode(roomMode === "central" ? "disaster" : "central")} className="mb-2 flex w-full items-center gap-2 text-left text-[12px] font-semibold text-slate-700 hover:text-primary">
+                        <span className="inline-flex size-2 rounded-full bg-[#2456c7]" />共45家分行，均配备中心机房
+                      </button>
                       <div className="flex items-center gap-3">
                         <div className="relative h-[98px] w-[122px] shrink-0">
                           <svg viewBox="0 0 120 120" className="h-full w-full -rotate-90">
@@ -487,8 +484,8 @@ export function BranchDashboard() {
                     </div>
 
                     <div className="grid gap-2 rounded-[12px] border border-border/80 bg-card/80 px-3 py-3 shadow-[inset_0_1px_0_oklch(0.72_0.15_220/6%)]">
-                      <button type="button" onClick={() => setRoomMode(roomMode === "central" ? "disaster" : "central")} className="w-full text-left text-[12px] text-slate-600 transition-colors hover:text-primary">
-                        <DotLegend color="#2dc2be" text="其中10家分行，配备灾备机房" />
+                      <button type="button" onClick={() => setRoomMode(roomMode === "central" ? "disaster" : "central")} className="w-full text-left text-[12px] font-semibold text-slate-700 transition-colors hover:text-primary">
+                        <span className="mr-2 inline-flex size-2 rounded-full bg-[#2dc2be]" />其中10家分行，配备灾备机房
                       </button>
                       <button type="button" onClick={() => setRoomMode(roomMode === "central" ? "disaster" : "central")} className="flex items-center justify-center" aria-label="切换机房类型"><GaugeMeter roomMode={roomMode} /></button>
                     </div>
