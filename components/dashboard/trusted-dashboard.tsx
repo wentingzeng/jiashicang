@@ -1,99 +1,69 @@
 "use client"
 
-import { useMemo, useState } from "react"
-import { ArrowUpRight, CheckCircle2, ChevronDown, CircleAlert, CloudCog, Cpu, Database, Gauge, MonitorCog, Network, ServerCog, ShieldCheck, Sparkles, TrendingUp } from "lucide-react"
+import { useState } from "react"
+import { BarChart3, CheckCircle2, ChevronDown, CircleAlert, FileCog, Printer, ServerCog, Settings2, TerminalSquare } from "lucide-react"
 
-type Metric = { label: string; value: string; unit: string; note: string; tone: "blue" | "teal" | "violet" | "amber" }
-type ProgressItem = { label: string; value: number; detail: string; tone: "blue" | "teal" | "violet" }
-
-const metrics: Metric[] = [
-  { label: "信创总体完成率", value: "76.8", unit: "%", note: "较上月提升 4.2%", tone: "blue" },
-  { label: "已完成适配系统", value: "68", unit: "套", note: "本年度新增 12 套", tone: "teal" },
-  { label: "信创终端覆盖", value: "2,486", unit: "台", note: "覆盖率 83.4%", tone: "violet" },
-  { label: "项目投入规模", value: "3.42", unit: "亿元", note: "年度预算执行 71.5%", tone: "amber" },
-]
-
-const systemProgress: ProgressItem[] = [
-  { label: "基础软件适配", value: 92, detail: "23 / 25 项", tone: "blue" },
-  { label: "数据库适配", value: 84, detail: "21 / 25 项", tone: "teal" },
-  { label: "中间件适配", value: 76, detail: "19 / 25 项", tone: "violet" },
-  { label: "业务应用改造", value: 68, detail: "68 / 100 套", tone: "blue" },
-]
-
-const terminalProgress: ProgressItem[] = [
-  { label: "桌面终端", value: 86, detail: "1,984 台", tone: "teal" },
-  { label: "服务器", value: 74, detail: "316 台", tone: "blue" },
-  { label: "移动终端", value: 62, detail: "186 台", tone: "violet" },
-]
-
-const milestones = [
-  { title: "核心业务系统适配", owner: "科技信息部", progress: 92, status: "按计划", date: "2026.08" },
-  { title: "分支机构终端替换", owner: "运行管理部", progress: 76, status: "推进中", date: "2026.09" },
-  { title: "数据中心基础设施升级", owner: "数据中心", progress: 61, status: "推进中", date: "2026.11" },
-  { title: "信创人才能力认证", owner: "人力资源部", progress: 48, status: "需关注", date: "2026.12" },
-]
-
-const trend = [61, 64, 63, 68, 70, 73, 76, 77, 81, 79, 84, 87]
-const issues = [
-  { title: "3 个系统存在兼容性风险", detail: "待完成数据库驱动升级", tone: "amber" },
-  { title: "2 家供应商交付延期", detail: "预计影响 1 个里程碑", tone: "violet" },
-  { title: "终端替换完成率领先计划", detail: "较计划提前 6 天", tone: "teal" },
-]
-
-function Panel({ title, eyebrow, icon: Icon, children, className = "" }: { title: string; eyebrow?: string; icon: typeof Cpu; children: React.ReactNode; className?: string }) {
-  return (
-    <section className={`overflow-hidden rounded-2xl border border-border/80 bg-card shadow-[0_10px_30px_oklch(0.35_0.06_240/8%)] ${className}`}>
-      <header className="flex items-center justify-between border-b border-border/70 bg-gradient-to-r from-secondary/70 to-card px-5 py-4">
-        <div className="flex items-center gap-3">
-          <div className="flex size-9 items-center justify-center rounded-xl bg-primary/10 text-primary"><Icon className="size-5" /></div>
-          <div>
-            {eyebrow && <p className="text-[10px] font-semibold uppercase tracking-[0.18em] text-muted-foreground">{eyebrow}</p>}
-            <h2 className="text-base font-bold text-foreground">{title}</h2>
-          </div>
-        </div>
-        <span className="rounded-full bg-accent/10 px-3 py-1 text-[10px] font-semibold tracking-[0.16em] text-accent">LIVE</span>
-      </header>
-      <div className="p-5">{children}</div>
-    </section>
-  )
+const palette = {
+  blue: "#2456c7",
+  violet: "#6f5bd3",
+  teal: "#16a6a1",
+  amber: "#d99435",
 }
 
-function MetricCard({ item }: { item: Metric }) {
-  const tone = { blue: "text-primary bg-primary/10", teal: "text-accent bg-accent/10", violet: "text-chart-4 bg-chart-4/10", amber: "text-amber-600 bg-amber-500/10" }[item.tone]
-  return <article className="rounded-2xl border border-border/70 bg-card p-5 shadow-sm transition-transform hover:-translate-y-0.5">
-    <div className="flex items-start justify-between gap-3"><p className="text-sm font-medium text-muted-foreground">{item.label}</p><span className={`rounded-lg p-2 ${tone}`}><TrendingUp className="size-4" /></span></div>
-    <div className="mt-5 flex items-baseline gap-2"><strong className="font-mono text-4xl font-black tracking-tight text-foreground">{item.value}</strong><span className="text-sm font-semibold text-muted-foreground">{item.unit}</span></div>
-    <p className="mt-3 flex items-center gap-1.5 text-xs text-muted-foreground"><ArrowUpRight className="size-3 text-accent" />{item.note}</p>
-  </article>
+const rolloutRows = [
+  ["通用办公软件", 55.26, 55.26],
+  ["设计制图软件", 14.74, 64.59],
+  ["管理支撑软件", 51.26, 38.64],
+  ["开发工具软件", 73.04, 26.96],
+  ["数据分析软件", 32.68, 67.32],
+  ["安全管理软件", 47.2, 33.94],
+]
+
+const branchRows = [
+  ["南京分行", 9, 5], ["苏州分行", 6, 3], ["北京分行", 6, 4], ["上海分行", 5, 3], ["青岛分行", 5, 2], ["福州分行", 9, 6], ["深圳分行", 4, 2], ["西安分行", 6, 4],
+]
+
+const departmentRows = [
+  ["公司金融部\n数字支撑室", 4, 2], ["绿色金融部\n临客部", 4, 0], ["普惠金融部\n村镇服务", 4, 0], ["机构业务部", 5, 1], ["国际业务部\n贸易行管", 24, 9], ["投资银行部", 2, 1], ["零售金融部\n消费者权益保护办公室", 23, 8],
+]
+
+function Panel({ title, children, className = "" }: { title: string; children: React.ReactNode; className?: string }) {
+  return <section className={`overflow-hidden rounded-xl border border-border/80 bg-card shadow-[0_8px_25px_oklch(0.35_0.06_240/8%)] ${className}`}>
+    <header className="flex items-center gap-3 border-b border-border/70 bg-gradient-to-r from-secondary/70 to-card px-4 py-3"><span className="flex size-8 items-center justify-center rounded-lg bg-primary/10 text-primary"><BarChart3 className="size-4" /></span><h2 className="text-base font-bold text-foreground">{title}</h2></header>
+    <div className="p-4">{children}</div>
+  </section>
 }
 
-function ProgressRow({ item }: { item: ProgressItem }) {
-  const bar = { blue: "bg-primary", teal: "bg-accent", violet: "bg-chart-4" }[item.tone]
-  return <div className="space-y-2"><div className="flex items-center justify-between gap-3 text-sm"><span className="font-medium text-foreground">{item.label}</span><span className="font-mono text-xs text-muted-foreground">{item.detail}</span></div><div className="h-3 overflow-hidden rounded-full bg-secondary"><div className={`h-full rounded-full ${bar} transition-all`} style={{ width: `${item.value}%` }} /></div><div className="text-right font-mono text-xs font-bold text-primary">{item.value}%</div></div>
+function Donut({ value, label, total, color = palette.blue }: { value: number; label: string; total: string; color?: string }) {
+  const circumference = 2 * Math.PI * 42
+  const offset = circumference * (1 - value / 100)
+  return <div className="flex items-center gap-4 rounded-xl border border-border/70 bg-secondary/25 p-3">
+    <div className="relative size-[116px] shrink-0"><svg viewBox="0 0 100 100" className="size-full -rotate-90"><circle cx="50" cy="50" r="42" fill="none" stroke="currentColor" strokeWidth="10" className="text-secondary" /><circle cx="50" cy="50" r="42" fill="none" stroke={color} strokeWidth="10" strokeLinecap="round" strokeDasharray={circumference} strokeDashoffset={offset} /></svg><div className="absolute inset-0 flex flex-col items-center justify-center"><strong className="font-mono text-xl font-black text-foreground">{value.toFixed(2)}%</strong><span className="text-[10px] text-muted-foreground">完成率</span></div></div>
+    <div><p className="text-sm font-semibold text-foreground">{label}</p><p className="mt-1 font-mono text-xl font-black text-primary">{total}</p><p className="mt-1 text-xs text-muted-foreground">已完成数量</p></div>
+  </div>
 }
 
-function TrendChart() {
-  const points = trend.map((value, index) => `${index * 9.09} ${100 - (value - 55) * 2.4}`).join(" ")
-  return <div className="rounded-xl border border-border/70 bg-secondary/30 p-4"><div className="mb-3 flex items-center justify-between"><div><p className="text-sm font-semibold text-foreground">综合完成趋势</p><p className="text-xs text-muted-foreground">近 12 个月累计进展</p></div><span className="font-mono text-lg font-bold text-accent">+26%</span></div><svg viewBox="0 0 100 100" preserveAspectRatio="none" className="h-36 w-full overflow-visible"><defs><linearGradient id="trustedArea" x1="0" x2="0" y1="0" y2="1"><stop offset="0" stopColor="currentColor" stopOpacity="0.2" /><stop offset="1" stopColor="currentColor" stopOpacity="0" /></linearGradient></defs><polygon points={`0 100 ${points} 100 100 100`} fill="url(#trustedArea)" className="text-primary" /><polyline points={points} fill="none" stroke="currentColor" strokeWidth="1.8" vectorEffect="non-scaling-stroke" className="text-primary" /></svg><div className="mt-2 flex justify-between text-[10px] text-muted-foreground"><span>09月</span><span>12月</span><span>03月</span><span>06月</span><span>08月</span></div></div>
+function HorizontalBars() {
+  const rows = [["应用系统", 66, 531], ["数据库", 663, 1031], ["中间件", 664, 859]]
+  return <div className="flex flex-col gap-5">{rows.map(([label, actual, plan]) => <div key={label}><div className="mb-2 flex items-center justify-between text-sm"><span className="font-semibold text-foreground">{label}</span><span className="text-xs text-muted-foreground">实际 / 计划</span></div><div className="flex flex-col gap-1.5"><div className="flex h-8 items-center rounded-r-md bg-primary px-3 text-sm font-bold text-primary-foreground" style={{ width: `${Math.max(20, (actual / plan) * 100)}%` }}>实际天数 {actual}</div><div className="flex h-8 items-center rounded-r-md bg-chart-4 px-3 text-sm font-bold text-primary-foreground" style={{ width: "100%" }}>计划天数 {plan.toLocaleString()}</div></div></div>)}</div>
+}
+
+function MiniBars({ rows }: { rows: Array<[string, number, number]> }) {
+  return <div className="flex h-40 items-end gap-2 border-b border-l border-border px-3 pb-0 pt-4">{rows.map(([label, value, percent]) => <div key={label} className="flex min-w-0 flex-1 flex-col items-center justify-end gap-1"><span className="font-mono text-[10px] font-bold text-primary">{percent}%</span><div className="w-full rounded-t-md bg-primary" style={{ height: `${Math.max(16, value * 1.8)}px` }} /><span className="max-w-full truncate text-[10px] text-muted-foreground">{label}</span></div>)}</div>
+}
+
+function DetailTable({ title, rows, branch = false }: { title: string; rows: Array<[string, number, number]>; branch?: boolean }) {
+  return <Panel title={title}><p className="mb-3 text-xs text-muted-foreground">{branch ? "各分行系统改造进展情况" : "各部门系统改造进展情况"}</p><table className="w-full text-left text-xs"><thead className="border-b border-border text-muted-foreground"><tr><th className="pb-2">序号</th><th className="pb-2">{branch ? "分行名称" : "所属部门"}</th><th className="pb-2 text-right">总数</th><th className="pb-2 text-right">剩余数量</th></tr></thead><tbody className="divide-y divide-border/60">{rows.map(([name, total, remaining], i) => <tr key={name}><td className="py-2 text-muted-foreground">{i + 1}</td><td className="whitespace-pre-line py-2 font-medium text-foreground">{name}</td><td className="py-2 text-right font-mono text-foreground">{total}</td><td className="py-2 text-right font-mono text-muted-foreground">{remaining}</td></tr>)}</tbody></table><div className="mt-3 flex justify-center gap-2 text-xs text-muted-foreground"><span>1-10/{rows.length + 34}</span><span className="rounded bg-primary px-2 py-1 text-primary-foreground">1</span><span className="px-2 py-1">2</span><span className="px-2 py-1">3</span><span className="px-2 py-1">4</span></div></Panel>
 }
 
 export function TrustedDashboard() {
   const [year, setYear] = useState("2026")
-  const summary = useMemo(() => `${year} 年度信创工作总览`, [year])
-  return <main className="min-h-screen bg-background px-4 py-5 text-foreground md:px-6 lg:px-8">
-    <div className="mx-auto max-w-[1680px] space-y-5">
-      <div className="flex flex-wrap items-end justify-between gap-4"><div><p className="text-xs font-semibold uppercase tracking-[0.24em] text-primary">Trusted Computing Dashboard</p><h1 className="mt-1 text-3xl font-black tracking-tight text-foreground">信创管理驾驶舱</h1><p className="mt-2 text-sm text-muted-foreground">{summary} · 数据更新于 2026 年 8 月 16 日</p></div><div className="flex items-center gap-2 rounded-xl border border-border bg-card px-3 py-2 shadow-sm"><span className="text-sm text-muted-foreground">统计年度</span><select value={year} onChange={(event) => setYear(event.target.value)} className="bg-transparent text-sm font-semibold text-foreground outline-none"><option>2026</option><option>2025</option><option>2024</option></select><ChevronDown className="size-4 text-muted-foreground" /></div></div>
-      <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">{metrics.map((item) => <MetricCard key={item.label} item={item} />)}</div>
-      <div className="grid items-stretch gap-5 xl:grid-cols-[1.05fr_1fr_1.15fr]">
-        <Panel title="系统适配进展" eyebrow="APPLICATION" icon={ServerCog} className="h-full"><div className="flex flex-col gap-5">{systemProgress.map((item) => <ProgressRow key={item.label} item={item} />)}<div className="rounded-xl bg-primary/5 p-4"><div className="flex items-center gap-3"><CheckCircle2 className="size-5 text-accent" /><div><p className="text-sm font-bold text-foreground">适配质量保持稳定</p><p className="mt-1 text-xs text-muted-foreground">已完成系统验收通过率 96.2%</p></div></div></div></div></Panel>
-        <Panel title="终端覆盖情况" eyebrow="ENDPOINT" icon={MonitorCog} className="h-full"><div className="flex flex-col gap-5">{terminalProgress.map((item) => <ProgressRow key={item.label} item={item} />)}<div className="grid grid-cols-2 gap-3"><div className="rounded-xl bg-secondary/70 p-4"><p className="text-xs text-muted-foreground">本月替换</p><p className="mt-2 font-mono text-2xl font-black text-foreground">286<span className="ml-1 text-xs font-medium text-muted-foreground">台</span></p></div><div className="rounded-xl bg-secondary/70 p-4"><p className="text-xs text-muted-foreground">待替换</p><p className="mt-2 font-mono text-2xl font-black text-foreground">498<span className="ml-1 text-xs font-medium text-muted-foreground">台</span></p></div></div></div></Panel>
-        <Panel title="总体趋势" eyebrow="PERFORMANCE" icon={Gauge} className="h-full"><TrendChart /><div className="mt-4 grid grid-cols-3 gap-3 text-center"><div><p className="font-mono text-xl font-black text-foreground">87%</p><p className="mt-1 text-xs text-muted-foreground">当前完成率</p></div><div><p className="font-mono text-xl font-black text-accent">+4.2%</p><p className="mt-1 text-xs text-muted-foreground">环比提升</p></div><div><p className="font-mono text-xl font-black text-foreground">12</p><p className="mt-1 text-xs text-muted-foreground">新增系统</p></div></div></Panel>
-      </div>
-      <div className="grid items-stretch gap-5 xl:grid-cols-[1.2fr_0.8fr]">
-        <Panel title="重点项目进展" eyebrow="PROJECTS" icon={Network}><div className="overflow-x-auto"><table className="w-full min-w-[600px] text-left text-sm"><thead className="text-xs text-muted-foreground"><tr><th className="pb-3 font-medium">项目名称</th><th className="pb-3 font-medium">牵头部门</th><th className="pb-3 font-medium">进度</th><th className="pb-3 text-right font-medium">计划节点</th></tr></thead><tbody className="divide-y divide-border/70">{milestones.map((item) => <tr key={item.title}><td className="py-4 font-semibold text-foreground">{item.title}<span className={`ml-2 rounded-full px-2 py-1 text-[10px] ${item.status === "需关注" ? "bg-amber-500/10 text-amber-700" : "bg-accent/10 text-accent"}`}>{item.status}</span></td><td className="py-4 text-muted-foreground">{item.owner}</td><td className="py-4"><div className="flex items-center gap-3"><div className="h-2 w-28 rounded-full bg-secondary"><div className="h-full rounded-full bg-primary" style={{ width: `${item.progress}%` }} /></div><span className="font-mono text-xs font-bold text-foreground">{item.progress}%</span></div></td><td className="py-4 text-right font-mono text-xs text-muted-foreground">{item.date}</td></tr>)}</tbody></table></div></Panel>
-        <Panel title="风险与提醒" eyebrow="INSIGHTS" icon={CircleAlert}><div className="flex flex-col gap-3">{issues.map((issue) => <div key={issue.title} className="flex items-start gap-3 rounded-xl border border-border/70 bg-secondary/30 p-4"><div className={`mt-0.5 rounded-lg p-2 ${issue.tone === "amber" ? "bg-amber-500/10 text-amber-600" : issue.tone === "violet" ? "bg-chart-4/10 text-chart-4" : "bg-accent/10 text-accent"}`}>{issue.tone === "teal" ? <ShieldCheck className="size-4" /> : <CircleAlert className="size-4" />}</div><div><p className="text-sm font-semibold text-foreground">{issue.title}</p><p className="mt-1 text-xs leading-5 text-muted-foreground">{issue.detail}</p></div></div>)}</div></Panel>
-      </div>
-      <div className="grid gap-4 md:grid-cols-3"><div className="flex items-center gap-3 rounded-xl border border-border bg-card p-4 shadow-sm"><Cpu className="size-5 text-primary" /><div><p className="text-xs text-muted-foreground">国产 CPU 适配率</p><p className="font-mono text-xl font-black text-foreground">78.4%</p></div></div><div className="flex items-center gap-3 rounded-xl border border-border bg-card p-4 shadow-sm"><Database className="size-5 text-accent" /><div><p className="text-xs text-muted-foreground">国产数据库适配</p><p className="font-mono text-xl font-black text-foreground">84.0%</p></div></div><div className="flex items-center gap-3 rounded-xl border border-border bg-card p-4 shadow-sm"><CloudCog className="size-5 text-chart-4" /><div><p className="text-xs text-muted-foreground">云平台资源池</p><p className="font-mono text-xl font-black text-foreground">92.6%</p></div></div></div>
+  return <div className="min-h-screen bg-background px-4 py-5 text-foreground md:px-6 lg:px-8"><div className="mx-auto max-w-[1760px] space-y-5">
+    <div className="flex flex-wrap items-end justify-between gap-4"><div><p className="text-xs font-semibold uppercase tracking-[0.24em] text-primary">Trusted Computing</p><h1 className="mt-1 text-3xl font-black tracking-tight text-foreground">信创管理驾驶舱</h1><p className="mt-2 text-sm text-muted-foreground">{year} 年度信创改造进度总览</p></div><label className="flex items-center gap-2 rounded-lg border border-border bg-card px-3 py-2 text-sm text-muted-foreground">统计年度<select value={year} onChange={(e) => setYear(e.target.value)} className="bg-transparent font-semibold text-foreground outline-none"><option>2026</option><option>2025</option></select><ChevronDown className="size-4" /></label></div>
+    <div className="grid gap-5 xl:grid-cols-[0.92fr_2.2fr_0.92fr]">
+      <div className="flex flex-col gap-5"><Panel title="软件类产品许可部署进度"><p className="mb-3 text-sm font-semibold text-foreground">总体进度</p><MiniBars rows={rolloutRows} /></Panel><Panel title="国产改造和替代进度"><p className="mb-4 text-sm font-semibold text-foreground">总体进度</p><div className="grid grid-cols-2 gap-3">{[["翻译工作", 100, 30], ["国密改造", 80, 25]].map(([label, total, done]) => <div key={label} className="rounded-xl bg-secondary/60 p-4"><p className="text-sm font-bold text-foreground">{label}</p><p className="mt-2 font-mono text-3xl font-black text-primary">{total}</p><p className="text-xs text-muted-foreground">总数</p><div className="mt-3 text-xs text-muted-foreground">已改造数 <strong className="font-mono text-accent">{done}</strong></div></div>)}</div></Panel></div>
+      <section className="rounded-xl border-4 border-primary/80 bg-card p-4 shadow-[0_10px_35px_oklch(0.35_0.06_240/10%)]"><div className="border-b border-border pb-3 text-center"><h2 className="text-xl font-black text-primary">核心指标</h2><p className="mt-1 text-xs text-muted-foreground">信创改造关键进展</p></div><div className="grid gap-4 p-2 lg:grid-cols-2"><div><h3 className="mb-3 text-sm font-bold text-foreground">一般系统信创进度</h3><Donut value={65.81} label="已替代" total="412" /><h3 className="mb-3 mt-4 text-sm font-bold text-foreground">2026年任务进度</h3><Donut value={24.68} label="已完成" total="58" color={palette.violet} /></div><div><h3 className="mb-3 text-sm font-bold text-foreground">核心系统信创进度</h3><HorizontalBars /></div><div><h3 className="mb-3 text-sm font-bold text-foreground">薄弱桌面操作系统推广进度</h3><Donut value={19.56} label="已推广" total="16.68K" color={palette.violet} /><h3 className="mb-3 mt-4 text-sm font-bold text-foreground">2026年任务进度</h3><Donut value={30.93} label="年度已推广" total="16.68K" color={palette.violet} /></div><div><h3 className="mb-3 text-sm font-bold text-foreground">A4单色打印机存量替代进度</h3><Donut value={38.15} label="推广数" total="4,572" color={palette.violet} /><h3 className="mb-3 mt-4 text-sm font-bold text-foreground">小型机下线进展</h3><MiniBars rows={[["南京", 328, 328], ["苏州", 286, 286], ["北京", 240, 240], ["上海", 178, 178], ["其他", 120, 120]]} /></div></div></section>
+      <div className="flex flex-col gap-5"><DetailTable title="总行系统改造进展明细" rows={departmentRows} /><DetailTable title="分行系统改造进展明细" rows={branchRows} branch /></div>
     </div>
-  </main>
+  </div></div>
 }
