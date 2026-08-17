@@ -414,6 +414,7 @@ export function BranchDashboard() {
   const [selectedGrade, setSelectedGrade] = useState(gradeOptions[0].key)
   const [selectedBranch, setSelectedBranch] = useState(branchOptions[0].key)
   const [roomMode, setRoomMode] = useState<"central" | "disaster">("central")
+  const [roomDetails, setRoomDetails] = useState(false)
   const [innovationRanking, setInnovationRanking] = useState(false)
   const [cloudRanking, setCloudRanking] = useState(false)
 
@@ -456,23 +457,22 @@ export function BranchDashboard() {
                 </div>
 
                 <div className="mt-2 border-t border-dashed border-border/70 pt-3">
-                  <div className="mb-2 text-[11px] text-muted-foreground">单击任一图形可切换查看中心机房与灾备机房情况。</div>
+<div className="mb-2 text-[11px] text-muted-foreground">单击可查看中心机房建设模式总览及详情。</div>
                   <div className="mt-3 grid gap-3 md:grid-cols-2">
                     <div className="rounded-[12px] border border-border/80 bg-card/80 px-3 py-3 shadow-[inset_0_1px_0_oklch(0.72_0.15_220/6%)]">
-                      <button type="button" onClick={() => setRoomMode(roomMode === "central" ? "disaster" : "central")} className="mb-2 flex w-full items-center gap-2 text-left text-[12px] font-semibold text-slate-700 hover:text-primary">
+                      <button type="button" onClick={() => setRoomDetails(!roomDetails)} className="mb-2 flex w-full items-center gap-2 text-left text-[12px] font-semibold text-slate-700 hover:text-primary">
                         <span className="inline-flex size-2 rounded-full bg-[#2456c7]" />共45家分行，均配备中心机房
                       </button>
-                      <div className="flex items-center gap-3">
-                        <div className="relative h-[98px] w-[122px] shrink-0">
-                          <svg viewBox="0 0 120 120" className="h-full w-full -rotate-90">
-                            <circle cx="60" cy="60" r="42" fill="none" stroke="#d9e1ee" strokeWidth="10" />
-                            <circle cx="60" cy="60" r="42" fill="none" stroke="#2dc2be" strokeWidth="10" strokeLinecap="round" strokeDasharray={roomMode === "central" ? "41 300" : "68 300"} />
-                            <circle cx="60" cy="60" r="42" fill="none" stroke="#2456c7" strokeWidth="10" strokeLinecap="round" strokeDasharray="259 300" strokeDashoffset="41" />
-                          </svg>
-                          <div className="absolute inset-0 flex flex-col items-center justify-center text-center">
-                            <div className="font-mono text-[20px] font-black text-primary">{roomMode === "central" ? "45" : "10"}</div>
-                            <div className="text-[10px] text-slate-500">{roomMode === "central" ? "中心机房" : "灾备机房"}</div>
-                          </div>
+                      {roomDetails ? <div className="overflow-x-auto">
+                        <table className="w-full min-w-[300px] text-left text-[11px]">
+                          <thead className="text-muted-foreground"><tr><th className="pb-2 font-medium">分行名称</th><th className="pb-2 font-medium">中心机房建设方式</th><th className="pb-2 font-medium">启用时间</th></tr></thead>
+                          <tbody>{[["上海分行", "自建", "2022年"], ["成都分行", "自建", "2023年"], ["北京分行", "租赁", "2021年"], ["深圳分行", "自建", "2024年"], ["广州分行", "自建", "2023年"]].map(([name, mode, year]) => <tr key={name} className="border-t border-border/50"><td className="py-1.5">{name}</td><td className="py-1.5">{mode}</td><td className="py-1.5 font-mono">{year}</td></tr>)}</tbody>
+                        </table>
+                      </div> : <button type="button" onClick={() => setRoomDetails(true)} className="flex w-full items-center gap-3 text-left">
+                        <div className="relative h-[98px] w-[122px] shrink-0"><svg viewBox="0 0 120 120" className="h-full w-full -rotate-90"><circle cx="60" cy="60" r="42" fill="none" stroke="#d9e1ee" strokeWidth="10" /><circle cx="60" cy="60" r="42" fill="none" stroke="#2456c7" strokeWidth="10" strokeLinecap="round" strokeDasharray="259 300" /><circle cx="60" cy="60" r="42" fill="none" stroke="#2dc2be" strokeWidth="10" strokeLinecap="round" strokeDasharray="41 300" strokeDashoffset="259" /></svg><div className="absolute inset-0 flex flex-col items-center justify-center text-center"><div className="font-mono text-[20px] font-black text-primary">45</div><div className="text-[10px] text-slate-500">中心机房</div></div></div>
+                        <div className="grid gap-2 text-[12px] text-foreground/75"><div><span className="mr-2 inline-flex size-2 rounded-full bg-[#2456c7]" />自建 <span className="font-mono text-primary">42</span></div><div><span className="mr-2 inline-flex size-2 rounded-full bg-[#2dc2be]" />租赁 <span className="font-mono text-primary">3</span></div></div>
+                      </button>}
+                    </div>
                         </div>
                         <div className="grid gap-2 text-[12px] text-foreground/75">
                           <div className="flex items-center gap-2">
@@ -482,6 +482,7 @@ export function BranchDashboard() {
                         </div>
                       </div>
                     </div>
+                    <div className="mt-3 flex items-center justify-between rounded-[10px] border border-border/70 bg-background/70 px-3 py-2"><span className="text-[11px] text-muted-foreground">机柜数</span><span className="font-mono text-[22px] font-black text-primary">1,821 <small className="text-[11px] font-normal text-muted-foreground">个</small></span></div>
 
                     <div className="grid gap-2 rounded-[12px] border border-border/80 bg-card/80 px-3 py-3 shadow-[inset_0_1px_0_oklch(0.72_0.15_220/6%)]">
                       <button type="button" onClick={() => setRoomMode(roomMode === "central" ? "disaster" : "central")} className="w-full text-left text-[12px] font-semibold text-slate-700 transition-colors hover:text-primary">
@@ -491,19 +492,6 @@ export function BranchDashboard() {
                     </div>
                   </div>
 
-                  <div className="mt-4 flex items-end justify-between gap-4 rounded-[12px] border border-border/80 bg-card/80 px-4 py-3 shadow-[inset_0_1px_0_oklch(0.72_0.15_220/6%)]">
-                    <div className="text-[12px] text-foreground/80">
-                      <div className="text-muted-foreground">机柜数</div>
-                      <div className="mt-1 flex items-end gap-2">
-                        <span className="font-mono text-[28px] font-black text-primary">1,821</span>
-                        <span className="pb-1 text-[12px] text-muted-foreground">个</span>
-                      </div>
-                    </div>
-                    <div className="text-right text-[11px] leading-5 text-muted-foreground">
-                      <div>统计口径与原型图保持一致。</div>
-                      <div>此区域后续可直接替换实时接口。</div>
-                    </div>
-                  </div>
                 </div>
               </PanelCard>
 
