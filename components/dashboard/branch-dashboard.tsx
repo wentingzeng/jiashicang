@@ -2,6 +2,7 @@
 
 import { useEffect, useState, type ReactNode } from "react"
 import { ArrowUpRight, ChevronDown, Cloud, Gauge, ShieldCheck, UsersRound } from "lucide-react"
+import { Bar, CartesianGrid, ComposedChart, Legend, Line, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts"
 
 import { Badge } from "@/components/ui/badge"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
@@ -494,11 +495,19 @@ export function BranchDashboard() {
                   <PanelCard className="h-full" bodyClassName="p-3" title="信创改造" icon={<ShieldCheck className="size-4" />}>
                     <button type="button" onClick={() => setInnovationRanking(!innovationRanking)} className="w-full text-left" aria-label="切换信创改造完成度排行">
                     {innovationRanking ? <div className="py-1">
-                      <div className="mb-2 flex items-center justify-end gap-3 text-[10px] text-muted-foreground"><span><i className="mr-1 inline-block size-2 rounded-sm bg-[#2dc2be]" />已完成改造数量</span><span><i className="mr-1 inline-block size-2 rounded-sm bg-[#e68a4a]" />改造完成率</span></div>
-                      <div className="relative h-[150px] px-1">
-                        <div className="absolute inset-x-1 bottom-5 top-2 flex items-end justify-between gap-1 border-b border-border/60">{[["乌鲁木齐分行",1,25],["深圳分行",3,100],["长沙分行",3,75],["杭州分行",1,50],["重庆分行",1,50],["济南分行",1,33],["南昌分行",1,33],["昆明分行",1,33],["上海分行",1,33],["南京分行",0,0]].map(([name, count, rate]) => <div key={name} className="flex h-full min-w-0 flex-1 flex-col items-center justify-end"><span className="mb-1 text-[9px] font-bold text-foreground">{count}</span><div className="w-3/5 rounded-t-sm bg-[#2dc2be]" style={{ height: `${Number(count) * 28}px` }} /><span className="mt-1 w-14 truncate text-center text-[8px] text-muted-foreground">{name}</span></div>)}</div>
-                        <svg viewBox="0 0 100 100" preserveAspectRatio="none" className="pointer-events-none absolute inset-x-1 top-2 h-[110px] w-[calc(100%-8px)] overflow-visible"><polyline points="0,75 11,0 22,25 33,50 44,50 55,67 66,67 77,67 88,67 99,100" fill="none" stroke="#e68a4a" strokeWidth="2" vectorEffect="non-scaling-stroke" /><circle cx="0" cy="75" r="2" fill="#e68a4a" /><circle cx="11" cy="0" r="2" fill="#e68a4a" /><circle cx="22" cy="25" r="2" fill="#e68a4a" /><circle cx="33" cy="50" r="2" fill="#e68a4a" /><circle cx="44" cy="50" r="2" fill="#e68a4a" /><circle cx="55" cy="67" r="2" fill="#e68a4a" /><circle cx="66" cy="67" r="2" fill="#e68a4a" /><circle cx="77" cy="67" r="2" fill="#e68a4a" /><circle cx="88" cy="67" r="2" fill="#e68a4a" /><circle cx="99" cy="100" r="2" fill="#e68a4a" /></svg>
-                      </div><div className="mt-1 text-center text-[10px] text-muted-foreground">信创部改造前十名完成度</div>
+                      <ResponsiveContainer width="100%" height={210}>
+                        <ComposedChart data={[{ name: "乌鲁木齐", count: 1, rate: 25 }, { name: "深圳", count: 3, rate: 100 }, { name: "长沙", count: 3, rate: 75 }, { name: "杭州", count: 1, rate: 50 }, { name: "重庆", count: 1, rate: 50 }, { name: "济南", count: 1, rate: 33 }, { name: "南昌", count: 1, rate: 33 }, { name: "昆明", count: 1, rate: 33 }, { name: "上海", count: 1, rate: 33 }, { name: "南京", count: 0, rate: 0 }]} margin={{ top: 20, right: 8, left: -18, bottom: 8 }}>
+                          <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" vertical={false} />
+                          <XAxis dataKey="name" tick={{ fontSize: 10, fill: "hsl(var(--muted-foreground))" }} interval={0} angle={-25} textAnchor="end" height={42} />
+                          <YAxis yAxisId="count" domain={[0, 4]} ticks={[0, 1, 2, 3, 4]} tick={{ fontSize: 10 }} />
+                          <YAxis yAxisId="rate" orientation="right" domain={[0, 100]} ticks={[0, 50, 100]} tickFormatter={(value) => `${value}%`} tick={{ fontSize: 10 }} />
+                          <Tooltip formatter={(value, name) => [name === "rate" ? `${value}%` : value, name === "rate" ? "改造完成率" : "已完成改造数量"]} />
+                          <Legend wrapperStyle={{ fontSize: 10 }} formatter={(value) => value === "count" ? "已完成改造数量" : "改造完成率"} />
+                          <Bar yAxisId="count" dataKey="count" name="count" fill="#2dc2be" radius={[3, 3, 0, 0]} label={{ position: "top", fontSize: 10 }} />
+                          <Line yAxisId="rate" type="monotone" dataKey="rate" name="rate" stroke="#e68a4a" strokeWidth={2} dot={{ r: 3, fill: "#e68a4a" }} label={{ position: "top", fontSize: 10, formatter: (value: number) => `${value}%` }} />
+                        </ComposedChart>
+                      </ResponsiveContainer>
+                      <div className="text-center text-[10px] text-muted-foreground">信创部改造前十名完成度</div>
                     </div> : <div className="flex items-center justify-between gap-3">
                       <div className="flex flex-1 items-center justify-center">
                         <RingChart value={current.innovation.done} total={current.innovation.value} label="已完成" />
