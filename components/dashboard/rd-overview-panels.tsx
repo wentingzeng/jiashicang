@@ -33,7 +33,7 @@ export function BusinessLinePanel() {
     <PanelCard icon={PieIcon} title="当年承建需求计划各业务条线分布" bodyClassName="p-2">
       <div className="flex flex-col gap-4 sm:flex-row sm:items-center">
         <div className="mx-auto w-[160px] shrink-0 sm:mx-0">
-          <ResponsiveContainer width="100%" height={130}>
+          <ResponsiveContainer width="100%" height={180}>
             <PieChart>
               {businessLineDistribution.map((item, i) => {
                 const startAngle = 90 - i * angleStep
@@ -104,13 +104,13 @@ function StatGroup({
   return (
     <div
       className={cn(
-        "relative overflow-hidden rounded-xl border p-5 transition-all hover:shadow-lg",
+        "relative overflow-hidden rounded-xl border p-3 transition-all hover:shadow-lg",
         isAccent 
           ? "border-accent/25 bg-gradient-to-br from-accent/10 to-transparent hover:border-accent/40" 
           : "border-primary/25 bg-gradient-to-br from-primary/10 to-transparent hover:border-primary/40",
       )}
     >
-      <div className="mb-4 flex items-center justify-between gap-2">
+      <div className="mb-2 flex items-center justify-between gap-2">
         <span className={cn("text-sm font-bold uppercase tracking-wider", isAccent ? "text-accent" : "text-primary")}>
           {title}
         </span>
@@ -125,7 +125,7 @@ function StatGroup({
         <span className="text-sm font-medium text-muted-foreground">{total.unit}</span>
       </div>
       
-      <div className="mt-6 grid grid-cols-2 gap-4">
+      <div className="mt-3 grid grid-cols-2 gap-2">
         <div className="rounded-lg border border-border/40 bg-background/30 p-3 transition-colors hover:bg-background/50">
           <p className="text-xs font-medium text-muted-foreground mb-1.5">{project.label}</p>
           <p className="font-mono text-xl font-bold tabular-nums text-foreground">
@@ -192,7 +192,7 @@ export function MonthlyTaskTrendPanel() {
         <span className="flex items-center gap-2">{legendDot("var(--primary)")}公司在建项目及专项任务</span>
         <span className="flex items-center gap-2">{legendDot("var(--accent)")}公司当年已投产项目及专项任务</span>
       </div>
-      <ResponsiveContainer width="100%" height={150}>
+      <ResponsiveContainer width="100%" height={200}>
         <ComposedChart data={monthlyTaskTrend} margin={{ left: 0, right: 8, top: 8, bottom: 0 }}>
           <defs>
             <linearGradient id="buildingArea" x1="0" y1="0" x2="0" y2="1">
@@ -220,7 +220,7 @@ export function DurationTrendPanel() {
         <span className="flex items-center gap-2">{legendDot("var(--primary)")}顺序项目研发时长</span>
         <span className="flex items-center gap-2">{legendDot("var(--accent)")}累计平均研发时长</span>
       </div>
-      <ResponsiveContainer width="100%" height={150}>
+      <ResponsiveContainer width="100%" height={200}>
         <LineChart data={rdDurationTrend} margin={{ left: 0, right: 8, top: 8, bottom: 0 }}>
           <CartesianGrid vertical={false} stroke={chartGridStroke} />
           <XAxis dataKey="month" tick={{ fill: "var(--muted-foreground)", fontSize: 11 }} axisLine={false} tickLine={false} />
