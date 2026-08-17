@@ -19,13 +19,14 @@ const teams = [
 
 function TeamCard({ team }: { team: (typeof teams)[number] }) {
   const Icon = team.icon
+  const compact = team.name === "知识工程专班" || team.name === "智能平台建设专班"
   return (
-    <article className="overflow-hidden rounded-2xl border border-border/70 bg-card/90 shadow-[0_8px_24px_rgba(37,86,199,0.06)] backdrop-blur-sm">
+    <article className={`overflow-hidden rounded-2xl border border-border/70 bg-card/90 shadow-[0_8px_24px_rgba(37,86,199,0.06)] backdrop-blur-sm ${compact ? "lg:col-span-3" : "lg:col-span-2"}`}>
       <header className="flex items-center gap-2 bg-gradient-to-r from-primary/10 via-chart-4/10 to-accent/10 px-3 py-2 text-foreground">
-        <span className="flex size-7 items-center justify-center rounded-lg bg-primary/15 text-primary shadow-sm"><Icon className="size-4" aria-hidden="true" /></span>
+        <span className="size-3 shrink-0 rounded-full bg-emerald-500 shadow-[0_0_0_3px_rgba(16,185,129,.18),0_0_10px_rgba(16,185,129,.55)]" aria-hidden="true" />
         <h2 className="text-sm font-bold tracking-wide">{team.name}</h2>
       </header>
-      <div className="grid gap-3 p-3">
+      <div className={`grid gap-3 p-3 ${compact ? "lg:grid-cols-[1.15fr_1fr] lg:items-center" : ""}`}>
         <div className="grid grid-cols-[auto_1fr] gap-3">
           <div className="flex size-14 items-center justify-center rounded-xl bg-secondary text-primary"><Icon className="size-7" aria-hidden="true" /></div>
           <div className="min-w-0">
@@ -43,5 +44,5 @@ function TeamCard({ team }: { team: (typeof teams)[number] }) {
 }
 
 export function TeamOverview() {
-  return <main className="min-h-screen bg-background text-foreground"><TopNav /><div className="mx-auto flex max-w-[1800px] flex-col gap-3 px-4 pb-4 md:px-6"><HeroBanner title="人工智能+驾驶舱" subtitle="整体统筹 · 过程管控 · 重点跟踪 · 成效展示" /><div className="flex overflow-hidden rounded-lg border border-primary/20 bg-muted/50 text-sm font-semibold"><Link href="/" className="flex-1 px-4 py-2 text-center text-muted-foreground transition-colors hover:bg-primary/10">驾驶舱总览</Link><Link href="/team" className="flex-1 bg-[#2456c7] px-4 py-2 text-center text-white">专班建设概览</Link></div><section className="grid gap-3 md:grid-cols-2 lg:grid-cols-3">{teams.map((team) => <TeamCard key={team.name} team={team} />)}</section></div></main>
+  return <main className="min-h-screen bg-background text-foreground"><TopNav /><div className="mx-auto flex max-w-[1800px] flex-col gap-3 px-4 pb-4 md:px-6"><HeroBanner title="人工智能+驾驶舱" subtitle="整体统筹 · 过程管控 · 重点跟踪 · 成效展示" /><div className="flex overflow-hidden rounded-lg border border-primary/20 bg-muted/50 text-sm font-semibold"><Link href="/" className="flex-1 px-4 py-2 text-center text-muted-foreground transition-colors hover:bg-primary/10">驾驶舱总览</Link><Link href="/team" className="flex-1 bg-[#2456c7] px-4 py-2 text-center text-white">专班建设概览</Link></div><section className="grid gap-3 md:grid-cols-2 lg:grid-cols-6">{teams.map((team) => <TeamCard key={team.name} team={team} />)}</section></div></main>
 }
