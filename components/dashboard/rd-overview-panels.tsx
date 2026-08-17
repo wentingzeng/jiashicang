@@ -30,10 +30,10 @@ export function BusinessLinePanel() {
   const angleStep = 360 / n
 
   return (
-    <PanelCard icon={PieIcon} title="当年承建需求计划各业务条线分布" bodyClassName="p-3">
+    <PanelCard icon={PieIcon} title="当年承建需求计划各业务条线分布" bodyClassName="p-2">
       <div className="flex flex-col gap-4 sm:flex-row sm:items-center">
         <div className="mx-auto w-[160px] shrink-0 sm:mx-0">
-          <ResponsiveContainer width="100%" height={160}>
+          <ResponsiveContainer width="100%" height={130}>
             <PieChart>
               {businessLineDistribution.map((item, i) => {
                 const startAngle = 90 - i * angleStep
@@ -151,7 +151,7 @@ function StatGroup({
 
 export function RdStatsPanel() {
   return (
-    <PanelCard icon={BriefcaseBusiness} title="项目概况" bodyClassName="p-3">
+    <PanelCard icon={BriefcaseBusiness} title="项目概况" bodyClassName="p-2">
       <div className="grid gap-3 sm:grid-cols-2">
         <StatGroup
           title="在建"
@@ -187,12 +187,12 @@ export function RdOverviewSummaryRow() {
 
 export function MonthlyTaskTrendPanel() {
   return (
-    <PanelCard icon={TrendingUp} title="在建项目及专项任务数月度趋势" accent="accent" bodyClassName="p-3">
+    <PanelCard icon={TrendingUp} title="在建项目及专项任务数月度趋势" accent="accent" bodyClassName="p-2">
       <div className="mb-3 flex flex-wrap items-center gap-4 text-xs text-muted-foreground">
         <span className="flex items-center gap-2">{legendDot("var(--primary)")}公司在建项目及专项任务</span>
         <span className="flex items-center gap-2">{legendDot("var(--accent)")}公司当年已投产项目及专项任务</span>
       </div>
-      <ResponsiveContainer width="100%" height={200}>
+      <ResponsiveContainer width="100%" height={150}>
         <ComposedChart data={monthlyTaskTrend} margin={{ left: 0, right: 8, top: 8, bottom: 0 }}>
           <defs>
             <linearGradient id="buildingArea" x1="0" y1="0" x2="0" y2="1">
@@ -215,12 +215,12 @@ export function MonthlyTaskTrendPanel() {
 
 export function DurationTrendPanel() {
   return (
-    <PanelCard icon={LineIcon} title="项目研发时长" accent="accent" bodyClassName="p-3">
+    <PanelCard icon={LineIcon} title="项目研发时长" accent="accent" bodyClassName="p-2">
       <div className="mb-3 flex flex-wrap items-center gap-4 text-xs text-muted-foreground">
         <span className="flex items-center gap-2">{legendDot("var(--primary)")}顺序项目研发时长</span>
         <span className="flex items-center gap-2">{legendDot("var(--accent)")}累计平均研发时长</span>
       </div>
-      <ResponsiveContainer width="100%" height={200}>
+      <ResponsiveContainer width="100%" height={150}>
         <LineChart data={rdDurationTrend} margin={{ left: 0, right: 8, top: 8, bottom: 0 }}>
           <CartesianGrid vertical={false} stroke={chartGridStroke} />
           <XAxis dataKey="month" tick={{ fill: "var(--muted-foreground)", fontSize: 11 }} axisLine={false} tickLine={false} />
