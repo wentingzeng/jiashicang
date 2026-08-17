@@ -14,7 +14,9 @@ export function TopNav() {
       ? "branch"
       : pathname.startsWith("/security")
         ? "security"
-        : navItems[0].key
+        : pathname.startsWith("/trusted")
+          ? "trusted"
+          : navItems[0].key
       
 
   const routeMap: Record<string, string> = {
@@ -24,7 +26,7 @@ export function TopNav() {
     resource: "/",
     branch: "/branch",
     security: "/security",
-    trusted: "/",
+    trusted: "/trusted",
   }
 
   return (
