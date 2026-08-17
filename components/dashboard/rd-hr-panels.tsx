@@ -21,7 +21,7 @@ const maxUnitValue = Math.max(...unitPersonnel.map((u) => u.value))
 
 export function HrPersonnelMix() {
   return (
-    <PanelCard icon={UsersRound} title="研发人员构成">
+    <PanelCard icon={UsersRound} title="研发人员构成" className="h-full">
       <div className="flex min-h-[240px] flex-col items-center gap-3 sm:flex-row sm:items-center sm:justify-between">
         <div className="relative w-full text-[12px] sm:w-[52%]">
           <ResponsiveContainer width="100%" height={240}>
@@ -77,7 +77,7 @@ export function HrPersonnelMix() {
 
 export function HrRegionalDistribution() {
   return (
-    <PanelCard icon={BarChart3} title="各地区人员分布">
+    <PanelCard icon={BarChart3} title="各地区人员分布" className="h-full">
       <ResponsiveContainer width="100%" height={248}>
         <BarChart data={regionalPersonnel} margin={{ left: -10, right: 10, top: 15, bottom: 0 }}>
           <defs>
@@ -117,7 +117,7 @@ export function HrRegionalDistribution() {
 
 export function HrUnitDistribution() {
   return (
-    <PanelCard icon={Building2} title="各单位人数" bodyClassName="overflow-y-auto pr-1 pb-0 font-[inherit]">
+    <PanelCard icon={Building2} title="各单位人数" className="h-full" bodyClassName="h-[240px] overflow-y-auto pr-1 pb-0 font-[inherit]">
       <div className="flex flex-col gap-3.5">
         {unitPersonnel.map((unit) => {
           const width = (unit.value / maxUnitValue) * 100
