@@ -159,7 +159,7 @@ const branchData: Record<string, BranchData> = {
     ],
     tableRows: [
       { name: "广州分行", development: 17, operations: 8, architecture: 1, innovation: 1, data: 4, security: 2, management: 18, total: 51 },
-      { name: "深圳��行", development: 15, operations: 10, architecture: 1, innovation: 0, data: 5, security: 3, management: 14, total: 48 },
+      { name: "深圳���行", development: 15, operations: 10, architecture: 1, innovation: 0, data: 5, security: 3, management: 14, total: 48 },
       { name: "佛山分行", development: 11, operations: 7, architecture: 0, innovation: 0, data: 3, security: 2, management: 8, total: 31 },
       { name: "东莞分行", development: 8, operations: 5, architecture: 0, innovation: 0, data: 2, security: 1, management: 7, total: 23 },
       { name: "珠海分行", development: 6, operations: 4, architecture: 0, innovation: 0, data: 1, security: 1, management: 5, total: 17 },
@@ -507,10 +507,10 @@ export function BranchDashboard() {
                 </div>
               </PanelCard>
 
-              <div className="flex flex-col gap-3">
-                <div className="grid gap-3 md:grid-cols-2">
-                  <PanelCard className="h-full" title="信创改造" icon={<ShieldCheck className="size-4" />}>
-                    <div className="flex items-center justify-between gap-4">
+              <div className="flex flex-col gap-2">
+                <div className="grid gap-2 md:grid-cols-2">
+                  <PanelCard className="h-full" bodyClassName="p-3" title="信创改造" icon={<ShieldCheck className="size-4" />}>
+                    <div className="flex items-center justify-between gap-3">
                       <div className="flex flex-1 items-center justify-center">
                         <RingChart value={current.innovation.value} total={current.innovation.value} label={current.innovation.title} />
                       </div>
@@ -542,8 +542,8 @@ export function BranchDashboard() {
                     <div className="mt-2 text-center text-[11px] text-slate-500">单击可查看信创改造完成度排序十名。</div>
                   </PanelCard>
 
-                  <PanelCard className="h-full" title="系统上云" icon={<Cloud className="size-4" />}>
-                    <div className="flex flex-col items-center gap-3">
+                  <PanelCard className="h-full" bodyClassName="p-3" title="系统上云" icon={<Cloud className="size-4" />}>
+                    <div className="flex flex-col items-center gap-2">
                       <CloudCircle value={current.cloud.value} total={current.cloud.total} />
                       <div className="text-center text-[12px] text-slate-500">{current.cloud.note}</div>
                       <div className="grid w-full grid-cols-2 gap-3">
@@ -561,7 +561,7 @@ export function BranchDashboard() {
                   </PanelCard>
                 </div>
 
-                <PanelCard className="h-full" title="科技人员数量" icon={<UsersRound className="size-4" />}>
+                <PanelCard className="h-full" bodyClassName="p-3" title="科技人员数量" icon={<UsersRound className="size-4" />}>
                   <div className="grid gap-4 xl:grid-cols-[0.92fr_1.08fr]">
                     <div className="space-y-4">
                       <div className="rounded-[12px] border border-border/80 bg-card/80 px-4 py-4 shadow-[inset_0_1px_0_oklch(0.72_0.15_220/6%)]">
