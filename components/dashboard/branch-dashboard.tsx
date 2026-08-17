@@ -444,7 +444,7 @@ export function BranchDashboard() {
 
                 <div className="mt-2 border-t border-dashed border-border/70 pt-3">
 
-                  <div className="mt-3 grid gap-3 md:grid-cols-2">
+                  <div className="mt-3 grid gap-3 grid-cols-1">
                     <div className="rounded-[12px] border border-border/80 bg-card/80 px-3 py-3 shadow-[inset_0_1px_0_oklch(0.72_0.15_220/6%)]">
                       <div className="mb-2 text-[11px] text-muted-foreground">单击可查看中心机房建设模式总览及详情。</div>
                       <button type="button" onClick={() => setRoomDetails(!roomDetails)} className="mb-2 flex w-full items-center gap-2 text-left text-[12px] font-semibold text-slate-700 hover:text-primary">
