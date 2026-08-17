@@ -1,7 +1,7 @@
 "use client"
 
 import Link from "next/link"
-import { ArrowRight, BriefcaseBusiness, CheckCircle2, Database, Landmark, Layers3, LineChart, ShieldCheck, Sparkles, UsersRound } from "lucide-react"
+import { BriefcaseBusiness, Database, Landmark, Layers3, LineChart, ShieldCheck, Sparkles, UsersRound } from "lucide-react"
 
 import { HeroBanner } from "@/components/dashboard/hero-banner"
 import { TopNav } from "@/components/dashboard/top-nav"
@@ -20,14 +20,14 @@ const teams = [
 function TeamCard({ team }: { team: (typeof teams)[number] }) {
   const Icon = team.icon
   return (
-    <article className="overflow-hidden rounded-2xl border border-primary/15 bg-card/85 shadow-[0_8px_24px_rgba(37,86,199,0.08)] backdrop-blur-sm">
-      <header className="flex items-center gap-2 bg-gradient-to-r from-[#dbeafe] via-[#c7d2fe] to-[#ccfbf1] px-3 py-2 text-[#1e3a8a]">
-        <span className="flex size-7 items-center justify-center rounded-lg bg-gradient-to-br from-[#3157d5] to-[#14a89a] text-white shadow-sm"><Icon className="size-4" aria-hidden="true" /></span>
+    <article className="overflow-hidden rounded-2xl border border-border/70 bg-card/90 shadow-[0_8px_24px_rgba(37,86,199,0.06)] backdrop-blur-sm">
+      <header className="flex items-center gap-2 bg-gradient-to-r from-primary/10 via-chart-4/10 to-accent/10 px-3 py-2 text-foreground">
+        <span className="flex size-7 items-center justify-center rounded-lg bg-primary/15 text-primary shadow-sm"><Icon className="size-4" aria-hidden="true" /></span>
         <h2 className="text-sm font-bold tracking-wide">{team.name}</h2>
       </header>
       <div className="grid gap-3 p-3">
         <div className="grid grid-cols-[auto_1fr] gap-3">
-          <div className="flex size-14 items-center justify-center rounded-xl bg-gradient-to-br from-[#dbeafe] to-[#ccfbf1] text-[#2456c7]"><Icon className="size-7" aria-hidden="true" /></div>
+          <div className="flex size-14 items-center justify-center rounded-xl bg-secondary text-primary"><Icon className="size-7" aria-hidden="true" /></div>
           <div className="min-w-0">
             <p className="mb-1 text-xs font-bold text-foreground">北极星指标</p>
             <div className="grid gap-1 text-xs text-muted-foreground">{team.metrics.map(([label, value]) => <div className="flex items-center justify-between gap-2" key={label}><span className="truncate">{label}</span><strong className="shrink-0 font-mono text-[#2456c7]">{value}</strong></div>)}</div>
@@ -43,5 +43,5 @@ function TeamCard({ team }: { team: (typeof teams)[number] }) {
 }
 
 export function TeamOverview() {
-  return <main className="min-h-screen bg-background text-foreground"><TopNav /><div className="mx-auto flex max-w-[1800px] flex-col gap-3 px-4 pb-4 md:px-6"><HeroBanner title="人工智能+专班建设概览" subtitle="专班协同 · 目标牵引 · 任务跟踪 · 成效展示" /><div className="flex overflow-hidden rounded-lg border border-primary/20 bg-muted/50 text-sm font-semibold"><Link href="/" className="flex-1 px-4 py-2 text-center text-muted-foreground transition-colors hover:bg-primary/10">驾驶舱总览</Link><Link href="/team" className="flex-1 bg-[#2456c7] px-4 py-2 text-center text-white">专班建设概览</Link></div><section className="grid gap-3 md:grid-cols-2 lg:grid-cols-3">{teams.map((team) => <TeamCard key={team.name} team={team} />)}</section><Link href="/" className="inline-flex items-center justify-center gap-2 self-center text-sm text-primary hover:underline">返回驾驶舱总览 <ArrowRight className="size-4" /></Link></div></main>
+  return <main className="min-h-screen bg-background text-foreground"><TopNav /><div className="mx-auto flex max-w-[1800px] flex-col gap-3 px-4 pb-4 md:px-6"><HeroBanner title="人工智能+驾驶舱" subtitle="整体统筹 · 过程管控 · 重点跟踪 · 成效展示" /><div className="flex overflow-hidden rounded-lg border border-primary/20 bg-muted/50 text-sm font-semibold"><Link href="/" className="flex-1 px-4 py-2 text-center text-muted-foreground transition-colors hover:bg-primary/10">驾驶舱总览</Link><Link href="/team" className="flex-1 bg-[#2456c7] px-4 py-2 text-center text-white">专班建设概览</Link></div><section className="grid gap-3 md:grid-cols-2 lg:grid-cols-3">{teams.map((team) => <TeamCard key={team.name} team={team} />)}</section></div></main>
 }
