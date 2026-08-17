@@ -274,20 +274,21 @@ function RankedBars({
   )
 }
 
-function CategoryBars({ data, label, color = "#42bdb7" }: { data: { name: string; value: number }[]; label: string; color?: string }) {
-  const max = Math.max(...data.map((item) => item.value), 1)
-  const sorted = [...data].sort((a, b) => b.value - a.value)
+function CapabilityMeter({ data, label }: { data: { name: string; value: number }[]; label: string }) {
+  const average = Math.round(data.reduce((sum, item) => sum + item.value, 0) / Math.max(data.length, 1))
+  const circumference = 2 * Math.PI * 44
+  const offset = circumference - (circumference * average) / 100
+  return <div className="rounded-lg border border-border/50 bg-background/20 p-3"><div className="mb-2 text-xs text-muted-foreground">{label}</div><div className="flex items-center justify-center gap-5"><div className="relative size-32"><svg className="size-full -rotate-90"><circle cx="64" cy="64" r="44" fill="none" stroke="var(--border)" strokeWidth="10" /><circle cx="64" cy="64" r="44" fill="none" stroke="var(--accent)" strokeWidth="10" strokeLinecap="round" strokeDasharray={circumference} strokeDashoffset={offset} /></svg><div className="absolute inset-0 flex flex-col items-center justify-center"><strong className="font-mono text-3xl text-primary">{average}</strong><span className="text-[10px] text-muted-foreground">平均得分</span></div></div><div className="grid gap-2 text-[11px]">{data.slice(0, 3).map((item) => <div key={item.name} className="flex items-center justify-between gap-4"><span>{item.name.replace("分行", "")}</span><strong className="font-mono text-primary">{item.value}</strong></div>)}</div></div></div>
+}
 
-  return (
-    <div className="rounded-lg border border-border/50 bg-background/20 p-3">
-      <div className="mb-3 flex items-center justify-between text-xs text-muted-foreground"><span>{label}</span><span>问题数</span></div>
-      <div className="grid gap-3">
-        {sorted.map((item) => (
-          <div key={item.name} className="grid grid-cols-[58px_1fr_34px] items-center gap-2 text-[11px]"><span className="truncate text-foreground/80">{item.name}</span><div className="h-2.5 overflow-hidden rounded-full bg-accent/10"><div className="h-full rounded-full" style={{ width: `${(item.value / max) * 100}%`, background: `linear-gradient(90deg, ${color}88, ${color})` }} /></div><strong className="text-right font-mono tabular-nums text-foreground">{item.value}</strong></div>
-        ))}
-      </div>
-    </div>
-  )
+function CategoryBars({ data, label, color = "#42bdb7" }: { data: { name: string; value: number }[]; label: string; color?: string }) {
+  const total = data.reduce((sum, item) => sum + item.value, 0)
+  return <div className="rounded-lg border border-border/50 bg-background/20 p-3"><div className="mb-3 flex items-center justify-between text-xs text-muted-foreground"><span>{label}</span><span>共 {total} 项</span></div><div className="grid grid-cols-2 gap-2">{data.map((item, index) => <div key={item.name} className="rounded-md border border-border/40 bg-card/50 p-2.5"><div className="flex items-center justify-between gap-2"><span className="truncate text-[11px] text-foreground/80">{item.name}</span><span className="size-2 shrink-0 rounded-full" style={{ backgroundColor: index % 2 ? color : "#4ba8d8" }} /></div><div className="mt-1 font-mono text-xl font-bold text-foreground">{item.value}</div><div className="mt-1 text-[10px] text-muted-foreground">占比 {Math.round((item.value / Math.max(total, 1)) * 100)}%</div></div>)}</div></div>
+}
+
+function AssessmentPodium({ data }: { data: { name: string; value: number }[] }) {
+  const sorted = [...data].sort((a, b) => b.value - a.value).slice(0, 5)
+  return <div className="rounded-lg border border-border/50 bg-background/20 p-3"><div className="mb-3 text-xs text-muted-foreground">考评得分排名</div><div className="flex h-40 items-end justify-center gap-2">{sorted.map((item, index) => <div key={item.name} className="flex min-w-0 flex-1 flex-col items-center justify-end gap-1"><span className="font-mono text-xs font-bold text-foreground">{item.value}</span><div className="w-full rounded-t-md bg-gradient-to-t from-chart-4/70 to-chart-4" style={{ height: `${Math.max(28, item.value * 1.15)}px` }} /><span className="w-full truncate text-center text-[10px] text-muted-foreground">{item.name.replace("分行", "")}</span><span className="font-mono text-[10px] text-chart-4">TOP {index + 1}</span></div>)}</div></div>
 }
 
 function ChinaSecurityMap() {
@@ -463,7 +464,7 @@ export function SecurityDashboard() {
         <div className="grid items-stretch gap-5 xl:grid-cols-3 xl:auto-rows-fr">
           <section className="flex h-full min-h-0 min-w-0 flex-col gap-4">
               <Panel title="网络安全综合能力" tone="primary">
-                <RankedBars data={capabilityData} color="#4ba8d8" label="各分行综合能力评分" />
+                <CapabilityMeter data={capabilityData} label="各分行综合能力评分" />
               </Panel>
 
               <Panel title="检查发现问题" tone="accent" bodyClassName="space-y-3">
@@ -522,7 +523,7 @@ export function SecurityDashboard() {
 
           <section className="flex h-full min-h-0 min-w-0 flex-col gap-4">
               <Panel title="网络安全考评" tone="chart-4" compact bodyClassName="p-2.5">
-                <RankedBars data={securityAssessmentData} color="#e5b45c" label="各分行考评结果" height={150} />
+                <AssessmentPodium data={securityAssessmentData} />
               </Panel>
 
                   <Panel title="员工安全画��" tone="primary" bodyClassName="p-3">
