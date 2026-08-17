@@ -47,7 +47,7 @@ export function HrPersonnelMix() {
             </PieChart>
           </ResponsiveContainer>
           <div className="pointer-events-none absolute inset-0 flex flex-col items-center justify-center">
-            <span className="font-mono text-4xl font-bold tabular-nums text-foreground tracking-tight">
+            <span className="font-mono text-3xl font-bold tabular-nums text-foreground tracking-tight">
               {hrPersonnelTotal.toLocaleString()}
             </span>
             <span className="text-sm font-medium text-muted-foreground uppercase tracking-widest">总人数</span>
@@ -63,8 +63,8 @@ export function HrPersonnelMix() {
               <div className="min-w-0 flex-1">
                 <p className="truncate text-sm font-medium text-muted-foreground group-hover:text-foreground transition-colors">{item.name}</p>
                 <div className="mt-1 flex items-baseline gap-1.5">
-                  <strong className="font-mono text-xl font-bold tabular-nums text-foreground">{item.value.toFixed(1)}</strong>
-                  <span className="text-sm text-muted-foreground">%</span>
+                  <strong className="font-mono text-lg font-bold tabular-nums text-foreground">{item.value.toFixed(1)}</strong>
+                  <span className="text-xs text-muted-foreground">%</span>
                 </div>
               </div>
             </div>
