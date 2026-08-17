@@ -16,14 +16,16 @@ export function TopNav() {
         ? "security"
         : pathname.startsWith("/trusted")
           ? "trusted"
-          : navItems[0].key
+          : pathname.startsWith("/resource")
+            ? "resource"
+            : navItems[0].key
       
 
   const routeMap: Record<string, string> = {
     "ai-plus": "/",
     project: "/",
     rd: "/research",
-    resource: "/",
+    resource: "/resource",
     branch: "/branch",
     security: "/security",
     trusted: "/trusted",
