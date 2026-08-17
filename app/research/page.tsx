@@ -58,14 +58,7 @@ export default function ResearchManagementPage() {
           <SectionRail label="人力资源" tone="primary" />
           <div className="flex min-w-0 flex-1 flex-col gap-2">
             <div className="flex flex-wrap items-end justify-between gap-4">
-              <div className="flex items-center gap-3">
-                <h2 id="hr-title" className="text-2xl font-bold tracking-tight md:text-3xl">
-                  人力资源
-                </h2>
-                <div className="h-5 w-px bg-border/60" />
-                <p className="text-base text-muted-foreground">Team Resource Insight</p>
-              </div>
-              <div className="rounded-full border border-primary/25 bg-primary/8 px-4 py-2 text-sm text-muted-foreground shadow-sm">
+                            <div className="rounded-full border border-primary/25 bg-primary/8 px-4 py-2 text-sm text-muted-foreground shadow-sm">
                 研发团队总人数{" "}
                 <strong className="font-mono text-lg font-bold text-primary">{hrPersonnelTotal.toLocaleString()}</strong> 人
               </div>
@@ -82,14 +75,7 @@ export default function ResearchManagementPage() {
         <section aria-labelledby="rd-title" className="flex animate-in fade-in slide-in-from-bottom-4 duration-700 delay-150 gap-6">
           <SectionRail label="研发工作概览" tone="accent" />
           <div className="flex min-w-0 flex-1 flex-col gap-2">
-            <div className="flex items-center gap-3">
-              <h2 id="rd-title" className="text-2xl font-bold tracking-tight md:text-3xl">
-                研发工作概览
-              </h2>
-              <div className="h-5 w-px bg-border/60" />
-              <p className="text-base text-muted-foreground">R&D Work Overview</p>
-            </div>
-            <RdOverviewSummaryRow />
+                        <RdOverviewSummaryRow />
             <div className="grid gap-4 lg:grid-cols-2">
               <MonthlyTaskTrendPanel />
               <DurationTrendPanel />
