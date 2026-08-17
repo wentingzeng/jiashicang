@@ -1,73 +1,42 @@
 "use client"
 
 import { useState } from "react"
-import { BarChart3, ChevronLeft, ChevronRight, PieChart, TrendingUp } from "lucide-react"
+import { BarChart3, ChevronLeft, ChevronRight } from "lucide-react"
 import { HeroBanner } from "@/components/dashboard/hero-banner"
 
-const budgetTrend = [4000, 7000, 11570, 18400, 27480, 35380, 43090, 39570, 46800, 51560, 58000, 76000]
-const budgetLabels = ["1月", "2月", "3月", "4月", "5月", "6月", "7月", "8月", "9月", "10月", "11月", "12月"]
-const executionTrend = [23.8, 38.8, 52.1, 18.9, 33.5, 24.0, 49.6, 23.5, 31.8, 42.8, 58.2, 76.0]
-const categoryData = [
-  ["服务", 72420, "#356be4"],
-  ["硬件", 4742, "#8b8bea"],
-  ["网络", 9870, "#f3ae32"],
-  ["软件", 9620, "#e5796d"],
-  ["其他", 12820, "#a5a7ef"],
+const months = ["1月", "2月", "3月", "4月", "5月", "6月", "7月", "8月", "9月", "10月", "11月", "12月"]
+const execution = [4, 7, 11.57, 18.4, 27.48, 35.38, 43.96, 39.57, 46.8, 51.65, 58, 76]
+const budgetRows = [
+  ["列支", 2.38, 3.88, 6.21, 9.89, 14.75, 18.99, 23.59],
+  ["总行部门列支", 2.38, 3.88, 6.21, 9.89, 14.75, 18.99, 23.59],
+  ["数金技术服务费列支", 0.43, 0.54, 0.91, 1.46, 3.96, 6.22, 8.4],
 ] as const
-const topDepartments = [
-  ["科技创新中心", 61742.29],
-  ["信息科技部", 19238.67],
-  ["数据管理部", 14816.55],
-  ["金融市场部", 9818.37],
-  ["运营管理部", 5309.95],
-  ["风险管理部", 4714.72],
-  ["财务会计部", 3096.35],
-  ["人力资源部", 1598.05],
-  ["办公室", 1450.25],
-] as const
-const detailRows = Array.from({ length: 12 }, (_, index) => [
-  `资源项目 ${index + 1}`,
-  ["服务", "硬件", "网络", "软件"][index % 4],
-  ["科技创新中心", "信息科技部", "数据管理部", "运营管理部"][index % 4],
-  1200 + index * 386,
-  ["已完成", "执行中", "待执行"][index % 3],
-]) as Array<[string, string, string, number, string]>
+const top10 = [["科技运维中心", 61742.92], ["科技管理部", 12937.86], ["信用卡中心", 4873.6], ["资金营运中心", 1481.65], ["金融科技研究院", 1189.38], ["运营管理部", 530.99], ["财富管理部", 471.41], ["资产托管部", 309.63], ["银行合作中心", 159.8], ["数字运营部", 145.02]] as const
+const resourceTypes = [["服务", 7.24, "#356be4"], ["硬件", 4.74, "#8b8bea"], ["网络", 0.98, "#f3ae32"], ["软件", 0.96, "#e5796d"], ["机房", 0.56, "#a5a7ef"]] as const
+const departments = ["资产托管部", "数据管理部", "科技运维中心", "金融科技研究院", "运营管理部", "财务管理部"]
 
 function Panel({ title, children, className = "" }: { title: string; children: React.ReactNode; className?: string }) {
-  return <section className={`overflow-hidden rounded-xl border border-border/80 bg-card shadow-[0_8px_24px_oklch(0.35_0.06_240/8%)] ${className}`}>
-    <header className="flex items-center gap-2 border-b border-border/70 bg-gradient-to-r from-secondary/70 to-card px-3 py-2.5"><span className="flex size-7 items-center justify-center rounded-md bg-primary/10 text-primary"><BarChart3 className="size-4" /></span><h2 className="text-sm font-bold text-foreground">{title}</h2></header>
-    <div className="p-3">{children}</div>
-  </section>
+  return <section className={`overflow-hidden rounded-xl border border-border/80 bg-card shadow-[0_8px_24px_oklch(0.35_0.06_240/8%)] ${className}`}><header className="flex items-center gap-2 border-b border-border/70 bg-gradient-to-r from-secondary/70 to-card px-3 py-2.5"><span className="flex size-7 items-center justify-center rounded-md bg-primary/10 text-primary"><BarChart3 className="size-4" /></span><h2 className="text-sm font-bold text-foreground">{title}</h2></header><div className="p-3">{children}</div></section>
 }
 
-function LineChart({ values, labels, color = "#356be4", suffix = "" }: { values: number[]; labels: string[]; color?: string; suffix?: string }) {
-  const [selected, setSelected] = useState(values.length - 1)
-  const max = Math.max(...values)
-  const points = values.map((value, index) => `${(index / (values.length - 1)) * 100},${100 - (value / max) * 82 - 8}`).join(" ")
-  return <div><div className="relative h-44 rounded-lg border border-border/70 bg-secondary/20 p-3"><div className="absolute inset-3 flex flex-col justify-between text-[9px] text-muted-foreground"><span>{max.toLocaleString()}{suffix}</span><span>{Math.round(max / 2).toLocaleString()}{suffix}</span><span>0{suffix}</span></div><svg viewBox="0 0 100 100" preserveAspectRatio="none" className="absolute inset-8 h-[calc(100%-3rem)] w-[calc(100%-4rem)] overflow-visible"><polyline points={points} fill="none" stroke={color} strokeWidth="2" vectorEffect="non-scaling-stroke" /><polyline points={`0,100 ${points} 100,100`} fill={color} opacity="0.12" /></svg><div className="absolute inset-x-8 bottom-3 flex justify-between text-[9px] text-muted-foreground">{labels.map((label) => <button type="button" key={label} onClick={() => setSelected(labels.indexOf(label))} className="hover:text-primary">{label}</button>)}</div><div className="absolute inset-x-8 bottom-7 flex justify-between">{values.map((value, index) => <button type="button" key={`${index}-${value}`} aria-label={`${labels[index]} ${value}${suffix}`} onClick={() => setSelected(index)} className={`size-2 rounded-full border-2 border-card ${selected === index ? "scale-150 bg-accent" : "bg-primary"}`} />)}</div></div><p className="mt-1 text-center text-xs text-muted-foreground">{labels[selected]}：<strong className="font-mono text-foreground">{values[selected].toLocaleString()}{suffix}</strong></p></div>
+function BudgetExecution() {
+  const [selected, setSelected] = useState(6)
+  const max = 80
+  return <div><div className="relative flex h-52 items-end gap-1.5 border-b border-l border-border px-3 pb-5 pt-4"><div className="pointer-events-none absolute inset-y-4 left-0 flex flex-col justify-between text-[9px] text-muted-foreground"><span>0.50</span><span>0.25</span><span>0</span></div>{months.map((month, index) => <button type="button" key={month} onClick={() => setSelected(index)} className={`relative z-10 flex min-w-0 flex-1 flex-col items-center justify-end gap-0.5 rounded-t ${selected === index ? "bg-primary/10" : "hover:bg-secondary/50"}`} title={`${month}：${execution[index].toFixed(2)}%`}><span className="font-mono text-[9px] text-foreground">{execution[index].toFixed(2)}%</span><div className="flex w-full items-end justify-center gap-0.5" style={{ height: `${(execution[index] / max) * 128}px` }}><span className="w-1/2 rounded-t bg-primary" style={{ height: `${Math.min(100, execution[index] * 1.15)}%` }} /><span className="w-1/2 rounded-t bg-chart-4" style={{ height: `${Math.max(8, execution[index] * 0.75)}%` }} /></div><span className="text-[9px] text-muted-foreground">{month}</span></button>)}</div><p className="mt-1 text-center text-xs text-muted-foreground">{months[selected]}：<strong className="font-mono text-foreground">{execution[selected].toFixed(2)}%</strong></p></div>
 }
 
-function HorizontalRank() {
-  const max = topDepartments[0][1]
-  return <div className="flex flex-col gap-2">{topDepartments.map(([name, value], index) => <button type="button" key={name} title={`${name}：${value.toLocaleString()}万元`} className="group grid grid-cols-[7rem_1fr_4.5rem] items-center gap-2 text-left text-xs"><span className="truncate text-muted-foreground">{index + 1}. {name}</span><span className="h-5 overflow-hidden rounded bg-secondary"><span className="block h-full rounded bg-primary transition group-hover:bg-accent" style={{ width: `${(value / max) * 100}%` }} /></span><strong className="text-right font-mono text-foreground">{value.toLocaleString()}</strong></button>)}</div>
+function BudgetLines() {
+  const [selected, setSelected] = useState(6)
+  const max = 30
+  return <div><div className="relative flex h-52 items-end gap-2 border-b border-l border-border px-3 pb-5 pt-4"><div className="pointer-events-none absolute inset-y-4 left-0 flex flex-col justify-between text-[9px] text-muted-foreground"><span>30</span><span>15</span><span>0</span></div>{months.map((month, index) => <button type="button" key={month} onClick={() => setSelected(index)} className={`relative z-10 flex min-w-0 flex-1 flex-col items-center justify-end ${selected === index ? "bg-primary/10" : "hover:bg-secondary/40"}`}><div className="flex w-full items-end justify-center gap-0.5" style={{ height: `${((budgetRows[0][Math.min(index + 1, 7)] ?? 0) / max) * 130}px` }}><span className="w-1/3 rounded-t bg-primary" style={{ height: `${Math.min(100, budgetRows[0][Math.min(index + 1, 7)] * 3.3)}%` }} /><span className="w-1/3 rounded-t bg-chart-4" style={{ height: `${Math.min(100, budgetRows[2][Math.min(index + 1, 7)] * 7)}%` }} /><span className="w-1/3 rounded-t bg-accent" style={{ height: `${Math.min(100, budgetRows[1][Math.min(index + 1, 7)] * 3.3)}%` }} /></div><span className="text-[9px] text-muted-foreground">{month}</span></button>)}</div><div className="mt-2 flex flex-wrap gap-3 text-[10px] text-muted-foreground"><span><i className="mr-1 inline-block size-2 rounded-sm bg-primary" />列支</span><span><i className="mr-1 inline-block size-2 rounded-sm bg-chart-4" />总行部门列支</span><span><i className="mr-1 inline-block size-2 rounded-sm bg-accent" />数金技术服务费列支</span></div><p className="mt-1 text-center text-xs text-muted-foreground">{months[selected]} 数据：<strong className="font-mono text-foreground">{budgetRows[0][Math.min(selected + 1, 7)].toFixed(2)} 亿元</strong></p></div>
 }
 
-function ResourcePie() {
-  const [selected, setSelected] = useState(0)
-  const total = categoryData.reduce((sum, [, value]) => sum + value, 0)
-  let cursor = 0
-  const segments = categoryData.map(([name, value, color]) => { const start = cursor; cursor += (value / total) * 360; return { name, value, color, start, end: cursor } })
-  const selectedItem = categoryData[selected]
-  return <div className="flex items-center gap-5"><svg viewBox="0 0 120 120" className="size-40 -rotate-90">{segments.map((segment, index) => <circle key={segment.name} cx="60" cy="60" r="42" fill="none" stroke={segment.color} strokeWidth={index === selected ? 24 : 20} strokeDasharray={`${((segment.end - segment.start) / 360) * 264} 264`} strokeDashoffset={`${-(segment.start / 360) * 264}`} onClick={() => setSelected(index)} className="cursor-pointer transition-all hover:opacity-80" />)}</svg><div className="flex flex-col gap-1.5 text-xs">{categoryData.map(([name, value, color], index) => <button type="button" key={name} onClick={() => setSelected(index)} className={`flex items-center gap-2 text-left ${selected === index ? "font-bold text-foreground" : "text-muted-foreground"}`}><i className="size-2 rounded-sm" style={{ backgroundColor: color }} />{name} {((value / total) * 100).toFixed(2)}%</button>)}<p className="mt-2 border-t border-border pt-2 text-muted-foreground">{selectedItem[0]}：<strong className="font-mono text-foreground">{selectedItem[1].toLocaleString()} 万元</strong></p></div></div>
-}
+function TopDepartments() { const max = top10[0][1]; return <div className="flex h-52 items-end gap-2 border-b border-l border-border px-3 pb-5 pt-4">{top10.map(([name, value]) => <div key={name} className="flex min-w-0 flex-1 flex-col items-center justify-end gap-1"><button type="button" title={`${name}：${value.toLocaleString()}万元`} className="w-full rounded-t bg-primary transition hover:bg-accent" style={{ height: `${Math.max(12, (value / max) * 135)}px` }} /><span className="max-w-full truncate text-[9px] text-muted-foreground">{name.replace("中心", "")}</span><span className="font-mono text-[9px] text-foreground">{value.toFixed(2)}万</span></div>)}</div> }
 
-function ResourceTable({ title, rows }: { title: string; rows: typeof detailRows }) {
-  const [page, setPage] = useState(0)
-  const pageSize = 5
-  const visible = rows.slice(page * pageSize, page * pageSize + pageSize)
-  return <Panel title={title}><div className="overflow-x-auto rounded-md border border-border/70"><table className="w-full min-w-[560px] text-left text-xs"><thead className="bg-secondary/50 text-muted-foreground"><tr><th className="px-2 py-2">项目名称</th><th className="px-2 py-2">资源类型</th><th className="px-2 py-2">责任部门</th><th className="px-2 py-2 text-right">预算（万元）</th><th className="px-2 py-2">状态</th></tr></thead><tbody className="divide-y divide-border/60">{visible.map((row) => <tr key={row[0]}><td className="px-2 py-2 font-medium text-foreground">{row[0]}</td><td className="px-2 py-2 text-muted-foreground">{row[1]}</td><td className="px-2 py-2 text-muted-foreground">{row[2]}</td><td className="px-2 py-2 text-right font-mono text-foreground">{row[3].toLocaleString()}</td><td className="px-2 py-2 text-primary">{row[4]}</td></tr>)}</tbody></table></div><div className="mt-2 flex items-center justify-between text-xs text-muted-foreground"><span>{page * pageSize + 1}-{Math.min((page + 1) * pageSize, rows.length)} / {rows.length}</span><div className="flex gap-1"><button type="button" aria-label="上一页" onClick={() => setPage(Math.max(0, page - 1))} disabled={page === 0} className="rounded px-1.5 py-1 disabled:opacity-40"><ChevronLeft className="size-3" /></button><span className="rounded bg-primary px-2 py-1 text-primary-foreground">{page + 1}</span><button type="button" aria-label="下一页" onClick={() => setPage(Math.min(Math.ceil(rows.length / pageSize) - 1, page + 1))} disabled={(page + 1) * pageSize >= rows.length} className="rounded px-1.5 py-1 disabled:opacity-40"><ChevronRight className="size-3" /></button></div></div></Panel>
-}
+function ResourcePie() { const [selected, setSelected] = useState(0); const total = resourceTypes.reduce((sum, [, value]) => sum + value, 0); let cursor = 0; const segments = resourceTypes.map(([name, value, color]) => { const start = cursor; cursor += value / total; return { name, value, color, start, end: cursor } }); const item = resourceTypes[selected]; return <div className="flex items-center justify-center gap-6"><svg viewBox="0 0 120 120" className="size-44 -rotate-90">{segments.map((segment, index) => <circle key={segment.name} cx="60" cy="60" r="40" fill="none" stroke={segment.color} strokeWidth={index === selected ? 25 : 21} strokeDasharray={`${(segment.end - segment.start) * 251} 251`} strokeDashoffset={`${-segment.start * 251}`} onClick={() => setSelected(index)} className="cursor-pointer transition-all" />)}</svg><div className="flex flex-col gap-2 text-xs">{resourceTypes.map(([name, value, color], index) => <button type="button" key={name} onClick={() => setSelected(index)} className={`flex items-center gap-2 text-left ${selected === index ? "font-bold text-foreground" : "text-muted-foreground"}`}><i className="size-2 rounded-sm" style={{ backgroundColor: color }} />{name} {((value / total) * 100).toFixed(2)}%</button>)}<p className="border-t border-border pt-2 text-muted-foreground">{item[0]}：<strong className="font-mono text-foreground">{item[1].toFixed(2)}亿元</strong></p></div></div> }
 
-export function ResourceDashboard() {
-  return <div className="min-h-screen bg-background px-4 pb-8 text-foreground md:px-6"><div className="mx-auto max-w-[1800px]"><HeroBanner title="资源管理驾驶舱" subtitle="预算管理 · 资源配置 · 执行监控 · 效率分析" /><div className="mt-4 grid gap-3 lg:grid-cols-12"><Panel className="lg:col-span-8" title="2026年预算执行总体情况"><LineChart values={budgetTrend} labels={budgetLabels} suffix="万元" /></Panel><Panel className="lg:col-span-4" title="资源类型分布"><ResourcePie /></Panel><Panel className="lg:col-span-5" title="预算执行率趋势"><LineChart values={executionTrend} labels={budgetLabels} color="#f0a42d" suffix="%" /></Panel><Panel className="lg:col-span-7" title="总行部门预算情况（TOP10）"><HorizontalRank /></Panel><div className="lg:col-span-12 grid gap-3 lg:grid-cols-2"><ResourceTable title="资源分类及执行情况" rows={detailRows} /><ResourceTable title="资源分类及部门预算情况" rows={detailRows} /></div></div></div></div>
-}
+function BudgetTable({ title }: { title: string }) { const rows = departments.map((name, index) => [name, index + 2, 1266 + index * 987, index % 4 + 1, index % 3 + 1, 49 - index]) ; return <div><div className="max-h-44 overflow-auto rounded-md border border-border/70"><table className="w-full min-w-[620px] text-left text-[11px]"><thead className="sticky top-0 bg-card text-muted-foreground"><tr>{["科技职能相关单位", "年度呈报预算项目数", "年度呈报预算金额（万元）", "已发起预算项目数", "已发起预算笔数", "已发起预算金额（万元）"].map((head) => <th key={head} className="px-2 py-2">{head}</th>)}</tr></thead><tbody className="divide-y divide-border/60">{rows.map((row) => <tr key={row[0]}>{row.map((cell, index) => <td key={index} className="px-2 py-2 text-foreground">{typeof cell === "number" ? cell.toLocaleString() : cell}</td>)}</tr>)}</tbody></table></div></div> }
+
+function ResourceTable({ title }: { title: string }) { const rows = ["离岸技术服务", "其他技术服务", "大型型资源服务", "IT咨询服务", "安全服务", "研发现场技术服务", "项目研发实施服务"].map((name, index) => [name, ["服务", "硬件", "网络"][index % 3], (1025 + index * 3890).toLocaleString()]); return <div><div className="max-h-44 overflow-auto rounded-md border border-border/70"><table className="w-full min-w-[420px] text-left text-[11px]"><thead className="sticky top-0 bg-card text-muted-foreground"><tr><th className="px-2 py-2">资源分类三级</th><th className="px-2 py-2">使用单位</th><th className="px-2 py-2">列支</th></tr></thead><tbody className="divide-y divide-border/60">{rows.map(([name, type, value]) => <tr key={name}><td className="px-2 py-2 text-foreground">{name}</td><td className="px-2 py-2 text-muted-foreground">{type}</td><td className="px-2 py-2 text-right font-mono text-foreground">{value}</td></tr>)}</tbody></table></div><div className="mt-2 flex justify-end gap-1 text-[11px]"><button type="button" aria-label="上一页"><ChevronLeft className="size-3" /></button><span className="rounded bg-primary px-2 py-0.5 text-primary-foreground">1</span><button type="button" aria-label="下一页"><ChevronRight className="size-3" /></button></div></div> }
+
+export function ResourceDashboard() { return <div className="min-h-screen bg-background px-4 pb-8 text-foreground md:px-6"><div className="mx-auto max-w-[1800px]"><HeroBanner title="资源管理驾驶舱" subtitle="" /><div className="mb-3 mt-3 rounded-lg border border-primary/20 bg-primary/5 px-4 py-2 text-lg font-black text-primary">科技投入（管理预算口径）</div><div className="grid gap-3 lg:grid-cols-12"><Panel className="lg:col-span-5" title="2026年预算整体执行率"><BudgetExecution /></Panel><Panel className="lg:col-span-4" title="预算列支情况（单位：亿元）"><BudgetLines /></Panel><Panel className="lg:col-span-3" title="资源分类列支情况"><ResourceTable title="" /></Panel><Panel className="lg:col-span-4" title="总行部门费用类型列支情况（单位：亿元）"><BudgetLines /></Panel><Panel className="lg:col-span-6" title="总行部门列支情况（TOP10）"><TopDepartments /></Panel><Panel className="lg:col-span-2" title="资源分类及执行情况"><ResourceTable title="" /></Panel><Panel className="lg:col-span-4" title="预算呈报情况"><BudgetTable title="" /></Panel><Panel className="lg:col-span-6" title="资源类型分布"><ResourcePie /></Panel><Panel className="lg:col-span-2" title="研发服务费机构分布情况"><ResourceTable title="" /></Panel></div></div></div> }
