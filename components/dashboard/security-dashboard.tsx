@@ -241,6 +241,55 @@ function ChartBox({
   )
 }
 
+function RankedBars({
+  data,
+  label,
+  color = "#4ba8d8",
+  height = 190,
+}: {
+  data: { name: string; value: number }[]
+  label: string
+  color?: string
+  height?: number
+}) {
+  const max = Math.max(...data.map((item) => item.value), 1)
+
+  return (
+    <div className="rounded-lg border border-border/50 bg-background/20 p-3">
+      <div className="mb-3 flex items-center justify-between text-xs text-muted-foreground">
+        <span>{label}</span>
+        <span>单位：分</span>
+      </div>
+      <div className="flex flex-col gap-2.5" style={{ minHeight: height }}>
+        {data.slice(0, 8).map((item, index) => (
+          <div key={item.name} className="grid grid-cols-[20px_72px_1fr_42px] items-center gap-2 text-[11px]">
+            <span className="font-mono text-muted-foreground">{String(index + 1).padStart(2, "0")}</span>
+            <span className="truncate text-foreground/80">{item.name.replace("分行", "")}</span>
+            <div className="h-2 overflow-hidden rounded-full bg-primary/10"><div className="h-full rounded-full" style={{ width: `${(item.value / max) * 100}%`, background: `linear-gradient(90deg, ${color}88, ${color})` }} /></div>
+            <strong className="text-right font-mono tabular-nums text-foreground">{item.value}</strong>
+          </div>
+        ))}
+      </div>
+    </div>
+  )
+}
+
+function CategoryBars({ data, label, color = "#42bdb7" }: { data: { name: string; value: number }[]; label: string; color?: string }) {
+  const max = Math.max(...data.map((item) => item.value), 1)
+  const sorted = [...data].sort((a, b) => b.value - a.value)
+
+  return (
+    <div className="rounded-lg border border-border/50 bg-background/20 p-3">
+      <div className="mb-3 flex items-center justify-between text-xs text-muted-foreground"><span>{label}</span><span>问题数</span></div>
+      <div className="grid gap-3">
+        {sorted.map((item) => (
+          <div key={item.name} className="grid grid-cols-[58px_1fr_34px] items-center gap-2 text-[11px]"><span className="truncate text-foreground/80">{item.name}</span><div className="h-2.5 overflow-hidden rounded-full bg-accent/10"><div className="h-full rounded-full" style={{ width: `${(item.value / max) * 100}%`, background: `linear-gradient(90deg, ${color}88, ${color})` }} /></div><strong className="text-right font-mono tabular-nums text-foreground">{item.value}</strong></div>
+        ))}
+      </div>
+    </div>
+  )
+}
+
 function ChinaSecurityMap() {
   const [selectedProvince, setSelectedProvince] = useState("")
 
@@ -414,11 +463,7 @@ export function SecurityDashboard() {
         <div className="grid items-stretch gap-5 xl:grid-cols-3 xl:auto-rows-fr">
           <section className="flex h-full min-h-0 min-w-0 flex-col gap-4">
               <Panel title="网络安全综合能力" tone="primary">
-                <ChartBox
-                  data={capabilityData}
-                  color="#25a8d2"
-                  label="各分行综合能力评分"
-                />
+                <RankedBars data={capabilityData} color="#4ba8d8" label="各分行综合能力评分" />
               </Panel>
 
               <Panel title="检查发现问题" tone="accent" bodyClassName="space-y-3">
@@ -452,12 +497,7 @@ export function SecurityDashboard() {
                   />
                 </div>
 
-                <ChartBox
-                  data={inspectionCategoryData}
-                  color="#7b91ed"
-                  label="检查问题分类"
-                  height={150}
-                />
+                <CategoryBars data={inspectionCategoryData} color="#42bdb7" label="检查问题分类" />
               </Panel>
           </section>
 
@@ -482,12 +522,7 @@ export function SecurityDashboard() {
 
           <section className="flex h-full min-h-0 min-w-0 flex-col gap-4">
               <Panel title="网络安全考评" tone="chart-4" compact bodyClassName="p-2.5">
-                <ChartBox
-                  data={securityAssessmentData}
-                  color="#25c5c9"
-                  label="各分行考评结果"
-                  height={125}
-                />
+                <RankedBars data={securityAssessmentData} color="#e5b45c" label="各分行考评结果" height={150} />
               </Panel>
 
                   <Panel title="员工安全画��" tone="primary" bodyClassName="p-3">
