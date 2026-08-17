@@ -40,8 +40,8 @@ import {
 
 const chinaMapUrl = "/maps/china.json"
 
-const chartGrid = "rgba(120, 170, 195, 0.24)"
-const chartText = "#7f9db2"
+const chartGrid = "rgba(79, 112, 145, 0.18)"
+const chartText = "#60758b"
 
 function Panel({
   title,
@@ -75,7 +75,7 @@ function Panel({
   }
 
   return (
-    <section className="overflow-hidden rounded-xl border border-border/70 bg-card/90 shadow-[0_0_0_1px_oklch(0.72_0.15_220/6%),0_12px_40px_oklch(0_0_0/18%)] backdrop-blur-sm">
+    <section className="overflow-hidden rounded-xl border border-border/70 bg-card/90 shadow-[0_8px_28px_oklch(0.35_0.06_240/8%)] backdrop-blur-sm">
       <header
         className={[
           "relative flex items-center gap-3 border-b border-border/60",
@@ -209,10 +209,10 @@ function ChartBox({
             <Tooltip
               cursor={{ stroke: color, strokeOpacity: 0.3 }}
               contentStyle={{
-                background: "#102638",
-                border: "1px solid #2b617c",
+                background: "#ffffff",
+                border: "1px solid #d8e3ee",
                 borderRadius: 8,
-                color: "#e8f4fa",
+                color: "#24364b",
                 fontSize: 12,
               }}
               labelStyle={{ color: "#b4d1dd" }}
@@ -270,9 +270,9 @@ function ChinaSecurityMap() {
                   key={`${geo.rsmKey}-${index}`}
                   geography={geo}
                   onClick={() => setSelectedProvince(province)}
-                  fill={selected ? "#20d5d8" : "#2477bd"}
-                  fillOpacity={selected ? 1 : 0.72}
-                  stroke="#071e35"
+                  fill={selected ? "#13a8a8" : "#4d8fca"}
+                  fillOpacity={selected ? 1 : 0.62}
+                  stroke="#ffffff"
                   strokeWidth={0.7}
                   style={{
                     default: {
@@ -343,15 +343,6 @@ function BranchList({
 export function SecurityDashboard() {
   return (
     <main className="min-h-screen bg-background text-foreground selection:bg-primary/30">
-      <div
-        className="pointer-events-none fixed inset-0 opacity-45"
-        style={{
-          backgroundImage:
-            "radial-gradient(circle at 10% 0%, oklch(0.72 0.15 220 / 12%), transparent 35%), radial-gradient(circle at 90% 10%, oklch(0.75 0.14 195 / 10%), transparent 35%), radial-gradient(circle at 50% 100%, oklch(0.65 0.12 280 / 8%), transparent 30%)",
-        }}
-        aria-hidden="true"
-      />
-
       <div className="relative mx-auto max-w-[1800px] px-4 pb-8 md:px-6">
         <HeroBanner
           title="网络安全驾驶舱"
