@@ -409,7 +409,7 @@ export function SecurityDashboard() {
           />
         </section>
 
-        <div className="grid items-stretch gap-5 xl:grid-cols-[1.04fr_1.2fr_1.38fr]">
+        <div className="grid items-stretch gap-5 xl:grid-cols-3">
           <section className="flex h-full min-w-0 flex-col gap-4">
               <Panel title="网络安全综合能力" tone="primary">
                 <ChartBox
@@ -486,7 +486,7 @@ export function SecurityDashboard() {
                 />
               </Panel>
 
-                  <Panel title="员工安全画像" tone="primary" bodyClassName="p-3">
+                  <Panel title="员工安全画��" tone="primary" bodyClassName="p-3">
                     <div className="space-y-3">
                       <div className="grid grid-cols-2 gap-2.5">
                         <StatCard
