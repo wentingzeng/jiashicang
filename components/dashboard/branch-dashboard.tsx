@@ -316,28 +316,12 @@ function RingChart({ value, total, label }: { value: number; total: number; labe
   )
 }
 
-function CloudCircle({ value, total }: { value: number; total: number }) {
-  const percent = total > 0 ? Math.round((value / total) * 100) : 0
-  const circumference = 2 * Math.PI * 48
-  const offset = circumference - (circumference * percent) / 100
-
+function CloudCircle({ value }: { value: number }) {
   return (
-    <div className="relative flex h-[148px] w-[148px] items-center justify-center">
-      <svg viewBox="0 0 120 120" className="absolute inset-0 h-full w-full -rotate-90 drop-shadow-[0_5px_10px_rgba(45,194,190,0.16)]">
-        <circle cx="60" cy="60" r="48" fill="none" stroke="#edf2f8" strokeWidth="12" />
-        <circle cx="60" cy="60" r="48" fill="none" stroke="url(#cloudGrad)" strokeWidth="12" strokeLinecap="round" strokeDasharray={circumference} strokeDashoffset={offset} />
-        <defs>
-          <linearGradient id="cloudGrad" x1="0" y1="0" x2="1" y2="1">
-            <stop offset="0%" stopColor="#2456c7" />
-            <stop offset="100%" stopColor="#2dc2be" />
-          </linearGradient>
-        </defs>
-      </svg>
-      <div className="relative text-center">
-        <div className="font-mono text-[32px] font-black leading-none text-primary">{value}</div>
-        <div className="mt-1 text-[11px] font-medium tracking-[0.12em] text-muted-foreground">上云系统数</div>
-        <div className="mt-1 text-[10px] text-accent">完成率 {percent}%</div>
-      </div>
+    <div className="flex h-[148px] w-[148px] flex-col items-center justify-center rounded-full bg-gradient-to-br from-primary/15 via-accent/15 to-primary/5 shadow-[inset_0_0_0_10px_rgba(36,86,199,0.06),0_8px_20px_rgba(36,86,199,0.1)]">
+      <Cloud className="mb-2 size-7 text-primary" aria-hidden="true" />
+      <div className="font-mono text-[32px] font-black leading-none text-primary">{value}</div>
+      <div className="mt-1 text-[11px] font-medium tracking-[0.12em] text-muted-foreground">上云系统数</div>
     </div>
   )
 }
@@ -543,8 +527,8 @@ export function BranchDashboard() {
 
                   <PanelCard className="h-full" bodyClassName="p-3" title="系统上云" icon={<Cloud className="size-4" />}>
                     <button type="button" onClick={() => setCloudRanking(!cloudRanking)} className="w-full text-left" aria-label="切换上云系统前十名">
-                    {cloudRanking ? <div className="grid gap-2 py-1">{["上海分行", "成都分行", "呼和浩特分行", "北京分行", "哈尔滨分行"].map((name, index) => <div key={name} className="grid grid-cols-[1.2fr_1fr_auto] items-center gap-2 text-[11px]"><span>{String(index + 1).padStart(2, "0")} {name}</span><span className="h-2 rounded-full bg-gradient-to-r from-accent to-primary" style={{ width: `${100 - index * 14}%` }} /><strong className="font-mono text-primary">{7 - Math.min(index, 4)}</strong></div>)}</div> : <div className="flex flex-col items-center gap-2">
-                      <CloudCircle value={current.cloud.value} total={current.cloud.total} />
+                    {cloudRanking ? <div className="grid gap-2 py-1">{[["上海分行",7],["成都分行",3],["呼和浩特分行",2],["北京分行",2],["哈尔滨分行",2],["深圳分行",1],["广州分行",1],["重庆分行",1],["武汉分行",1],["西安分行",1]].map(([name, count], index) => <div key={name} className="grid grid-cols-[1.2fr_1fr_auto] items-center gap-2 text-[11px]"><span>{String(index + 1).padStart(2, "0")} {name}</span><span className="h-2 rounded-full bg-gradient-to-r from-accent to-primary" style={{ width: `${Math.max(20, Number(count) / 7 * 100)}%` }} /><strong className="font-mono text-primary">{count}</strong></div>)}</div> : <div className="flex flex-col items-center gap-2">
+                      <CloudCircle value={current.cloud.value} />
                       <div className="text-center text-[12px] text-slate-500">{current.cloud.note}</div>
                       <div className="text-center text-[11px] text-muted-foreground">单击可查看上云系统前十名。</div></div>}
                     </button>
