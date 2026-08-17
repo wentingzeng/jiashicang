@@ -457,15 +457,16 @@ export function BranchDashboard() {
                 </div>
 
                 <div className="mt-2 border-t border-dashed border-border/70 pt-3">
-<div className="mb-2 text-[11px] text-muted-foreground">单击可查看中心机房建设模式总览及详情。</div>
+
                   <div className="mt-3 grid gap-3 md:grid-cols-2">
                     <div className="rounded-[12px] border border-border/80 bg-card/80 px-3 py-3 shadow-[inset_0_1px_0_oklch(0.72_0.15_220/6%)]">
+                      <div className="mb-2 text-[11px] text-muted-foreground">单击可查看中心机房建设模式总览及详情。</div>
                       <button type="button" onClick={() => setRoomDetails(!roomDetails)} className="mb-2 flex w-full items-center gap-2 text-left text-[12px] font-semibold text-slate-700 hover:text-primary">
                         <span className="inline-flex size-2 rounded-full bg-[#2456c7]" />共45家分行，均配备中心机房
                       </button>
                       {roomDetails ? <div className="overflow-x-auto">
                         <table className="w-full min-w-[300px] text-left text-[11px]">
-                          <thead className="text-muted-foreground"><tr><th className="pb-2 font-medium">分行名称</th><th className="pb-2 font-medium">中心机房建设���式</th><th className="pb-2 font-medium">启用时间</th></tr></thead>
+                          <thead className="text-muted-foreground"><tr><th className="pb-2 font-medium">分行名称</th><th className="pb-2 font-medium">中心机房建设方式</th><th className="pb-2 font-medium">启用时间</th></tr></thead>
                           <tbody>{[["上海分行", "自建", "2022年"], ["成都分行", "自建", "2023年"], ["北京分行", "租赁", "2021年"], ["深圳分行", "自建", "2024年"], ["广州分行", "自建", "2023年"]].map(([name, mode, year]) => <tr key={name} className="border-t border-border/50"><td className="py-1.5">{name}</td><td className="py-1.5">{mode}</td><td className="py-1.5 font-mono">{year}</td></tr>)}</tbody>
                         </table>
                       </div> : <button type="button" onClick={() => setRoomDetails(true)} className="flex w-full items-center gap-3 text-left">
