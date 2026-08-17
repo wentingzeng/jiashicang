@@ -57,12 +57,7 @@ export default function ResearchManagementPage() {
         <section aria-labelledby="hr-title" className="flex animate-in fade-in slide-in-from-bottom-4 duration-700 gap-3">
           <SectionRail label="人力资源" tone="primary" />
           <div className="flex min-w-0 flex-1 flex-col gap-2">
-            <div className="flex flex-wrap items-end justify-between gap-4">
-                            <div className="rounded-full border border-primary/25 bg-primary/8 px-4 py-2 text-sm text-muted-foreground shadow-sm">
-                研发团队总人数{" "}
-                <strong className="font-mono text-lg font-bold text-primary">{hrPersonnelTotal.toLocaleString()}</strong> 人
-              </div>
-            </div>
+            <div className="flex flex-wrap items-end justify-between gap-4" />
             <div className="grid items-stretch gap-3 xl:grid-cols-3">
               <HrPersonnelMix />
               <HrRegionalDistribution />
