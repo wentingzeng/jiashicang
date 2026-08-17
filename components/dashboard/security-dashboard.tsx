@@ -14,6 +14,8 @@ import {
 import {
   Area,
   AreaChart,
+  Bar,
+  BarChart,
   CartesianGrid,
   ResponsiveContainer,
   Tooltip,
@@ -274,11 +276,15 @@ function RankedBars({
   )
 }
 
-function CapabilityMeter({ data, label }: { data: { name: string; value: number }[]; label: string }) {
-  const average = Math.round(data.reduce((sum, item) => sum + item.value, 0) / Math.max(data.length, 1))
-  const circumference = 2 * Math.PI * 44
-  const offset = circumference - (circumference * average) / 100
-  return <div className="rounded-lg border border-border/50 bg-background/20 p-3"><div className="mb-2 text-xs text-muted-foreground">{label}</div><div className="flex items-center justify-center gap-5"><div className="relative size-32"><svg className="size-full -rotate-90"><circle cx="64" cy="64" r="44" fill="none" stroke="var(--border)" strokeWidth="10" /><circle cx="64" cy="64" r="44" fill="none" stroke="var(--accent)" strokeWidth="10" strokeLinecap="round" strokeDasharray={circumference} strokeDashoffset={offset} /></svg><div className="absolute inset-0 flex flex-col items-center justify-center"><strong className="font-mono text-3xl text-primary">{average}</strong><span className="text-[10px] text-muted-foreground">平均得分</span></div></div><div className="grid gap-2 text-[11px]">{data.slice(0, 3).map((item) => <div key={item.name} className="flex items-center justify-between gap-4"><span>{item.name.replace("分行", "")}</span><strong className="font-mono text-primary">{item.value}</strong></div>)}</div></div></div>
+function CapabilityBars({ data, label }: { data: { name: string; value: number }[]; label: string }) {
+  const metrics = data.slice(0, 6).map((item, index) => ({
+    ...item,
+    responsibility: Math.max(70, item.value - index * 1.2),
+    notification: Math.max(66, item.value - 4 - index * 0.8),
+    privacy: Math.max(62, item.value - 7 - index * 1.1),
+    risk: Math.max(60, item.value - 10 - index * 1.3),
+  }))
+  return <div className="rounded-lg border border-border/50 bg-background/20 p-3"><div className="mb-2 flex items-center justify-between text-xs text-muted-foreground"><span>{label}</span><span>单位：分</span></div><div className="mb-2 flex flex-wrap gap-x-3 gap-y-1 text-[10px] text-muted-foreground"><span><i className="mr-1 inline-block size-2 rounded-sm bg-[#4ba8d8]" />全年合计</span><span><i className="mr-1 inline-block size-2 rounded-sm bg-[#42bdb7]" />责任落实</span><span><i className="mr-1 inline-block size-2 rounded-sm bg-[#e5b45c]" />通知部署</span><span><i className="mr-1 inline-block size-2 rounded-sm bg-[#8494d8]" />隐患整改</span></div><ResponsiveContainer width="100%" height={230}><BarChart data={metrics} margin={{ top: 8, right: 4, left: -18, bottom: 8 }}><CartesianGrid vertical={false} strokeDasharray="3 3" /><XAxis dataKey="name" tick={{ fontSize: 9 }} tickFormatter={(value) => value.replace("分行", "")} interval={0} /><YAxis domain={[0, 100]} tick={{ fontSize: 9 }} /><Tooltip formatter={(value, name) => [Number(value).toFixed(1), name]} /><Bar dataKey="value" name="全年合计得分" fill="#4ba8d8" radius={[3, 3, 0, 0]} /><Bar dataKey="responsibility" name="压紧压实网络安全责任" fill="#42bdb7" radius={[3, 3, 0, 0]} /><Bar dataKey="notification" name="重要通知和工作部署落实情况及个人信息保护" fill="#e5b45c" radius={[3, 3, 0, 0]} /><Bar dataKey="risk" name="及时发现及整改网络安全风险隐患" fill="#8494d8" radius={[3, 3, 0, 0]} /></BarChart></ResponsiveContainer></div>
 }
 
 function CategoryBars({ data, label, color = "#42bdb7" }: { data: { name: string; value: number }[]; label: string; color?: string }) {
@@ -286,9 +292,9 @@ function CategoryBars({ data, label, color = "#42bdb7" }: { data: { name: string
   return <div className="rounded-lg border border-border/50 bg-background/20 p-3"><div className="mb-3 flex items-center justify-between text-xs text-muted-foreground"><span>{label}</span><span>共 {total} 项</span></div><div className="grid grid-cols-2 gap-2">{data.map((item, index) => <div key={item.name} className="rounded-md border border-border/40 bg-card/50 p-2.5"><div className="flex items-center justify-between gap-2"><span className="truncate text-[11px] text-foreground/80">{item.name}</span><span className="size-2 shrink-0 rounded-full" style={{ backgroundColor: index % 2 ? color : "#4ba8d8" }} /></div><div className="mt-1 font-mono text-xl font-bold text-foreground">{item.value}</div><div className="mt-1 text-[10px] text-muted-foreground">占比 {Math.round((item.value / Math.max(total, 1)) * 100)}%</div></div>)}</div></div>
 }
 
-function AssessmentPodium({ data }: { data: { name: string; value: number }[] }) {
-  const sorted = [...data].sort((a, b) => b.value - a.value).slice(0, 5)
-  return <div className="rounded-lg border border-border/50 bg-background/20 p-3"><div className="mb-3 text-xs text-muted-foreground">考评得分排名</div><div className="flex h-40 items-end justify-center gap-2">{sorted.map((item, index) => <div key={item.name} className="flex min-w-0 flex-1 flex-col items-center justify-end gap-1"><span className="font-mono text-xs font-bold text-foreground">{item.value}</span><div className="w-full rounded-t-md bg-gradient-to-t from-chart-4/70 to-chart-4" style={{ height: `${Math.max(28, item.value * 1.15)}px` }} /><span className="w-full truncate text-center text-[10px] text-muted-foreground">{item.name.replace("分行", "")}</span><span className="font-mono text-[10px] text-chart-4">TOP {index + 1}</span></div>)}</div></div>
+function AssessmentBars({ data }: { data: { name: string; value: number }[] }) {
+  const sorted = [...data].sort((a, b) => b.value - a.value).slice(0, 8).map((item) => ({ ...item, shortName: item.name.replace("分行", "") }))
+  return <div className="rounded-lg border border-border/50 bg-background/20 p-3"><div className="mb-2 flex items-center justify-between text-xs text-muted-foreground"><span>各分行考评结果</span><span>横轴：得分</span></div><ResponsiveContainer width="100%" height={230}><BarChart data={sorted} layout="vertical" margin={{ top: 4, right: 24, left: 0, bottom: 4 }}><CartesianGrid horizontal={false} strokeDasharray="3 3" /><XAxis type="number" domain={[0, 100]} tick={{ fontSize: 9 }} /><YAxis dataKey="shortName" type="category" width={48} tick={{ fontSize: 9 }} /><Tooltip formatter={(value) => [`${Number(value).toFixed(2)} 分`, "考评得分"]} /><Bar dataKey="value" name="考评得分" fill="#e5b45c" radius={[0, 4, 4, 0]} label={{ position: "right", fontSize: 9, fill: "currentColor" }} /></BarChart></ResponsiveContainer></div>
 }
 
 function ChinaSecurityMap() {
@@ -464,7 +470,7 @@ export function SecurityDashboard() {
         <div className="grid items-stretch gap-5 xl:grid-cols-3 xl:auto-rows-fr">
           <section className="flex h-full min-h-0 min-w-0 flex-col gap-4">
               <Panel title="网络安全综合能力" tone="primary">
-                <CapabilityMeter data={capabilityData} label="各分行综合能力评分" />
+                <CapabilityBars data={capabilityData} label="各分行综合能力评分" />
               </Panel>
 
               <Panel title="检查发现问题" tone="accent" bodyClassName="space-y-3">
@@ -523,10 +529,10 @@ export function SecurityDashboard() {
 
           <section className="flex h-full min-h-0 min-w-0 flex-col gap-4">
               <Panel title="网络安全考评" tone="chart-4" compact bodyClassName="p-2.5">
-                <AssessmentPodium data={securityAssessmentData} />
+                <AssessmentBars data={securityAssessmentData} />
               </Panel>
 
-                  <Panel title="员工安全画��" tone="primary" bodyClassName="p-3">
+                  <Panel title="员工安全画像" tone="primary" bodyClassName="p-3">
                     <div className="space-y-3">
                       <div className="grid grid-cols-2 gap-2.5">
                         <StatCard
