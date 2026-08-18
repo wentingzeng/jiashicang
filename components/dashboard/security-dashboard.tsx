@@ -381,7 +381,7 @@ function ChinaSecurityMap() {
         </Geographies>
       </ComposableMap>
 
-      <div className="pointer-events-none absolute bottom-3 left-3 w-44 rounded-lg border border-border/60 bg-card/95 px-2.5 py-2 shadow-sm">
+      <div className="pointer-events-none absolute right-3 top-3 w-44 rounded-lg border border-border/60 bg-card/95 px-2.5 py-2 shadow-sm">
         <div className="mb-1.5 text-[10px] font-medium text-foreground">全年合计得分</div>
         <div className="h-2 rounded-full bg-gradient-to-r from-[hsl(204_58%_77%)] via-[hsl(204_58%_58%)] to-[hsl(204_58%_32%)]" aria-hidden="true" />
         <div className="mt-1 flex items-center justify-between font-mono text-[9px] text-muted-foreground"><span>最低分 {minScore.toFixed(1)}</span><span>最高分 {maxScore.toFixed(1)}</span></div>
