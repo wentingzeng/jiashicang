@@ -307,7 +307,8 @@ function AssessmentBars({ data }: { data: { name: string; value: number }[] }) {
 
 function ChinaSecurityMap() {
   const [selectedProvince, setSelectedProvince] = useState("")
-  const selectedScore = branchSecurityData.find((item) => selectedProvince.includes(item.name.replace("市", "")))?.value
+  const normalizeRegion = (name: string) => name.replace(/(省|市|自治区|特别行政区)$/u, "").replace(/(壮族|回族|维吾尔)$/u, "")
+  const selectedScore = branchSecurityData.find((item) => normalizeRegion(selectedProvince).includes(normalizeRegion(item.name)) || normalizeRegion(item.name).includes(normalizeRegion(selectedProvince)))?.value
 
   return (
     <div className="relative h-[300px] overflow-hidden rounded-xl border border-border/60 bg-gradient-to-br from-background/45 via-background/20 to-card/90">

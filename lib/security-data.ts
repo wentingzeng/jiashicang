@@ -99,17 +99,12 @@ export const violationTrendData = [
   { month: "12月", value: 143 },
 ]
 
+// 演示数据：后续可整体替换为真实地区安全能力接口返回值。
 export const branchSecurityData = [
-  { name: "南京市", value: 96.26 },
-  { name: "苏州市", value: 94.8 },
-  { name: "无锡市", value: 93.7 },
-  { name: "常州市", value: 92.4 },
-  { name: "南通市", value: 90.8 },
-  { name: "徐州市", value: 89.6 },
-  { name: "扬州市", value: 88.9 },
-  { name: "镇江市", value: 87.6 },
-  { name: "泰州市", value: 86.4 },
-  { name: "盐城市", value: 84.1 },
-  { name: "淮安市", value: 82.35 },
-  { name: "连云港市", value: 80.29 },
+  { name: "北京市", value: 92.8 }, { name: "天津市", value: 88.6 }, { name: "河北省", value: 84.2 }, { name: "山西省", value: 81.7 }, { name: "内蒙古自治区", value: 79.5 },
+  { name: "辽宁省", value: 86.4 }, { name: "吉林省", value: 80.9 }, { name: "黑龙江省", value: 78.6 }, { name: "上海市", value: 94.1 }, { name: "江苏省", value: 91.8 },
+  { name: "浙江省", value: 93.5 }, { name: "安徽省", value: 85.6 }, { name: "福建省", value: 87.9 }, { name: "江西省", value: 82.4 }, { name: "山东省", value: 90.2 },
+  { name: "河南省", value: 86.7 }, { name: "湖北省", value: 88.3 }, { name: "湖南省", value: 84.9 }, { name: "广东省", value: 95.2 }, { name: "广西壮族自治区", value: 80.8 },
+  { name: "海南省", value: 79.9 }, { name: "重庆市", value: 89.7 }, { name: "四川省", value: 91.1 }, { name: "贵州省", value: 78.8 }, { name: "云南省", value: 81.6 },
+  { name: "西藏自治区", value: 76.4 }, { name: "陕西省", value: 87.5 }, { name: "甘肃省", value: 77.9 }, { name: "青海省", value: 74.8 }, { name: "宁夏回族自治区", value: 76.9 }, { name: "新疆维吾尔自治区", value: 75.6 },
 ]
