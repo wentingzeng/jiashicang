@@ -41,7 +41,8 @@ import {
   weakBranches,
 } from "@/lib/security-data"
 
-const chinaMapUrl = "/maps/china.json"
+// 省级 GeoJSON：包含 34 个省级行政区，确保每个省份都有独立边界和点击区域。
+const chinaMapUrl = "https://geo.datav.aliyun.com/areas_v3/bound/100000_full.json"
 
 const chartGrid = "rgba(79, 112, 145, 0.18)"
 const chartText = "#60758b"
