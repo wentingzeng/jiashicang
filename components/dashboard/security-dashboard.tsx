@@ -481,7 +481,7 @@ export function SecurityDashboard() {
           />
         </section>
 
-        <div className="grid items-stretch gap-5 xl:grid-cols-3 xl:auto-rows-fr [&>section]:min-h-0 [&>section>section]:min-h-0 [&>section>section]:flex-1 [&>section>section]:flex [&>section>section>div:last-child]:flex-1">
+        <div className="grid items-stretch gap-5 xl:grid-cols-3 xl:auto-rows-fr [&>section]:min-h-0 [&>section>section]:min-h-0 [&>section>section]:flex-1">
           <section className="flex h-full min-h-0 min-w-0 flex-col gap-4">
               <Panel title="网络安全综合能力" tone="primary">
                 <CapabilityBars data={capabilityData} label="各分行综合能力评分" />
