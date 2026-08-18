@@ -312,10 +312,10 @@ function ChinaSecurityMap() {
   const selectedScore = branchSecurityData.find((item) => normalizeRegion(selectedProvince).includes(normalizeRegion(item.name)) || normalizeRegion(item.name).includes(normalizeRegion(selectedProvince)))?.value
 
   return (
-    <div className="relative h-[320px] overflow-hidden rounded-xl border border-border/60 bg-gradient-to-br from-background/45 via-background/20 to-card/90">
+    <div className="relative h-[380px] overflow-hidden rounded-xl border border-border/60 bg-gradient-to-br from-background/45 via-background/20 to-card/90">
       <ComposableMap
         width={800}
-        height={460}
+        height={520}
         projection="geoMercator"
         projectionConfig={{
           center: [104.3, 35.9],
@@ -366,7 +366,7 @@ function ChinaSecurityMap() {
         </Geographies>
       </ComposableMap>
 
-      <div className="pointer-events-none absolute right-3 top-3 rounded-md border border-border/60 bg-card/95 px-3 py-2 text-xs shadow-sm">
+      <div className="pointer-events-none absolute bottom-3 right-3 rounded-md border border-border/60 bg-card/95 px-3 py-2 text-xs shadow-sm">
         {selectedProvince ? (
           <div className="grid gap-1"><span className="font-semibold text-foreground">{selectedProvince}</span><span className="text-muted-foreground">安全能力得分：<strong className="font-mono text-accent">{selectedScore?.toFixed(2) ?? "待接入"}</strong>{selectedScore === undefined ? "" : " 分"}</span></div>
         ) : (
@@ -374,10 +374,6 @@ function ChinaSecurityMap() {
         )}
       </div>
 
-      <div className="absolute bottom-3 left-3 rounded-md border border-border/60 bg-card/95 px-3 py-2 text-[11px] text-muted-foreground shadow-sm">
-        <div className="mb-1 text-foreground">地区安全能力得分</div>
-        <div className="text-[10px] text-muted-foreground">点击省份后显示对应得分，数据接口接入后自动更新</div>
-      </div>
     </div>
   )
 }
