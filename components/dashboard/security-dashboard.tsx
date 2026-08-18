@@ -342,7 +342,7 @@ function ChinaSecurityMap() {
                   fill={selected ? "#13a8a8" : "#4d8fca"}
                   fillOpacity={selected ? 1 : 0.62}
                   stroke="#ffffff"
-                  strokeWidth={1.2}
+                  strokeWidth={0.8}
                   style={{
                     default: {
                       outline: "none",
