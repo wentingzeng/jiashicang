@@ -327,10 +327,10 @@ function ChinaSecurityMap() {
   }
 
   return (
-    <div className="relative h-[440px] overflow-hidden rounded-xl border border-border/60 bg-gradient-to-br from-background/45 via-background/20 to-card/90">
+    <div className="relative h-[480px] overflow-hidden rounded-xl border border-border/60 bg-gradient-to-br from-background/45 via-background/20 to-card/90">
       <ComposableMap
         width={800}
-        height={600}
+        height={660}
         projection="geoMercator"
         projectionConfig={{
           center: [104.3, 35.9],
@@ -381,8 +381,8 @@ function ChinaSecurityMap() {
         </Geographies>
       </ComposableMap>
 
-      <div className="pointer-events-none absolute bottom-1 right-3 min-w-64 rounded-xl border border-primary/20 bg-card/95 px-3 py-2.5 text-xs shadow-md">
-        {selectedProvince && selectedItem ? (() => { const rank = [...branchSecurityData].sort((a, b) => b.value - a.value).findIndex((item) => item.name === selectedItem.name) + 1; const category = selectedItem.value >= 90 ? "一等行" : selectedItem.value >= 82 ? "二等行" : "三等行"; const categoryRank = [...branchSecurityData].filter((item) => category === "一等行" ? item.value >= 90 : category === "二等行" ? item.value >= 82 && item.value < 90 : item.value < 82).sort((a, b) => b.value - a.value).findIndex((item) => item.name === selectedItem.name) + 1; return <div className="grid gap-1.5"><div className="mb-1 border-b border-border/60 pb-1.5 text-xs font-semibold text-foreground">{selectedProvince}</div><div className="grid grid-cols-[1fr_auto] gap-x-5 gap-y-1 text-muted-foreground"><span>网络安全全年合计得分</span><strong className="font-mono text-base text-primary">{selectedItem.value.toFixed(2)}</strong><span>2025年排名（按全行）</span><strong className="font-mono text-foreground">{rank}</strong><span>类别</span><strong className="text-foreground">{category}</strong><span>2025年排名（按等级行）</span><strong className="font-mono text-foreground">{categoryRank}</strong></div></div> })() : <span className="text-muted-foreground">点击省份查看安全能力得分</span>}
+      <div className="pointer-events-none absolute bottom-0 right-2 min-w-56 rounded-lg border border-primary/20 bg-card/95 px-2.5 py-2 text-[11px] shadow-md">
+        {selectedProvince && selectedItem ? (() => { const rank = [...branchSecurityData].sort((a, b) => b.value - a.value).findIndex((item) => item.name === selectedItem.name) + 1; const category = selectedItem.value >= 90 ? "一等行" : selectedItem.value >= 82 ? "二等行" : "三等行"; const categoryRank = [...branchSecurityData].filter((item) => category === "一等行" ? item.value >= 90 : category === "二等行" ? item.value >= 82 && item.value < 90 : item.value < 82).sort((a, b) => b.value - a.value).findIndex((item) => item.name === selectedItem.name) + 1; return <div className="grid gap-1.5"><div className="mb-1 border-b border-border/60 pb-1.5 text-xs font-semibold text-foreground">{selectedProvince}</div><div className="grid grid-cols-[1fr_auto] gap-x-5 gap-y-1 text-muted-foreground"><span>网络安全全年合计得分</span><strong className="font-mono text-[11px] font-semibold text-primary">{selectedItem.value.toFixed(2)}</strong><span>2025年排名（按全行）</span><strong className="font-mono text-foreground">{rank}</strong><span>类别</span><strong className="text-foreground">{category}</strong><span>2025年排名（按等级行）</span><strong className="font-mono text-foreground">{categoryRank}</strong></div></div> })() : <span className="text-muted-foreground">点击省份查看安全能力得分</span>}
       </div>
 
     </div>
