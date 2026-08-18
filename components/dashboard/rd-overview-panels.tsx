@@ -201,8 +201,8 @@ export function MonthlyTaskTrendPanel() {
             </linearGradient>
           </defs>
           <CartesianGrid vertical={false} stroke={chartGridStroke} />
-          <XAxis dataKey="month" tick={{ fill: "var(--muted-foreground)", fontSize: 9 }} axisLine={false} tickLine={false} />
-          <YAxis tick={{ fill: "var(--muted-foreground)", fontSize: 9 }} axisLine={false} tickLine={false} width={45} />
+          <XAxis dataKey="month" tick={{ fill: "var(--muted-foreground)", fontSize: 9 }} axisLine={{ stroke: "var(--border)", strokeWidth: 1 }} tickLine={{ stroke: "var(--border)", strokeWidth: 1 }} />
+          <YAxis tick={{ fill: "var(--muted-foreground)", fontSize: 9 }} axisLine={{ stroke: "var(--border)", strokeWidth: 1 }} tickLine={{ stroke: "var(--border)", strokeWidth: 1 }} width={45} />
           <Tooltip {...chartTooltip} contentStyle={{ ...chartTooltip.contentStyle, fontSize: '12px' }} />
           <Area type="monotone" dataKey="building" fill="url(#buildingArea)" stroke="none" />
           <Line type="monotone" dataKey="building" name="在建项目及专项任务" stroke="var(--primary)" strokeWidth={2.5} dot={{ r: 3, fill: "var(--primary)" }} activeDot={{ r: 5 }} />
@@ -223,8 +223,8 @@ export function DurationTrendPanel() {
       <ResponsiveContainer width="100%" height={200}>
         <LineChart data={rdDurationTrend} margin={{ left: 0, right: 8, top: 8, bottom: 0 }}>
           <CartesianGrid vertical={false} stroke={chartGridStroke} />
-          <XAxis dataKey="month" tick={{ fill: "var(--muted-foreground)", fontSize: 9 }} axisLine={false} tickLine={false} />
-          <YAxis tick={{ fill: "var(--muted-foreground)", fontSize: 9 }} axisLine={false} tickLine={false} width={50} unit="天" />
+          <XAxis dataKey="month" tick={{ fill: "var(--muted-foreground)", fontSize: 9 }} axisLine={{ stroke: "var(--border)", strokeWidth: 1 }} tickLine={{ stroke: "var(--border)", strokeWidth: 1 }} />
+          <YAxis tick={{ fill: "var(--muted-foreground)", fontSize: 9 }} axisLine={{ stroke: "var(--border)", strokeWidth: 1 }} tickLine={{ stroke: "var(--border)", strokeWidth: 1 }} width={50} unit="天" />
           <Tooltip {...chartTooltip} contentStyle={{ ...chartTooltip.contentStyle, fontSize: '12px' }} />
           <Line type="monotone" dataKey="project" name="顺序项目研发时长" stroke="var(--primary)" strokeWidth={2.5} dot={{ r: 3, fill: "var(--primary)" }} />
           <Line type="monotone" dataKey="agile" name="累计平均研发时长" stroke="var(--accent)" strokeWidth={2} strokeDasharray="6 4" dot={false} />

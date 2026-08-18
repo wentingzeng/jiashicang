@@ -90,8 +90,8 @@ export function HrRegionalDistribution() {
           <XAxis
             dataKey="name"
             tick={{ fill: "var(--muted-foreground)", fontSize: 11, fontWeight: 500 }}
-            axisLine={false}
-            tickLine={false}
+            axisLine={{ stroke: "var(--border)", strokeWidth: 1 }}
+            tickLine={{ stroke: "var(--border)", strokeWidth: 1 }}
             interval={0}
             angle={-20}
             textAnchor="end"
@@ -99,8 +99,8 @@ export function HrRegionalDistribution() {
           />
           <YAxis
             tick={{ fill: "var(--muted-foreground)", fontSize: 11 }}
-            axisLine={false}
-            tickLine={false}
+            axisLine={{ stroke: "var(--border)", strokeWidth: 1 }}
+            tickLine={{ stroke: "var(--border)", strokeWidth: 1 }}
             width={45}
           />
           <Tooltip 
