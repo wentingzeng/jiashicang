@@ -327,10 +327,10 @@ function ChinaSecurityMap() {
   }
 
   return (
-    <div className="relative h-[540px] overflow-hidden rounded-xl border border-border/60 bg-gradient-to-br from-background/45 via-background/20 to-card/90">
+    <div className="relative h-[600px] overflow-hidden rounded-xl border border-border/60 bg-gradient-to-br from-background/45 via-background/20 to-card/90">
       <ComposableMap
         width={800}
-        height={740}
+        height={820}
         projection="geoMercator"
         projectionConfig={{
           center: [104.3, 35.9],
