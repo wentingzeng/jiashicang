@@ -381,6 +381,12 @@ function ChinaSecurityMap() {
         </Geographies>
       </ComposableMap>
 
+      <div className="pointer-events-none absolute bottom-3 left-3 w-44 rounded-lg border border-border/60 bg-card/95 px-2.5 py-2 shadow-sm">
+        <div className="mb-1.5 text-[10px] font-medium text-foreground">全年合计得分</div>
+        <div className="h-2 rounded-full bg-gradient-to-r from-[hsl(204_58%_77%)] via-[hsl(204_58%_58%)] to-[hsl(204_58%_32%)]" aria-hidden="true" />
+        <div className="mt-1 flex items-center justify-between font-mono text-[9px] text-muted-foreground"><span>最低分 {minScore.toFixed(1)}</span><span>最高分 {maxScore.toFixed(1)}</span></div>
+      </div>
+
       <div className="pointer-events-none absolute bottom-8 right-2 min-w-56 rounded-lg border border-primary/20 bg-card/95 px-2.5 py-2 text-[11px] shadow-md">
         {selectedProvince && selectedItem ? (() => { const rank = [...branchSecurityData].sort((a, b) => b.value - a.value).findIndex((item) => item.name === selectedItem.name) + 1; const category = selectedItem.value >= 90 ? "一等行" : selectedItem.value >= 82 ? "二等行" : "三等行"; const categoryRank = [...branchSecurityData].filter((item) => category === "一等行" ? item.value >= 90 : category === "二等行" ? item.value >= 82 && item.value < 90 : item.value < 82).sort((a, b) => b.value - a.value).findIndex((item) => item.name === selectedItem.name) + 1; return <div className="grid gap-1.5"><div className="mb-1 border-b border-border/60 pb-1.5 text-xs font-semibold text-foreground">{selectedProvince}</div><div className="grid grid-cols-[1fr_auto] gap-x-5 gap-y-1 text-muted-foreground"><span>网络安全全年合计得分</span><strong className="font-mono text-[11px] font-semibold text-primary">{selectedItem.value.toFixed(2)}</strong><span>2025年排名（按全行）</span><strong className="font-mono text-foreground">{rank}</strong><span>类别</span><strong className="text-foreground">{category}</strong><span>2025年排名（按等级行）</span><strong className="font-mono text-foreground">{categoryRank}</strong></div></div> })() : <span className="text-muted-foreground">点击省份查看安全能力得分</span>}
       </div>
