@@ -480,6 +480,67 @@ export function SecurityDashboard() {
                 <CapabilityBars data={capabilityData} label="各分行综合能力评分" />
               </Panel>
 
+              <Panel title="员工安全画像" tone="primary" bodyClassName="p-3">
+                <div className="space-y-3">
+                  <div className="grid grid-cols-2 gap-2.5">
+                    <StatCard
+                      label="安全培训人次"
+                      value={securityOverview.trainingPeople}
+                      unit="人次"
+                      icon={Users}
+                      color="var(--primary)"
+                    />
+                    <StatCard
+                      label="违规记分人次"
+                      value={securityOverview.violationPeople}
+                      unit="人次"
+                      icon={AlertTriangle}
+                      color="#e9ad43"
+                    />
+                  </div>
+
+                  <div className="flex flex-col gap-3">
+                    <ChartBox
+                      data={trainingTrendData}
+                      color="#25a8d2"
+                      label="培训趋势"
+                      height={125}
+                    />
+                    <ChartBox
+                      data={violationTrendData}
+                      color="#d9953f"
+                      label="违规趋势"
+                      height={125}
+                    />
+                  </div>
+                </div>
+              </Panel>
+          </section>
+
+          <section className="flex h-full min-h-0 min-w-0 flex-col gap-4">
+              <Panel title="网络安全综合能力视图" tone="accent">
+                <ChinaSecurityMap />
+              </Panel>
+
+              <Panel title="网络安全管理指标" tone="primary" className="flex flex-1 flex-col">
+                <div className="flex-1">
+                <ul className="space-y-2.5 text-sm leading-6 text-muted-foreground">
+                  {securityManagementIndicators.map((item) => (
+                    <li key={item} className="flex gap-2.5">
+                      <span className="mt-2 size-1.5 shrink-0 rounded-full bg-accent" />
+                      <span>{item}</span>
+                    </li>
+                  ))}
+                </ul>
+                </div>
+              </Panel>
+          </section>
+
+          <section className="flex h-full min-h-0 min-w-0 flex-col gap-4">
+              <Panel title="网络安全考评" tone="chart-4" compact bodyClassName="p-2.5">
+                <AssessmentBars data={securityAssessmentData} />
+              </Panel>
+
               <Panel title="检查发现问题" tone="accent" bodyClassName="space-y-3">
                 <div className="grid grid-cols-2 gap-3">
                   <StatCard
@@ -513,67 +574,6 @@ export function SecurityDashboard() {
 
                 <CategoryBars data={inspectionCategoryData} color="#42bdb7" label="检查问题分类" />
               </Panel>
-          </section>
-
-          <section className="flex h-full min-h-0 min-w-0 flex-col gap-4">
-              <Panel title="网络安全综合能力视图" tone="accent">
-                <ChinaSecurityMap />
-              </Panel>
-
-              <Panel title="网络安全管理指标" tone="primary" className="flex flex-1 flex-col">
-                <div className="flex-1">
-                <ul className="space-y-2.5 text-sm leading-6 text-muted-foreground">
-                  {securityManagementIndicators.map((item) => (
-                    <li key={item} className="flex gap-2.5">
-                      <span className="mt-2 size-1.5 shrink-0 rounded-full bg-accent" />
-                      <span>{item}</span>
-                    </li>
-                  ))}
-                </ul>
-                </div>
-              </Panel>
-          </section>
-
-          <section className="flex h-full min-h-0 min-w-0 flex-col gap-4">
-              <Panel title="网络安全考评" tone="chart-4" compact bodyClassName="p-2.5">
-                <AssessmentBars data={securityAssessmentData} />
-              </Panel>
-
-                  <Panel title="员工安全画像" tone="primary" bodyClassName="p-3">
-                    <div className="space-y-3">
-                      <div className="grid grid-cols-2 gap-2.5">
-                        <StatCard
-                          label="安全培训人次"
-                          value={securityOverview.trainingPeople}
-                          unit="人次"
-                          icon={Users}
-                          color="var(--primary)"
-                        />
-                        <StatCard
-                          label="违规记分人次"
-                          value={securityOverview.violationPeople}
-                          unit="人次"
-                          icon={AlertTriangle}
-                          color="#e9ad43"
-                        />
-                      </div>
-
-                      <div className="flex flex-col gap-3">
-                        <ChartBox
-                          data={trainingTrendData}
-                          color="#25a8d2"
-                          label="培训趋势"
-                          height={125}
-                        />
-                        <ChartBox
-                          data={violationTrendData}
-                          color="#d9953f"
-                          label="违规趋势"
-                          height={125}
-                        />
-                      </div>
-                    </div>
-                  </Panel>
           </section>
         </div>
       </div>
