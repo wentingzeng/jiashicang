@@ -17,7 +17,7 @@ function ProgressCell({ value, colorClass }: { value: number; colorClass?: strin
           style={{ width: `${Math.min(value, 100)}%` }}
         />
       </div>
-      <span className="w-10 shrink-0 text-right font-mono text-xs font-bold tabular-nums text-foreground">
+      <span className="w-10 shrink-0 text-right font-mono text-xs font-normal tabular-nums text-foreground">
         {value}%
       </span>
     </div>
@@ -45,8 +45,8 @@ export function KeyProjectsTable() {
             <TableHead className="h-9 text-xs font-bold uppercase tracking-wider text-muted-foreground px-4">环境</TableHead>
             <TableHead className="h-9 min-w-[10rem] text-xs font-bold uppercase tracking-wider text-muted-foreground px-4">完成进度</TableHead>
             <TableHead className="h-9 text-xs font-bold uppercase tracking-wider text-muted-foreground px-4">主办部门</TableHead>
-            <TableHead className="h-9 text-xs font-bold uppercase tracking-wider text-muted-foreground px-4 text-center">开始时间</TableHead>
-            <TableHead className="h-9 text-xs font-bold uppercase tracking-wider text-muted-foreground px-4 text-center">研发时长</TableHead>
+            <TableHead className="h-9 text-xs font-normal uppercase tracking-wider text-muted-foreground px-4 text-center">开始时间</TableHead>
+            <TableHead className="h-9 text-xs font-normal uppercase tracking-wider text-muted-foreground px-4 text-center">研发时长</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
@@ -58,11 +58,11 @@ export function KeyProjectsTable() {
                 i % 2 === 1 && "bg-background/40",
               )}
             >
-              <TableCell className="max-w-[280px] px-3 py-2 font-semibold text-foreground group-hover:text-primary transition-colors">
+              <TableCell className="max-w-[280px] px-3 py-2 font-normal text-foreground group-hover:text-primary transition-colors">
                 {row.name}
               </TableCell>
               <TableCell className="px-3 py-2">
-                <Badge variant="outline" className="rounded-md border-primary/20 bg-primary/5 px-2.5 py-1 text-xs font-bold text-primary">
+                <Badge variant="outline" className="rounded-md border-primary/20 bg-primary/5 px-2.5 py-1 text-xs font-normal text-primary">
                   {row.type}
                 </Badge>
               </TableCell>
@@ -79,7 +79,7 @@ export function KeyProjectsTable() {
                 {row.start}
               </TableCell>
               <TableCell className="px-3 py-2 text-center">
-                <span className="font-mono text-xs font-bold text-foreground bg-primary/10 px-2.5 py-1 rounded text-primary">
+                <span className="font-mono text-xs font-normal text-foreground bg-primary/10 px-2.5 py-1 rounded text-primary">
                   {row.duration}
                 </span>
               </TableCell>
@@ -100,7 +100,7 @@ export function KeySpecialsTable() {
             <TableHead className="h-9 text-xs font-bold uppercase tracking-wider text-muted-foreground px-4">专项名称</TableHead>
             <TableHead className="h-9 text-xs font-bold uppercase tracking-wider text-muted-foreground px-4">状态</TableHead>
             <TableHead className="h-9 min-w-[10rem] text-xs font-bold uppercase tracking-wider text-muted-foreground px-4">完成进度</TableHead>
-            <TableHead className="h-9 text-xs font-bold uppercase tracking-wider text-muted-foreground px-4 text-center">交付时长</TableHead>
+            <TableHead className="h-9 text-xs font-normal uppercase tracking-wider text-muted-foreground px-4 text-center">交付时长</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
@@ -112,14 +112,14 @@ export function KeySpecialsTable() {
                 i % 2 === 1 && "bg-background/40",
               )}
             >
-              <TableCell className="max-w-[240px] px-3 py-2 font-semibold text-foreground group-hover:text-accent transition-colors">
+              <TableCell className="max-w-[240px] px-3 py-2 font-normal text-foreground group-hover:text-accent transition-colors">
                 {row.name}
               </TableCell>
               <TableCell className="px-3 py-2">
                 <Badge 
                   variant={row.status === "已完成" ? "secondary" : "outline"} 
                   className={cn(
-                    "rounded-md px-2.5 py-1 text-xs font-bold",
+                    "rounded-md px-2.5 py-1 text-xs font-normal",
                     row.status === "已完成" ? "bg-accent/20 text-accent border-accent/20" : "bg-muted/50 text-muted-foreground border-border"
                   )}
                 >
@@ -130,7 +130,7 @@ export function KeySpecialsTable() {
                 <ProgressCell value={row.progress} colorClass={row.status === "已完成" ? "bg-accent" : "bg-accent/60"} />
               </TableCell>
               <TableCell className="px-3 py-2 text-center">
-                <span className="font-mono text-xs font-bold text-foreground bg-accent/10 px-2.5 py-1 rounded text-accent">
+                <span className="font-mono text-xs font-normal text-foreground bg-accent/10 px-2.5 py-1 rounded text-accent">
                   {row.duration}
                 </span>
               </TableCell>
