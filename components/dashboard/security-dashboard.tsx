@@ -29,6 +29,7 @@ import {
 } from "react-simple-maps"
 
 import {
+  branchSecurityData,
   capabilityData,
   inspectionCategoryData,
   outstandingBranches,
@@ -306,6 +307,7 @@ function AssessmentBars({ data }: { data: { name: string; value: number }[] }) {
 
 function ChinaSecurityMap() {
   const [selectedProvince, setSelectedProvince] = useState("")
+  const selectedScore = branchSecurityData.find((item) => selectedProvince.includes(item.name.replace("市", "")))?.value
 
   return (
     <div className="relative h-[300px] overflow-hidden rounded-xl border border-border/60 bg-gradient-to-br from-background/45 via-background/20 to-card/90">
@@ -364,19 +366,15 @@ function ChinaSecurityMap() {
 
       <div className="pointer-events-none absolute right-3 top-3 rounded-md border border-border/60 bg-card/95 px-3 py-2 text-xs shadow-sm">
         {selectedProvince ? (
-          <span className="text-accent">{selectedProvince}</span>
+          <div className="grid gap-1"><span className="font-semibold text-foreground">{selectedProvince}</span><span className="text-muted-foreground">安全能力得分：<strong className="font-mono text-accent">{selectedScore?.toFixed(2) ?? "待接入"}</strong>{selectedScore === undefined ? "" : " 分"}</span></div>
         ) : (
-          <span className="text-muted-foreground">点击区域查看详情</span>
+          <span className="text-muted-foreground">点击省份查看安全能力得分</span>
         )}
       </div>
 
       <div className="absolute bottom-3 left-3 rounded-md border border-border/60 bg-card/95 px-3 py-2 text-[11px] text-muted-foreground shadow-sm">
-        <div className="mb-1 text-foreground">安全能力得分</div>
-        <div className="flex items-center gap-2">
-          <span className="h-1.5 w-20 rounded-full bg-gradient-to-r from-primary to-accent" />
-          <span>60.29</span>
-          <span>96.26</span>
-        </div>
+        <div className="mb-1 text-foreground">地区安全能力得分</div>
+        <div className="text-[10px] text-muted-foreground">点击省份后显示对应得分，数据接口接入后自动更新</div>
       </div>
     </div>
   )
