@@ -59,7 +59,7 @@ export default function Page() {
       <TopNav />
       
       <div className="relative mx-auto flex max-w-[1720px] flex-col gap-6 px-4 py-6 md:px-8 lg:px-10">
-        <HeroBanner title="人工智能+驾驶舱" subtitle="整体统筹 · 过程管控 · 重点跟踪 · 成效展示" />
+        <HeroBanner title="人工智能+驾驶舱" subtitle="目标牵引 · 任务推进 · 协同督办 · 成果沉淀" />
         <div className="flex overflow-hidden rounded-lg border border-primary/20 bg-muted/50 text-sm font-semibold">
           <Link href="/" className="flex-1 bg-primary px-4 py-2 text-center text-primary-foreground">驾驶舱总览</Link>
           <Link href="/team" className="flex-1 px-4 py-2 text-center text-muted-foreground transition-colors hover:bg-primary/10">专班建设概览</Link>

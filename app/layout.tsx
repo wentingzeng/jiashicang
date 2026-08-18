@@ -13,7 +13,7 @@ const _geistMono = Geist_Mono({ subsets: ['latin'], variable: '--font-mono' })
 
 export const metadata: Metadata = {
   title: '人工智能+驾驶舱',
-  description: '整体统筹 · 过程管控 · 重点跟踪 · 成效展示',
+  description: '目标牵引 · 任务推进 · 协同督办 · 成果沉淀',
   generator: 'v0.app',
   icons: {
     icon: [
