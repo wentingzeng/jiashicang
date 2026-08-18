@@ -1,4 +1,3 @@
-import Link from "next/link"
 import { TopNav } from "@/components/dashboard/top-nav"
 import { HeroBanner } from "@/components/dashboard/hero-banner"
 import { KpiCards } from "@/components/dashboard/kpi-cards"
@@ -60,22 +59,11 @@ export default function Page() {
       
       <div className="relative mx-auto flex max-w-[1720px] flex-col gap-6 px-4 py-6 md:px-8 lg:px-10">
         <HeroBanner title="人工智能+驾驶舱" subtitle="目标牵引 · 任务推进 · 协同督办 · 成果沉淀" />
-        <div className="flex overflow-hidden rounded-lg border border-primary/20 bg-muted/50 text-sm font-semibold">
-          <Link href="/" className="flex-1 bg-primary px-4 py-2 text-center text-primary-foreground">驾驶舱总览</Link>
-          <Link href="/team" className="flex-1 px-4 py-2 text-center text-muted-foreground transition-colors hover:bg-primary/10">专班建设概览</Link>
-        </div>
 
         {/* Overview Section */}
         <section aria-labelledby="overview-title" className="flex animate-in fade-in slide-in-from-bottom-4 duration-700 gap-6">
           <SectionRail label="核心概览" tone="primary" />
           <div className="flex min-w-0 flex-1 flex-col gap-5">
-            <div className="flex items-center gap-3">
-              <h2 id="overview-title" className="text-2xl font-bold tracking-tight md:text-3xl">
-                核心概览
-              </h2>
-              <div className="h-5 w-px bg-border/60" />
-              <p className="text-base text-muted-foreground">Core KPI Overview</p>
-            </div>
             <KpiCards />
             <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
               <TaskStatusPanel />
@@ -89,13 +77,6 @@ export default function Page() {
         <section aria-labelledby="eng-title" className="flex animate-in fade-in slide-in-from-bottom-4 duration-700 delay-150 gap-6">
           <SectionRail label="工程建设" tone="accent" />
           <div className="flex min-w-0 flex-1 flex-col gap-5">
-            <div className="flex items-center gap-3">
-              <h2 id="eng-title" className="text-2xl font-bold tracking-tight md:text-3xl">
-                工程建设
-              </h2>
-              <div className="h-5 w-px bg-border/60" />
-              <p className="text-base text-muted-foreground">Engineering & Assets</p>
-            </div>
             <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4 xl:grid-cols-5">
               {engineeringPanels.map((panel) => (
                 <MetricPanelCard key={panel.key} panel={panel} />
@@ -111,13 +92,6 @@ export default function Page() {
         <section aria-labelledby="foundation-title" className="flex animate-in fade-in slide-in-from-bottom-4 duration-700 delay-300 gap-6">
           <SectionRail label="技术底座" tone="chart-4" />
           <div className="flex min-w-0 flex-1 flex-col gap-5">
-            <div className="flex items-center gap-3">
-              <h2 id="foundation-title" className="text-2xl font-bold tracking-tight md:text-3xl">
-                技术底座
-              </h2>
-              <div className="h-5 w-px bg-border/60" />
-              <p className="text-base text-muted-foreground">Technical Foundation</p>
-            </div>
             <TechFoundationStrip />
           </div>
         </section>

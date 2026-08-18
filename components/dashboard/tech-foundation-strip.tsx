@@ -1,6 +1,6 @@
 "use client"
 
-import { Cpu, Server, Zap, Boxes, Database, type LucideIcon } from "lucide-react"
+import { Server, Zap, Boxes, Database, type LucideIcon } from "lucide-react"
 import { Card } from "@/components/ui/card"
 import { techFoundationGroups, type TechFoundationGroup, type TechStat } from "@/lib/mock-data"
 import { useLiveValue } from "@/lib/use-live-value"
@@ -49,12 +49,6 @@ function GroupPanel({ group }: { group: TechFoundationGroup }) {
 export function TechFoundationStrip() {
   return (
     <Card className="gap-4 p-5">
-      <div className="flex items-center gap-2.5">
-        <span className="flex size-7 shrink-0 items-center justify-center rounded-md bg-primary/15 text-primary">
-          <Cpu className="size-4" aria-hidden="true" />
-        </span>
-        <h3 className="text-sm font-semibold text-foreground">技术底座</h3>
-      </div>
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
         {techFoundationGroups.map((group) => (
           <GroupPanel key={group.key} group={group} />
