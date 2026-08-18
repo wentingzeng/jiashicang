@@ -316,7 +316,15 @@ function AssessmentBars({ data }: { data: { name: string; value: number }[] }) {
 function ChinaSecurityMap() {
   const [selectedProvince, setSelectedProvince] = useState("")
   const normalizeRegion = (name: string) => name.replace(/(省|市|自治区|特别行政区)$/u, "").replace(/(壮族|回族|维吾尔)$/u, "")
-  const selectedScore = branchSecurityData.find((item) => normalizeRegion(selectedProvince).includes(normalizeRegion(item.name)) || normalizeRegion(item.name).includes(normalizeRegion(selectedProvince)))?.value
+  const selectedItem = branchSecurityData.find((item) => normalizeRegion(selectedProvince).includes(normalizeRegion(item.name)) || normalizeRegion(item.name).includes(normalizeRegion(selectedProvince)))
+  const scores = branchSecurityData.map((item) => item.value)
+  const minScore = Math.min(...scores)
+  const maxScore = Math.max(...scores)
+  const scoreColor = (score: number) => {
+    const ratio = (score - minScore) / Math.max(maxScore - minScore, 1)
+    const light = Math.round(77 - ratio * 45)
+    return `hsl(204 58% ${light}%)`
+  }
 
   return (
     <div className="relative h-[440px] overflow-hidden rounded-xl border border-border/60 bg-gradient-to-br from-background/45 via-background/20 to-card/90">
@@ -346,8 +354,8 @@ function ChinaSecurityMap() {
                   key={`${geo.rsmKey}-${index}`}
                   geography={geo}
                   onClick={() => setSelectedProvince(province)}
-                  fill={selected ? "#13a8a8" : "#4d8fca"}
-                  fillOpacity={selected ? 1 : 0.62}
+                  fill={selected ? "#13a8a8" : scoreColor(branchSecurityData.find((item) => normalizeRegion(province).includes(normalizeRegion(item.name)) || normalizeRegion(item.name).includes(normalizeRegion(province)))?.value ?? minScore)}
+                  fillOpacity={selected ? 1 : 0.9}
                   stroke="#ffffff"
                   strokeWidth={0.8}
                   style={{
@@ -373,12 +381,8 @@ function ChinaSecurityMap() {
         </Geographies>
       </ComposableMap>
 
-      <div className="pointer-events-none absolute bottom-3 right-3 rounded-md border border-border/60 bg-card/95 px-3 py-2 text-xs shadow-sm">
-        {selectedProvince ? (
-          <div className="grid gap-1"><span className="font-semibold text-foreground">{selectedProvince}</span><span className="text-muted-foreground">安全能力得分：<strong className="font-mono text-accent">{selectedScore?.toFixed(2) ?? "待接入"}</strong>{selectedScore === undefined ? "" : " 分"}</span></div>
-        ) : (
-          <span className="text-muted-foreground">点击省份查看安全能力得分</span>
-        )}
+      <div className="pointer-events-none absolute bottom-3 right-3 min-w-64 rounded-xl border border-primary/20 bg-card/95 px-3 py-2.5 text-xs shadow-md">
+        {selectedProvince && selectedItem ? (() => { const rank = [...branchSecurityData].sort((a, b) => b.value - a.value).findIndex((item) => item.name === selectedItem.name) + 1; const category = selectedItem.value >= 90 ? "一等行" : selectedItem.value >= 82 ? "二等行" : "三等行"; const categoryRank = [...branchSecurityData].filter((item) => category === "一等行" ? item.value >= 90 : category === "二等行" ? item.value >= 82 && item.value < 90 : item.value < 82).sort((a, b) => b.value - a.value).findIndex((item) => item.name === selectedItem.name) + 1; return <div className="grid gap-1.5"><div className="mb-1 border-b border-border/60 pb-1.5 text-sm font-semibold text-foreground">{selectedProvince}</div><div className="grid grid-cols-[1fr_auto] gap-x-5 gap-y-1 text-muted-foreground"><span>网络安全全年合计得分</span><strong className="font-mono text-base text-primary">{selectedItem.value.toFixed(2)}</strong><span>2025年排名（按全行）</span><strong className="font-mono text-foreground">第 {rank} 名</strong><span>类别</span><strong className="text-foreground">{category}</strong><span>2025年排名（按等级行）</span><strong className="font-mono text-foreground">第 {categoryRank} 名</strong></div></div> })() : <span className="text-muted-foreground">点击省份查看安全能力得分</span>}
       </div>
 
     </div>
