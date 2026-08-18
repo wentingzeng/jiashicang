@@ -41,8 +41,8 @@ import {
   weakBranches,
 } from "@/lib/security-data"
 
-// 省级 GeoJSON：包含 34 个省级行政区，确保每个省份都有独立边界和点击区域。
-const chinaMapUrl = "https://geo.datav.aliyun.com/areas_v3/bound/100000_full.json"
+// 省级 GeoJSON：包含 34 个省级行政区，确保每个省份都有独立边界和点击区域。托管在本地以避免外部请求被拦截。
+const chinaMapUrl = "/maps/china-provinces.json"
 
 const chartGrid = "rgba(79, 112, 145, 0.18)"
 const chartText = "#60758b"
@@ -312,14 +312,14 @@ function ChinaSecurityMap() {
   const selectedScore = branchSecurityData.find((item) => normalizeRegion(selectedProvince).includes(normalizeRegion(item.name)) || normalizeRegion(item.name).includes(normalizeRegion(selectedProvince)))?.value
 
   return (
-    <div className="relative h-[300px] overflow-hidden rounded-xl border border-border/60 bg-gradient-to-br from-background/45 via-background/20 to-card/90">
+    <div className="relative h-[320px] overflow-hidden rounded-xl border border-border/60 bg-gradient-to-br from-background/45 via-background/20 to-card/90">
       <ComposableMap
         width={800}
-        height={390}
+        height={460}
         projection="geoMercator"
         projectionConfig={{
-          center: [105, 35],
-          scale: 530,
+          center: [104.3, 35.9],
+          scale: 750,
         }}
         className="h-full w-full"
       >
@@ -342,7 +342,7 @@ function ChinaSecurityMap() {
                   fill={selected ? "#13a8a8" : "#4d8fca"}
                   fillOpacity={selected ? 1 : 0.62}
                   stroke="#ffffff"
-                  strokeWidth={0.7}
+                  strokeWidth={1.2}
                   style={{
                     default: {
                       outline: "none",
