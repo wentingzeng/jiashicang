@@ -399,7 +399,15 @@ export function ProjectDashboard() {
                     ticks={[0, 50, 100, 150, 200]}
                     tick={{ fontSize: 9 }}
                   />
-                    <Tooltip cursor={false} contentStyle={tooltipStyle} />
+                    <Tooltip
+                      cursor={false}
+                      contentStyle={tooltipStyle}
+                      labelFormatter={(label) => String(label)}
+                      formatter={(value, name) => {
+                        const label = name === "项目平均交付周期（天）" ? "项目平均交付周期（天）" : "项目个数"
+                        return [name === "项目平均交付周期（天）" ? `${Number(value)}天` : `${Number(value)}个`, label]
+                      }}
+                    />
                     <Legend
                       verticalAlign="bottom"
                       height={22}
