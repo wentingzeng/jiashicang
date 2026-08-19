@@ -159,19 +159,16 @@ function ChartBox({
     <div className="rounded-lg border border-border/50 bg-background/20 p-3">
       <div className="mb-3 flex items-center justify-between text-xs text-muted-foreground">
         <span>{label}</span>
-        <span className="font-mono text-[10px]">按分行排名</span>
+        <span className="font-mono text-[10px]">单位：人次</span>
       </div>
-      <div className="space-y-2.5" style={{ minHeight: `${height}px` }}>
+      <div className="flex items-end gap-1.5 overflow-x-auto pb-1" style={{ minHeight: `${height}px` }}>
         {data.map((item) => {
-          const width = Math.max((item.value / maxValue) * 100, 3)
+          const barHeight = Math.max((item.value / maxValue) * (height - 40), 8)
           return (
-            <div key={item.name} className="group grid grid-cols-[5.5rem_1fr_auto] items-center gap-2" title={`${item.name}：${item.value.toLocaleString()}人次`}>
-              <span className="truncate text-[11px] text-muted-foreground">{item.name}</span>
-              <div className="relative h-2 rounded-full bg-muted/60">
-                <div className="absolute left-0 top-1/2 h-px -translate-y-1/2 rounded-full transition-all group-hover:h-0.5" style={{ width: `${width}%`, backgroundColor: color }} />
-                <div className="absolute top-1/2 size-2.5 -translate-y-1/2 -translate-x-1/2 rounded-full border-2 border-background shadow-sm transition-transform group-hover:scale-125" style={{ left: `${width}%`, backgroundColor: color }} />
-              </div>
-              <span className="font-mono text-[10px] text-foreground/75 group-hover:text-foreground">{item.value.toLocaleString()}人次</span>
+            <div key={item.name} className="group flex min-w-[2.6rem] flex-1 flex-col items-center justify-end gap-1" title={`${item.name}：${item.value.toLocaleString()}人次`}>
+              <span className="whitespace-nowrap font-mono text-[9px] text-muted-foreground opacity-0 transition-opacity group-hover:opacity-100">{item.value.toLocaleString()}</span>
+              <div className="w-full rounded-t-md transition-all group-hover:brightness-110" style={{ height: `${barHeight}px`, minHeight: 8, background: `linear-gradient(180deg, ${color}, ${color}99)` }} />
+              <span className="max-w-[3.5rem] truncate text-[10px] text-muted-foreground">{item.name.replace("分行", "")}</span>
             </div>
           )
         })}
