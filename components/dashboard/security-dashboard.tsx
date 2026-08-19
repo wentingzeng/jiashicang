@@ -79,7 +79,7 @@ function Panel({
   }
 
   return (
-    <section className={["flex min-h-0 flex-1 flex-col overflow-hidden rounded-xl border border-border/70 bg-card/90 shadow-[0_8px_28px_oklch(0.35_0.06_240/8%)] backdrop-blur-sm", className].filter(Boolean).join(" ")}>
+    <section className={["overflow-hidden rounded-xl border border-border/70 bg-card/90 shadow-[0_8px_28px_oklch(0.35_0.06_240/8%)] backdrop-blur-sm", className].filter(Boolean).join(" ")}>
       <header
         className={[
           "relative flex items-center gap-3 border-b border-border/60",
@@ -104,7 +104,7 @@ function Panel({
         </h2>
 
       </header>
-      <div className={["flex-1", bodyClassName ?? (compact ? "p-2.5" : "p-4")].join(" ")}>{children}</div>
+      <div className={bodyClassName ?? (compact ? "p-2.5" : "p-4")}>{children}</div>
     </section>
   )
 }
