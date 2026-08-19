@@ -436,9 +436,9 @@ export function BranchDashboard() {
 
             <div className="grid gap-3 xl:grid-cols-[0.75fr_1.25fr] xl:items-start">
               <PanelCard className="h-full" title="运维指标" icon={<Gauge className="size-4" />}>
-                <div className="grid gap-x-2 gap-y-1 md:grid-cols-6">
-                  {current.operationMetrics.map((item, index) => (
-                    <div key={item.label} className={index < 2 ? "md:col-span-3" : "md:col-span-2"}>
+                <div className="grid gap-x-2 gap-y-1 md:grid-cols-3">
+                  {current.operationMetrics.map((item) => (
+                    <div key={item.label}>
                       <MetricTile item={item} />
                     </div>
                   ))}
