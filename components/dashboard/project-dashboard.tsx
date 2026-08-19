@@ -416,7 +416,7 @@ export function ProjectDashboard() {
                       yAxisId="days"
                       type="monotone"
                       dataKey="days"
-                      name="项��平均交付周期（天）"
+                      name="项目平均交付周期（天）"
                       stroke="#0d9488"
                       strokeWidth={3}
                       dot={{ r: 4, fill: "#0d9488" }}
