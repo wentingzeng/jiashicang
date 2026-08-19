@@ -256,7 +256,7 @@ export function ProjectDashboard() {
     <main className="min-h-screen bg-background px-4 pb-4 text-foreground md:px-6">
       <div className="mx-auto max-w-[1800px]">
         <HeroBanner
-          title="项目管理驾驶舱"
+          title="��目管理驾驶舱"
           subtitle="目标牵引 · 任������推进 · 协同督办 · 成果沉淀"
         />
         <div className="grid grid-cols-2 gap-3 py-2 md:grid-cols-3 xl:grid-cols-6">
@@ -321,16 +321,27 @@ export function ProjectDashboard() {
           <Panel title="在建项目进展情况">
             <ProgressBars data={progressData} />
           </Panel>
-          <Panel title="延期项目情况">
-            <div className="grid grid-cols-3 gap-2 p-3">
-              {overdueData.map((item, index) => (
-<div key={item.name} className="flex min-h-28 flex-col rounded-lg border border-border/60 bg-card p-3 shadow-sm">
-  <div className="flex items-center justify-between gap-2"><p className="text-xs font-medium text-muted-foreground">{item.name.replace("项目", "")}</p><span className="size-2 rounded-full" style={{ backgroundColor: palette[index + 1] }} /></div>
-  <p className="mt-2 font-mono text-2xl font-bold tracking-tight" style={{ color: palette[index + 1] }}>{item.count}<span className="ml-1 text-sm font-medium">项</span></p>
-  <div className="mt-auto pt-4"><div className="mb-2 flex justify-between text-[10px] text-muted-foreground"><span>延期占比</span><span>{item.value.toFixed(2)}%</span></div><div className="h-2 rounded-full bg-muted"><div className="h-full rounded-full" style={{ width: `${item.value}%`, backgroundColor: palette[index + 1] }} /></div></div>
-</div>
-              ))}
-            </div>
+          <Panel title="项目进度绩效表">
+            <ChartBox>
+              <BarChart
+                data={[
+                  { name: "[0,0.5]", value: 35 },
+                  { name: "[0.5,1]", value: 144 },
+                  { name: "[1,1.5]", value: 46 },
+                  { name: ">1.5", value: 4 },
+                ]}
+                margin={{ top: 18, right: 10, bottom: 12, left: 0 }}
+              >
+                <CartesianGrid vertical={false} strokeDasharray="3 3" />
+                <XAxis dataKey="name" tick={{ fontSize: 10 }} />
+                <YAxis tick={{ fontSize: 10 }} />
+                <Tooltip formatter={(value) => [`${Number(value)}个`, "项目个数"]} cursor={false} contentStyle={tooltipStyle} />
+                <Bar dataKey="value" fill="#3157d5" radius={[6, 6, 0, 0]}>
+                  {[35, 144, 46, 4].map((_, index) => <Cell key={index} fill={palette[index]} />)}
+                  <LabelList dataKey="value" position="top" formatter={(value: number) => `${value}个`} fill="var(--foreground)" fontSize={10} />
+                </Bar>
+              </BarChart>
+            </ChartBox>
           </Panel>
           <Panel title="分布式核心任务进展">
             <div className="grid grid-cols-2 gap-2 p-3">
@@ -354,33 +365,16 @@ export function ProjectDashboard() {
               ))}
             </div>
           </Panel>
-          <Panel title="项目进度绩效表">
-            <ChartBox>
-              <BarChart
-                data={[
-                  { name: "[0,0.5]", value: 35 },
-                  { name: "[0.5,1]", value: 144 },
-                  { name: "[1,1.5]", value: 46 },
-                  { name: ">1.5", value: 4 },
-                ]}
-                margin={{ top: 18, right: 10, bottom: 12, left: 0 }}
-              >
-                <CartesianGrid vertical={false} strokeDasharray="3 3" />
-                <XAxis dataKey="name" tick={{ fontSize: 10 }} />
-                <YAxis tick={{ fontSize: 10 }} />
-                <Tooltip
-                  formatter={(value) => [`${Number(value)}个`, "项目个数"]}
-                  cursor={false}
-                  contentStyle={tooltipStyle}
-                />
-                <Bar dataKey="value" fill="#3157d5" radius={[6, 6, 0, 0]}>
-                  {[35, 144, 46, 4].map((_, index) => (
-                    <Cell key={index} fill={palette[index]} />
-                  ))}
-                  <LabelList dataKey="value" position="top" formatter={(value: number) => `${value}个`} fill="var(--foreground)" fontSize={10} />
-                </Bar>
-              </BarChart>
-            </ChartBox>
+          <Panel title="延期项目情况">
+            <div className="grid grid-cols-2 gap-2 p-3">
+              {overdueData.map((item, index) => (
+                <div key={item.name} className="flex min-h-28 flex-col rounded-lg border border-border/60 bg-card p-3 shadow-sm">
+                  <div className="flex items-center justify-between gap-2"><p className="text-xs font-medium text-muted-foreground">{item.name.replace("项目", "")}</p><span className="size-2 rounded-full" style={{ backgroundColor: palette[index + 1] }} /></div>
+                  <p className="mt-2 font-mono text-2xl font-bold tracking-tight" style={{ color: palette[index + 1] }}>{item.count}<span className="ml-1 text-sm font-medium">项</span></p>
+                  <div className="mt-auto pt-4"><div className="mb-2 flex justify-between text-[10px] text-muted-foreground"><span>延期占比</span><span>{item.value.toFixed(2)}%</span></div><div className="h-2 rounded-full bg-muted"><div className="h-full rounded-full" style={{ width: `${item.value}%`, backgroundColor: palette[index + 1] }} /></div></div>
+                </div>
+              ))}
+            </div>
           </Panel>
         </div>
         <div className="mt-3">
