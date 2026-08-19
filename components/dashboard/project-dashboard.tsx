@@ -49,9 +49,9 @@ const progressData = [
   { name: "上线准备", value: 11 },
 ];
 const overdueData = [
-  { name: "重度延期项目", value: 10.34 },
-  { name: "轻度延期项目", value: 79.31 },
-  { name: "中度延期项目", value: 10.34 },
+  { name: "轻度延期项目", count: 23, value: 23 },
+  { name: "中度延期项目", count: 3, value: 3 },
+  { name: "重度延期项目", count: 3, value: 3 },
 ];
 const taskData = [
   { name: "待执行的任务数", value: 331 },
@@ -60,10 +60,10 @@ const taskData = [
   { name: "已完成的任务数", value: 119 },
 ];
 const keyProgressData = [
-  { name: "待启动项目", value: 23.11 },
-  { name: "已投产项目", value: 31.37 },
-  { name: "在建项目", value: 44.34 },
-  { name: "延期项目", value: 1.18 },
+  { name: "待启动项目", count: 98, value: 23.11 },
+  { name: "已投产项目", count: 133, value: 31.37 },
+  { name: "在建项目", count: 188, value: 44.34 },
+  { name: "延期项目", count: 5, value: 1.18 },
 ];
 const deliveryData = [
   { name: "2026投产项目", count: 145, days: 176 },
@@ -257,7 +257,7 @@ export function ProjectDashboard() {
       <div className="mx-auto max-w-[1800px]">
         <HeroBanner
           title="项目管理驾驶舱"
-          subtitle="目标牵引 · 任�����推进 · 协同督办 · 成果沉淀"
+          subtitle="目标牵引 · 任������推进 · 协同督办 · 成果沉淀"
         />
         <div className="grid grid-cols-2 gap-3 py-2 md:grid-cols-3 xl:grid-cols-6">
           {kpis.map(({ label, value, unit, icon: Icon, danger }) => (
@@ -324,12 +324,11 @@ export function ProjectDashboard() {
           <Panel title="延期项目情况">
             <div className="grid grid-cols-3 gap-3 p-4">
               {overdueData.map((item, index) => (
-                <div key={item.name} className="flex min-h-36 flex-col rounded-xl border border-border/60 bg-muted/20 p-4">
-                  <div className="mb-4 h-1.5 rounded-full bg-muted"><div className="h-full rounded-full" style={{ width: `${item.value}%`, backgroundColor: palette[index + 1] }} /></div>
-                  <p className="text-xs leading-5 text-muted-foreground">{item.name}</p>
-                  <p className="mt-2 font-mono text-2xl font-bold" style={{ color: palette[index + 1] }}>{item.value.toFixed(2)}%</p>
-                  <p className="mt-auto pt-2 text-[11px] text-muted-foreground">延期占比</p>
-                </div>
+<div key={item.name} className="flex min-h-36 flex-col rounded-xl border border-border/60 bg-card p-4 shadow-sm">
+  <div className="flex items-center justify-between gap-2"><p className="text-xs font-medium text-muted-foreground">{item.name.replace("项目", "")}</p><span className="size-2 rounded-full" style={{ backgroundColor: palette[index + 1] }} /></div>
+  <p className="mt-4 font-mono text-3xl font-bold tracking-tight" style={{ color: palette[index + 1] }}>{item.count}<span className="ml-1 text-sm font-medium">项</span></p>
+  <div className="mt-auto pt-4"><div className="mb-2 flex justify-between text-[10px] text-muted-foreground"><span>延期占比</span><span>{item.value.toFixed(2)}%</span></div><div className="h-2 rounded-full bg-muted"><div className="h-full rounded-full" style={{ width: `${item.value}%`, backgroundColor: palette[index + 1] }} /></div></div>
+</div>
               ))}
             </div>
           </Panel>
@@ -347,11 +346,11 @@ export function ProjectDashboard() {
           <Panel title="全行重点项目进展情况">
             <div className="grid grid-cols-2 gap-3 p-4">
               {keyProgressData.map((item, index) => (
-                <div key={item.name} className="flex min-h-36 flex-col rounded-xl border border-border/60 bg-muted/20 p-4">
-                  <div className="flex items-center justify-between gap-2"><span className="text-xs leading-5 text-muted-foreground">{item.name}</span><span className="size-2 rounded-full" style={{ backgroundColor: palette[index] }} /></div>
-                  <div className="mt-3 flex items-end justify-between gap-3"><span className="font-mono text-2xl font-bold" style={{ color: palette[index] }}>{item.value.toFixed(2)}%</span><span className="text-[11px] text-muted-foreground">项目占比</span></div>
-                  <div className="mt-auto h-1.5 rounded-full bg-muted"><div className="h-full rounded-full" style={{ width: `${item.value}%`, backgroundColor: palette[index] }} /></div>
-                </div>
+<div key={item.name} className="flex min-h-36 flex-col rounded-xl border border-border/60 bg-card p-4 shadow-sm">
+  <div className="flex items-center justify-between gap-2"><span className="text-xs font-medium text-muted-foreground">{item.name}</span><span className="size-2 rounded-full" style={{ backgroundColor: palette[index] }} /></div>
+  <p className="mt-4 font-mono text-3xl font-bold tracking-tight" style={{ color: palette[index] }}>{item.count}<span className="ml-1 text-sm font-medium">项</span></p>
+  <div className="mt-auto pt-4"><div className="mb-2 flex justify-between text-[10px] text-muted-foreground"><span>项目占比</span><span>{item.value.toFixed(2)}%</span></div><div className="h-2 rounded-full bg-muted"><div className="h-full rounded-full" style={{ width: `${item.value}%`, backgroundColor: palette[index] }} /></div></div>
+</div>
               ))}
             </div>
           </Panel>
