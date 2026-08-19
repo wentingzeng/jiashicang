@@ -429,7 +429,7 @@ export function SecurityDashboard() {
                 <CapabilityBars data={capabilityData} label="各分行综合能力评分" />
               </Panel>
 
-              <Panel title="员工安全画像" tone="primary" bodyClassName="p-3">
+              <Panel title="员工安全画像" tone="primary" bodyClassName="p-3" className="flex-1">
                 <div className="space-y-3">
                   <div className="grid grid-cols-2 gap-2.5">
                     <StatCard
