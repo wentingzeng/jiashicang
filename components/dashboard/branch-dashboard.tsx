@@ -311,7 +311,7 @@ function RingChart({ value, total, label }: { value: number; total: number; labe
         <div className="text-[11px] text-muted-foreground">{label}</div>
         <div className="mt-1 font-mono text-[28px] font-black leading-none text-primary">{value}</div>
       </div>
-      <div className="absolute right-1 top-2 text-[11px] text-muted-foreground">{Math.round(percent)}%</div>
+      <div className="absolute right-1 top-2 text-[14px] text-muted-foreground">{Math.round(percent)}%</div>
     </div>
   )
 }
