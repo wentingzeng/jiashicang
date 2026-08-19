@@ -4,7 +4,6 @@ import { usePathname } from "next/navigation"
 import Link from "next/link"
 import { cn } from "@/lib/utils"
 import { navItems } from "@/lib/mock-data"
-import { BrainCircuit } from "lucide-react"
 
 export function TopNav() {
   const pathname = usePathname()
@@ -50,7 +49,6 @@ export function TopNav() {
                 isActive ? "text-accent" : "text-muted-foreground hover:text-foreground",
               )}
             >
-              {index === 0 && <BrainCircuit className="size-4" aria-hidden="true" />}
               {item.label}
               {isActive && (
                 <span className="absolute inset-x-3 bottom-0 h-0.5 rounded-full bg-accent shadow-[0_0_8px_var(--accent)]" aria-hidden="true" />

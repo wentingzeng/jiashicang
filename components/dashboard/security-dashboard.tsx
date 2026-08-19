@@ -391,7 +391,7 @@ export function SecurityDashboard() {
 
         <section className="mb-6 grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
           <StatCard
-            label="综合安全��力得分"
+            label="综合安全能力得分"
             value={securityOverview.totalScore}
             unit="分"
             icon={ShieldCheck}

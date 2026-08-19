@@ -344,10 +344,7 @@ function GaugeMeter({ roomMode }: { roomMode: "central" | "disaster" }) {
         <div className="font-mono text-[24px] font-black text-primary">22.22%</div>
       </div>
       <div className="absolute left-[8px] bottom-3 text-[10px] text-muted-foreground">0</div>
-      <div className="absolute left-[54px] bottom-3 text-[10px] text-muted-foreground">10</div>
-      <div className="absolute left-[100px] bottom-3 text-[10px] text-muted-foreground">20</div>
-      <div className="absolute left-[146px] bottom-3 text-[10px] text-muted-foreground">30</div>
-      <div className="absolute right-[8px] bottom-3 text-[10px] text-muted-foreground">40</div>
+<div className="absolute right-[8px] bottom-3 text-[10px] text-muted-foreground">40</div>
     </div>
   )
 }
