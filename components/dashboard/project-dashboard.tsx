@@ -352,7 +352,7 @@ export function ProjectDashboard() {
                 <div key={item.name} className="flex min-h-28 flex-col rounded-lg border border-border/60 bg-card p-3 shadow-sm">
                   <div className="flex items-start justify-between gap-2"><span className="text-xs leading-5 text-muted-foreground">{item.name}</span><span className="size-2 shrink-0 rounded-full" style={{ backgroundColor: palette[index] }} /></div>
                   <p className="mt-2 font-mono text-2xl font-bold text-foreground">{item.value}<span className="ml-1 text-sm font-medium">项</span></p>
-                  <div className="mt-auto pt-4"><div className="mb-2 flex justify-between text-[10px] text-muted-foreground"><span>任务进度</span><span>{((item.value / taskTotal) * 100).toFixed(2)}%</span></div><div className="h-2 rounded-full bg-muted"><div className="h-full rounded-full" style={{ width: `${(item.value / taskTotal) * 100}%`, backgroundColor: palette[index] }} /></div></div>
+                  <div className="mt-auto pt-4"><div className="mb-2 flex justify-between text-[10px] text-muted-foreground"><span>任务占比</span><span>{((item.value / taskTotal) * 100).toFixed(2)}%</span></div><div className="h-2 rounded-full bg-muted"><div className="h-full rounded-full" style={{ width: `${(item.value / taskTotal) * 100}%`, backgroundColor: palette[index] }} /></div></div>
                 </div>
               ))}
             </div>
