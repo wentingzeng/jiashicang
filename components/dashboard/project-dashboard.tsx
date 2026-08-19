@@ -257,7 +257,7 @@ export function ProjectDashboard() {
       <div className="mx-auto max-w-[1800px]">
         <HeroBanner
           title="项目管理驾驶舱"
-          subtitle="目标牵引 · 任��推进 · 协同督办 · 成果沉淀"
+          subtitle="目标牵引 · 任���推进 · 协同督办 · 成果沉淀"
         />
         <div className="grid grid-cols-2 gap-3 py-2 md:grid-cols-3 xl:grid-cols-6">
           {kpis.map(({ label, value, unit, icon: Icon, danger }) => (
@@ -434,11 +434,13 @@ export function ProjectDashboard() {
                     <CartesianGrid vertical={false} strokeDasharray="3 3" />
                     <XAxis dataKey="name" tick={{ fontSize: 9 }} />
                     <YAxis yAxisId="count" tick={{ fontSize: 9 }} />
-                    <YAxis
-                      yAxisId="days"
-                      orientation="right"
-                      tick={{ fontSize: 9 }}
-                    />
+<YAxis
+                    yAxisId="days"
+                    orientation="right"
+                    domain={[0, 200]}
+                    ticks={[0, 50, 100, 150, 200]}
+                    tick={{ fontSize: 9 }}
+                  />
                     <Tooltip cursor={false} contentStyle={tooltipStyle} />
                     <Legend
                       verticalAlign="bottom"
@@ -456,7 +458,7 @@ export function ProjectDashboard() {
                       yAxisId="days"
                       type="monotone"
                       dataKey="days"
-                      name="项目平均交付周期（天）"
+                      name="项��平均交付周期（天）"
                       stroke="#0d9488"
                       strokeWidth={3}
                       dot={{ r: 4, fill: "#0d9488" }}
