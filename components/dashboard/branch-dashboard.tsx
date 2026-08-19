@@ -339,8 +339,6 @@ function GaugeMeter({ roomMode }: { roomMode: "central" | "disaster" }) {
           </linearGradient>
         </defs>
       </svg>
-      <div className="absolute inset-x-4 bottom-5 h-1 rounded-full bg-[#d9e1ee]" />
-      <div className="absolute inset-x-6 bottom-5 h-1 rounded-full bg-gradient-to-r from-[#2dc2be] via-[#7ac5ff] to-[#d6dbe7]" />
       <div className="absolute left-1/2 top-[40%] -translate-x-1/2 text-center">
         <div className="text-[11px] text-muted-foreground">中心机房配套率</div>
         <div className="font-mono text-[24px] font-black text-primary">22.22%</div>

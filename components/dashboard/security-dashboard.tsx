@@ -166,7 +166,7 @@ function ChartBox({
           const barHeight = Math.max((item.value / maxValue) * (height - 40), 8)
           return (
             <div key={item.name} className="group flex min-w-[2.6rem] flex-1 flex-col items-center justify-end gap-1" title={`${item.name}：${item.value.toLocaleString()}人次`}>
-              <span className="whitespace-nowrap font-mono text-[9px] text-muted-foreground opacity-0 transition-opacity group-hover:opacity-100">{item.value.toLocaleString()}</span>
+              <span className="whitespace-nowrap font-mono text-[9px] text-muted-foreground opacity-100">{item.value.toLocaleString()}</span>
               <div className="w-full rounded-t-md transition-all group-hover:brightness-110" style={{ height: `${barHeight}px`, minHeight: 8, background: `linear-gradient(180deg, ${color}, ${color}99)` }} />
               <span className="max-w-[3.5rem] truncate text-[10px] text-muted-foreground">{item.name.replace("分行", "")}</span>
             </div>
@@ -324,7 +324,7 @@ function ChinaSecurityMap() {
       </div>
 
       <div className="pointer-events-none absolute bottom-8 right-2 min-w-56 rounded-lg border border-primary/20 bg-card/95 px-2.5 py-2 text-[11px] shadow-md">
-        {selectedProvince && selectedItem ? (() => { const rank = [...branchSecurityData].sort((a, b) => b.value - a.value).findIndex((item) => item.name === selectedItem.name) + 1; const category = selectedItem.value >= 90 ? "一等行" : selectedItem.value >= 82 ? "二等行" : "三等行"; const categoryRank = [...branchSecurityData].filter((item) => category === "一等行" ? item.value >= 90 : category === "二等行" ? item.value >= 82 && item.value < 90 : item.value < 82).sort((a, b) => b.value - a.value).findIndex((item) => item.name === selectedItem.name) + 1; return <div className="grid gap-1.5"><div className="mb-1 border-b border-border/60 pb-1.5 text-xs font-semibold text-foreground">{selectedProvince}</div><div className="grid grid-cols-[1fr_auto] gap-x-5 gap-y-1 text-muted-foreground"><span>网络安全全年合计得分</span><strong className="font-mono text-[11px] font-semibold text-primary">{selectedItem.value.toFixed(2)}</strong><span>2025年排名（按全行��</span><strong className="font-mono text-foreground">{rank}</strong><span>类别</span><strong className="text-foreground">{category}</strong><span>2025年排名（按等级行）</span><strong className="font-mono text-foreground">{categoryRank}</strong></div></div> })() : <span className="text-muted-foreground">点击省份查看安全能力得分</span>}
+        {selectedProvince && selectedItem ? (() => { const rank = [...branchSecurityData].sort((a, b) => b.value - a.value).findIndex((item) => item.name === selectedItem.name) + 1; const category = selectedItem.value >= 90 ? "一等行" : selectedItem.value >= 82 ? "二等行" : "三等行"; const categoryRank = [...branchSecurityData].filter((item) => category === "一等行" ? item.value >= 90 : category === "二等行" ? item.value >= 82 && item.value < 90 : item.value < 82).sort((a, b) => b.value - a.value).findIndex((item) => item.name === selectedItem.name) + 1; return <div className="grid gap-1.5"><div className="mb-1 border-b border-border/60 pb-1.5 text-xs font-semibold text-foreground">{selectedProvince}</div><div className="grid grid-cols-[1fr_auto] gap-x-5 gap-y-1 text-muted-foreground"><span>网络安全全年合计得分</span><strong className="font-mono text-[11px] font-semibold text-primary">{selectedItem.value.toFixed(2)}</strong><span>2025年排名（按全行）</span><strong className="font-mono text-foreground">{rank}</strong><span>类别</span><strong className="text-foreground">{category}</strong><span>2025年排名（按等级行）</span><strong className="font-mono text-foreground">{categoryRank}</strong></div></div> })() : <span className="text-muted-foreground">点击省份查看安全能力得分</span>}
       </div>
 
     </div>
@@ -391,7 +391,7 @@ export function SecurityDashboard() {
 
         <section className="mb-6 grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
           <StatCard
-            label="综合安全能力得分"
+            label="综合安全��力得分"
             value={securityOverview.totalScore}
             unit="分"
             icon={ShieldCheck}

@@ -12,6 +12,7 @@ import {
   XAxis,
   YAxis,
   CartesianGrid,
+  LabelList,
 } from "recharts"
 import { PanelCard } from "@/components/dashboard/panel-card"
 import { chartGridStroke, chartTooltip } from "@/lib/chart-utils"
@@ -108,7 +109,7 @@ export function HrRegionalDistribution() {
             contentStyle={{ ...chartTooltip.contentStyle, fontSize: '12px' }}
             cursor={{ fill: "var(--muted)", opacity: 0.35 }} 
           />
-          <Bar dataKey="value" name="人数" fill="url(#regionBar)" radius={[4, 4, 0, 0]} maxBarSize={28} />
+          <Bar dataKey="value" name="人数" fill="url(#regionBar)" radius={[4, 4, 0, 0]} maxBarSize={28}><LabelList dataKey="value" position="top" fill="var(--foreground)" fontSize={10} /></Bar>
         </BarChart>
       </ResponsiveContainer>
     </PanelCard>
