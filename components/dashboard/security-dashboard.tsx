@@ -153,70 +153,28 @@ function ChartBox({
   label: string
   height?: number
 }) {
-  const dataKey = "name"
-  const categoryChart = true
+  const maxValue = Math.max(...data.map((item) => item.value), 1)
 
   return (
     <div className="rounded-lg border border-border/50 bg-background/20 p-3">
-      <div className="mb-2 text-xs text-muted-foreground">{label}</div>
-
-      <div style={{ height: `${height}px` }}>
-        <ResponsiveContainer width="100%" height="100%" minWidth={1} minHeight={1}>
-          <LineChart
-            data={data}
-            margin={{
-              top: 8,
-              right: 8,
-              left: -22,
-              bottom: categoryChart ? 35 : 4,
-            }}
-          >
-
-            <CartesianGrid
-              vertical={false}
-              stroke={chartGrid}
-              strokeDasharray="3 4"
-            />
-
-            <XAxis
-              dataKey={dataKey}
-              axisLine={{ stroke: chartGrid }}
-              tickLine={false}
-              angle={categoryChart ? -32 : 0}
-              textAnchor={categoryChart ? "end" : "middle"}
-              interval={categoryChart ? 0 : "preserveStartEnd"}
-              tick={{ fill: chartText, fontSize: 10 }}
-            />
-
-            <YAxis
-              axisLine={{ stroke: chartGrid }}
-              tickLine={false}
-              tick={{ fill: chartText, fontSize: 10 }}
-            />
-
-            <Tooltip
-              cursor={{ stroke: color, strokeOpacity: 0.3 }}
-              contentStyle={{
-                background: "#ffffff",
-                border: "1px solid #d8e3ee",
-                borderRadius: 8,
-                color: "#24364b",
-                fontSize: 12,
-              }}
-              labelStyle={{ color: "#b4d1dd" }}
-              formatter={(value) => [`${Number(value).toLocaleString()}人次`, "数量"]}
-            />
-
-            <Line
-              type="monotone"
-              dataKey="value"
-              stroke={color}
-              strokeWidth={2.5}
-              dot={{ r: 4, fill: color, stroke: "#ffffff", strokeWidth: 2 }}
-              activeDot={{ r: 6, fill: color, stroke: "#ffffff", strokeWidth: 2 }}
-            />
-          </LineChart>
-        </ResponsiveContainer>
+      <div className="mb-3 flex items-center justify-between text-xs text-muted-foreground">
+        <span>{label}</span>
+        <span className="font-mono text-[10px]">按分行排名</span>
+      </div>
+      <div className="space-y-2.5" style={{ minHeight: `${height}px` }}>
+        {data.map((item) => {
+          const width = Math.max((item.value / maxValue) * 100, 3)
+          return (
+            <div key={item.name} className="group grid grid-cols-[5.5rem_1fr_auto] items-center gap-2" title={`${item.name}：${item.value.toLocaleString()}人次`}>
+              <span className="truncate text-[11px] text-muted-foreground">{item.name}</span>
+              <div className="relative h-2 rounded-full bg-muted/60">
+                <div className="absolute left-0 top-1/2 h-px -translate-y-1/2 rounded-full transition-all group-hover:h-0.5" style={{ width: `${width}%`, backgroundColor: color }} />
+                <div className="absolute top-1/2 size-2.5 -translate-y-1/2 -translate-x-1/2 rounded-full border-2 border-background shadow-sm transition-transform group-hover:scale-125" style={{ left: `${width}%`, backgroundColor: color }} />
+              </div>
+              <span className="font-mono text-[10px] text-foreground/75 group-hover:text-foreground">{item.value.toLocaleString()}人次</span>
+            </div>
+          )
+        })}
       </div>
     </div>
   )
