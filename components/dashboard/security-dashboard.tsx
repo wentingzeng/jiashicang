@@ -150,13 +150,13 @@ function ChartBox({
   label,
   height = 175,
 }: {
-  data: { name?: string; month?: string; value: number }[]
+  data: { name: string; value: number }[]
   color: string
   label: string
   height?: number
 }) {
-  const dataKey = data[0]?.month ? "month" : "name"
-  const categoryChart = dataKey === "name"
+  const dataKey = "name"
+  const categoryChart = true
 
   return (
     <div className="rounded-lg border border-border/50 bg-background/20 p-3">
@@ -212,6 +212,7 @@ function ChartBox({
                 fontSize: 12,
               }}
               labelStyle={{ color: "#b4d1dd" }}
+              formatter={(value) => [`${Number(value).toLocaleString()}人次`, "数量"]}
             />
 
             <Area
@@ -510,13 +511,13 @@ export function SecurityDashboard() {
                     <ChartBox
                       data={trainingTrendData}
                       color="#25a8d2"
-                      label="培训趋势"
+                      label="安全培训人次"
                       height={125}
                     />
                     <ChartBox
                       data={violationTrendData}
                       color="#d9953f"
-                      label="违规趋势"
+                      label="违规记分人次"
                       height={125}
                     />
                   </div>

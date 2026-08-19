@@ -70,33 +70,21 @@ export const securityManagementIndicators = [
 ]
 
 export const trainingTrendData = [
-  { month: "1月", value: 120 },
-  { month: "2月", value: 180 },
-  { month: "3月", value: 95 },
-  { month: "4月", value: 230 },
-  { month: "5月", value: 160 },
-  { month: "6月", value: 280 },
-  { month: "7月", value: 210 },
-  { month: "8月", value: 310 },
-  { month: "9月", value: 245 },
-  { month: "10月", value: 190 },
-  { month: "11月", value: 265 },
-  { month: "12月", value: 220 },
+  { name: "南京分行", value: 38200 }, { name: "苏州分行", value: 31800 },
+  { name: "无锡分行", value: 27600 }, { name: "常州分行", value: 24100 },
+  { name: "南通分行", value: 22800 }, { name: "徐州分行", value: 19600 },
+  { name: "扬州分行", value: 18400 }, { name: "镇江分行", value: 15200 },
+  { name: "泰州分行", value: 14800 }, { name: "盐城分行", value: 13200 },
+  { name: "淮安分行", value: 11900 }, { name: "连云港分行", value: 9800 },
 ]
 
 export const violationTrendData = [
-  { month: "1月", value: 72 },
-  { month: "2月", value: 128 },
-  { month: "3月", value: 65 },
-  { month: "4月", value: 150 },
-  { month: "5月", value: 104 },
-  { month: "6月", value: 180 },
-  { month: "7月", value: 132 },
-  { month: "8月", value: 205 },
-  { month: "9月", value: 168 },
-  { month: "10月", value: 119 },
-  { month: "11月", value: 156 },
-  { month: "12月", value: 143 },
+  { name: "南京分行", value: 286 }, { name: "苏州分行", value: 234 },
+  { name: "无锡分行", value: 198 }, { name: "常州分行", value: 176 },
+  { name: "南通分行", value: 162 }, { name: "徐州分行", value: 145 },
+  { name: "扬州分行", value: 132 }, { name: "镇江分行", value: 118 },
+  { name: "泰州分行", value: 106 }, { name: "盐城分行", value: 94 },
+  { name: "淮安分行", value: 82 }, { name: "连云港分行", value: 71 },
 ]
 
 // 演示数据：后续可整体替换为真实地区安全能力接口返回值。
