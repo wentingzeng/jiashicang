@@ -322,33 +322,33 @@ export function ProjectDashboard() {
             <ProgressBars data={progressData} />
           </Panel>
           <Panel title="延期项目情况">
-            <div className="grid grid-cols-3 gap-3 p-4">
+            <div className="grid grid-cols-3 gap-2 p-3">
               {overdueData.map((item, index) => (
-<div key={item.name} className="flex min-h-36 flex-col rounded-xl border border-border/60 bg-card p-4 shadow-sm">
+<div key={item.name} className="flex min-h-28 flex-col rounded-lg border border-border/60 bg-card p-3 shadow-sm">
   <div className="flex items-center justify-between gap-2"><p className="text-xs font-medium text-muted-foreground">{item.name.replace("项目", "")}</p><span className="size-2 rounded-full" style={{ backgroundColor: palette[index + 1] }} /></div>
-  <p className="mt-4 font-mono text-3xl font-bold tracking-tight" style={{ color: palette[index + 1] }}>{item.count}<span className="ml-1 text-sm font-medium">项</span></p>
+  <p className="mt-2 font-mono text-2xl font-bold tracking-tight" style={{ color: palette[index + 1] }}>{item.count}<span className="ml-1 text-sm font-medium">项</span></p>
   <div className="mt-auto pt-4"><div className="mb-2 flex justify-between text-[10px] text-muted-foreground"><span>延期占比</span><span>{item.value.toFixed(2)}%</span></div><div className="h-2 rounded-full bg-muted"><div className="h-full rounded-full" style={{ width: `${item.value}%`, backgroundColor: palette[index + 1] }} /></div></div>
 </div>
               ))}
             </div>
           </Panel>
           <Panel title="分布式核心任务进展">
-            <div className="grid grid-cols-2 gap-3 p-4">
+            <div className="grid grid-cols-2 gap-2 p-3">
               {taskData.map((item, index) => (
-                <div key={item.name} className="flex min-h-36 flex-col rounded-xl border border-border/60 bg-muted/20 p-4">
+                <div key={item.name} className="flex min-h-28 flex-col rounded-xl border border-border/60 bg-muted/20 p-4">
                   <div className="flex items-start justify-between gap-2"><span className="text-xs leading-5 text-muted-foreground">{item.name}</span><span className="size-2 shrink-0 rounded-full" style={{ backgroundColor: palette[index] }} /></div>
-                  <p className="mt-3 font-mono text-2xl font-bold text-foreground">{item.value}</p>
+                  <p className="mt-2 font-mono text-xl font-bold text-foreground">{item.value}</p>
                   <div className="mt-auto h-1.5 rounded-full bg-muted"><div className="h-full rounded-full" style={{ width: `${Math.min((item.value / 331) * 100, 100)}%`, backgroundColor: palette[index] }} /></div>
                 </div>
               ))}
             </div>
           </Panel>
           <Panel title="全行重点项目进展情况">
-            <div className="grid grid-cols-2 gap-3 p-4">
+            <div className="grid grid-cols-2 gap-2 p-3">
               {keyProgressData.map((item, index) => (
-<div key={item.name} className="flex min-h-36 flex-col rounded-xl border border-border/60 bg-card p-4 shadow-sm">
+<div key={item.name} className="flex min-h-28 flex-col rounded-lg border border-border/60 bg-card p-3 shadow-sm">
   <div className="flex items-center justify-between gap-2"><span className="text-xs font-medium text-muted-foreground">{item.name}</span><span className="size-2 rounded-full" style={{ backgroundColor: palette[index] }} /></div>
-  <p className="mt-4 font-mono text-3xl font-bold tracking-tight" style={{ color: palette[index] }}>{item.count}<span className="ml-1 text-sm font-medium">项</span></p>
+  <p className="mt-2 font-mono text-2xl font-bold tracking-tight" style={{ color: palette[index] }}>{item.count}<span className="ml-1 text-sm font-medium">项</span></p>
   <div className="mt-auto pt-4"><div className="mb-2 flex justify-between text-[10px] text-muted-foreground"><span>项目占比</span><span>{item.value.toFixed(2)}%</span></div><div className="h-2 rounded-full bg-muted"><div className="h-full rounded-full" style={{ width: `${item.value}%`, backgroundColor: palette[index] }} /></div></div>
 </div>
               ))}
