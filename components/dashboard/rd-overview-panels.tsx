@@ -217,8 +217,8 @@ export function DurationTrendPanel() {
   return (
     <PanelCard icon={LineIcon} title="项目研发时长" accent="accent" bodyClassName="p-2">
       <div className="mb-3 flex flex-wrap items-center gap-3 text-[11px] text-muted-foreground">
-        <span className="flex items-center gap-2">{legendDot("var(--primary)")}顺序项目研发时长</span>
-        <span className="flex items-center gap-2">{legendDot("var(--accent)")}累计平均研发时长</span>
+        <span className="flex items-center gap-2">{legendDot("var(--primary)")}顺序项目研发时长均值</span>
+        <span className="flex items-center gap-2">{legendDot("var(--accent)")}敏捷项目研发时长均值</span>
       </div>
       <ResponsiveContainer width="100%" height={200}>
         <LineChart data={rdDurationTrend} margin={{ left: 0, right: 8, top: 8, bottom: 0 }}>
@@ -226,8 +226,8 @@ export function DurationTrendPanel() {
           <XAxis dataKey="month" tick={{ fill: "var(--muted-foreground)", fontSize: 9 }} axisLine={{ stroke: "var(--border)", strokeWidth: 1 }} tickLine={{ stroke: "var(--border)", strokeWidth: 1 }} />
           <YAxis tick={{ fill: "var(--muted-foreground)", fontSize: 9 }} axisLine={{ stroke: "var(--border)", strokeWidth: 1 }} tickLine={{ stroke: "var(--border)", strokeWidth: 1 }} width={50} unit="天" />
           <Tooltip {...chartTooltip} contentStyle={{ ...chartTooltip.contentStyle, fontSize: '12px' }} />
-          <Line type="monotone" dataKey="project" name="顺序项目研发时长" stroke="var(--primary)" strokeWidth={2.5} dot={{ r: 3, fill: "var(--primary)" }} />
-          <Line type="monotone" dataKey="agile" name="累计平均研发时长" stroke="var(--accent)" strokeWidth={2} strokeDasharray="6 4" dot={false} />
+          <Line type="monotone" dataKey="project" name="顺序项目研发时长均值" stroke="var(--primary)" strokeWidth={2.5} dot={{ r: 3, fill: "var(--primary)" }} />
+          <Line type="monotone" dataKey="agile" name="敏捷项目研发时长均值" stroke="var(--accent)" strokeWidth={2} strokeDasharray="6 4" dot={false} />
         </LineChart>
       </ResponsiveContainer>
     </PanelCard>
