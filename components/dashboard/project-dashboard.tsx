@@ -163,17 +163,6 @@ function ProgressBars({
           </div>
         ))}
       </div>
-      <div className="grid grid-cols-2 gap-2 rounded-lg border border-border/60 bg-card/60 p-2 text-[10px]">
-        {data.map((item) => (
-          <div
-            key={`${item.name}-detail`}
-            className="flex items-center justify-between gap-2"
-          >
-            <span className="truncate text-muted-foreground">{item.name}</span>
-            <strong className="font-mono text-primary">{item.value}</strong>
-          </div>
-        ))}
-      </div>
     </div>
   );
 }
@@ -474,9 +463,6 @@ export function ProjectDashboard() {
                     ><LabelList dataKey="days" position="top" formatter={(value: number) => `${value}天`} fill="#0d9488" fontSize={9} /></Line>
                   </ComposedChart>
                 </ChartBox>
-                <div className="mt-2 grid gap-1 rounded-lg border border-border/60 bg-muted/20 p-2 text-[10px]">
-                  {deliveryData.map((item) => <div key={`${item.name}-detail`} className="flex items-center justify-between gap-2"><span className="truncate text-muted-foreground">{item.name}</span><span className="shrink-0 font-mono text-primary">{item.count}个 · {item.days}天</span></div>)}
-                </div>
               </div>
               <div className="grid gap-2 sm:grid-cols-3 lg:col-span-3">
                 {gauges.map((gauge) => (
