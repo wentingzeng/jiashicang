@@ -60,11 +60,14 @@ const taskData = [
   { name: "已完成的任务数", value: 119 },
 ];
 const keyProgressData = [
-  { name: "待启动项目", count: 98, value: 23.11 },
-  { name: "已投产项目", count: 133, value: 31.37 },
-  { name: "在建项目", count: 188, value: 44.34 },
-  { name: "延期项目", count: 5, value: 1.18 },
+  { name: "待启动项目", count: 98 },
+  { name: "已投产项目", count: 133 },
+  { name: "在建项目", count: 188 },
+  { name: "延期项目", count: 5 },
 ];
+const taskTotal = taskData.reduce((total, item) => total + item.value, 0);
+const keyProgressTotal = keyProgressData.reduce((total, item) => total + item.count, 0);
+const overdueTotal = overdueData.reduce((total, item) => total + item.count, 0);
 const deliveryData = [
   { name: "2026投产项目", count: 145, days: 176 },
   { name: "投产顺序项目", count: 40, days: 23 },
@@ -256,7 +259,7 @@ export function ProjectDashboard() {
     <main className="min-h-screen bg-background px-4 pb-4 text-foreground md:px-6">
       <div className="mx-auto max-w-[1800px]">
         <HeroBanner
-          title="���目管理驾驶舱"
+          title="����目管理驾驶舱"
           subtitle="目标牵引 · 任������推进 · 协同督办 · 成果沉淀"
         />
         <div className="grid grid-cols-2 gap-3 py-2 md:grid-cols-3 xl:grid-cols-6">
@@ -349,7 +352,7 @@ export function ProjectDashboard() {
                 <div key={item.name} className="flex min-h-28 flex-col rounded-lg border border-border/60 bg-card p-3 shadow-sm">
                   <div className="flex items-start justify-between gap-2"><span className="text-xs leading-5 text-muted-foreground">{item.name}</span><span className="size-2 shrink-0 rounded-full" style={{ backgroundColor: palette[index] }} /></div>
                   <p className="mt-2 font-mono text-2xl font-bold text-foreground">{item.value}<span className="ml-1 text-sm font-medium">项</span></p>
-                  <div className="mt-auto pt-4"><div className="mb-2 flex justify-between text-[10px] text-muted-foreground"><span>任务进度</span><span>{Math.min((item.value / 331) * 100, 100).toFixed(2)}%</span></div><div className="h-2 rounded-full bg-muted"><div className="h-full rounded-full" style={{ width: `${Math.min((item.value / 331) * 100, 100)}%`, backgroundColor: palette[index] }} /></div></div>
+                  <div className="mt-auto pt-4"><div className="mb-2 flex justify-between text-[10px] text-muted-foreground"><span>任务进度</span><span>{((item.value / taskTotal) * 100).toFixed(2)}%</span></div><div className="h-2 rounded-full bg-muted"><div className="h-full rounded-full" style={{ width: `${(item.value / taskTotal) * 100}%`, backgroundColor: palette[index] }} /></div></div>
                 </div>
               ))}
             </div>
@@ -360,7 +363,7 @@ export function ProjectDashboard() {
 <div key={item.name} className="flex min-h-28 flex-col rounded-lg border border-border/60 bg-card p-3 shadow-sm">
   <div className="flex items-center justify-between gap-2"><span className="text-xs font-medium text-muted-foreground">{item.name}</span><span className="size-2 rounded-full" style={{ backgroundColor: palette[index] }} /></div>
   <p className="mt-2 font-mono text-2xl font-bold tracking-tight" style={{ color: palette[index] }}>{item.count}<span className="ml-1 text-sm font-medium">项</span></p>
-  <div className="mt-auto pt-4"><div className="mb-2 flex justify-between text-[10px] text-muted-foreground"><span>项目占比</span><span>{item.value.toFixed(2)}%</span></div><div className="h-2 rounded-full bg-muted"><div className="h-full rounded-full" style={{ width: `${item.value}%`, backgroundColor: palette[index] }} /></div></div>
+  <div className="mt-auto pt-4"><div className="mb-2 flex justify-between text-[10px] text-muted-foreground"><span>项目占比</span><span>{((item.count / keyProgressTotal) * 100).toFixed(2)}%</span></div><div className="h-2 rounded-full bg-muted"><div className="h-full rounded-full" style={{ width: `${(item.count / keyProgressTotal) * 100}%`, backgroundColor: palette[index] }} /></div></div>
 </div>
               ))}
             </div>
@@ -371,7 +374,7 @@ export function ProjectDashboard() {
                 <div key={item.name} className="flex min-h-28 flex-col rounded-lg border border-border/60 bg-card p-3 shadow-sm">
                   <div className="flex items-center justify-between gap-2"><p className="text-xs font-medium text-muted-foreground">{item.name.replace("项目", "")}</p><span className="size-2 rounded-full" style={{ backgroundColor: palette[index + 1] }} /></div>
                   <p className="mt-2 font-mono text-2xl font-bold tracking-tight" style={{ color: palette[index + 1] }}>{item.count}<span className="ml-1 text-sm font-medium">项</span></p>
-                  <div className="mt-auto pt-4"><div className="mb-2 flex justify-between text-[10px] text-muted-foreground"><span>延期占比</span><span>{item.value.toFixed(2)}%</span></div><div className="h-2 rounded-full bg-muted"><div className="h-full rounded-full" style={{ width: `${item.value}%`, backgroundColor: palette[index + 1] }} /></div></div>
+                  <div className="mt-auto pt-4"><div className="mb-2 flex justify-between text-[10px] text-muted-foreground"><span>延期占比</span><span>{((item.count / overdueTotal) * 100).toFixed(2)}%</span></div><div className="h-2 rounded-full bg-muted"><div className="h-full rounded-full" style={{ width: `${(item.count / overdueTotal) * 100}%`, backgroundColor: palette[index + 1] }} /></div></div>
                 </div>
               ))}
             </div>
