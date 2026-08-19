@@ -259,8 +259,8 @@ export function ProjectDashboard() {
     <main className="min-h-screen bg-background px-4 pb-4 text-foreground md:px-6">
       <div className="mx-auto max-w-[1800px]">
         <HeroBanner
-          title="����目管理驾驶舱"
-          subtitle="目标牵引 · 任������推进 · 协同督办 · 成果沉淀"
+          title="项目管理驾驶舱"
+          subtitle="目标牵引 · 任务推进 · 协同督办 · 成果沉淀"
         />
         <div className="grid grid-cols-2 gap-3 py-2 md:grid-cols-3 xl:grid-cols-6">
           {kpis.map(({ label, value, unit, icon: Icon, danger }) => (
