@@ -341,13 +341,17 @@ function BranchList({
   color: string
 }) {
   return (
-    <div className="rounded-xl border border-border/60 bg-gradient-to-br from-background/35 via-card/80 to-background/45 px-3 py-3 shadow-[0_8px_18px_rgba(16,30,46,0.12)]">
-      <div className="mb-2 text-xs text-muted-foreground">{title}</div>
-      <div className="flex flex-wrap gap-x-3 gap-y-1">
-        {data.map((name) => (
-          <span key={name} className="text-sm" style={{ color }}>
-            {name}
-          </span>
+    <div className="rounded-xl border border-border/60 bg-card/75 p-3 shadow-sm">
+      <div className="mb-3 flex items-center justify-between gap-2">
+        <div className="text-xs font-semibold text-foreground">{title}</div>
+        <span className="rounded-full bg-muted px-2 py-0.5 font-mono text-[10px] text-muted-foreground">TOP 3</span>
+      </div>
+      <div className="grid gap-1.5">
+        {data.map((name, index) => (
+          <div key={name} className="flex items-center gap-2 rounded-lg bg-muted/45 px-2.5 py-2">
+            <span className="flex size-5 shrink-0 items-center justify-center rounded-full font-mono text-[10px] font-bold text-background" style={{ backgroundColor: color }}>{index + 1}</span>
+            <span className="truncate text-sm text-foreground">{name}</span>
+          </div>
         ))}
       </div>
     </div>
