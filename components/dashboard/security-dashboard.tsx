@@ -105,16 +105,6 @@ function Panel({
           {title}
         </h2>
 
-        <span
-          className={[
-            compact
-              ? "ml-auto rounded-full px-2 py-0.5 text-[9px] font-medium uppercase tracking-[0.18em]"
-              : "ml-auto rounded-full px-2 py-0.5 text-[10px] font-medium uppercase tracking-[0.18em]",
-            toneStyles[tone].chip,
-          ].join(" ")}
-        >
-          live
-        </span>
       </header>
       <div className={bodyClassName ?? (compact ? "p-2.5" : "p-4")}>{children}</div>
     </section>
@@ -310,7 +300,7 @@ function CategoryBars({ data, label, color = "#42bdb7" }: { data: { name: string
 function AssessmentBars({ data }: { data: { name: string; value: number }[] }) {
   const sorted = [...data].sort((a, b) => b.value - a.value).slice(0, 12).map((item) => ({ ...item, shortName: item.name.replace("分行", "") }))
   const [details, setDetails] = useState(false)
-  return <div className="h-[300px] rounded-xl border border-border/50 bg-background/20 p-3"><div className="mb-3 flex items-center justify-end"><button type="button" onClick={() => setDetails(!details)} className="text-[11px] text-muted-foreground transition-colors hover:text-primary">{details ? "返回总览" : "点击查看详情"}</button></div>{details ? <div className="h-52 overflow-y-auto rounded-xl border border-border/50 bg-card/90 shadow-md"><table className="w-full text-left text-[11px]"><thead className="sticky top-0 z-10 bg-primary text-primary-foreground"><tr><th className="w-16 px-3 py-2 font-semibold">排名</th><th className="px-3 py-2 font-semibold">分行</th><th className="w-24 px-3 py-2 text-right font-semibold">考评得分</th></tr></thead><tbody className="divide-y divide-border/30">{sorted.map((item, index) => <tr key={item.name} className={index % 2 ? "bg-muted/20" : "bg-card/40"}><td className="px-3 py-2 font-mono text-muted-foreground">{String(index + 1).padStart(2, "0")}</td><td className="px-3 py-2 text-foreground">{item.name}</td><td className="px-3 py-2 text-right font-mono text-[11px] font-normal text-primary">{item.value}</td></tr>)}</tbody></table></div> : <div className="h-52 space-y-2 overflow-y-auto pr-1">{sorted.map((item, index) => <div key={item.name} className="grid grid-cols-[20px_58px_1fr_48px] items-center gap-2 text-[11px]"><span className="font-mono text-muted-foreground">{String(index + 1).padStart(2, "0")}</span><span className="truncate text-foreground/80">{item.shortName}</span><div className="h-3 overflow-hidden rounded-full bg-accent/10"><div className="h-full rounded-full bg-[#e5b45c]" style={{ width: `${item.value}%` }} /></div><span className="text-right font-mono text-[11px] font-normal tabular-nums text-foreground">{item.value}</span></div>)}</div>}</div>
+  return <div className="h-[300px] rounded-xl border border-border/50 bg-background/20 p-3"><div className="mb-3 flex items-center justify-end"><button type="button" onClick={() => setDetails(!details)} className="text-[11px] text-muted-foreground transition-colors hover:text-primary">{details ? "返回总览" : "点击查��详情"}</button></div>{details ? <div className="h-52 overflow-y-auto rounded-xl border border-border/50 bg-card/90 shadow-md"><table className="w-full text-left text-[11px]"><thead className="sticky top-0 z-10 bg-primary text-primary-foreground"><tr><th className="w-16 px-3 py-2 font-semibold">排名</th><th className="px-3 py-2 font-semibold">分行</th><th className="w-24 px-3 py-2 text-right font-semibold">考评得分</th></tr></thead><tbody className="divide-y divide-border/30">{sorted.map((item, index) => <tr key={item.name} className={index % 2 ? "bg-muted/20" : "bg-card/40"}><td className="px-3 py-2 font-mono text-muted-foreground">{String(index + 1).padStart(2, "0")}</td><td className="px-3 py-2 text-foreground">{item.name}</td><td className="px-3 py-2 text-right font-mono text-[11px] font-normal text-primary">{item.value}</td></tr>)}</tbody></table></div> : <div className="h-52 space-y-2 overflow-y-auto pr-1">{sorted.map((item, index) => <div key={item.name} className="grid grid-cols-[20px_58px_1fr_48px] items-center gap-2 text-[11px]"><span className="font-mono text-muted-foreground">{String(index + 1).padStart(2, "0")}</span><span className="truncate text-foreground/80">{item.shortName}</span><div className="h-3 overflow-hidden rounded-full bg-accent/10"><div className="h-full rounded-full bg-[#e5b45c]" style={{ width: `${item.value}%` }} /></div><span className="text-right font-mono text-[11px] font-normal tabular-nums text-foreground">{item.value}</span></div>)}</div>}</div>
 }
 
 function ChinaSecurityMap() {
@@ -441,7 +431,7 @@ export function SecurityDashboard() {
           </label>
 
           <label className="flex min-w-52 flex-1 items-center gap-3 rounded-md border border-border/60 bg-background/35 px-3 py-2 text-sm">
-            <span className="text-muted-foreground">机构类别</span>
+            <span className="font-[100] text-muted-foreground">机构类别</span>
             <select className="w-full bg-transparent text-foreground outline-none">
               <option>全部机构</option>
               <option>分行</option>
