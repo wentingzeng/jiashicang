@@ -28,7 +28,7 @@ export const inspectionCategoryData = [
   { name: "个人信息保护", value: 24 },
   { name: "金融专网", value: 18 },
   { name: "漏洞补丁修复", value: 31 },
-  { name: "外网管理", value: 15 },
+  { name: "网络管理", value: 15 },
   { name: "物理安防管理", value: 12 },
   { name: "信息发布大屏", value: 9 },
   { name: "研发及运维管理", value: 27 },

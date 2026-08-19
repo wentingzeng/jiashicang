@@ -156,7 +156,7 @@ function ChartBox({
   const maxValue = Math.max(...data.map((item) => item.value), 1)
 
   return (
-    <div className="rounded-lg border border-border/50 bg-background/20 p-3">
+    <div className="rounded-lg border border-border/50 bg-background/20 px-3 pb-[13px] pt-[18px]">
       <div className="mb-3 flex items-center justify-between text-xs text-muted-foreground">
         <span>{label}</span>
         <span className="font-mono text-[10px]">单位：人次</span>
@@ -191,8 +191,8 @@ function RankedBars({
   const max = Math.max(...data.map((item) => item.value), 1)
 
   return (
-    <div className="rounded-lg border border-border/50 bg-background/20 p-3">
-      <div className="mb-3 flex items-center justify-between text-xs text-muted-foreground">
+<div className="rounded-lg border border-border/50 bg-background/20 px-3 pb-3 pt-[26px]">
+                      <div className="mb-3 flex items-center justify-between text-xs text-muted-foreground">
         <span>{label}</span>
         <span>单位：分</span>
       </div>
@@ -344,7 +344,6 @@ function BranchList({
     <div className="rounded-xl border border-border/60 bg-card/75 p-3 shadow-sm">
       <div className="mb-3 flex items-center justify-between gap-2">
         <div className="text-xs font-semibold text-foreground">{title}</div>
-        <span className="rounded-full bg-muted px-2 py-0.5 font-mono text-[10px] text-muted-foreground">TOP 3</span>
       </div>
       <div className="grid gap-1.5">
         {data.map((name, index) => (
@@ -434,7 +433,7 @@ export function SecurityDashboard() {
               </Panel>
 
               <Panel title="员工安全画像" tone="primary" bodyClassName="p-3" className="flex-1">
-                <div className="space-y-3">
+                <div className="flex flex-col gap-[38px]">
                   <div className="grid grid-cols-2 gap-2.5">
                     <StatCard
                       label="安全培训人次"
