@@ -544,16 +544,12 @@ export function BranchDashboard() {
                 <PanelCard className="h-full" bodyClassName="p-3" title="科技人员数量" icon={<UsersRound className="size-4" />}>
                   <div className="grid gap-4 xl:grid-cols-[0.92fr_1.08fr]">
                     <div className="space-y-4">
-                      <div className="rounded-[12px] border border-border/80 bg-card/80 px-4 py-4 shadow-[inset_0_1px_0_oklch(0.72_0.15_220/6%)]">
+                      <div className="rounded-[12px] border border-border/80 bg-card/80 px-4 pt-[19px] pb-[22px] shadow-[inset_0_1px_0_oklch(0.72_0.15_220/6%)]">
                         <div className="text-[12px] text-foreground/80">科技人员总数</div>
                         <div className="mt-2 flex items-end gap-2">
                           <span className="font-mono text-[34px] font-black leading-none text-primary">{current.personnelTotal}</span>
                           <span className="pb-1 text-[14px] text-muted-foreground">人</span>
                         </div>
-                        <Badge variant="outline" className="mt-3 rounded-full border-primary/20 bg-primary/5 px-3 py-1.5 text-[12px] font-semibold text-primary">
-                          <ArrowUpRight className="mr-1 size-3.5" />
-                          较上月 {current.personnelDelta}
-                        </Badge>
                       </div>
 
                       <div className="rounded-[12px] border border-border/80 bg-card/80 px-4 py-4 shadow-[inset_0_1px_0_oklch(0.72_0.15_220/6%)]">
