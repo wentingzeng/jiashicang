@@ -12,9 +12,9 @@ import {
   Users,
 } from "lucide-react"
 import {
-  Bar,
-  BarChart,
   CartesianGrid,
+  Line,
+  LineChart,
   ResponsiveContainer,
   Tooltip,
   XAxis,
@@ -162,7 +162,7 @@ function ChartBox({
 
       <div style={{ height: `${height}px` }}>
         <ResponsiveContainer width="100%" height="100%" minWidth={1} minHeight={1}>
-          <BarChart
+          <LineChart
             data={data}
             margin={{
               top: 8,
@@ -207,14 +207,15 @@ function ChartBox({
               formatter={(value) => [`${Number(value).toLocaleString()}人次`, "数量"]}
             />
 
-            <Bar
+            <Line
+              type="monotone"
               dataKey="value"
-              fill={color}
-              radius={[3, 3, 0, 0]}
-              maxBarSize={22}
-              activeBar={{ fill: color, fillOpacity: 0.82 }}
+              stroke={color}
+              strokeWidth={2.5}
+              dot={{ r: 4, fill: color, stroke: "#ffffff", strokeWidth: 2 }}
+              activeDot={{ r: 6, fill: color, stroke: "#ffffff", strokeWidth: 2 }}
             />
-          </BarChart>
+          </LineChart>
         </ResponsiveContainer>
       </div>
     </div>
