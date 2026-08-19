@@ -257,7 +257,7 @@ export function ProjectDashboard() {
       <div className="mx-auto max-w-[1800px]">
         <HeroBanner
           title="项目管理驾驶舱"
-          subtitle="目标牵引 · 任务推进 · 协同督办 · 成果沉淀"
+          subtitle="目标牵引 · 任��推进 · 协同督办 · 成果沉淀"
         />
         <div className="grid grid-cols-2 gap-3 py-2 md:grid-cols-3 xl:grid-cols-6">
           {kpis.map(({ label, value, unit, icon: Icon, danger }) => (
@@ -451,7 +451,7 @@ export function ProjectDashboard() {
                       name="项目个数"
                       fill="#6366f1"
                       radius={[6, 6, 0, 0]}
-                    ><LabelList dataKey="count" position="top" formatter={(value: number) => `${value}个`} fill="var(--foreground)" fontSize={9} /></Bar>
+                    ><LabelList dataKey="count" position="insideBottom" offset={8} formatter={(value: number) => `${value}个`} fill="#ffffff" fontSize={10} fontWeight={700} /></Bar>
                     <Line
                       yAxisId="days"
                       type="monotone"
@@ -460,7 +460,7 @@ export function ProjectDashboard() {
                       stroke="#0d9488"
                       strokeWidth={3}
                       dot={{ r: 4, fill: "#0d9488" }}
-                    ><LabelList dataKey="days" position="top" formatter={(value: number) => `${value}天`} fill="#0d9488" fontSize={9} /></Line>
+                    ><LabelList dataKey="days" position="top" offset={12} formatter={(value: number) => `${value}天`} fill="#0f766e" fontSize={10} fontWeight={700} /></Line>
                   </ComposedChart>
                 </ChartBox>
               </div>
