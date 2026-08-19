@@ -163,7 +163,7 @@ function ChartBox({
       <div className="mb-2 text-xs text-muted-foreground">{label}</div>
 
       <div style={{ height: `${height}px` }}>
-        <ResponsiveContainer width="100%" height="100%">
+        <ResponsiveContainer width="100%" height="100%" minWidth={1} minHeight={1}>
           <AreaChart
             data={data}
             margin={{

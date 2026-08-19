@@ -485,7 +485,7 @@ export function BranchDashboard() {
                   <PanelCard className="h-full" bodyClassName="p-3" title="信创改造" icon={<ShieldCheck className="size-4" />}>
                     <button type="button" onClick={() => setInnovationRanking(!innovationRanking)} className="w-full text-left" aria-label="切换信创改造完成度排行">
                     {innovationRanking ? <div className="py-1">
-                      <ResponsiveContainer width="100%" height={210}>
+                      <ResponsiveContainer width="100%" height={210} minWidth={1} minHeight={1}>
                         <ComposedChart data={[{ name: "乌鲁木齐", count: 1, rate: 25 }, { name: "深圳", count: 3, rate: 100 }, { name: "长沙", count: 3, rate: 75 }, { name: "杭州", count: 1, rate: 50 }, { name: "重庆", count: 1, rate: 50 }, { name: "济南", count: 1, rate: 33 }, { name: "南昌", count: 1, rate: 33 }, { name: "昆明", count: 1, rate: 33 }, { name: "上海", count: 1, rate: 33 }, { name: "南京", count: 0, rate: 0 }]} margin={{ top: 20, right: 8, left: -18, bottom: 8 }}>
                           <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" vertical={false} />
                           <XAxis dataKey="name" tick={{ fontSize: 10, fill: "hsl(var(--muted-foreground))" }} interval={0} angle={-25} textAnchor="end" height={42} />
