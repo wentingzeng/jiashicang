@@ -25,13 +25,14 @@ export const capabilityData = [
 ]
 
 export const inspectionCategoryData = [
-  { name: "制度建设", value: 78 },
-  { name: "人员管理", value: 32 },
-  { name: "技术防护", value: 28 },
-  { name: "运行维护", value: 66 },
-  { name: "应急管理", value: 42 },
-  { name: "数据安全", value: 72 },
-  { name: "安全培训", value: 58 },
+  { name: "个人信息保护", value: 24 },
+  { name: "金融专网", value: 18 },
+  { name: "漏洞补丁修复", value: 31 },
+  { name: "外网管理", value: 15 },
+  { name: "物理安防管理", value: 12 },
+  { name: "信息发布大屏", value: 9 },
+  { name: "研发及运维管理", value: 27 },
+  { name: "员工安全意识", value: 21 },
 ]
 
 export const outstandingBranches = [
