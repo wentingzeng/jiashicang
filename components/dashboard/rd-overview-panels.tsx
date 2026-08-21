@@ -178,7 +178,7 @@ const legendDot = (color: string) => (
 
 export function RdOverviewSummaryRow() {
   return (
-    <div className="grid items-stretch gap-4 lg:grid-cols-[0.8fr_1.2fr]">
+    <div className="grid items-stretch gap-4 lg:grid-cols-2">
       <BusinessLinePanel />
       <RdStatsPanel />
     </div>
