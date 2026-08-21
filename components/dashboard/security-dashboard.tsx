@@ -5,7 +5,6 @@ import { useState } from "react"
 import { HeroBanner } from "@/components/dashboard/hero-banner"
 import {
   AlertTriangle,
-  BarChart3,
   CheckCircle2,
   Search,
   ShieldCheck,
@@ -417,40 +416,6 @@ export function SecurityDashboard() {
             <Search className="size-4" />
             查询
           </button>
-        </section>
-
-        <section className="mb-6 grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
-          <StatCard
-            label="综合安全能力得分"
-            value={filteredOverview.totalScore}
-            unit="分"
-            icon={ShieldCheck}
-            color="var(--primary)"
-          />
-
-          <StatCard
-            label="网络安全检查问题"
-            value={filteredOverview.inspectionIssues}
-            unit="项"
-            icon={AlertTriangle}
-            color="#e9ad43"
-          />
-
-          <StatCard
-            label="检查问题整改率"
-            value={filteredOverview.repairRate}
-            unit="%"
-            icon={CheckCircle2}
-            color="var(--accent)"
-          />
-
-          <StatCard
-            label="全行安全排名"
-            value={filteredOverview.ranking}
-            unit="名"
-            icon={BarChart3}
-            color="#8b9cff"
-          />
         </section>
 
         <div className="grid items-stretch gap-5 xl:min-h-[900px] xl:grid-cols-3 xl:grid-rows-[minmax(0,1fr)]">
