@@ -447,16 +447,28 @@ export function BranchDashboard() {
   const [disasterDetails, setDisasterDetails] = useState(false)
   const [innovationRanking, setInnovationRanking] = useState(false)
   const [cloudRanking, setCloudRanking] = useState(false)
+  const [personnelPage, setPersonnelPage] = useState(1)
+  const personnelPageSize = 6
 
   useEffect(() => {
     setSelectedBranch("all")
+    setPersonnelPage(1)
   }, [selectedGrade])
+
+  useEffect(() => {
+    setPersonnelPage(1)
+  }, [selectedBranch])
 
   const filteredKeys = Object.keys(branchData).filter((key) => {
     if (selectedBranch !== "all") return key === selectedBranch
     return selectedGrade === "all" || branchGrades[key] === selectedGrade
   })
   const current = aggregateBranchData(filteredKeys)
+  const personnelPageCount = Math.max(1, Math.ceil(current.tableRows.length / personnelPageSize))
+  const personnelRows = current.tableRows.slice(
+    (personnelPage - 1) * personnelPageSize,
+    personnelPage * personnelPageSize,
+  )
   const liveTime = now ? now.toTimeString().slice(0, 8) : "--:--:--"
 
   return (
@@ -627,7 +639,7 @@ export function BranchDashboard() {
                             </TableRow>
                           </TableHeader>
                           <TableBody>
-                            {current.tableRows.map((row, index) => (
+                            {personnelRows.map((row, index) => (
                               <TableRow key={row.name} className={cn("border-border/60 hover:bg-primary/5", index % 2 === 1 && "bg-primary/3")}>
                                 <TableCell className="px-3 py-3 font-medium text-foreground/90">{row.name}</TableCell>
                                 <TableCell className="px-3 py-3 text-center font-mono text-foreground/80">{row.development}</TableCell>
@@ -647,13 +659,24 @@ export function BranchDashboard() {
                         </Table>
                       </div>
                       <div className="flex items-center justify-between border-t border-border/60 bg-card/80 px-4 py-2.5 text-[11px] text-muted-foreground">
-                        <span>单击表格，字号自动切换为分行专班下钻数据</span>
-                        <div className="flex items-center gap-1.5">
-                          <span className="inline-flex size-5 items-center justify-center rounded-md bg-primary text-[11px] font-semibold text-foreground">1</span>
-                          <span className="inline-flex size-5 items-center justify-center rounded-md bg-card text-[11px] font-semibold text-muted-foreground ring-1 ring-border/80">2</span>
-                          <span className="inline-flex size-5 items-center justify-center rounded-md bg-card text-[11px] font-semibold text-muted-foreground ring-1 ring-border/80">3</span>
-                          <span className="inline-flex size-5 items-center justify-center rounded-md bg-card text-[11px] font-semibold text-muted-foreground ring-1 ring-border/80">4</span>
-                          <span className="inline-flex size-5 items-center justify-center rounded-md bg-card text-[11px] font-semibold text-muted-foreground ring-1 ring-border/80">5</span>
+                        <span>每页显示 6 条分行数据</span>
+                        <div className="flex items-center gap-1.5" aria-label="科技人员数量分页">
+                          {Array.from({ length: personnelPageCount }, (_, index) => {
+                            const page = index + 1
+                            const isActive = personnelPage === page
+                            return (
+                              <button
+                                key={page}
+                                type="button"
+                                aria-label={`第 ${page} 页`}
+                                aria-current={isActive ? "page" : undefined}
+                                onClick={() => setPersonnelPage(page)}
+                                className={`inline-flex size-5 items-center justify-center rounded-md text-[11px] font-semibold transition ${isActive ? "bg-primary text-foreground" : "bg-card text-muted-foreground ring-1 ring-border/80 hover:bg-primary/10"}`}
+                              >
+                                {page}
+                              </button>
+                            )
+                          })}
                         </div>
                       </div>
                     </div>
