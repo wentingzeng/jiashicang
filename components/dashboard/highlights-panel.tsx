@@ -12,9 +12,9 @@ export function HighlightsPanel() {
               <CircleAlert className="size-4" aria-hidden="true" />
             </span>
             <div className="flex min-w-0 flex-1 items-center justify-between gap-4">
-              <div className="flex min-w-0 flex-col gap-1">
+              <div className="flex min-w-0 flex-col gap-1.5">
                 <span className="truncate text-sm font-semibold text-foreground">{item.title}</span>
-                <span className="truncate text-[11px] leading-5 text-muted-foreground">{item.description}</span>
+                <span className="text-[11px] leading-5 text-muted-foreground">{item.description}</span>
               </div>
               <ArrowUpRight className="size-4 shrink-0 text-muted-foreground/60" aria-hidden="true" />
             </div>
