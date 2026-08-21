@@ -1,7 +1,7 @@
 "use client"
 
 import type { ReactNode } from "react"
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { HeroBanner } from "@/components/dashboard/hero-banner"
 import {
   AlertTriangle,
@@ -213,8 +213,11 @@ function CompactDetailTable({ rows, headers, className = "" }: { rows: string[][
   return <div className={`h-[204px] max-h-[204px] overflow-y-auto overflow-x-hidden rounded-lg border border-border/50 bg-card text-[8px] shadow-sm ${className}`}><table className="w-full table-fixed border-separate border-spacing-0 text-left"><thead><tr>{headers.map((header, index) => <th key={header} className={`sticky top-0 z-30 border-b border-primary/20 px-2 py-1.5 font-semibold ${index === 0 ? "w-[78%] bg-card text-foreground" : "w-[22%] bg-primary text-primary-foreground text-center"}`}>{header}</th>)}</tr></thead><tbody className="divide-y divide-border/30">{rows.map((row, index) => <tr key={index} className={index % 2 ? "bg-muted/20" : "bg-card/40"}>{row.map((cell, cellIndex) => <td key={cellIndex} className={`${cellIndex === 0 ? "whitespace-normal text-foreground" : "text-center font-mono font-semibold text-primary"} px-2 py-2 leading-4`}>{cell}</td>)}</tr>)}</tbody></table></div>
 }
 
-function CapabilityBars({ data, label }: { data: { name: string; value: number }[]; label: string }) {
-  const [selectedBranch, setSelectedBranch] = useState<string | null>(null)
+function CapabilityBars({ data, label, selectedInstitution }: { data: { name: string; value: number }[]; label: string; selectedInstitution: string }) {
+  const [selectedBranch, setSelectedBranch] = useState<string | null>(selectedInstitution === "全部机构" ? null : selectedInstitution)
+  useEffect(() => {
+    setSelectedBranch(selectedInstitution === "全部机构" ? null : selectedInstitution)
+  }, [selectedInstitution, data])
   const metrics = data.map((item, index) => ({
     ...item,
     responsibility: Math.max(70, item.value - index * 1.2),
@@ -421,7 +424,7 @@ export function SecurityDashboard() {
         <div className="grid items-stretch gap-5 xl:min-h-[900px] xl:grid-cols-3 xl:grid-rows-[minmax(0,1fr)]">
           <section className="flex h-full min-h-0 min-w-0 flex-col gap-4">
               <Panel title="网络安全综合能力" tone="primary">
-                <CapabilityBars data={filteredCapability} label="各分行综合能力评分" />
+                <CapabilityBars data={filteredCapability} label="各分行综合能力评分" selectedInstitution={selectedInstitution} />
               </Panel>
 
               <Panel title="员工安全画像" tone="primary" bodyClassName="p-3" className="flex-1">
@@ -429,14 +432,14 @@ export function SecurityDashboard() {
                   <div className="grid grid-cols-2 gap-2.5">
                     <StatCard
                       label="安全培训人次"
-                      value={filteredOverview.trainingPeople}
+                      value={securityOverview.trainingPeople}
                       unit="人次"
                       icon={Users}
                       color="var(--primary)"
                     />
                     <StatCard
                       label="违规记分人次"
-                      value={filteredOverview.violationPeople}
+                      value={securityOverview.violationPeople}
                       unit="人次"
                       icon={AlertTriangle}
                       color="#e9ad43"
@@ -489,14 +492,14 @@ export function SecurityDashboard() {
                 <div className="grid grid-cols-2 gap-3">
                   <StatCard
                     label="发现问题"
-                    value={filteredOverview.inspectionIssues}
+                    value={securityOverview.inspectionIssues}
                     unit="项"
                     icon={AlertTriangle}
                     color="#e9ad43"
                   />
                   <StatCard
                     label="问题整改率"
-                    value={filteredOverview.repairRate}
+                    value={securityOverview.repairRate}
                     unit="%"
                     icon={CheckCircle2}
                     color="var(--accent)"
