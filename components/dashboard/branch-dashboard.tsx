@@ -225,7 +225,7 @@ function SelectBox({
   options: Array<{ key: string; label: string }>
 }) {
   return (
-    <label className="flex min-w-[240px] flex-1 items-center gap-3 rounded-[6px] border border-border/80 bg-card/90 px-4 py-3 shadow-[0_0_0_1px_oklch(0.72_0.15_220/6%),0_10px_28px_oklch(0_0_0/10%)]">
+    <label className="flex min-w-0 flex-1 items-center gap-3 rounded-[6px] border border-border/80 bg-card/90 px-4 py-3 shadow-[0_0_0_1px_oklch(0.72_0.15_220/6%),0_10px_28px_oklch(0_0_0/10%)]">
       <div className="min-w-0 flex-1">
         <div className="text-[11px] text-muted-foreground">{label}</div>
         <select
@@ -424,7 +424,7 @@ export function BranchDashboard() {
 
         <section aria-labelledby="branch-overview-title" className="animate-in fade-in slide-in-from-bottom-4 duration-700">
           <div className="flex min-w-0 flex-col gap-5">
-            <div className="grid gap-3 pt-1 md:grid-cols-2 xl:grid-cols-[0.9fr_1.1fr]">
+            <div className="grid min-w-0 gap-3 pt-1 md:grid-cols-2 md:[&>*]:min-w-0 xl:grid-cols-[minmax(0,0.9fr)_minmax(0,1.1fr)]">
               <SelectBox label="请选择等级" value={selectedGrade} onChange={setSelectedGrade} options={gradeOptions} />
               <SelectBox label="请选择分行" value={selectedBranch} onChange={setSelectedBranch} options={branchOptions} />
             </div>
@@ -475,8 +475,8 @@ export function BranchDashboard() {
                 </div>
               </PanelCard>
 
-              <div className="flex flex-col gap-2">
-                <div className="grid gap-2 md:grid-cols-2">
+              <div className="flex min-w-0 flex-col gap-2">
+                <div className="grid min-w-0 gap-2 md:grid-cols-2 md:[&>*]:min-w-0">
                   <PanelCard className="h-full" bodyClassName="p-3" title="信创改造" icon={<ShieldCheck className="size-4" />}>
                     <button type="button" onClick={() => setInnovationRanking(!innovationRanking)} className="w-full text-left" aria-label="切换信创改造完成度排行">
                     {innovationRanking ? <div className="py-1">
@@ -537,7 +537,7 @@ export function BranchDashboard() {
                 </div>
 
                 <PanelCard className="min-w-0 h-full" bodyClassName="min-w-0 p-3" title="科技人员数量" icon={<UsersRound className="size-4" />}>
-                  <div className="grid gap-4 xl:grid-cols-[0.92fr_1.08fr]">
+                  <div className="grid min-w-0 gap-4 xl:grid-cols-[minmax(0,0.92fr)_minmax(0,1.08fr)] xl:[&>*]:min-w-0">
                     <div className="space-y-4">
                       <div className="rounded-[12px] border border-border/80 bg-card/80 px-4 pt-[19px] pb-[22px] shadow-[inset_0_1px_0_oklch(0.72_0.15_220/6%)]">
                         <div className="text-[12px] text-foreground/80">科技人员总数</div>
@@ -556,9 +556,9 @@ export function BranchDashboard() {
                       </div>
                     </div>
 
-                    <div className="overflow-hidden rounded-[12px] border border-border/80 bg-card/80 shadow-[inset_0_1px_0_oklch(0.72_0.15_220/6%)]">
-<div className="min-w-0 max-w-full overflow-x-auto overscroll-x-contain">
-                          <Table className="min-w-[860px] text-sm">
+<div className="min-w-0 overflow-hidden rounded-[12px] border border-border/80 bg-card/80 shadow-[inset_0_1px_0_oklch(0.72_0.15_220/6%)]">
+	<div className="block w-full min-w-0 max-w-full overflow-x-auto overscroll-x-contain [WebkitOverflowScrolling:touch]">
+                          <Table className="w-full min-w-[860px] table-fixed text-sm">
                           <TableHeader className="bg-gradient-to-r from-primary via-primary to-accent">
                             <TableRow className="border-transparent hover:bg-transparent">
                               <TableHead className="px-3 py-3 text-[12px] font-semibold text-foreground">分行名称</TableHead>

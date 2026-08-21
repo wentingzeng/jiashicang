@@ -30,7 +30,7 @@ export function PanelCard({
     >
       <div
         className={cn(
-          "relative flex items-center gap-3 border-b border-border/60 px-4 py-3",
+          "relative flex min-w-0 items-center gap-3 border-b border-border/60 px-4 py-3",
           accent === "accent"
             ? "bg-gradient-to-r from-accent/12 via-card to-card"
             : "bg-gradient-to-r from-primary/12 via-card to-card",
@@ -64,7 +64,7 @@ export function PanelCard({
           aria-hidden="true"
         />
       </div>
-      <div className={cn("p-4", bodyClassName)}>{children}</div>
+      <div className={cn("min-w-0 p-4", bodyClassName)}>{children}</div>
     </Card>
   )
 }
