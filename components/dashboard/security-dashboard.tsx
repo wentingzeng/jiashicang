@@ -366,18 +366,18 @@ export function SecurityDashboard() {
           subtitle="安全防护 · 风险监测 · 合规管理 · 应急响应"
         />
 
-        <section className="mb-6 flex flex-wrap items-center gap-2 rounded-xl border border-border/60 bg-card/80 p-3 shadow-[0_12px_28px_rgba(9,19,32,0.15)] backdrop-blur-sm">
-          <label className="flex min-w-44 flex-1 items-center gap-3 rounded-md border border-border/60 bg-background/35 px-3 py-2 text-sm">
-            <span className="text-muted-foreground">考评年度</span>
-            <select className="w-full bg-transparent text-foreground outline-none">
+        <section className="mb-6 flex flex-wrap items-center gap-2 rounded-xl border border-border/60 bg-card/80 p-3 shadow-[0_12px_28px_rgba(9,19,32,0.15)] backdrop-blur-sm lg:flex-nowrap">
+          <label className="flex min-w-0 flex-1 items-center gap-3 whitespace-nowrap rounded-md border border-border/60 bg-background/35 px-3 py-2 text-sm">
+            <span className="shrink-0 whitespace-nowrap text-muted-foreground">考评年度</span>
+            <select className="min-w-0 w-full bg-transparent text-foreground outline-none">
               <option>2025</option>
               <option>2024</option>
             </select>
           </label>
 
-          <label className="flex min-w-52 flex-1 items-center gap-3 rounded-md border border-border/60 bg-background/35 px-3 py-2 text-sm">
-            <span className="font-[100] text-muted-foreground">机构类别</span>
-            <select className="w-full bg-transparent text-foreground outline-none">
+          <label className="flex min-w-0 flex-1 items-center gap-3 whitespace-nowrap rounded-md border border-border/60 bg-background/35 px-3 py-2 text-sm">
+            <span className="shrink-0 whitespace-nowrap font-[100] text-muted-foreground">机构类别</span>
+            <select className="min-w-0 w-full bg-transparent text-foreground outline-none">
               <option>全部机构</option>
               <option>分行</option>
             </select>
