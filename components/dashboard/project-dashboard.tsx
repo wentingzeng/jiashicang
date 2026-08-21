@@ -300,9 +300,17 @@ export function ProjectDashboard() {
                   innerRadius={42}
                   outerRadius={65}
                   paddingAngle={3}
-                  label={({ percent }) => `${(Number(percent) * 100).toFixed(1)}%`}
+                  label={({ cx, cy, midAngle, innerRadius, outerRadius, percent }) => {
+                    const radius = innerRadius + (outerRadius - innerRadius) * 0.62
+                    const x = cx + radius * Math.cos((-midAngle * Math.PI) / 180)
+                    const y = cy + radius * Math.sin((-midAngle * Math.PI) / 180)
+                    return (
+                      <text x={x} y={y} fill="#ffffff" textAnchor="middle" dominantBaseline="central" fontSize={8} fontWeight={500}>
+                        {`${(Number(percent) * 100).toFixed(1)}%`}
+                      </text>
+                    )
+                  }}
                   labelLine={false}
-                  style={{ fontSize: 8, fontWeight: 500, fill: "#ffffff" }}
                 >
                   {statusData.map((item, index) => (
                     <Cell key={item.name} fill={palette[index]} />
