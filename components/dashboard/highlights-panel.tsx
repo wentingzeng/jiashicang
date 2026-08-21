@@ -5,9 +5,9 @@ import { highlights } from "@/lib/mock-data"
 export function HighlightsPanel() {
   return (
     <PanelCard icon={AlertTriangle} title="重点关注" bodyClassName="flex h-full flex-col justify-center p-4">
-      <ul className="flex h-full flex-col justify-center gap-3">
+      <ul className="flex h-full flex-col justify-center gap-2">
         {highlights.map((item) => (
-          <li key={item.index} className="flex min-w-0 items-center gap-3 rounded-lg border border-border/70 bg-secondary/35 px-4 py-3">
+          <li key={item.index} className="flex min-w-0 items-center gap-3 rounded-lg border border-border/70 bg-secondary/35 px-3 py-2">
             <span className="flex size-8 shrink-0 items-center justify-center rounded-lg bg-destructive/10 text-destructive">
               <CircleAlert className="size-4" aria-hidden="true" />
             </span>
