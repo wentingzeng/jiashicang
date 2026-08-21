@@ -247,11 +247,29 @@ function AssessmentBars({ data }: { data: { name: string; value: number }[] }) {
   return <div className="h-[300px] rounded-xl border border-border/50 bg-background/20 p-3"><div className="mb-3 flex items-center justify-end"><button type="button" onClick={() => setDetails(!details)} className="text-[11px] text-muted-foreground transition-colors hover:text-primary">{details ? "返回总览" : "点击查看详情"}</button></div>{details ? <div className="h-[236px] overflow-y-auto overscroll-contain rounded-xl border border-border/50 bg-card shadow-md"><table className="w-full border-separate border-spacing-0 text-left text-[11px]"><thead className="sticky top-0 z-30 bg-primary text-primary-foreground"><tr><th className="w-16 px-3 py-2 font-semibold">排名</th><th className="px-3 py-2 font-semibold">分行</th><th className="w-24 px-3 py-2 text-right font-semibold">考评得分</th></tr></thead><tbody className="divide-y divide-border/30">{sorted.map((item, index) => <tr key={item.name} className={index % 2 ? "bg-muted/20" : "bg-card/40"}><td className="px-3 py-2 font-mono text-muted-foreground">{String(index + 1).padStart(2, "0")}</td><td className="px-3 py-2 text-foreground">{item.name}</td><td className="px-3 py-2 text-right font-mono text-[11px] font-normal text-primary">{item.value}</td></tr>)}</tbody></table></div> : <div className="h-60 space-y-2 overflow-y-auto pr-1">{sorted.map((item, index) => <div key={item.name} className="grid grid-cols-[20px_58px_1fr_48px] items-center gap-2 text-[11px]"><span className="font-mono text-muted-foreground">{String(index + 1).padStart(2, "0")}</span><span className="truncate text-foreground/80">{item.shortName}</span><div className="h-3 overflow-hidden rounded-full bg-accent/10"><div className="h-full rounded-full bg-[#e5b45c]" style={{ width: `${item.value}%` }} /></div><span className="text-right font-mono text-[11px] font-normal tabular-nums text-foreground">{item.value}</span></div>)}</div>}</div>
 }
 
-function ChinaSecurityMap({ data }: { data: { name: string; value: number }[] }) {
-  const [selectedProvince, setSelectedProvince] = useState("")
+const branchProvinceMap: Record<string, string> = {
+  南京分行: "江苏",
+  杭州分行: "浙江",
+  上海分行: "上海",
+  北京分行: "北京",
+  广州分行: "广东",
+  深圳分行: "广东",
+  武汉分行: "湖北",
+  成都分行: "四川",
+  西安分行: "陕西",
+  重庆分行: "重庆",
+}
+
+function ChinaSecurityMap({ data, selectedInstitution }: { data: { name: string; value: number }[]; selectedInstitution: string }) {
+  const provinceForBranch = (name: string) => branchProvinceMap[name] ?? name.replace("分行", "")
+  const [selectedProvince, setSelectedProvince] = useState(selectedInstitution === "全部机构" ? "" : provinceForBranch(selectedInstitution))
   const [scoreThreshold, setScoreThreshold] = useState(() => Math.max(...data.map((item) => item.value)))
+  useEffect(() => {
+    setSelectedProvince(selectedInstitution === "全部机构" ? "" : provinceForBranch(selectedInstitution))
+    setScoreThreshold(Math.max(...data.map((item) => item.value), 0))
+  }, [selectedInstitution, data])
   const normalizeRegion = (name: string) => name.replace(/(省|市|自治区|特别行政区)$/u, "").replace(/(壮族|回族|维吾尔)$/u, "")
-  const selectedItem = data.find((item) => normalizeRegion(selectedProvince).includes(normalizeRegion(item.name)) || normalizeRegion(item.name).includes(normalizeRegion(selectedProvince)))
+  const selectedItem = data.find((item) => normalizeRegion(selectedProvince).includes(normalizeRegion(provinceForBranch(item.name))) || normalizeRegion(provinceForBranch(item.name)).includes(normalizeRegion(selectedProvince)))
   const scores = data.map((item) => item.value)
   const minScore = Math.min(...scores)
   const maxScore = Math.max(...scores)
@@ -282,14 +300,15 @@ function ChinaSecurityMap({ data }: { data: { name: string; value: number }[] })
                 geo.properties?.省份 ||
                 `区域${index + 1}`
 
-              const selected = selectedProvince === province
+              const provinceItem = data.find((item) => normalizeRegion(provinceForBranch(item.name)) === normalizeRegion(province))
+              const selected = selectedProvince === province || (selectedInstitution !== "全部机构" && normalizeRegion(province) === normalizeRegion(provinceForBranch(selectedInstitution)))
 
               return (
                 <Geography
                   key={`${geo.rsmKey}-${index}`}
                   geography={geo}
                   onClick={() => setSelectedProvince(province)}
-                  fill={selected ? "#13a8a8" : (() => { const score = data.find((item) => normalizeRegion(province).includes(normalizeRegion(item.name)) || normalizeRegion(item.name).includes(normalizeRegion(province)))?.value; return score !== undefined && score <= scoreThreshold ? scoreColor(score) : "#d8e0e7" })()}
+                  fill={selected ? "#0f8f9b" : (() => { const score = provinceItem?.value; return score !== undefined && score <= scoreThreshold ? scoreColor(score) : "#d8e0e7" })()}
                   fillOpacity={selected ? 1 : 0.9}
                   stroke="#ffffff"
                   strokeWidth={0.8}
@@ -466,7 +485,7 @@ export function SecurityDashboard() {
 
           <section className="flex h-full min-h-0 min-w-0 flex-col gap-4">
               <Panel title="网络安全综合能力视图" tone="accent">
-                <ChinaSecurityMap data={filteredBranches} />
+                <ChinaSecurityMap data={filteredBranches} selectedInstitution={selectedInstitution} />
               </Panel>
 
               <Panel title="网络安全管理指标" tone="primary" className="flex flex-1 flex-col">
