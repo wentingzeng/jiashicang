@@ -301,14 +301,14 @@ export function ProjectDashboard() {
                   innerRadius={48}
                   outerRadius={72}
                   paddingAngle={3}
-                  label={({ cx, cy, midAngle, outerRadius, percent }) => {
+                  label={({ cx, cy, midAngle, outerRadius, percent, name }) => {
                     const RADIAN = Math.PI / 180
                     const sin = Math.sin(-midAngle * RADIAN)
                     const cos = Math.cos(-midAngle * RADIAN)
                     const sx = cx + (outerRadius + 2) * cos
                     const sy = cy + (outerRadius + 2) * sin
-                    const mx = cx + (outerRadius + 10) * cos
-                    const my = cy + (outerRadius + 10) * sin
+                    const mx = cx + (outerRadius + 14) * cos
+                    const my = cy + (outerRadius + 14) * sin
                     const ex = mx + (cos >= 0 ? 1 : -1) * 8
                     const ey = my
                     const textAnchor = cos >= 0 ? "start" : "end"
@@ -318,16 +318,27 @@ export function ProjectDashboard() {
                           points={`${sx},${sy} ${mx},${my} ${ex},${ey}`}
                           fill="none"
                           stroke="var(--muted-foreground)"
-                          strokeOpacity={0.5}
+                          strokeOpacity={0.6}
                           strokeWidth={1}
                         />
                         <text
-                          x={ex + (cos >= 0 ? 3 : -3)}
-                          y={ey}
+                          x={ex + (cos >= 0 ? 4 : -4)}
+                          y={ey - 6}
                           textAnchor={textAnchor}
                           dominantBaseline="central"
-                          fontSize={9}
+                          fontSize={10}
                           fontWeight={500}
+                          fill="var(--muted-foreground)"
+                        >
+                          {name}
+                        </text>
+                        <text
+                          x={ex + (cos >= 0 ? 4 : -4)}
+                          y={ey + 7}
+                          textAnchor={textAnchor}
+                          dominantBaseline="central"
+                          fontSize={13}
+                          fontWeight={700}
                           fill="var(--foreground)"
                         >
                           {`${(Number(percent) * 100).toFixed(1)}%`}
@@ -356,12 +367,6 @@ export function ProjectDashboard() {
                 />
               </PieChart>
               </ChartBox>
-              <div className="pointer-events-none absolute left-1/2 top-[92px] flex -translate-x-1/2 -translate-y-1/2 flex-col items-center">
-                <span className="text-[9px] leading-tight text-muted-foreground">{statusData[0].name}</span>
-                <span className="font-mono text-lg font-bold leading-tight text-primary tabular-nums">
-                  {statusData[0].value.toFixed(1)}%
-                </span>
-              </div>
             </div>
           </Panel>
           <Panel title="在建项目进展情况">
