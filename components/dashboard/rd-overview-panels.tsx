@@ -30,7 +30,7 @@ export function BusinessLinePanel() {
   const angleStep = 360 / n
 
   return (
-    <PanelCard icon={PieIcon} title="当年承建需求计划各业务条线分布" bodyClassName="p-2">
+    <PanelCard icon={PieIcon} title="当年承建需求计划各业务条线分布" className="flex h-full flex-col" bodyClassName="flex flex-1 flex-col p-2">
       <div className="flex flex-col gap-4 sm:flex-row sm:items-center">
         <div className="mx-auto w-[160px] shrink-0 sm:mx-0">
           <ResponsiveContainer width="100%" height={180}>
@@ -151,7 +151,7 @@ function StatGroup({
 
 export function RdStatsPanel() {
   return (
-    <PanelCard icon={BriefcaseBusiness} title="项目概况" bodyClassName="p-2">
+    <PanelCard icon={BriefcaseBusiness} title="项目概况" className="flex h-full flex-col" bodyClassName="flex flex-1 flex-col p-2">
       <div className="grid gap-3 sm:grid-cols-2">
         <StatGroup
           title="在建"
@@ -178,7 +178,7 @@ const legendDot = (color: string) => (
 
 export function RdOverviewSummaryRow() {
   return (
-    <div className="grid gap-4 lg:grid-cols-[0.8fr_1.2fr]">
+    <div className="grid items-stretch gap-4 lg:grid-cols-[0.8fr_1.2fr]">
       <BusinessLinePanel />
       <RdStatsPanel />
     </div>
