@@ -292,23 +292,26 @@ export function ProjectDashboard() {
         <div className="grid gap-2 lg:grid-cols-3">
           <Panel title="年度需求计划状态分布">
             <div className="relative">
-              <ChartBox height={210}>
-              <PieChart margin={{ top: 4, right: 30, bottom: 0, left: 30 }}>
+              <ChartBox height={200}>
+              <PieChart margin={{ top: 8, right: 24, bottom: 0, left: 24 }}>
                 <Pie
                   data={statusData}
                   dataKey="value"
                   nameKey="name"
-                  innerRadius={48}
-                  outerRadius={72}
+                  innerRadius={44}
+                  outerRadius={68}
                   paddingAngle={3}
-                  label={({ cx, cy, midAngle, outerRadius, percent, name }) => {
+                  label={({ cx, cy, midAngle, outerRadius, percent, value }: any) => {
+                    // Only call out slices large enough to avoid crowding; small
+                    // slices are still identifiable via the legend below.
+                    if (Number(value) < 8) return null
                     const RADIAN = Math.PI / 180
                     const sin = Math.sin(-midAngle * RADIAN)
                     const cos = Math.cos(-midAngle * RADIAN)
                     const sx = cx + (outerRadius + 2) * cos
                     const sy = cy + (outerRadius + 2) * sin
-                    const mx = cx + (outerRadius + 14) * cos
-                    const my = cy + (outerRadius + 14) * sin
+                    const mx = cx + (outerRadius + 12) * cos
+                    const my = cy + (outerRadius + 12) * sin
                     const ex = mx + (cos >= 0 ? 1 : -1) * 8
                     const ey = my
                     const textAnchor = cos >= 0 ? "start" : "end"
@@ -318,26 +321,15 @@ export function ProjectDashboard() {
                           points={`${sx},${sy} ${mx},${my} ${ex},${ey}`}
                           fill="none"
                           stroke="var(--muted-foreground)"
-                          strokeOpacity={0.6}
+                          strokeOpacity={0.55}
                           strokeWidth={1}
                         />
                         <text
                           x={ex + (cos >= 0 ? 4 : -4)}
-                          y={ey - 6}
+                          y={ey}
                           textAnchor={textAnchor}
                           dominantBaseline="central"
-                          fontSize={10}
-                          fontWeight={500}
-                          fill="var(--muted-foreground)"
-                        >
-                          {name}
-                        </text>
-                        <text
-                          x={ex + (cos >= 0 ? 4 : -4)}
-                          y={ey + 7}
-                          textAnchor={textAnchor}
-                          dominantBaseline="central"
-                          fontSize={13}
+                          fontSize={12}
                           fontWeight={700}
                           fill="var(--foreground)"
                         >
@@ -355,15 +347,19 @@ export function ProjectDashboard() {
                 <Tooltip
                   cursor={false}
                   contentStyle={tooltipStyle}
-                  formatter={(value) => [
+                  formatter={(value: number, name: string) => [
                     `${Number(value).toFixed(2)}%`,
-                    "项目占比",
+                    name,
                   ]}
                 />
                 <Legend
                   verticalAlign="bottom"
-                  height={30}
-                  wrapperStyle={{ fontSize: 10, paddingTop: 6 }}
+                  height={40}
+                  wrapperStyle={{ fontSize: 10, paddingTop: 10 }}
+                  formatter={(value: string) => {
+                    const item = statusData.find((d) => d.name === value)
+                    return `${value} ${item ? item.value.toFixed(1) : ""}%`
+                  }}
                 />
               </PieChart>
               </ChartBox>
