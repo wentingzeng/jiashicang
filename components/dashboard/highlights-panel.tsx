@@ -5,11 +5,11 @@ import { highlights } from "@/lib/mock-data"
 export function HighlightsPanel() {
   return (
     <PanelCard icon={AlertTriangle} title="重点关注" bodyClassName="flex h-full flex-col justify-center p-4">
-      <ul className="flex h-full flex-col justify-center gap-1.5">
+      <ul className="flex h-full flex-col justify-center gap-1">
         {highlights.map((item) => (
-          <li key={item.index} className="flex min-w-0 items-center gap-2 rounded-lg border border-border/70 bg-secondary/35 px-2.5 py-1.5">
-            <span className="flex size-7 shrink-0 items-center justify-center rounded-lg bg-destructive/10 text-destructive">
-              <CircleAlert className="size-3.5" aria-hidden="true" />
+          <li key={item.index} className="flex min-w-0 items-center gap-2 rounded-lg border border-border/70 bg-secondary/35 px-2 py-1">
+            <span className="flex size-6 shrink-0 items-center justify-center rounded-lg bg-destructive/10 text-destructive">
+              <CircleAlert className="size-3" aria-hidden="true" />
             </span>
             <div className="flex min-w-0 flex-1 items-center justify-between gap-3">
               <div className="flex min-w-0 flex-col gap-0">
