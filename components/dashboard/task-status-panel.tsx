@@ -13,7 +13,7 @@ export function TaskStatusPanel() {
       <p className="mb-2 text-xs text-muted-foreground">任务状态分布</p>
       <div className="flex items-center gap-2">
         <div className="h-40 w-1/2 shrink-0">
-          <ResponsiveContainer width="100%" height="100%">
+          <ResponsiveContainer width="100%" height="100%" minWidth={1} minHeight={1}>
             <PieChart>
               <Pie
                 data={taskStatusDistribution}

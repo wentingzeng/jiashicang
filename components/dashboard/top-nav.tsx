@@ -4,27 +4,32 @@ import { usePathname } from "next/navigation"
 import Link from "next/link"
 import { cn } from "@/lib/utils"
 import { navItems } from "@/lib/mock-data"
-import { BrainCircuit } from "lucide-react"
 
 export function TopNav() {
   const pathname = usePathname()
-  const active = pathname.startsWith("/research")
+  const active = pathname.startsWith("/project")
+    ? "project"
+    : pathname.startsWith("/research")
     ? "rd"
     : pathname.startsWith("/branch")
       ? "branch"
       : pathname.startsWith("/security")
         ? "security"
-        : navItems[0].key
+        : pathname.startsWith("/trusted")
+          ? "trusted"
+          : pathname.startsWith("/resource")
+            ? "resource"
+            : navItems[0].key
       
 
   const routeMap: Record<string, string> = {
     "ai-plus": "/",
-    project: "/",
+    project: "/project",
     rd: "/research",
-    resource: "/",
+    resource: "/resource",
     branch: "/branch",
     security: "/security",
-    trusted: "/",
+    trusted: "/trusted",
   }
 
   return (
@@ -44,7 +49,6 @@ export function TopNav() {
                 isActive ? "text-accent" : "text-muted-foreground hover:text-foreground",
               )}
             >
-              {index === 0 && <BrainCircuit className="size-4" aria-hidden="true" />}
               {item.label}
               {isActive && (
                 <span className="absolute inset-x-3 bottom-0 h-0.5 rounded-full bg-accent shadow-[0_0_8px_var(--accent)]" aria-hidden="true" />

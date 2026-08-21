@@ -3,7 +3,7 @@
 import { statisticsPeriod, lastUpdatedAt } from "@/lib/mock-data"
 import { useLiveClock } from "@/lib/use-live-value"
 
-export function HeroBanner({ title = "人工智能+驾驶舱", subtitle = "整体统筹 · 过程管控 · 重点跟踪 · 成效展示" }: { title?: string; subtitle?: string }) {
+export function HeroBanner({ title = "人工智能+驾驶舱", subtitle = "目标牵引 · 任务推进 · 协同督办 · 成果沉淀" }: { title?: string; subtitle?: string }) {
   const now = useLiveClock()
   const timeLabel = now ? now.toTimeString().slice(0, 8) : "--:--:--"
 

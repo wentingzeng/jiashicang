@@ -44,7 +44,6 @@ export function KpiCards() {
     <section aria-label="核心指标" className="flex flex-col gap-3">
       <div className="grid grid-cols-1 gap-3 md:grid-cols-2 lg:grid-cols-6">
         <div className="flex flex-col gap-2 lg:col-span-3">
-          <h2 className="px-1 text-sm font-semibold tracking-wide text-primary">驾驶舱总览</h2>
           <div className="grid grid-cols-1 gap-3 sm:grid-cols-3">
             {overviewCards.map((card) => (
               <KpiCardItem key={card.key} card={card} />
@@ -52,7 +51,6 @@ export function KpiCards() {
           </div>
         </div>
         <div className="flex flex-col gap-2 lg:col-span-3">
-          <h2 className="px-1 text-sm font-semibold tracking-wide text-primary">专班建设概览</h2>
           <div className="grid grid-cols-1 gap-3 sm:grid-cols-3">
             {teamCards.map((card) => (
               <KpiCardItem key={card.key} card={card} />

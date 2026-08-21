@@ -17,7 +17,7 @@ function ProgressCell({ value, colorClass }: { value: number; colorClass?: strin
           style={{ width: `${Math.min(value, 100)}%` }}
         />
       </div>
-      <span className="w-10 shrink-0 text-right font-mono text-xs font-bold tabular-nums text-foreground">
+      <span className="w-10 shrink-0 text-right font-mono text-[11px] font-normal tabular-nums text-foreground">
         {value}%
       </span>
     </div>
@@ -28,7 +28,7 @@ function DashboardTable({ children, className }: { children: React.ReactNode; cl
   return (
     <div className={cn("relative overflow-hidden rounded-xl border border-border/40 bg-background/20", className)}>
       <div className="overflow-x-auto">
-        <Table className="min-w-full text-sm">{children}</Table>
+        <Table className="min-w-full text-xs">{children}</Table>
       </div>
     </div>
   )
@@ -40,13 +40,13 @@ export function KeyProjectsTable() {
       <DashboardTable>
         <TableHeader className="bg-muted/30">
           <TableRow className="border-border/60 hover:bg-transparent">
-            <TableHead className="h-12 whitespace-nowrap text-xs font-bold uppercase tracking-wider text-muted-foreground px-4">项目名称</TableHead>
-            <TableHead className="h-12 text-xs font-bold uppercase tracking-wider text-muted-foreground px-4">类型</TableHead>
-            <TableHead className="h-12 text-xs font-bold uppercase tracking-wider text-muted-foreground px-4">环境</TableHead>
-            <TableHead className="h-12 min-w-[10rem] text-xs font-bold uppercase tracking-wider text-muted-foreground px-4">完成进度</TableHead>
-            <TableHead className="h-12 text-xs font-bold uppercase tracking-wider text-muted-foreground px-4">主办部门</TableHead>
-            <TableHead className="h-12 text-xs font-bold uppercase tracking-wider text-muted-foreground px-4 text-center">开始时间</TableHead>
-            <TableHead className="h-12 text-xs font-bold uppercase tracking-wider text-muted-foreground px-4 text-center">研发时长</TableHead>
+            <TableHead className="h-9 whitespace-nowrap text-xs font-bold uppercase tracking-wider text-muted-foreground px-4">项目名称</TableHead>
+            <TableHead className="h-9 text-xs font-bold uppercase tracking-wider text-muted-foreground px-4">类型</TableHead>
+            <TableHead className="h-9 text-xs font-bold uppercase tracking-wider text-muted-foreground px-4">环境</TableHead>
+            <TableHead className="h-9 min-w-[10rem] text-xs font-bold uppercase tracking-wider text-muted-foreground px-4">完成进度</TableHead>
+            <TableHead className="h-9 text-xs font-bold uppercase tracking-wider text-muted-foreground px-4">主办部门</TableHead>
+            <TableHead className="h-9 text-xs font-normal uppercase tracking-wider text-muted-foreground px-4 text-center">开始时间</TableHead>
+            <TableHead className="h-9 text-xs font-normal uppercase tracking-wider text-muted-foreground px-4 text-center">研发时长</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
@@ -58,28 +58,28 @@ export function KeyProjectsTable() {
                 i % 2 === 1 && "bg-background/40",
               )}
             >
-              <TableCell className="max-w-[280px] px-4 py-4 font-semibold text-foreground group-hover:text-primary transition-colors">
+              <TableCell className="max-w-[280px] px-2 py-1.5 font-normal text-foreground group-hover:text-primary transition-colors">
                 {row.name}
               </TableCell>
-              <TableCell className="px-4 py-4">
-                <Badge variant="outline" className="rounded-md border-primary/20 bg-primary/5 px-2.5 py-1 text-xs font-bold text-primary">
+              <TableCell className="px-2 py-1.5">
+                <Badge variant="outline" className="rounded-md border-primary/20 bg-primary/5 px-2.5 py-1 text-xs font-normal text-primary">
                   {row.type}
                 </Badge>
               </TableCell>
-              <TableCell className="px-4 py-4">
-                <span className="rounded-md bg-muted/50 px-2.5 py-1 text-xs font-medium text-muted-foreground">
+              <TableCell className="px-2 py-1.5">
+                <span className="rounded-md bg-muted/50 px-2.5 py-1 text-[11px] font-medium text-muted-foreground">
                   {row.env}
                 </span>
               </TableCell>
-              <TableCell className="px-4 py-4">
+              <TableCell className="px-2 py-1.5">
                 <ProgressCell value={row.progress} />
               </TableCell>
-              <TableCell className="px-4 py-4 text-xs text-muted-foreground">{row.dept}</TableCell>
-              <TableCell className="px-4 py-4 text-center font-mono text-xs text-muted-foreground">
+              <TableCell className="px-2 py-1.5 text-xs text-muted-foreground">{row.dept}</TableCell>
+              <TableCell className="px-2 py-1.5 text-center font-mono text-xs text-muted-foreground">
                 {row.start}
               </TableCell>
-              <TableCell className="px-4 py-4 text-center">
-                <span className="font-mono text-xs font-bold text-foreground bg-primary/10 px-2.5 py-1 rounded text-primary">
+              <TableCell className="px-2 py-1.5 text-center">
+                <span className="font-mono text-xs font-normal text-foreground bg-primary/10 px-2.5 py-1 rounded text-primary">
                   {row.duration}
                 </span>
               </TableCell>
@@ -97,10 +97,10 @@ export function KeySpecialsTable() {
       <DashboardTable>
         <TableHeader className="bg-muted/30">
           <TableRow className="border-border/60 hover:bg-transparent">
-            <TableHead className="h-12 text-xs font-bold uppercase tracking-wider text-muted-foreground px-4">专项名称</TableHead>
-            <TableHead className="h-12 text-xs font-bold uppercase tracking-wider text-muted-foreground px-4">状态</TableHead>
-            <TableHead className="h-12 min-w-[10rem] text-xs font-bold uppercase tracking-wider text-muted-foreground px-4">完成进度</TableHead>
-            <TableHead className="h-12 text-xs font-bold uppercase tracking-wider text-muted-foreground px-4 text-center">交付时长</TableHead>
+            <TableHead className="h-9 text-xs font-bold uppercase tracking-wider text-muted-foreground px-4">专项名称</TableHead>
+            <TableHead className="h-9 text-xs font-bold uppercase tracking-wider text-muted-foreground px-4">状态</TableHead>
+            <TableHead className="h-9 min-w-[10rem] text-xs font-bold uppercase tracking-wider text-muted-foreground px-4">完成进度</TableHead>
+            <TableHead className="h-9 text-xs font-normal uppercase tracking-wider text-muted-foreground px-4 text-center">交付时长</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
@@ -112,25 +112,25 @@ export function KeySpecialsTable() {
                 i % 2 === 1 && "bg-background/40",
               )}
             >
-              <TableCell className="max-w-[240px] px-4 py-4 font-semibold text-foreground group-hover:text-accent transition-colors">
+              <TableCell className="max-w-[240px] px-2 py-1.5 font-normal text-foreground group-hover:text-accent transition-colors">
                 {row.name}
               </TableCell>
-              <TableCell className="px-4 py-4">
+              <TableCell className="px-2 py-1.5">
                 <Badge 
                   variant={row.status === "已完成" ? "secondary" : "outline"} 
                   className={cn(
-                    "rounded-md px-2.5 py-1 text-xs font-bold",
+                    "rounded-md px-2.5 py-1 text-xs font-normal",
                     row.status === "已完成" ? "bg-accent/20 text-accent border-accent/20" : "bg-muted/50 text-muted-foreground border-border"
                   )}
                 >
                   {row.status}
                 </Badge>
               </TableCell>
-              <TableCell className="px-4 py-4">
+              <TableCell className="px-2 py-1.5">
                 <ProgressCell value={row.progress} colorClass={row.status === "已完成" ? "bg-accent" : "bg-accent/60"} />
               </TableCell>
-              <TableCell className="px-4 py-4 text-center">
-                <span className="font-mono text-xs font-bold text-foreground bg-accent/10 px-2.5 py-1 rounded text-accent">
+              <TableCell className="px-2 py-1.5 text-center">
+                <span className="font-mono text-xs font-normal text-foreground bg-accent/10 px-2.5 py-1 rounded text-accent">
                   {row.duration}
                 </span>
               </TableCell>

@@ -1,19 +1,11 @@
 import { Analytics } from '@vercel/analytics/next'
 import type { Metadata, Viewport } from 'next'
-import { Noto_Sans_SC, Geist_Mono } from 'next/font/google'
 import { TooltipProvider } from '@/components/ui/tooltip'
 import './globals.css'
 
-const _notoSansSC = Noto_Sans_SC({
-  subsets: ['latin'],
-  weight: ['400', '500', '700', '900'],
-  variable: '--font-sans',
-})
-const _geistMono = Geist_Mono({ subsets: ['latin'], variable: '--font-mono' })
-
 export const metadata: Metadata = {
   title: '人工智能+驾驶舱',
-  description: '整体统筹 · 过程管控 · 重点跟踪 · 成效展示',
+  description: '目标牵引 · 任务推进 · 协同督办 · 成果沉淀',
   generator: 'v0.app',
   icons: {
     icon: [
@@ -35,8 +27,8 @@ export const metadata: Metadata = {
 }
 
 export const viewport: Viewport = {
-  colorScheme: 'dark',
-  themeColor: '#050b18',
+  colorScheme: 'light',
+  themeColor: '#f4f7fb',
 }
 
 export default function RootLayout({
@@ -45,7 +37,7 @@ export default function RootLayout({
   children: React.ReactNode
 }>) {
   return (
-    <html lang="zh-CN" className={`dark bg-background ${_notoSansSC.variable} ${_geistMono.variable}`}>
+    <html lang="zh-CN" className="bg-background">
       <body className="antialiased font-sans">
         <TooltipProvider>{children}</TooltipProvider>
         {process.env.NODE_ENV === 'production' && <Analytics />}

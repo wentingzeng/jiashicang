@@ -30,10 +30,10 @@ export function BusinessLinePanel() {
   const angleStep = 360 / n
 
   return (
-    <PanelCard icon={PieIcon} title="当年承建需求计划各业务条线分布" bodyClassName="p-3">
+    <PanelCard icon={PieIcon} title="当年承建需求计划各业务条线分布" bodyClassName="p-2">
       <div className="flex flex-col gap-4 sm:flex-row sm:items-center">
         <div className="mx-auto w-[160px] shrink-0 sm:mx-0">
-          <ResponsiveContainer width="100%" height={160}>
+          <ResponsiveContainer width="100%" height={180}>
             <PieChart>
               {businessLineDistribution.map((item, i) => {
                 const startAngle = 90 - i * angleStep
@@ -64,7 +64,7 @@ export function BusinessLinePanel() {
             </PieChart>
           </ResponsiveContainer>
         </div>
-        <div className="grid min-w-0 flex-1 grid-cols-2 gap-x-3 gap-y-2 text-sm">
+        <div className="grid min-w-0 flex-1 grid-cols-2 gap-x-2 gap-y-1 text-[11px]">
           {businessLineDistribution.map((item) => (
             <div key={item.name} className="flex min-w-0 items-center gap-2 rounded-md border border-border/30 bg-muted/20 px-2.5 py-1.5 transition-colors hover:border-primary/30">
               <span className="size-2 shrink-0 rounded-full" style={{ backgroundColor: item.color }} />
@@ -104,13 +104,13 @@ function StatGroup({
   return (
     <div
       className={cn(
-        "relative overflow-hidden rounded-xl border p-5 transition-all hover:shadow-lg",
+        "relative overflow-hidden rounded-xl border p-3 transition-all hover:shadow-lg",
         isAccent 
           ? "border-accent/25 bg-gradient-to-br from-accent/10 to-transparent hover:border-accent/40" 
           : "border-primary/25 bg-gradient-to-br from-primary/10 to-transparent hover:border-primary/40",
       )}
     >
-      <div className="mb-4 flex items-center justify-between gap-2">
+      <div className="mb-2 flex items-center justify-between gap-2">
         <span className={cn("text-sm font-bold uppercase tracking-wider", isAccent ? "text-accent" : "text-primary")}>
           {title}
         </span>
@@ -125,7 +125,7 @@ function StatGroup({
         <span className="text-sm font-medium text-muted-foreground">{total.unit}</span>
       </div>
       
-      <div className="mt-6 grid grid-cols-2 gap-4">
+      <div className="mt-3 grid grid-cols-2 gap-2">
         <div className="rounded-lg border border-border/40 bg-background/30 p-3 transition-colors hover:bg-background/50">
           <p className="text-xs font-medium text-muted-foreground mb-1.5">{project.label}</p>
           <p className="font-mono text-xl font-bold tabular-nums text-foreground">
@@ -151,7 +151,7 @@ function StatGroup({
 
 export function RdStatsPanel() {
   return (
-    <PanelCard icon={BriefcaseBusiness} title="项目概况" bodyClassName="p-3">
+    <PanelCard icon={BriefcaseBusiness} title="项目概况" bodyClassName="p-2">
       <div className="grid gap-3 sm:grid-cols-2">
         <StatGroup
           title="在建"
@@ -187,8 +187,8 @@ export function RdOverviewSummaryRow() {
 
 export function MonthlyTaskTrendPanel() {
   return (
-    <PanelCard icon={TrendingUp} title="在建项目及专项任务数月度趋势" accent="accent" bodyClassName="p-3">
-      <div className="mb-3 flex flex-wrap items-center gap-4 text-xs text-muted-foreground">
+    <PanelCard icon={TrendingUp} title="在建项目及专项任务数月度趋势" accent="accent" bodyClassName="p-2">
+      <div className="mb-3 flex flex-wrap items-center gap-3 text-[11px] text-muted-foreground">
         <span className="flex items-center gap-2">{legendDot("var(--primary)")}公司在建项目及专项任务</span>
         <span className="flex items-center gap-2">{legendDot("var(--accent)")}公司当年已投产项目及专项任务</span>
       </div>
@@ -201,8 +201,8 @@ export function MonthlyTaskTrendPanel() {
             </linearGradient>
           </defs>
           <CartesianGrid vertical={false} stroke={chartGridStroke} />
-          <XAxis dataKey="month" tick={{ fill: "var(--muted-foreground)", fontSize: 11 }} axisLine={false} tickLine={false} />
-          <YAxis tick={{ fill: "var(--muted-foreground)", fontSize: 11 }} axisLine={false} tickLine={false} width={45} />
+          <XAxis dataKey="month" tick={{ fill: "var(--muted-foreground)", fontSize: 9 }} axisLine={{ stroke: "var(--border)", strokeWidth: 1 }} tickLine={{ stroke: "var(--border)", strokeWidth: 1 }} />
+          <YAxis tick={{ fill: "var(--muted-foreground)", fontSize: 9 }} axisLine={{ stroke: "var(--border)", strokeWidth: 1 }} tickLine={{ stroke: "var(--border)", strokeWidth: 1 }} width={45} />
           <Tooltip {...chartTooltip} contentStyle={{ ...chartTooltip.contentStyle, fontSize: '12px' }} />
           <Area type="monotone" dataKey="building" fill="url(#buildingArea)" stroke="none" />
           <Line type="monotone" dataKey="building" name="在建项目及专项任务" stroke="var(--primary)" strokeWidth={2.5} dot={{ r: 3, fill: "var(--primary)" }} activeDot={{ r: 5 }} />
@@ -215,19 +215,19 @@ export function MonthlyTaskTrendPanel() {
 
 export function DurationTrendPanel() {
   return (
-    <PanelCard icon={LineIcon} title="项目研发时长" accent="accent" bodyClassName="p-3">
-      <div className="mb-3 flex flex-wrap items-center gap-4 text-xs text-muted-foreground">
-        <span className="flex items-center gap-2">{legendDot("var(--primary)")}顺序项目研发时长</span>
-        <span className="flex items-center gap-2">{legendDot("var(--accent)")}累计平均研发时长</span>
+    <PanelCard icon={LineIcon} title="项目研发时长" accent="accent" bodyClassName="p-2">
+      <div className="mb-3 flex flex-wrap items-center gap-3 text-[11px] text-muted-foreground">
+        <span className="flex items-center gap-2">{legendDot("var(--primary)")}顺序项目研发时长均值</span>
+        <span className="flex items-center gap-2">{legendDot("var(--accent)")}敏捷项目研发时长均值</span>
       </div>
       <ResponsiveContainer width="100%" height={200}>
         <LineChart data={rdDurationTrend} margin={{ left: 0, right: 8, top: 8, bottom: 0 }}>
           <CartesianGrid vertical={false} stroke={chartGridStroke} />
-          <XAxis dataKey="month" tick={{ fill: "var(--muted-foreground)", fontSize: 11 }} axisLine={false} tickLine={false} />
-          <YAxis tick={{ fill: "var(--muted-foreground)", fontSize: 11 }} axisLine={false} tickLine={false} width={50} unit="天" />
+          <XAxis dataKey="month" tick={{ fill: "var(--muted-foreground)", fontSize: 9 }} axisLine={{ stroke: "var(--border)", strokeWidth: 1 }} tickLine={{ stroke: "var(--border)", strokeWidth: 1 }} />
+          <YAxis tick={{ fill: "var(--muted-foreground)", fontSize: 9 }} axisLine={{ stroke: "var(--border)", strokeWidth: 1 }} tickLine={{ stroke: "var(--border)", strokeWidth: 1 }} width={50} unit="天" />
           <Tooltip {...chartTooltip} contentStyle={{ ...chartTooltip.contentStyle, fontSize: '12px' }} />
-          <Line type="monotone" dataKey="project" name="顺序项目研发时长" stroke="var(--primary)" strokeWidth={2.5} dot={{ r: 3, fill: "var(--primary)" }} />
-          <Line type="monotone" dataKey="agile" name="累计平均研发时长" stroke="var(--accent)" strokeWidth={2} strokeDasharray="6 4" dot={false} />
+          <Line type="monotone" dataKey="project" name="顺序项目研发时长均值" stroke="var(--primary)" strokeWidth={2.5} dot={{ r: 3, fill: "var(--primary)" }} />
+          <Line type="monotone" dataKey="agile" name="敏捷项目研发时长均值" stroke="var(--accent)" strokeWidth={2} strokeDasharray="6 4" dot={false} />
         </LineChart>
       </ResponsiveContainer>
     </PanelCard>

@@ -50,27 +50,15 @@ export default function ResearchManagementPage() {
         aria-hidden="true"
       />
       <TopNav />
-      <div className="relative mx-auto flex max-w-[1720px] flex-col gap-6 px-4 py-6 md:px-8 lg:px-10">
+      <div className="relative mx-auto flex max-w-[1720px] flex-col gap-3 px-3 py-3 md:px-6 lg:px-8">
         <HeroBanner title="研发管理驾驶舱" subtitle="研发统筹 · 人力洞察 · 项目交付 · 效能提升" />
 
         {/* HR Section */}
-        <section aria-labelledby="hr-title" className="flex animate-in fade-in slide-in-from-bottom-4 duration-700 gap-6">
+        <section aria-labelledby="hr-title" className="flex animate-in fade-in slide-in-from-bottom-4 duration-700 gap-3">
           <SectionRail label="人力资源" tone="primary" />
-          <div className="flex min-w-0 flex-1 flex-col gap-5">
-            <div className="flex flex-wrap items-end justify-between gap-4">
-              <div className="flex items-center gap-3">
-                <h2 id="hr-title" className="text-2xl font-bold tracking-tight md:text-3xl">
-                  人力资源
-                </h2>
-                <div className="h-5 w-px bg-border/60" />
-                <p className="text-base text-muted-foreground">Team Resource Insight</p>
-              </div>
-              <div className="rounded-full border border-primary/25 bg-primary/8 px-4 py-2 text-sm text-muted-foreground shadow-sm">
-                研发团队总人数{" "}
-                <strong className="font-mono text-lg font-bold text-primary">{hrPersonnelTotal.toLocaleString()}</strong> 人
-              </div>
-            </div>
-            <div className="grid gap-4 xl:grid-cols-[1fr_1.15fr_0.95fr]">
+          <div className="flex min-w-0 flex-1 flex-col gap-2">
+            <div className="flex flex-wrap items-end justify-between gap-4" />
+            <div className="grid items-stretch gap-3 xl:grid-cols-3">
               <HrPersonnelMix />
               <HrRegionalDistribution />
               <HrUnitDistribution />
@@ -81,15 +69,8 @@ export default function ResearchManagementPage() {
         {/* RD Overview Section */}
         <section aria-labelledby="rd-title" className="flex animate-in fade-in slide-in-from-bottom-4 duration-700 delay-150 gap-6">
           <SectionRail label="研发工作概览" tone="accent" />
-          <div className="flex min-w-0 flex-1 flex-col gap-5">
-            <div className="flex items-center gap-3">
-              <h2 id="rd-title" className="text-2xl font-bold tracking-tight md:text-3xl">
-                研发工作概览
-              </h2>
-              <div className="h-5 w-px bg-border/60" />
-              <p className="text-base text-muted-foreground">R&D Work Overview</p>
-            </div>
-            <RdOverviewSummaryRow />
+          <div className="flex min-w-0 flex-1 flex-col gap-2">
+                        <RdOverviewSummaryRow />
             <div className="grid gap-4 lg:grid-cols-2">
               <MonthlyTaskTrendPanel />
               <DurationTrendPanel />
