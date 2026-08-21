@@ -245,12 +245,12 @@ function AssessmentBars({ data }: { data: { name: string; value: number }[] }) {
   return <div className="h-[300px] rounded-xl border border-border/50 bg-background/20 p-3"><div className="mb-3 flex items-center justify-end"><button type="button" onClick={() => setDetails(!details)} className="text-[11px] text-muted-foreground transition-colors hover:text-primary">{details ? "返回总览" : "点击查看详情"}</button></div>{details ? <div className="h-[236px] overflow-y-auto overscroll-contain rounded-xl border border-border/50 bg-card shadow-md"><table className="w-full border-separate border-spacing-0 text-left text-[11px]"><thead className="sticky top-0 z-30 bg-primary text-primary-foreground"><tr><th className="w-16 px-3 py-2 font-semibold">排名</th><th className="px-3 py-2 font-semibold">分行</th><th className="w-24 px-3 py-2 text-right font-semibold">考评得分</th></tr></thead><tbody className="divide-y divide-border/30">{sorted.map((item, index) => <tr key={item.name} className={index % 2 ? "bg-muted/20" : "bg-card/40"}><td className="px-3 py-2 font-mono text-muted-foreground">{String(index + 1).padStart(2, "0")}</td><td className="px-3 py-2 text-foreground">{item.name}</td><td className="px-3 py-2 text-right font-mono text-[11px] font-normal text-primary">{item.value}</td></tr>)}</tbody></table></div> : <div className="h-60 space-y-2 overflow-y-auto pr-1">{sorted.map((item, index) => <div key={item.name} className="grid grid-cols-[20px_58px_1fr_48px] items-center gap-2 text-[11px]"><span className="font-mono text-muted-foreground">{String(index + 1).padStart(2, "0")}</span><span className="truncate text-foreground/80">{item.shortName}</span><div className="h-3 overflow-hidden rounded-full bg-accent/10"><div className="h-full rounded-full bg-[#e5b45c]" style={{ width: `${item.value}%` }} /></div><span className="text-right font-mono text-[11px] font-normal tabular-nums text-foreground">{item.value}</span></div>)}</div>}</div>
 }
 
-function ChinaSecurityMap() {
+function ChinaSecurityMap({ data }: { data: { name: string; value: number }[] }) {
   const [selectedProvince, setSelectedProvince] = useState("")
-  const [scoreThreshold, setScoreThreshold] = useState(() => Math.max(...branchSecurityData.map((item) => item.value)))
+  const [scoreThreshold, setScoreThreshold] = useState(() => Math.max(...data.map((item) => item.value)))
   const normalizeRegion = (name: string) => name.replace(/(省|市|自治区|特别行政区)$/u, "").replace(/(壮族|回族|维吾尔)$/u, "")
-  const selectedItem = branchSecurityData.find((item) => normalizeRegion(selectedProvince).includes(normalizeRegion(item.name)) || normalizeRegion(item.name).includes(normalizeRegion(selectedProvince)))
-  const scores = branchSecurityData.map((item) => item.value)
+  const selectedItem = data.find((item) => normalizeRegion(selectedProvince).includes(normalizeRegion(item.name)) || normalizeRegion(item.name).includes(normalizeRegion(selectedProvince)))
+  const scores = data.map((item) => item.value)
   const minScore = Math.min(...scores)
   const maxScore = Math.max(...scores)
   const scoreColor = (score: number) => {
@@ -287,7 +287,7 @@ function ChinaSecurityMap() {
                   key={`${geo.rsmKey}-${index}`}
                   geography={geo}
                   onClick={() => setSelectedProvince(province)}
-                  fill={selected ? "#13a8a8" : (() => { const score = branchSecurityData.find((item) => normalizeRegion(province).includes(normalizeRegion(item.name)) || normalizeRegion(item.name).includes(normalizeRegion(province)))?.value; return score !== undefined && score <= scoreThreshold ? scoreColor(score) : "#d8e0e7" })()}
+                  fill={selected ? "#13a8a8" : (() => { const score = data.find((item) => normalizeRegion(province).includes(normalizeRegion(item.name)) || normalizeRegion(item.name).includes(normalizeRegion(province)))?.value; return score !== undefined && score <= scoreThreshold ? scoreColor(score) : "#d8e0e7" })()}
                   fillOpacity={selected ? 1 : 0.9}
                   stroke="#ffffff"
                   strokeWidth={0.8}
@@ -324,7 +324,7 @@ function ChinaSecurityMap() {
       </div>
 
       <div className="pointer-events-none absolute bottom-8 right-2 min-w-56 rounded-lg border border-primary/20 bg-card/95 px-2.5 py-2 text-[11px] shadow-md">
-        {selectedProvince && selectedItem ? (() => { const rank = [...branchSecurityData].sort((a, b) => b.value - a.value).findIndex((item) => item.name === selectedItem.name) + 1; const category = selectedItem.value >= 90 ? "一等行" : selectedItem.value >= 82 ? "二等行" : "三等行"; const categoryRank = [...branchSecurityData].filter((item) => category === "一等行" ? item.value >= 90 : category === "二等行" ? item.value >= 82 && item.value < 90 : item.value < 82).sort((a, b) => b.value - a.value).findIndex((item) => item.name === selectedItem.name) + 1; return <div className="grid gap-1.5"><div className="mb-1 border-b border-border/60 pb-1.5 text-xs font-semibold text-foreground">{selectedProvince}</div><div className="grid grid-cols-[1fr_auto] gap-x-5 gap-y-1 text-muted-foreground"><span>网络安全全年合计得分</span><strong className="font-mono text-[11px] font-semibold text-primary">{selectedItem.value.toFixed(2)}</strong><span>2025年排名（按全行）</span><strong className="font-mono text-foreground">{rank}</strong><span>类别</span><strong className="text-foreground">{category}</strong><span>2025年排名（按等级行）</span><strong className="font-mono text-foreground">{categoryRank}</strong></div></div> })() : <span className="text-muted-foreground">点击省份查看安全能力得分</span>}
+        {selectedProvince && selectedItem ? (() => { const rank = [...data].sort((a, b) => b.value - a.value).findIndex((item) => item.name === selectedItem.name) + 1; const category = selectedItem.value >= 90 ? "一等行" : selectedItem.value >= 82 ? "二等行" : "三等行"; const categoryRank = [...data].filter((item) => category === "一等行" ? item.value >= 90 : category === "二等行" ? item.value >= 82 && item.value < 90 : item.value < 82).sort((a, b) => b.value - a.value).findIndex((item) => item.name === selectedItem.name) + 1; return <div className="grid gap-1.5"><div className="mb-1 border-b border-border/60 pb-1.5 text-xs font-semibold text-foreground">{selectedProvince}</div><div className="grid grid-cols-[1fr_auto] gap-x-5 gap-y-1 text-muted-foreground"><span>网络安全全年合计得分</span><strong className="font-mono text-[11px] font-semibold text-primary">{selectedItem.value.toFixed(2)}</strong><span>2025年排名（按全行）</span><strong className="font-mono text-foreground">{rank}</strong><span>类别</span><strong className="text-foreground">{category}</strong><span>2025年排名（按等级行）</span><strong className="font-mono text-foreground">{categoryRank}</strong></div></div> })() : <span className="text-muted-foreground">点击省份查看安全能力得分</span>}
       </div>
 
     </div>
@@ -358,6 +358,33 @@ function BranchList({
 }
 
 export function SecurityDashboard() {
+  const [selectedYear, setSelectedYear] = useState("2025")
+  const [selectedInstitution, setSelectedInstitution] = useState("全部机构")
+  const filteredCapability = selectedInstitution === "全部机构"
+    ? capabilityData
+    : capabilityData.filter((item) => item.name === selectedInstitution)
+  const selectedScore = filteredCapability.length === 1 ? filteredCapability[0].value : securityOverview.totalScore
+  const filteredTraining = selectedInstitution === "全部机构"
+    ? trainingTrendData
+    : trainingTrendData.filter((item) => item.name === selectedInstitution)
+  const filteredViolations = selectedInstitution === "全部机构"
+    ? violationTrendData
+    : violationTrendData.filter((item) => item.name === selectedInstitution)
+  const filteredAssessment = selectedInstitution === "全部机构"
+    ? securityAssessmentData
+    : securityAssessmentData.filter((item) => item.name === selectedInstitution)
+  const filteredBranches = selectedInstitution === "全部机构"
+    ? branchSecurityData
+    : branchSecurityData.filter((item) => item.name.includes(selectedInstitution.replace("分行", "")))
+  const filteredOutstanding = selectedInstitution === "全部机构"
+    ? outstandingBranches
+    : outstandingBranches.filter((name) => name === selectedInstitution)
+  const filteredWeak = selectedInstitution === "全部机构"
+    ? weakBranches
+    : weakBranches.filter((name) => name === selectedInstitution)
+  const filteredOverview = selectedInstitution === "全部机构"
+    ? securityOverview
+    : { ...securityOverview, totalScore: selectedScore, ranking: filteredCapability.length ? 1 : 0, trainingPeople: filteredTraining[0]?.value ?? 0, violationPeople: filteredViolations[0]?.value ?? 0, repairRate: Math.min(100, Math.round(selectedScore + 8)), inspectionIssues: Math.round((securityOverview.inspectionIssues * selectedScore) / 100) }
   return (
     <main className="min-h-screen bg-background text-foreground selection:bg-primary/30">
       <div className="relative mx-auto max-w-[1800px] px-4 pb-8 md:px-6">
@@ -369,7 +396,7 @@ export function SecurityDashboard() {
         <section className="mb-6 flex flex-wrap items-center gap-2 rounded-xl border border-border/60 bg-card/80 p-3 shadow-[0_12px_28px_rgba(9,19,32,0.15)] backdrop-blur-sm lg:flex-nowrap">
           <label className="flex min-w-0 flex-1 items-center gap-3 whitespace-nowrap rounded-md border border-border/60 bg-background/35 px-3 py-2 text-sm">
             <span className="shrink-0 whitespace-nowrap text-muted-foreground">考评年度</span>
-            <select className="min-w-0 w-full bg-transparent text-foreground outline-none">
+            <select value={selectedYear} onChange={(event) => setSelectedYear(event.target.value)} className="min-w-0 w-full bg-transparent text-foreground outline-none">
               <option>2025</option>
               <option>2024</option>
             </select>
@@ -377,9 +404,9 @@ export function SecurityDashboard() {
 
           <label className="flex min-w-0 flex-1 items-center gap-3 whitespace-nowrap rounded-md border border-border/60 bg-background/35 px-3 py-2 text-sm">
             <span className="shrink-0 whitespace-nowrap font-[100] text-muted-foreground">机构类别</span>
-            <select className="min-w-0 w-full bg-transparent text-foreground outline-none">
+            <select value={selectedInstitution} onChange={(event) => setSelectedInstitution(event.target.value)} className="min-w-0 w-full bg-transparent text-foreground outline-none">
               <option>全部机构</option>
-              <option>分行</option>
+              {capabilityData.map((item) => <option key={item.name}>{item.name}</option>)}
             </select>
           </label>
 
@@ -395,7 +422,7 @@ export function SecurityDashboard() {
         <section className="mb-6 grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
           <StatCard
             label="综合安全能力得分"
-            value={securityOverview.totalScore}
+            value={filteredOverview.totalScore}
             unit="分"
             icon={ShieldCheck}
             color="var(--primary)"
@@ -403,7 +430,7 @@ export function SecurityDashboard() {
 
           <StatCard
             label="网络安全检查问题"
-            value={securityOverview.inspectionIssues}
+            value={filteredOverview.inspectionIssues}
             unit="项"
             icon={AlertTriangle}
             color="#e9ad43"
@@ -411,7 +438,7 @@ export function SecurityDashboard() {
 
           <StatCard
             label="检查问题整改率"
-            value={securityOverview.repairRate}
+            value={filteredOverview.repairRate}
             unit="%"
             icon={CheckCircle2}
             color="var(--accent)"
@@ -419,7 +446,7 @@ export function SecurityDashboard() {
 
           <StatCard
             label="全行安全排名"
-            value={securityOverview.ranking}
+            value={filteredOverview.ranking}
             unit="名"
             icon={BarChart3}
             color="#8b9cff"
@@ -429,7 +456,7 @@ export function SecurityDashboard() {
         <div className="grid items-stretch gap-5 xl:min-h-[900px] xl:grid-cols-3 xl:grid-rows-[minmax(0,1fr)]">
           <section className="flex h-full min-h-0 min-w-0 flex-col gap-4">
               <Panel title="网络安全综合能力" tone="primary">
-                <CapabilityBars data={capabilityData} label="各分行综合能力评分" />
+                <CapabilityBars data={filteredCapability} label="各分行综合能力评分" />
               </Panel>
 
               <Panel title="员工安全画像" tone="primary" bodyClassName="p-3" className="flex-1">
@@ -437,14 +464,14 @@ export function SecurityDashboard() {
                   <div className="grid grid-cols-2 gap-2.5">
                     <StatCard
                       label="安全培训人次"
-                      value={securityOverview.trainingPeople}
+                      value={filteredOverview.trainingPeople}
                       unit="人次"
                       icon={Users}
                       color="var(--primary)"
                     />
                     <StatCard
                       label="违规记分人次"
-                      value={securityOverview.violationPeople}
+                      value={filteredOverview.violationPeople}
                       unit="人次"
                       icon={AlertTriangle}
                       color="#e9ad43"
@@ -453,13 +480,13 @@ export function SecurityDashboard() {
 
                   <div className="flex flex-col gap-3">
                     <ChartBox
-                      data={trainingTrendData}
+                      data={filteredTraining}
                       color="#25a8d2"
                       label="安全培训人次"
                       height={125}
                     />
                     <ChartBox
-                      data={violationTrendData}
+                      data={filteredViolations}
                       color="#d9953f"
                       label="违规记分人次"
                       height={125}
@@ -471,7 +498,7 @@ export function SecurityDashboard() {
 
           <section className="flex h-full min-h-0 min-w-0 flex-col gap-4">
               <Panel title="网络安全综合能力视图" tone="accent">
-                <ChinaSecurityMap />
+                <ChinaSecurityMap data={filteredBranches} />
               </Panel>
 
               <Panel title="网络安全管理指标" tone="primary" className="flex flex-1 flex-col">
@@ -490,21 +517,21 @@ export function SecurityDashboard() {
 
           <section className="flex h-full min-h-0 min-w-0 flex-col gap-4">
               <Panel title="网络安全考评" tone="chart-4" bodyClassName="p-3">
-                <AssessmentBars data={securityAssessmentData} />
+                <AssessmentBars data={filteredAssessment} />
               </Panel>
 
               <Panel title="检查发现问题" tone="accent" bodyClassName="space-y-3">
                 <div className="grid grid-cols-2 gap-3">
                   <StatCard
                     label="发现问题"
-                    value={securityOverview.inspectionIssues}
+                    value={filteredOverview.inspectionIssues}
                     unit="项"
                     icon={AlertTriangle}
                     color="#e9ad43"
                   />
                   <StatCard
                     label="问题整改率"
-                    value={securityOverview.repairRate}
+                    value={filteredOverview.repairRate}
                     unit="%"
                     icon={CheckCircle2}
                     color="var(--accent)"

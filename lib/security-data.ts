@@ -22,6 +22,7 @@ export const capabilityData = [
   { name: "盐城分行", value: 84.1 },
   { name: "淮安分行", value: 82.35 },
   { name: "连云港分行", value: 80.29 },
+  { name: "武汉分行", value: 88.3 },
 ]
 
 export const inspectionCategoryData = [
@@ -60,6 +61,7 @@ export const securityAssessmentData = [
   { name: "盐城分行", value: 84.1 },
   { name: "淮安分行", value: 82.35 },
   { name: "连云港分行", value: 80.29 },
+  { name: "武汉分行", value: 88.3 },
 ]
 
 export const securityManagementIndicators = [
@@ -77,6 +79,7 @@ export const trainingTrendData = [
   { name: "扬州分行", value: 18400 }, { name: "镇江分行", value: 15200 },
   { name: "泰州分行", value: 14800 }, { name: "盐城分行", value: 13200 },
   { name: "淮安分行", value: 11900 }, { name: "连云港分行", value: 9800 },
+  { name: "武汉分行", value: 21800 },
 ]
 
 export const violationTrendData = [
@@ -86,6 +89,7 @@ export const violationTrendData = [
   { name: "扬州分行", value: 132 }, { name: "镇江分行", value: 118 },
   { name: "泰州分行", value: 106 }, { name: "盐城分行", value: 94 },
   { name: "淮安分行", value: 82 }, { name: "连云港分行", value: 71 },
+  { name: "武汉分行", value: 128 },
 ]
 
 // 演示数据：后续可整体替换为真实地区安全能力接口返回值。
