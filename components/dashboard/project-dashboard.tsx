@@ -292,22 +292,46 @@ export function ProjectDashboard() {
         <div className="grid gap-2 lg:grid-cols-3">
           <Panel title="年度需求计划状态分布">
             <ChartBox height={185}>
-              <PieChart>
+              <PieChart margin={{ top: 12, right: 28, bottom: 0, left: 28 }}>
                 <Pie
                   data={statusData}
                   dataKey="value"
                   nameKey="name"
-                  innerRadius={42}
-                  outerRadius={65}
+                  innerRadius={38}
+                  outerRadius={56}
                   paddingAngle={3}
-                  label={({ cx, cy, midAngle, innerRadius, outerRadius, percent }) => {
-                    const radius = innerRadius + (outerRadius - innerRadius) * 0.62
-                    const x = cx + radius * Math.cos((-midAngle * Math.PI) / 180)
-                    const y = cy + radius * Math.sin((-midAngle * Math.PI) / 180)
+                  label={({ cx, cy, midAngle, outerRadius, percent }) => {
+                    const RADIAN = Math.PI / 180
+                    const sin = Math.sin(-midAngle * RADIAN)
+                    const cos = Math.cos(-midAngle * RADIAN)
+                    const sx = cx + (outerRadius + 2) * cos
+                    const sy = cy + (outerRadius + 2) * sin
+                    const mx = cx + (outerRadius + 10) * cos
+                    const my = cy + (outerRadius + 10) * sin
+                    const ex = mx + (cos >= 0 ? 1 : -1) * 8
+                    const ey = my
+                    const textAnchor = cos >= 0 ? "start" : "end"
                     return (
-                      <text x={x} y={y} fill="#ffffff" textAnchor="middle" dominantBaseline="central" fontSize={8} fontWeight={500}>
-                        {`${(Number(percent) * 100).toFixed(1)}%`}
-                      </text>
+                      <g>
+                        <polyline
+                          points={`${sx},${sy} ${mx},${my} ${ex},${ey}`}
+                          fill="none"
+                          stroke="var(--muted-foreground)"
+                          strokeOpacity={0.5}
+                          strokeWidth={1}
+                        />
+                        <text
+                          x={ex + (cos >= 0 ? 3 : -3)}
+                          y={ey}
+                          textAnchor={textAnchor}
+                          dominantBaseline="central"
+                          fontSize={9}
+                          fontWeight={500}
+                          fill="var(--foreground)"
+                        >
+                          {`${(Number(percent) * 100).toFixed(1)}%`}
+                        </text>
+                      </g>
                     )
                   }}
                   labelLine={false}
