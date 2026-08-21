@@ -45,12 +45,14 @@ type BranchData = {
 }
 
 const gradeOptions = [
+  { key: "all", label: "全部等级" },
   { key: "level-1", label: "一级分行" },
   { key: "level-2", label: "二级分行" },
   { key: "level-3", label: "三级分行" },
 ]
 
 const branchOptions = [
+  { key: "all", label: "全部分行" },
   { key: "nanjing", label: "南京分行" },
   { key: "hangzhou", label: "杭州分行" },
   { key: "guangzhou", label: "广州分行" },
@@ -202,6 +204,53 @@ const branchData: Record<string, BranchData> = {
       { name: "龙岩分行", development: 5, operations: 2, architecture: 0, innovation: 0, data: 1, security: 1, management: 4, total: 13 },
     ],
   },
+}
+
+const branchGrades: Record<string, string> = {
+  nanjing: "level-1",
+  hangzhou: "level-1",
+  guangzhou: "level-2",
+  fuzhou: "level-3",
+}
+
+function sumBy<T>(items: T[], getValue: (item: T) => number) {
+  return items.reduce((sum, item) => sum + getValue(item), 0)
+}
+
+function aggregateBranchData(keys: string[]): BranchData {
+  const rows = keys.map((key) => branchData[key])
+  const base = rows[0] ?? branchData.nanjing
+  const operationMetrics = base.operationMetrics.map((metric, index) => ({
+    ...metric,
+    value: sumBy(rows, (row) => row.operationMetrics[index]?.value ?? 0),
+  }))
+  const personnelRoles = base.personnelRoles.map((role, index) => ({
+    ...role,
+    value: sumBy(rows, (row) => row.personnelRoles[index]?.value ?? 0),
+  }))
+  const tableRows = rows.flatMap((row) => row.tableRows)
+  return {
+    ...base,
+    label: keys.length === 1 ? base.label : "筛选结果汇总",
+    quickStats: base.quickStats.map((stat, index) => ({ ...stat, value: sumBy(rows, (row) => row.quickStats[index]?.value ?? 0) })),
+    operationMetrics,
+    innovation: {
+      ...base.innovation,
+      value: sumBy(rows, (row) => row.innovation.value),
+      done: sumBy(rows, (row) => row.innovation.done),
+      remaining: sumBy(rows, (row) => row.innovation.remaining),
+    },
+    cloud: {
+      ...base.cloud,
+      value: sumBy(rows, (row) => row.cloud.value),
+      total: sumBy(rows, (row) => row.cloud.total),
+      note: "当前筛选范围内系统上云进度",
+    },
+    personnelTotal: sumBy(rows, (row) => row.personnelTotal),
+    personnelDelta: "—",
+    personnelRoles,
+    tableRows,
+  }
 }
 
 function SectionHeader({ title, icon }: { title: string; icon: ReactNode }) {
@@ -391,8 +440,8 @@ function PanelCard({ title, icon, children, className }: { title: string; icon: 
 
 export function BranchDashboard() {
   const now = useLiveClock()
-  const [selectedGrade, setSelectedGrade] = useState(gradeOptions[0].key)
-  const [selectedBranch, setSelectedBranch] = useState(branchOptions[0].key)
+  const [selectedGrade, setSelectedGrade] = useState("all")
+  const [selectedBranch, setSelectedBranch] = useState("all")
   const [roomMode, setRoomMode] = useState<"central" | "disaster">("central")
   const [roomDetails, setRoomDetails] = useState(false)
   const [disasterDetails, setDisasterDetails] = useState(false)
@@ -400,10 +449,14 @@ export function BranchDashboard() {
   const [cloudRanking, setCloudRanking] = useState(false)
 
   useEffect(() => {
-    setSelectedBranch(branchOptions[0].key)
+    setSelectedBranch("all")
   }, [selectedGrade])
 
-  const current = branchData[selectedBranch] ?? branchData.nanjing
+  const filteredKeys = Object.keys(branchData).filter((key) => {
+    if (selectedBranch !== "all") return key === selectedBranch
+    return selectedGrade === "all" || branchGrades[key] === selectedGrade
+  })
+  const current = aggregateBranchData(filteredKeys)
   const liveTime = now ? now.toTimeString().slice(0, 8) : "--:--:--"
 
   return (
@@ -517,7 +570,7 @@ export function BranchDashboard() {
                     </button>
                     {!innovationRanking && <><div className="mt-3 flex flex-wrap items-center justify-center gap-4 text-[11px] text-slate-500">
                       <div className="flex items-center gap-1.5">
-                        <span className="size-2 rounded-full bg-[#2456c7]" />已完成信创改造
+                        <span className="size-2 rounded-full bg-[#2456c7]" />已��成信创改造
                       </div>
                       <div className="flex items-center gap-1.5">
                         <span className="size-2 rounded-full bg-[#2dc2be]" />未完成信创改造
