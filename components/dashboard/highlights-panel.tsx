@@ -4,8 +4,8 @@ import { highlights } from "@/lib/mock-data"
 
 export function HighlightsPanel() {
   return (
-    <PanelCard icon={AlertTriangle} title="重点关注" className="h-fit" bodyClassName="p-3">
-      <ul className="flex flex-col gap-2.5">
+    <PanelCard icon={AlertTriangle} title="重点关注" bodyClassName="flex h-full flex-col justify-center p-4">
+      <ul className="flex flex-col gap-4">
         {highlights.map((item) => (
           <li key={item.index} className="flex gap-2.5">
             <span className="mt-0.5 flex size-5 shrink-0 items-center justify-center rounded-full bg-destructive/20 text-[11px] font-bold text-destructive">
