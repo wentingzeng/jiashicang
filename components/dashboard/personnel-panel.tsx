@@ -12,8 +12,8 @@ export function PersonnelPanel() {
             className={`flex min-w-0 flex-col px-3 py-2 ${index === 2 ? "col-span-2" : ""}`}
           >
             <span className="font-mono text-lg font-bold leading-6 text-foreground tabular-nums">{stat.value}</span>
-            <span className="mt-1 min-h-8 text-[11px] leading-tight text-muted-foreground">{stat.label}</span>
-            <span className="mt-1 text-[10px] text-muted-foreground/70">{"单位：" + stat.unit}</span>
+            <span className="mt-0.5 text-[11px] leading-tight text-muted-foreground">{stat.label}</span>
+            <span className="text-[10px] leading-tight text-muted-foreground/70">{"单位：" + stat.unit}</span>
           </div>
         ))}
       </div>
