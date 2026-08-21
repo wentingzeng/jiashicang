@@ -475,8 +475,8 @@ export function BranchDashboard() {
                 </div>
               </PanelCard>
 
-              <div className="flex min-w-0 flex-col gap-2">
-                <div className="grid min-w-0 gap-2 md:grid-cols-2 md:[&>*]:min-w-0">
+              <div className="grid min-w-0 gap-2">
+                <div className="grid min-w-0 items-stretch gap-2 md:grid-cols-2 md:[&>*]:min-w-0">
                   <PanelCard className="h-full" bodyClassName="p-3" title="信创改造" icon={<ShieldCheck className="size-4" />}>
                     <button type="button" onClick={() => setInnovationRanking(!innovationRanking)} className="w-full text-left" aria-label="切换信创改造完成度排行">
                     {innovationRanking ? <div className="py-1">
