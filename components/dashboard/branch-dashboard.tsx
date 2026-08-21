@@ -463,23 +463,29 @@ export function BranchDashboard() {
     if (selectedBranch !== "all") return key === selectedBranch
     return selectedGrade === "all" || branchGrades[key] === selectedGrade
   })
-  const current = aggregateBranchData(filteredKeys)
+  const current = selectedBranch !== "all"
+    ? branchData[selectedBranch] ?? branchData.nanjing
+    : aggregateBranchData(filteredKeys)
   const personnelPageCount = Math.max(1, Math.ceil(current.tableRows.length / personnelPageSize))
   const personnelRows = current.tableRows.slice(
     (personnelPage - 1) * personnelPageSize,
     personnelPage * personnelPageSize,
   )
   const liveTime = now ? now.toTimeString().slice(0, 8) : "--:--:--"
-  const scopedRows = Array.from(new Map(current.tableRows.map((row) => [row.name, row])).values())
-  const detailRows = scopedRows.slice(0, 10)
+  const scopedRows = selectedBranch !== "all"
+    ? current.tableRows.filter((row) => row.name === current.label || row.name.endsWith(current.label.replace("分行", "")))
+    : Array.from(new Map(current.tableRows.map((row) => [row.name, row])).values())
+  const detailRows = selectedBranch !== "all" ? scopedRows.slice(0, 1) : scopedRows.slice(0, 10)
   const innovationRows = [...scopedRows]
     .map((row) => ({ name: row.name, count: row.innovation, rate: row.total ? Math.round((row.innovation / row.total) * 100) : 0 }))
     .sort((a, b) => b.count - a.count)
     .slice(0, 10)
-  const cloudRows = [...scopedRows]
-    .map((row) => ({ name: row.name, count: Math.max(0, Math.round((current.cloud.value / Math.max(current.personnelTotal, 1)) * row.total)) }))
-    .sort((a, b) => b.count - a.count)
-    .slice(0, 10)
+  const cloudRows = selectedBranch !== "all"
+    ? [{ name: current.label, count: current.cloud.value }]
+    : [...scopedRows]
+      .map((row) => ({ name: row.name, count: Math.max(0, Math.round((current.cloud.value / Math.max(current.personnelTotal, 1)) * row.total)) }))
+      .sort((a, b) => b.count - a.count)
+      .slice(0, 10)
   const selectedScopeLabel = selectedBranch !== "all"
     ? branchOptions.find((option) => option.key === selectedBranch)?.label ?? current.label
     : selectedGrade !== "all"
