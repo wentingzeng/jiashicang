@@ -300,6 +300,8 @@ export function ProjectDashboard() {
                   innerRadius={42}
                   outerRadius={65}
                   paddingAngle={3}
+                  label={({ percent }) => `${(Number(percent) * 100).toFixed(1)}%`}
+                  labelLine={false}
                 >
                   {statusData.map((item, index) => (
                     <Cell key={item.name} fill={palette[index]} />

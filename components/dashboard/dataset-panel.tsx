@@ -9,8 +9,8 @@ export function DatasetPanel() {
   const value = useLiveValue(datasetProgress.value, { volatility: 0.03 })
 
   return (
-    <PanelCard icon={Database} title={datasetProgress.title}>
-      <div className="flex min-h-28 items-center justify-center gap-5 rounded-lg border border-border/60 bg-secondary/35 p-3">
+    <PanelCard icon={Database} title={datasetProgress.title} bodyClassName="flex min-h-[190px] items-center justify-center p-4">
+      <div className="flex w-full items-center justify-center gap-5 rounded-lg border border-border/60 bg-secondary/35 p-3">
         <div className="relative flex size-20 shrink-0 items-center justify-center rounded-full border-[7px] border-accent/15">
           <div className="absolute inset-0 rounded-full border-[7px] border-transparent border-t-accent border-r-accent" aria-hidden="true" />
           <span className="font-mono text-lg font-bold text-accent tabular-nums">{value.toFixed(0)}%</span>
