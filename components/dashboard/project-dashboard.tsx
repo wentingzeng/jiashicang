@@ -1,5 +1,6 @@
 "use client";
 
+import { useState } from "react";
 import {
   Bar,
   BarChart,
@@ -41,7 +42,6 @@ const statusData = [
   { name: "已批复超期未启动", value: 2.7 },
   { name: "已批复未启动", value: 5.9 },
 ];
-const minStatusValue = Math.min(...statusData.map((item) => item.value));
 const progressData = [
   { name: "业务需求", value: 52 },
   { name: "总体设计", value: 51 },
@@ -255,6 +255,89 @@ function GaugeCard({
   );
 }
 
+function StatusPie() {
+  const [selected, setSelected] = useState(0);
+  const [selectedName, selectedValue] = [
+    statusData[selected].name,
+    statusData[selected].value,
+  ];
+  return (
+    <div className="flex items-center gap-3">
+      <div className="relative shrink-0" style={{ width: 148 }}>
+        <ChartBox height={148}>
+          <PieChart margin={{ top: 0, right: 0, bottom: 0, left: 0 }}>
+            <Pie
+              data={statusData}
+              dataKey="value"
+              nameKey="name"
+              innerRadius={46}
+              outerRadius={68}
+              paddingAngle={3}
+              stroke="none"
+              onClick={(_, index) => setSelected(index)}
+            >
+              {statusData.map((item, index) => (
+                <Cell
+                  key={item.name}
+                  fill={palette[index]}
+                  opacity={selected === index ? 1 : 0.55}
+                  className="cursor-pointer outline-none"
+                />
+              ))}
+            </Pie>
+            <Tooltip
+              cursor={false}
+              contentStyle={tooltipStyle}
+              formatter={(value: number, name: string) => [
+                `${Number(value).toFixed(2)}%`,
+                name,
+              ]}
+            />
+          </PieChart>
+        </ChartBox>
+        <div className="pointer-events-none absolute inset-0 flex flex-col items-center justify-center">
+          <span className="font-mono text-2xl font-black text-foreground tabular-nums">
+            {selectedValue.toFixed(1)}%
+          </span>
+          <span className="max-w-20 text-center text-[10px] leading-tight text-muted-foreground">
+            {selectedName}
+          </span>
+        </div>
+      </div>
+      <ul className="flex min-w-0 flex-1 flex-col gap-1">
+        {statusData.map((item, index) => {
+          const isSelected = selected === index;
+          return (
+            <li key={item.name}>
+              <button
+                type="button"
+                onClick={() => setSelected(index)}
+                className={`flex w-full items-center gap-2 rounded-md px-2 py-1 text-left transition ${isSelected ? "bg-secondary/60" : "hover:bg-secondary/35"}`}
+              >
+                <span
+                  className="size-2 shrink-0 rounded-full"
+                  style={{ backgroundColor: palette[index] }}
+                  aria-hidden="true"
+                />
+                <span
+                  className={`min-w-0 flex-1 truncate text-xs ${isSelected ? "font-semibold text-foreground" : "text-muted-foreground"}`}
+                >
+                  {item.name}
+                </span>
+                <span
+                  className={`font-mono text-xs tabular-nums ${isSelected ? "font-semibold text-foreground" : "text-foreground"}`}
+                >
+                  {item.value.toFixed(1)}%
+                </span>
+              </button>
+            </li>
+          );
+        })}
+      </ul>
+    </div>
+  );
+}
+
 export function ProjectDashboard() {
   return (
     <main className="min-h-screen bg-background px-4 pb-4 text-foreground md:px-6">
@@ -292,70 +375,7 @@ export function ProjectDashboard() {
         </div>
         <div className="grid gap-2 lg:grid-cols-3">
           <Panel title="年度需求计划状态分布">
-            <div className="flex items-center gap-3">
-              <div className="relative shrink-0" style={{ width: 148 }}>
-                <ChartBox height={148}>
-                  <PieChart margin={{ top: 0, right: 0, bottom: 0, left: 0 }}>
-                    <Pie
-                      data={statusData}
-                      dataKey="value"
-                      nameKey="name"
-                      innerRadius={46}
-                      outerRadius={68}
-                      paddingAngle={3}
-                      stroke="none"
-                    >
-                      {statusData.map((item, index) => (
-                        <Cell key={item.name} fill={palette[index]} />
-                      ))}
-                    </Pie>
-                    <Tooltip
-                      cursor={false}
-                      contentStyle={tooltipStyle}
-                      formatter={(value: number, name: string) => [
-                        `${Number(value).toFixed(2)}%`,
-                        name,
-                      ]}
-                    />
-                  </PieChart>
-                </ChartBox>
-                <div className="pointer-events-none absolute inset-0 flex flex-col items-center justify-center">
-                  <span className="font-mono text-2xl font-black text-foreground tabular-nums">
-                    329
-                  </span>
-                  <span className="text-[10px] text-muted-foreground">
-                    需求计划&middot;个
-                  </span>
-                </div>
-              </div>
-              <ul className="flex min-w-0 flex-1 flex-col gap-1">
-                {statusData.map((item, index) => {
-                  const isEmphasized = item.value === minStatusValue
-                  return (
-                    <li
-                      key={item.name}
-                      className={`flex items-center gap-2 rounded-md px-2 py-1 ${isEmphasized ? "bg-secondary/60" : ""}`}
-                    >
-                      <span
-                        className="size-2 shrink-0 rounded-full"
-                        style={{ backgroundColor: palette[index] }}
-                        aria-hidden="true"
-                      />
-                      <span
-                        className={`min-w-0 flex-1 truncate text-xs ${isEmphasized ? "font-semibold text-foreground" : "text-muted-foreground"}`}
-                      >
-                        {item.name}
-                      </span>
-                      <span
-                        className={`font-mono text-xs tabular-nums ${isEmphasized ? "font-semibold text-foreground" : "text-foreground"}`}
-                      >
-                        {item.value.toFixed(1)}%
-                      </span>
-                    </li>
-                  )
-                })}
-              </ul>
-            </div>
+            <StatusPie />
           </Panel>
           <Panel title="在建项目进展情况">
             <ProgressBars data={progressData} />
