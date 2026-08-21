@@ -291,14 +291,15 @@ export function ProjectDashboard() {
         </div>
         <div className="grid gap-2 lg:grid-cols-3">
           <Panel title="年度需求计划状态分布">
-            <ChartBox height={185}>
-              <PieChart margin={{ top: 12, right: 28, bottom: 0, left: 28 }}>
+            <div className="relative">
+              <ChartBox height={210}>
+              <PieChart margin={{ top: 4, right: 30, bottom: 0, left: 30 }}>
                 <Pie
                   data={statusData}
                   dataKey="value"
                   nameKey="name"
-                  innerRadius={38}
-                  outerRadius={56}
+                  innerRadius={48}
+                  outerRadius={72}
                   paddingAngle={3}
                   label={({ cx, cy, midAngle, outerRadius, percent }) => {
                     const RADIAN = Math.PI / 180
@@ -354,7 +355,14 @@ export function ProjectDashboard() {
                   wrapperStyle={{ fontSize: 10, paddingTop: 6 }}
                 />
               </PieChart>
-            </ChartBox>
+              </ChartBox>
+              <div className="pointer-events-none absolute left-1/2 top-[92px] flex -translate-x-1/2 -translate-y-1/2 flex-col items-center">
+                <span className="text-[9px] leading-tight text-muted-foreground">{statusData[0].name}</span>
+                <span className="font-mono text-lg font-bold leading-tight text-primary tabular-nums">
+                  {statusData[0].value.toFixed(1)}%
+                </span>
+              </div>
+            </div>
           </Panel>
           <Panel title="在建项目进展情况">
             <ProgressBars data={progressData} />
