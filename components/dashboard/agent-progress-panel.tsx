@@ -4,8 +4,8 @@ import { agentProgress } from "@/lib/mock-data"
 
 export function AgentProgressPanel() {
   return (
-    <PanelCard icon={Bot} title="超级智能体建设情况">
-      <div className="grid grid-cols-2 gap-3">
+    <PanelCard icon={Bot} title="超级智能体建设情况" bodyClassName="flex min-h-[240px] items-center p-4">
+      <div className="grid w-full grid-cols-2 items-center gap-4">
         {agentProgress.map((item) => (
           <div
             key={item.key}

@@ -19,8 +19,8 @@ export function ProgressSummaryPanel() {
   ]
 
   return (
-    <PanelCard icon={TrendingUp} title="总体进展">
-      <div className="grid min-h-0 grid-cols-3 items-center gap-2 py-1">
+    <PanelCard icon={TrendingUp} title="总体进展" bodyClassName="flex min-h-[240px] items-center p-4">
+      <div className="grid w-full grid-cols-3 items-center gap-2">
         {stats.map((stat) => {
           const Icon = stat.icon
           return (
