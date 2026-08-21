@@ -11,10 +11,10 @@ export function PersonnelPanel() {
             key={stat.label}
             className={`flex min-w-0 flex-col justify-between px-3 py-2 ${index === 2 ? "col-span-2" : ""}`}
           >
-            <span className="min-h-8 text-sm leading-5 text-muted-foreground">{stat.label}</span>
-            <div className="mt-2 flex flex-col gap-0.5">
-              <span className="font-mono text-2xl font-bold text-foreground tabular-nums">{stat.value}</span>
-              <span className="text-sm text-muted-foreground/70">{"单位：" + stat.unit}</span>
+            <span className="min-h-8 text-[11px] leading-tight text-muted-foreground">{stat.label}</span>
+            <div className="mt-2 flex flex-col gap-1">
+              <span className="font-mono text-lg font-bold text-foreground tabular-nums">{stat.value}</span>
+              <span className="text-[10px] text-muted-foreground/70">{"单位：" + stat.unit}</span>
             </div>
           </div>
         ))}
