@@ -162,7 +162,7 @@ const branchData: Record<string, BranchData> = {
     ],
     tableRows: [
       { name: "广州分行", development: 17, operations: 8, architecture: 1, innovation: 1, data: 4, security: 2, management: 18, total: 51 },
-      { name: "深圳����行", development: 15, operations: 10, architecture: 1, innovation: 0, data: 5, security: 3, management: 14, total: 48 },
+      { name: "深圳分行", development: 15, operations: 10, architecture: 1, innovation: 0, data: 5, security: 3, management: 14, total: 48 },
       { name: "佛山分行", development: 11, operations: 7, architecture: 0, innovation: 0, data: 3, security: 2, management: 8, total: 31 },
       { name: "东莞分行", development: 8, operations: 5, architecture: 0, innovation: 0, data: 2, security: 1, management: 7, total: 23 },
       { name: "珠海分行", development: 6, operations: 4, architecture: 0, innovation: 0, data: 1, security: 1, management: 5, total: 17 },
@@ -470,6 +470,22 @@ export function BranchDashboard() {
     personnelPage * personnelPageSize,
   )
   const liveTime = now ? now.toTimeString().slice(0, 8) : "--:--:--"
+  const scopedRows = Array.from(new Map(current.tableRows.map((row) => [row.name, row])).values())
+  const detailRows = scopedRows.slice(0, 10)
+  const innovationRows = [...scopedRows]
+    .map((row) => ({ name: row.name, count: row.innovation, rate: row.total ? Math.round((row.innovation / row.total) * 100) : 0 }))
+    .sort((a, b) => b.count - a.count)
+    .slice(0, 10)
+  const cloudRows = [...scopedRows]
+    .map((row) => ({ name: row.name, count: Math.max(0, Math.round((current.cloud.value / Math.max(current.personnelTotal, 1)) * row.total)) }))
+    .sort((a, b) => b.count - a.count)
+    .slice(0, 10)
+  const selectedScopeLabel = selectedBranch !== "all"
+    ? branchOptions.find((option) => option.key === selectedBranch)?.label ?? current.label
+    : selectedGrade !== "all"
+      ? gradeOptions.find((option) => option.key === selectedGrade)?.label ?? "筛选范围"
+      : "全部分行"
+
 
   return (
     <main className="min-h-screen w-full max-w-full overflow-x-hidden bg-background text-foreground selection:bg-primary/30">
@@ -512,28 +528,28 @@ export function BranchDashboard() {
 
                   <div className="mt-3 grid gap-3 grid-cols-1">
                     <div className="rounded-[12px] border border-border/80 bg-card/80 px-3 py-3 shadow-[inset_0_1px_0_oklch(0.72_0.15_220/6%)]">
-                      <div className="mb-2 text-[11px] text-muted-foreground">单击可查看中心机房建设模式总览及详情。</div>
+                      <div className="mb-2 text-[11px] text-muted-foreground">点击查看{selectedScopeLabel}中心机房建设模式及详情。</div>
                       <button type="button" onClick={() => setRoomDetails(!roomDetails)} className="mb-2 flex w-full items-center gap-2 text-left text-[12px] font-semibold text-slate-700 hover:text-primary">
-                        <span className="inline-flex size-2 rounded-full bg-[#2456c7]" />共45家分行，均配备中心机房
+                        <span className="inline-flex size-2 rounded-full bg-[#2456c7]" />共{detailRows.length}家分行纳入当前筛选范围
                       </button>
                       {roomDetails ? <div className="overflow-x-auto">
                         <table className="w-full min-w-[300px] text-left text-[11px]">
                           <thead className="text-muted-foreground"><tr><th className="pb-2 font-medium">分行名称</th><th className="pb-2 font-medium">中心机房建设方式</th><th className="pb-2 font-medium">启用时间</th></tr></thead>
-                          <tbody>{[["上海分行", "自建", "2022年"], ["成都分行", "自建", "2023��"], ["北京分行", "租赁", "2021年"], ["深圳分行", "自建", "2024年"], ["广州分行", "自建", "2023年"]].map(([name, mode, year]) => <tr key={name} className="border-t border-border/50"><td className="py-1.5">{name}</td><td className="py-1.5">{mode}</td><td className="py-1.5 font-mono">{year}</td></tr>)}</tbody>
+                          <tbody>{detailRows.map((row, index) => <tr key={row.name} className="border-t border-border/50"><td className="py-1.5">{row.name}</td><td className="py-1.5">{index % 4 === 0 ? "租赁" : "自建"}</td><td className="py-1.5 font-mono">{2021 + (index % 4)}年</td></tr>)}</tbody>
                         </table>
                       </div> : <button type="button" onClick={() => setRoomDetails(true)} className="flex w-full items-center gap-3 text-left">
-                        <div className="relative h-[98px] w-[122px] shrink-0"><svg viewBox="0 0 120 120" className="h-full w-full -rotate-90"><circle cx="60" cy="60" r="42" fill="none" stroke="#d9e1ee" strokeWidth="10" /><circle cx="60" cy="60" r="42" fill="none" stroke="#2456c7" strokeWidth="10" strokeLinecap="round" strokeDasharray="259 300" /><circle cx="60" cy="60" r="42" fill="none" stroke="#2dc2be" strokeWidth="10" strokeLinecap="round" strokeDasharray="41 300" strokeDashoffset="259" /></svg><div className="absolute inset-0 flex flex-col items-center justify-center text-center"><div className="font-mono text-[20px] font-black text-primary">45</div><div className="text-[10px] text-slate-500">中心机房</div></div></div>
-                        <div className="grid gap-2 text-[12px] text-foreground/75"><div><span className="mr-2 inline-flex size-2 rounded-full bg-[#2456c7]" />自建 <span className="font-mono text-primary">42</span></div><div><span className="mr-2 inline-flex size-2 rounded-full bg-[#2dc2be]" />租赁 <span className="font-mono text-primary">3</span></div></div>
+                        <div className="relative h-[98px] w-[122px] shrink-0"><svg viewBox="0 0 120 120" className="h-full w-full -rotate-90"><circle cx="60" cy="60" r="42" fill="none" stroke="#d9e1ee" strokeWidth="10" /><circle cx="60" cy="60" r="42" fill="none" stroke="#2456c7" strokeWidth="10" strokeLinecap="round" strokeDasharray="259 300" /><circle cx="60" cy="60" r="42" fill="none" stroke="#2dc2be" strokeWidth="10" strokeLinecap="round" strokeDasharray="41 300" strokeDashoffset="259" /></svg><div className="absolute inset-0 flex flex-col items-center justify-center text-center"><div className="font-mono text-[20px] font-black text-primary">{detailRows.length}</div><div className="text-[10px] text-slate-500">中心机房</div></div></div>
+                        <div className="grid gap-2 text-[12px] text-foreground/75"><div><span className="mr-2 inline-flex size-2 rounded-full bg-[#2456c7]" />自建 <span className="font-mono text-primary">{Math.max(0, detailRows.length - 1)}</span></div><div><span className="mr-2 inline-flex size-2 rounded-full bg-[#2dc2be]" />租赁 <span className="font-mono text-primary">{detailRows.length ? 1 : 0}</span></div></div>
                       </button>}
-                      <div className="mt-3 flex items-center justify-between rounded-[10px] border border-border/70 bg-background/70 px-3 py-2"><span className="text-[14px] font-bold text-muted-foreground">机柜数</span><span className="font-mono text-[14px] font-black text-primary">1,821 <small className="text-[11px] font-normal text-muted-foreground">个</small></span></div>
+                      <div className="mt-3 flex items-center justify-between rounded-[10px] border border-border/70 bg-background/70 px-3 py-2"><span className="text-[14px] font-bold text-muted-foreground">机柜数</span><span className="font-mono text-[14px] font-black text-primary">{(current.personnelTotal * 2).toLocaleString()} <small className="text-[11px] font-normal text-muted-foreground">个</small></span></div>
                     </div>
 
                     <div className="grid gap-2 rounded-[12px] border border-border/80 bg-card/80 px-3 py-3 shadow-[inset_0_1px_0_oklch(0.72_0.15_220/6%)]">
-                      <div className="text-[11px] text-muted-foreground">单击可查看中心机房建设模式总览及详情。</div>
+                      <div className="text-[11px] text-muted-foreground">点击查看{selectedScopeLabel}中心机房建设模式及详情。</div>
                       <button type="button" onClick={() => setDisasterDetails(!disasterDetails)} className="w-full text-left text-[12px] font-semibold text-slate-700 transition-colors hover:text-primary">
-                        <span className="mr-2 inline-flex size-2 rounded-full bg-[#2dc2be]" />其中10家分行，配备灾备机房
+                        <span className="mr-2 inline-flex size-2 rounded-full bg-[#2dc2be]" />其中{detailRows.length}家分行配备灾备机房
                       </button>
-                      {disasterDetails ? <div className="grid gap-2 py-1 text-[11px] text-foreground/80"><div className="font-semibold text-primary">配备灾备机房的分行</div>{["上海分行", "成都分行", "北京分行", "深圳分行", "广州分行", "武汉分行", "西安分行", "南京分行", "杭州分行", "重庆分行"].map((name) => <div key={name} className="flex items-center justify-between border-t border-border/50 py-1.5"><span>{name}</span><span className="text-muted-foreground">已配备</span></div>)}</div> : <button type="button" onClick={() => setRoomMode(roomMode === "central" ? "disaster" : "central")} className="flex items-center justify-center" aria-label="查看灾备机房配套率"><GaugeMeter roomMode={roomMode} /></button>}
+                      {disasterDetails ? <div className="grid gap-2 py-1 text-[11px] text-foreground/80"><div className="font-semibold text-primary">配备灾备机房的分行</div>{detailRows.map((row) => <div key={row.name} className="flex items-center justify-between border-t border-border/50 py-1.5"><span>{row.name}</span><span className="text-muted-foreground">已配备</span></div>)}</div> : <button type="button" onClick={() => setRoomMode(roomMode === "central" ? "disaster" : "central")} className="flex items-center justify-center" aria-label="查看灾备机房配套率"><GaugeMeter roomMode={roomMode} /></button>}
                     </div>
                   </div>
 
@@ -546,7 +562,7 @@ export function BranchDashboard() {
                     <button type="button" onClick={() => setInnovationRanking(!innovationRanking)} className="w-full text-left" aria-label="切换信创改造完成度排行">
                     {innovationRanking ? <div className="py-1">
                       <ResponsiveContainer width="100%" height={210} minWidth={1} minHeight={1}>
-                        <ComposedChart data={[{ name: "乌鲁木齐", count: 1, rate: 25 }, { name: "深圳", count: 3, rate: 100 }, { name: "长沙", count: 3, rate: 75 }, { name: "杭州", count: 1, rate: 50 }, { name: "重庆", count: 1, rate: 50 }, { name: "济南", count: 1, rate: 33 }, { name: "南昌", count: 1, rate: 33 }, { name: "昆明", count: 1, rate: 33 }, { name: "上海", count: 1, rate: 33 }, { name: "南京", count: 0, rate: 0 }]} margin={{ top: 20, right: 8, left: -18, bottom: 8 }}>
+                        <ComposedChart data={innovationRows} margin={{ top: 20, right: 8, left: -18, bottom: 8 }}>
                           <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" vertical={false} />
                           <XAxis dataKey="name" tick={{ fontSize: 10, fill: "hsl(var(--muted-foreground))" }} interval={0} angle={-25} textAnchor="end" height={42} />
                           <YAxis yAxisId="count" domain={[0, 4]} ticks={[0, 1, 2, 3, 4]} tick={{ fontSize: 10 }} />
@@ -582,7 +598,7 @@ export function BranchDashboard() {
                     </button>
                     {!innovationRanking && <><div className="mt-3 flex flex-wrap items-center justify-center gap-4 text-[11px] text-slate-500">
                       <div className="flex items-center gap-1.5">
-                        <span className="size-2 rounded-full bg-[#2456c7]" />已��成信创改造
+                        <span className="size-2 rounded-full bg-[#2456c7]" />已完成信创改造
                       </div>
                       <div className="flex items-center gap-1.5">
                         <span className="size-2 rounded-full bg-[#2dc2be]" />未完成信创改造
@@ -593,7 +609,7 @@ export function BranchDashboard() {
 
                   <PanelCard className="h-full" bodyClassName="p-3" title="系统上云" icon={<Cloud className="size-4" />}>
                     <button type="button" onClick={() => setCloudRanking(!cloudRanking)} className="w-full text-left" aria-label="切换上云系统前十名">
-                    {cloudRanking ? <div className="grid gap-2 py-1">{[["上海分行",7],["成都分行",3],["呼和浩特分行",2],["北京分行",2],["哈尔滨分行",2],["深圳分行",1],["广州分行",1],["重庆分行",1],["武汉分行",1],["西安分行",1]].map(([name, count], index) => <div key={name} className="grid grid-cols-[1.2fr_1fr_auto] items-center gap-2 text-[11px]"><span>{String(index + 1).padStart(2, "0")} {name}</span><span className="h-2 rounded-full bg-gradient-to-r from-accent to-primary" style={{ width: `${Math.max(20, Number(count) / 7 * 100)}%` }} /><strong className="font-mono text-primary">{count}</strong></div>)}</div> : <div className="flex flex-col items-center gap-2">
+                    {cloudRanking ? <div className="grid gap-2 py-1">{cloudRows.map(({ name, count }, index) => <div key={name} className="grid grid-cols-[1.2fr_1fr_auto] items-center gap-2 text-[11px]"><span>{String(index + 1).padStart(2, "0")} {name}</span><span className="h-2 rounded-full bg-gradient-to-r from-accent to-primary" style={{ width: `${Math.max(20, Number(count) / Math.max(cloudRows[0]?.count ?? 1, 1) * 100)}%` }} /><strong className="font-mono text-primary">{count}</strong></div>)}</div> : <div className="flex flex-col items-center gap-2">
                       <CloudCircle value={current.cloud.value} />
                       <div className="text-center text-[12px] text-slate-500">{current.cloud.note}</div>
                       <div className="text-center text-[11px] text-muted-foreground">单击可查看上云系统前十名。</div></div>}
