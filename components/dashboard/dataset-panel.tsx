@@ -9,10 +9,10 @@ export function DatasetPanel() {
   const value = useLiveValue(datasetProgress.value, { volatility: 0.03 })
 
   return (
-    <PanelCard icon={Database} title={datasetProgress.title} bodyClassName="flex min-h-[190px] items-center justify-center p-4">
-      <div className="flex w-full items-center justify-center gap-5 rounded-lg border border-border/60 bg-secondary/35 p-3">
-        <div className="relative flex size-20 shrink-0 items-center justify-center rounded-full border-[7px] border-accent/15">
-          <div className="absolute inset-0 rounded-full border-[7px] border-transparent border-t-accent border-r-accent" aria-hidden="true" />
+    <PanelCard icon={Database} title={datasetProgress.title} bodyClassName="flex min-h-[150px] items-center justify-center p-3">
+      <div className="flex w-full items-center justify-center gap-4 rounded-lg border border-border/60 bg-secondary/35 p-2">
+        <div className="relative flex size-16 shrink-0 items-center justify-center rounded-full border-[6px] border-accent/15">
+          <div className="absolute inset-0 rounded-full border-[6px] border-transparent border-t-accent border-r-accent" aria-hidden="true" />
           <span className="font-mono text-lg font-bold text-accent tabular-nums">{value.toFixed(0)}%</span>
         </div>
         <span className="max-w-36 text-xs font-normal leading-5 text-foreground">高质量数据集建设完成度</span>

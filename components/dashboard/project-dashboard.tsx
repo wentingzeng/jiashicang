@@ -301,8 +301,8 @@ export function ProjectDashboard() {
                   outerRadius={65}
                   paddingAngle={3}
                   label={({ percent }) => `${(Number(percent) * 100).toFixed(1)}%`}
-                  labelLine={{ stroke: "var(--muted-foreground)", strokeWidth: 1 }}
-                  style={{ fontSize: 9, fontWeight: 500 }}
+                  labelLine={false}
+                  style={{ fontSize: 8, fontWeight: 500, fill: "#ffffff" }}
                 >
                   {statusData.map((item, index) => (
                     <Cell key={item.name} fill={palette[index]} />
