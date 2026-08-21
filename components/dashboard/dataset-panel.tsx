@@ -15,7 +15,7 @@ export function DatasetPanel() {
           <div className="absolute inset-0 rounded-full border-[7px] border-transparent border-t-accent border-r-accent" aria-hidden="true" />
           <span className="font-mono text-lg font-bold text-accent tabular-nums">{value.toFixed(0)}%</span>
         </div>
-        <span className="max-w-36 text-sm font-semibold leading-5 text-foreground">高质量数据集建设完成度</span>
+        <span className="max-w-36 text-xs font-normal leading-5 text-foreground">高质量数据集建设完成度</span>
       </div>
     </PanelCard>
   )
