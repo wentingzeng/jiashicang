@@ -71,7 +71,7 @@ export default function Page() {
           <SectionRail label="核心概览" tone="primary" />
           <div className="flex min-w-0 flex-1 flex-col gap-5">
             <KpiCards />
-            <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
+            <div className="grid items-start grid-cols-1 gap-6 lg:grid-cols-3">
               <TaskStatusPanel />
               <ProgressSummaryPanel />
               <AgentProgressPanel />

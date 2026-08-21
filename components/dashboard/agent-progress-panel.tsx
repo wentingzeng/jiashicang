@@ -4,12 +4,12 @@ import { agentProgress } from "@/lib/mock-data"
 
 export function AgentProgressPanel() {
   return (
-    <PanelCard icon={Bot} title="超级智能体建设情况" bodyClassName="flex min-h-[240px] items-center p-4">
+    <PanelCard icon={Bot} title="超级智能体建设情况" className="h-fit" bodyClassName="flex min-h-[190px] items-center p-4">
       <div className="grid w-full grid-cols-2 items-center gap-4">
         {agentProgress.map((item) => (
           <div
             key={item.key}
-            className="flex min-h-28 flex-col justify-between rounded-lg border border-border/60 bg-secondary/35 p-3"
+            className="flex min-h-24 flex-col justify-between rounded-lg border border-border/60 bg-secondary/35 p-3"
           >
             <div className="flex items-start justify-between gap-2">
               <span className="text-xs leading-5 text-muted-foreground">{item.label}</span>

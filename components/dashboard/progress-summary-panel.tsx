@@ -19,14 +19,14 @@ export function ProgressSummaryPanel() {
   ]
 
   return (
-    <PanelCard icon={TrendingUp} title="总体进展" bodyClassName="flex min-h-[240px] items-center p-4">
+    <PanelCard icon={TrendingUp} title="总体进展" className="h-fit" bodyClassName="flex min-h-[190px] items-center p-4">
       <div className="grid w-full grid-cols-3 items-center gap-2">
         {stats.map((stat) => {
           const Icon = stat.icon
           return (
             <div
               key={stat.label}
-              className="relative flex min-h-28 flex-col items-center justify-center gap-1.5 overflow-hidden rounded-lg border border-border/60 bg-gradient-to-b from-secondary/50 to-background/40 px-2 py-3 text-center"
+              className="relative flex min-h-24 flex-col items-center justify-center gap-1.5 overflow-hidden rounded-lg border border-border/60 bg-gradient-to-b from-secondary/50 to-background/40 px-2 py-3 text-center"
             >
               <div
                 className="pointer-events-none absolute inset-0 opacity-60"

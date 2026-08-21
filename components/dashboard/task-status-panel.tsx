@@ -9,10 +9,10 @@ export function TaskStatusPanel() {
   const total = taskStatusDistribution.reduce((sum, slice) => sum + slice.value, 0)
 
   return (
-    <PanelCard icon={PieChartIcon} title="专班工作概览">
+    <PanelCard icon={PieChartIcon} title="专班工作概览" className="h-fit">
       <p className="mb-2 text-xs text-muted-foreground">任务状态分布</p>
       <div className="flex items-center gap-2">
-        <div className="h-40 w-1/2 shrink-0">
+        <div className="h-32 w-1/2 shrink-0">
           <ResponsiveContainer width="100%" height="100%" minWidth={1} minHeight={1}>
             <PieChart>
               <Pie
