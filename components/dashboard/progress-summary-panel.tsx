@@ -20,13 +20,13 @@ export function ProgressSummaryPanel() {
 
   return (
     <PanelCard icon={TrendingUp} title="总体进展">
-      <div className="grid h-full grid-cols-3 gap-2">
+      <div className="grid min-h-0 grid-cols-3 items-center gap-2 py-1">
         {stats.map((stat) => {
           const Icon = stat.icon
           return (
             <div
               key={stat.label}
-              className="relative flex flex-col items-center justify-center gap-2 overflow-hidden rounded-lg border border-border/60 bg-gradient-to-b from-secondary/50 to-background/40 px-2 py-4 text-center"
+              className="relative flex min-h-28 flex-col items-center justify-center gap-1.5 overflow-hidden rounded-lg border border-border/60 bg-gradient-to-b from-secondary/50 to-background/40 px-2 py-3 text-center"
             >
               <div
                 className="pointer-events-none absolute inset-0 opacity-60"
