@@ -407,7 +407,7 @@ export function BranchDashboard() {
   const liveTime = now ? now.toTimeString().slice(0, 8) : "--:--:--"
 
   return (
-    <main className="min-h-screen bg-background text-foreground selection:bg-primary/30">
+    <main className="min-h-screen w-full max-w-full overflow-x-hidden bg-background text-foreground selection:bg-primary/30">
       <div
         className="pointer-events-none fixed inset-0 opacity-40"
         style={{
@@ -419,7 +419,7 @@ export function BranchDashboard() {
 
       <TopNav />
 
-      <div className="relative mx-auto flex max-w-[1720px] flex-col gap-6 px-4 py-6 md:px-8 lg:px-10">
+      <div className="relative mx-auto flex w-full min-w-0 max-w-[1720px] flex-col gap-6 overflow-hidden px-4 py-6 md:px-8 lg:px-10">
         <HeroBanner title="分行管理驾驶舱" subtitle="分行科技画像 · 运维监控 · 信创建设 · 系统上云" />
 
         <section aria-labelledby="branch-overview-title" className="animate-in fade-in slide-in-from-bottom-4 duration-700">
@@ -429,7 +429,7 @@ export function BranchDashboard() {
               <SelectBox label="请选择分行" value={selectedBranch} onChange={setSelectedBranch} options={branchOptions} />
             </div>
 
-            <div className="grid gap-3 xl:grid-cols-[0.75fr_1.25fr] xl:items-start">
+            <div className="grid min-w-0 gap-3 xl:grid-cols-[minmax(0,0.75fr)_minmax(0,1.25fr)] xl:items-start">
               <PanelCard className="h-full" title="运维指标" icon={<Gauge className="size-4" />}>
                 <div className="grid gap-y-1">
                   <div className="grid gap-x-2 md:grid-cols-3">
@@ -536,7 +536,7 @@ export function BranchDashboard() {
                   </PanelCard>
                 </div>
 
-                <PanelCard className="h-full" bodyClassName="p-3" title="科技人员数量" icon={<UsersRound className="size-4" />}>
+                <PanelCard className="min-w-0 h-full" bodyClassName="min-w-0 p-3" title="科技人员数量" icon={<UsersRound className="size-4" />}>
                   <div className="grid gap-4 xl:grid-cols-[0.92fr_1.08fr]">
                     <div className="space-y-4">
                       <div className="rounded-[12px] border border-border/80 bg-card/80 px-4 pt-[19px] pb-[22px] shadow-[inset_0_1px_0_oklch(0.72_0.15_220/6%)]">
@@ -557,8 +557,8 @@ export function BranchDashboard() {
                     </div>
 
                     <div className="overflow-hidden rounded-[12px] border border-border/80 bg-card/80 shadow-[inset_0_1px_0_oklch(0.72_0.15_220/6%)]">
-                      <div className="overflow-x-auto">
-                        <Table className="min-w-[860px] text-sm">
+<div className="min-w-0 max-w-full overflow-x-auto overscroll-x-contain">
+                          <Table className="min-w-[860px] text-sm">
                           <TableHeader className="bg-gradient-to-r from-primary via-primary to-accent">
                             <TableRow className="border-transparent hover:bg-transparent">
                               <TableHead className="px-3 py-3 text-[12px] font-semibold text-foreground">分行名称</TableHead>
