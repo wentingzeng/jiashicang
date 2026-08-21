@@ -217,6 +217,21 @@ function sumBy<T>(items: T[], getValue: (item: T) => number) {
   return items.reduce((sum, item) => sum + getValue(item), 0)
 }
 
+function toBranchRow(branch: BranchData): RowItem {
+  const getMetric = (label: string) => branch.operationMetrics.find((metric) => metric.label === label)?.value ?? 0
+  return {
+    name: branch.label,
+    development: branch.personnelRoles[0]?.value ?? 0,
+    operations: branch.personnelRoles[1]?.value ?? 0,
+    architecture: branch.personnelRoles[3]?.value ?? 0,
+    innovation: branch.innovation.done,
+    data: branch.personnelRoles[2]?.value ?? 0,
+    security: branch.personnelRoles[4]?.value ?? 0,
+    management: branch.quickStats[2]?.value ?? 0,
+    total: branch.personnelTotal,
+  }
+}
+
 function aggregateBranchData(keys: string[]): BranchData {
   const rows = keys.map((key) => branchData[key])
   const base = rows[0] ?? branchData.nanjing
@@ -228,7 +243,7 @@ function aggregateBranchData(keys: string[]): BranchData {
     ...role,
     value: sumBy(rows, (row) => row.personnelRoles[index]?.value ?? 0),
   }))
-  const tableRows = rows.flatMap((row) => row.tableRows)
+  const tableRows = rows.map(toBranchRow)
   return {
     ...base,
     label: keys.length === 1 ? base.label : "筛选结果汇总",
@@ -463,8 +478,11 @@ export function BranchDashboard() {
     if (selectedBranch !== "all") return key === selectedBranch
     return selectedGrade === "all" || branchGrades[key] === selectedGrade
   })
-  const current = selectedBranch !== "all"
+  const selectedData = selectedBranch !== "all"
     ? branchData[selectedBranch] ?? branchData.nanjing
+    : null
+  const current = selectedData
+    ? { ...selectedData, tableRows: [toBranchRow(selectedData)] }
     : aggregateBranchData(filteredKeys)
   const personnelPageCount = Math.max(1, Math.ceil(current.tableRows.length / personnelPageSize))
   const personnelRows = current.tableRows.slice(
