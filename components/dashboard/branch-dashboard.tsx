@@ -57,6 +57,12 @@ const branchOptions = [
   { key: "hangzhou", label: "杭州分行" },
   { key: "guangzhou", label: "广州分行" },
   { key: "fuzhou", label: "福州分行" },
+  { key: "wuhan", label: "武汉分行" },
+  { key: "beijing", label: "北京分行" },
+  { key: "shanghai", label: "上海分行" },
+  { key: "shenzhen", label: "深圳分行" },
+  { key: "chengdu", label: "成都分行" },
+  { key: "xian", label: "西安分行" },
 ]
 
 const branchData: Record<string, BranchData> = {
@@ -206,11 +212,56 @@ const branchData: Record<string, BranchData> = {
   },
 }
 
+const additionalBranchData: Array<[string, string, string, number, number, number, number, number]> = [
+  ["wuhan", "武汉分行", "level-1", 214, 506, 31, 42, 876],
+  ["beijing", "北京分行", "level-1", 246, 590, 39, 51, 1042],
+  ["shanghai", "上海分行", "level-1", 238, 562, 36, 47, 986],
+  ["shenzhen", "深圳分行", "level-2", 192, 448, 29, 38, 812],
+  ["chengdu", "成都分行", "level-2", 164, 386, 25, 32, 698],
+  ["xian", "西安分行", "level-3", 126, 298, 18, 24, 524],
+]
+
+for (const [key, label, grade, parentSystems, childSystems, cloudValue, planValue, personnelTotal] of additionalBranchData) {
+  const source = branchData.nanjing
+  const roleScale = personnelTotal / source.personnelTotal
+  branchData[key] = {
+    ...source,
+    label,
+    quickStats: source.quickStats.map((stat, index) => ({ ...stat, value: Math.round(stat.value * roleScale) })),
+    operationMetrics: source.operationMetrics.map((metric, index) => ({
+      ...metric,
+      value: index === 0 ? parentSystems : index === 1 ? childSystems : Math.round(metric.value * roleScale),
+    })),
+    innovation: { title: "年度计划数", value: planValue, done: Math.max(1, planValue - Math.round(planValue * 0.18)), remaining: Math.round(planValue * 0.18) },
+    cloud: { value: cloudValue, total: cloudValue + Math.round(cloudValue * 0.45), note: `${label}系统上云推进情况` },
+    personnelTotal,
+    personnelDelta: `+${(3.2 + roleScale * 2.8).toFixed(1)}%`,
+    personnelRoles: source.personnelRoles.map((role) => ({ ...role, value: Math.round(role.value * roleScale) })),
+    tableRows: [{
+      name: label,
+      development: Math.round(19 * roleScale),
+      operations: Math.round(5 * roleScale),
+      architecture: Math.max(1, Math.round(roleScale)),
+      innovation: Math.max(0, Math.round(planValue * 0.04)),
+      data: Math.round(3 * roleScale),
+      security: Math.max(1, Math.round(2 * roleScale)),
+      management: Math.round(29 * roleScale),
+      total: personnelTotal,
+    }],
+  }
+}
+
 const branchGrades: Record<string, string> = {
   nanjing: "level-1",
   hangzhou: "level-1",
   guangzhou: "level-2",
   fuzhou: "level-3",
+  wuhan: "level-1",
+  beijing: "level-1",
+  shanghai: "level-1",
+  shenzhen: "level-2",
+  chengdu: "level-2",
+  xian: "level-3",
 }
 
 function sumBy<T>(items: T[], getValue: (item: T) => number) {
