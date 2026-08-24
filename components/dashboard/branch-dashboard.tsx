@@ -160,7 +160,7 @@ const branchData: Record<string, BranchData> = {
     personnelTotal: 742,
     personnelDelta: "+4.8%",
     personnelRoles: [
-      { label: "研发岗位", value: 160, tone: "primary" },
+      { label: "���发岗位", value: 160, tone: "primary" },
       { label: "运维岗位", value: 174, tone: "accent" },
       { label: "数据岗位", value: 108, tone: "chart-4" },
       { label: "架构岗位", value: 154, tone: "primary" },
@@ -602,7 +602,7 @@ export function BranchDashboard() {
                 <div className="mt-2 border-t border-dashed border-border/70 pt-3">
 
                   <div className="mt-3 grid gap-3 grid-cols-1">
-                    <div className="rounded-[12px] border border-border/80 bg-card/80 px-3 py-3 shadow-[inset_0_1px_0_oklch(0.72_0.15_220/6%)]">
+                    <div onClick={(event) => { if ((event.target as HTMLElement).closest("button")) return; setRoomDetails((value) => !value) }} className="cursor-pointer rounded-[12px] border border-border/80 bg-card/80 px-3 py-3 shadow-[inset_0_1px_0_oklch(0.72_0.15_220/6%)]">
                       <div className="mb-2 text-[11px] text-muted-foreground">点击查看{selectedScopeLabel}中心机房建设模式及详情。</div>
                       <button type="button" onClick={() => setRoomDetails(!roomDetails)} className="mb-2 flex w-full items-center gap-2 text-left text-[12px] font-semibold text-slate-700 hover:text-primary">
                         <span className="inline-flex size-2 rounded-full bg-[#2456c7]" />共{detailRows.length}家分行纳入当前筛选范围
@@ -619,7 +619,7 @@ export function BranchDashboard() {
                       <div className="mt-3 flex items-center justify-between rounded-[10px] border border-border/70 bg-background/70 px-3 py-2"><span className="text-[14px] font-bold text-muted-foreground">机柜数</span><span className="font-mono text-[14px] font-black text-primary">{(current.personnelTotal * 2).toLocaleString()} <small className="text-[11px] font-normal text-muted-foreground">个</small></span></div>
                     </div>
 
-                    <div className="grid gap-2 rounded-[12px] border border-border/80 bg-card/80 px-3 py-3 shadow-[inset_0_1px_0_oklch(0.72_0.15_220/6%)]">
+                    <div onClick={(event) => { if ((event.target as HTMLElement).closest("button")) return; setDisasterDetails((value) => !value) }} className="cursor-pointer grid gap-2 rounded-[12px] border border-border/80 bg-card/80 px-3 py-3 shadow-[inset_0_1px_0_oklch(0.72_0.15_220/6%)]">
                       <div className="text-[11px] text-muted-foreground">点击查看{selectedScopeLabel}中心机房建设模式及详情。</div>
                       <button type="button" onClick={() => setDisasterDetails(!disasterDetails)} className="w-full text-left text-[12px] font-semibold text-slate-700 transition-colors hover:text-primary">
                         <span className="mr-2 inline-flex size-2 rounded-full bg-[#2dc2be]" />其中{detailRows.length}家分行配备灾备机房
@@ -633,8 +633,8 @@ export function BranchDashboard() {
 
               <div className="grid min-w-0 gap-2">
                 <div className="grid min-w-0 items-stretch gap-2 md:grid-cols-2 md:[&>*]:min-w-0">
-                  <PanelCard className="h-full" bodyClassName="p-3" title="信创改造" icon={<ShieldCheck className="size-4" />}>
-                    <button type="button" onClick={() => setInnovationRanking(!innovationRanking)} className="w-full text-left" aria-label="切换信创改造完成度排行">
+                  <PanelCard className="h-full cursor-pointer" bodyClassName="p-3" title="信创改造" icon={<ShieldCheck className="size-4" />} onClick={() => setInnovationRanking((value) => !value)}>
+                    <button type="button" onClick={(event) => { event.stopPropagation(); setInnovationRanking((value) => !value) }} className="w-full text-left" aria-label="切换信创改造完成度排行">
                     {innovationRanking ? <div className="py-1">
                       <ResponsiveContainer width="100%" height={210} minWidth={1} minHeight={1}>
                         <ComposedChart data={innovationRows} margin={{ top: 20, right: 8, left: -18, bottom: 8 }}>
@@ -682,8 +682,8 @@ export function BranchDashboard() {
                     <div className="mt-2 text-center text-[11px] text-slate-500">单击可查看信创改造完成度排序十名。</div></>}
                   </PanelCard>
 
-                  <PanelCard className="h-full" bodyClassName="p-3" title="系统上云" icon={<Cloud className="size-4" />}>
-                    <button type="button" onClick={() => setCloudRanking(!cloudRanking)} className="w-full text-left" aria-label="切换上云系统前十名">
+                  <PanelCard className="h-full" bodyClassName="p-3" title="系统上云" icon={<Cloud className="size-4" />} onClick={() => setCloudRanking((value) => !value)}>
+                    <button type="button" onClick={(event) => { event.stopPropagation(); setCloudRanking((value) => !value) }} className="w-full text-left" aria-label="切换上云系统前十名">
                     {cloudRanking ? <div className="grid gap-2 py-1">{cloudRows.map(({ name, count }, index) => <div key={name} className="grid grid-cols-[1.2fr_1fr_auto] items-center gap-2 text-[11px]"><span>{String(index + 1).padStart(2, "0")} {name}</span><span className="h-2 rounded-full bg-gradient-to-r from-accent to-primary" style={{ width: `${Math.max(20, Number(count) / Math.max(cloudRows[0]?.count ?? 1, 1) * 100)}%` }} /><strong className="font-mono text-primary">{count}</strong></div>)}</div> : <div className="flex flex-col items-center gap-2">
                       <CloudCircle value={current.cloud.value} />
                       <div className="text-center text-[12px] text-slate-500">{current.cloud.note}</div>

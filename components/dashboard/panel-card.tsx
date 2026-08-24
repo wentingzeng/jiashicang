@@ -8,6 +8,7 @@ type PanelCardProps = {
   className?: string
   bodyClassName?: string
   accent?: "primary" | "accent"
+  onClick?: () => void
   children: React.ReactNode
 }
 
@@ -17,14 +18,17 @@ export function PanelCard({
   className,
   bodyClassName,
   accent = "primary",
+  onClick,
   children,
 }: PanelCardProps) {
   const accentColor = accent === "accent" ? "accent" : "primary"
 
   return (
     <Card
+      onClick={onClick}
       className={cn(
         "group gap-0 overflow-hidden border-border/80 bg-card/90 p-0 shadow-[0_0_0_1px_oklch(0.72_0.15_220/6%),0_12px_40px_oklch(0_0_0/18%)] backdrop-blur-sm transition-shadow hover:shadow-[0_0_0_1px_oklch(0.72_0.15_220/18%),0_16px_48px_oklch(0_0_0/22%)]",
+        onClick && "cursor-pointer",
         className,
       )}
     >
