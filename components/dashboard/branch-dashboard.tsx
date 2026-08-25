@@ -520,8 +520,8 @@ function TechLevelPanel({ rows, selectedKey, onSelect }: { rows: Array<{ key: st
   return (
     <PanelCard title="分行科技分级" icon={<Gauge className="size-4" />}>
       <div className="grid gap-3">
-        <div className="grid grid-cols-6 gap-1.5">
-          {[{ label: "3A", count: 2 }, { label: "3B", count: 2 }, { label: "3C", count: 1 }, { label: "2A", count: 2 }, { label: "2B", count: 2 }, { label: "2C", count: 1 }].map(({ label, count }) => (
+<div className="grid grid-cols-4 gap-1 sm:grid-cols-7">
+  {[{ label: "EA", count: 1 }, { label: "1A", count: 2 }, { label: "2A", count: 2 }, { label: "3A", count: 2 }, { label: "1B", count: 1 }, { label: "2B", count: 2 }, { label: "3B", count: 2 }, { label: "1C", count: 1 }, { label: "2C", count: 1 }, { label: "3C", count: 1 }, { label: "1D", count: 1 }, { label: "2D", count: 1 }, { label: "3D", count: 1 }].map(({ label, count }) => (
             <div key={label} className="rounded-lg border border-border/70 bg-background/40 px-1 py-1.5 text-center">
               <div className="font-mono text-base font-black leading-none text-primary">{count}</div>
               <div className="mt-1 text-[10px] text-muted-foreground">{label}</div>
@@ -634,11 +634,11 @@ export function BranchDashboard() {
               <SelectBox label="请选择分行" value={selectedBranch} onChange={setSelectedBranch} options={branchOptions} />
             </div>
 
-            <div className="grid min-w-0 items-stretch gap-3 lg:grid-cols-[minmax(280px,0.42fr)_minmax(0,0.58fr)]">
+            <div className="grid min-w-0 items-stretch gap-3 lg:grid-cols-[minmax(240px,0.34fr)_minmax(0,0.66fr)]">
               <TechLevelPanel rows={techRows} selectedKey={activeTechKey} onSelect={setTechSelectedKey} />
 
               <div className="grid min-w-0 items-start gap-3 lg:grid-cols-2">
-              <PanelCard className="order-3 h-full lg:col-span-2" title="运维指标" icon={<Gauge className="size-4" />}>
+              <PanelCard className="order-3 h-full lg:col-span-2 lg:col-start-1 lg:row-start-2" title="运维指标" icon={<Gauge className="size-4" />}>
                 <div className="grid grid-cols-2 gap-2 md:grid-cols-4">
                   {current.operationMetrics.slice(0, 6).map((item) => <MetricTile key={item.label} item={item} />)}
                 </div>
