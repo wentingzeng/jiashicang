@@ -511,7 +511,7 @@ function TechLevelPanel({ rows, selectedKey, onSelect }: { rows: Array<{ key: st
   const selected = rows.find((row) => row.key === selectedKey)?.data ?? rows[0]?.data
   const techLevel = selected?.techLevel ?? { level: "B类", score: 82, dimensions: [82, 78, 84, 80, 86] }
   const points = techLevel.dimensions.slice(0, 5)
-  const dimensionLabels = ["基础设施", "安全能力", "数据治理", "应用研发", "运维管理"]
+  const dimensionLabels = ["科技治理", "风险安全", "研发创新", "运维管理", "数据管理"]
   const radarPoints = points.map((value, index) => {
     const angle = (Math.PI * 2 * index) / points.length - Math.PI / 2
     const radius = 18 + value * 0.42
@@ -542,7 +542,7 @@ function TechLevelPanel({ rows, selectedKey, onSelect }: { rows: Array<{ key: st
         </div>
         <div className="max-h-[268px] overflow-auto rounded-lg border border-border/70">
           <Table className="min-w-[760px] text-[11px]">
-            <TableHeader className="bg-primary/10"><TableRow><TableHead>分行名称</TableHead><TableHead>科技等级</TableHead><TableHead className="text-center">基础设施</TableHead><TableHead className="text-center">安全能力</TableHead><TableHead className="text-center">数据治理</TableHead><TableHead className="text-center">应用研发</TableHead><TableHead className="text-center">运维管理</TableHead><TableHead className="text-right">综合评分</TableHead></TableRow></TableHeader>
+            <TableHeader className="bg-primary/10"><TableRow><TableHead>分行名称</TableHead><TableHead>科技等级</TableHead><TableHead className="text-center">科技治理</TableHead><TableHead className="text-center">风险安全</TableHead><TableHead className="text-center">研发创新</TableHead><TableHead className="text-center">运维管理</TableHead><TableHead className="text-center">数据管理</TableHead><TableHead className="text-right">综合评分</TableHead></TableRow></TableHeader>
             <TableBody>{rows.map(({ key, data }) => <TableRow key={key} onClick={() => onSelect(key)} className={cn("cursor-pointer", key === selectedKey && "bg-primary/10") }><TableCell className="whitespace-nowrap py-2 font-medium">{data.label}</TableCell><TableCell className="whitespace-nowrap py-2">{data.techLevel?.level ?? "B类"}</TableCell>{(data.techLevel?.dimensions ?? [82, 78, 84, 80, 86]).slice(0, 5).map((value, index) => <TableCell key={`${key}-${index}`} className="py-2 text-center font-mono text-foreground/80">{value}</TableCell>)}<TableCell className="py-2 text-right font-mono font-bold text-primary">{data.techLevel?.score ?? 82}</TableCell></TableRow>)}</TableBody>
           </Table>
         </div>
@@ -738,16 +738,16 @@ export function BranchDashboard() {
               <PanelCard className="order-1 col-start-1 row-start-1 h-full min-w-0" bodyClassName="min-w-0 p-1.5" title="科技人员数量" icon={<UsersRound className="size-4" />}>
                   <div className="grid min-w-0 gap-2">
                     <div className="grid gap-2 sm:grid-cols-[minmax(0,0.4fr)_minmax(0,0.6fr)]">
-                      <div className="rounded-[10px] border border-border/80 bg-card/80 px-3 py-2 shadow-[inset_0_1px_0_oklch(0.72_0.15_220/6%)]">
-                        <div className="text-[11px] text-foreground/80">科技人员总数</div>
-                        <div className="mt-1 flex items-end gap-2">
-                          <span className="font-mono text-[26px] font-black leading-none text-primary">{current.personnelTotal}</span>
-                          <span className="pb-1 text-[14px] text-muted-foreground">人</span>
+                      <div className="rounded-[10px] border border-border/80 bg-card/80 px-3 py-1.5 shadow-[inset_0_1px_0_oklch(0.72_0.15_220/6%)]">
+                        <div className="text-[10px] text-foreground/80">科技人员总数</div>
+                        <div className="mt-0.5 flex items-end gap-1.5">
+                          <span className="font-mono text-[18px] font-black leading-none text-primary">{current.personnelTotal}</span>
+                          <span className="pb-0.5 text-[11px] text-muted-foreground">人</span>
                         </div>
                       </div>
 
                       <div className="rounded-[10px] border border-border/80 bg-card/80 px-3 py-1.5 shadow-[inset_0_1px_0_oklch(0.72_0.15_220/6%)]">
-                        <div className="grid grid-cols-2 gap-x-3 gap-y-1 sm:grid-cols-3">
+                        <div className="grid grid-cols-2 gap-x-3 gap-y-2.5 sm:grid-cols-3">
                           {current.personnelRoles.map((role) => (
                             <RoleBar key={role.label} label={role.label} value={role.value} tone={role.tone} />
                           ))}
@@ -775,17 +775,17 @@ export function BranchDashboard() {
                           <TableBody>
                             {personnelRows.map((row, index) => (
                               <TableRow key={row.name} className={cn("border-border/60 hover:bg-primary/5", index % 2 === 1 && "bg-primary/3")}>
-                                <TableCell className="px-1.5 py-1 font-medium text-[10px] text-foreground/90">{row.name}</TableCell>
-                                <TableCell className="px-1.5 py-1 text-center font-mono text-foreground/80">{row.development}</TableCell>
-                                <TableCell className="px-1.5 py-1 text-center font-mono text-foreground/80">{row.operations}</TableCell>
-                                <TableCell className="px-1.5 py-1 text-center font-mono text-foreground/80">{row.architecture}</TableCell>
-                                <TableCell className="px-1.5 py-1 text-center font-mono text-foreground/80">{row.innovation}</TableCell>
-                                <TableCell className="px-1.5 py-1 text-center font-mono text-foreground/80">{row.data}</TableCell>
-                                <TableCell className="px-1.5 py-1 text-center font-mono text-foreground/80">{row.security}</TableCell>
-                                <TableCell className="px-1.5 py-1 text-center font-mono text-foreground/80">{row.management}</TableCell>
-                                <TableCell className="px-1.5 py-1 text-center font-mono text-foreground/80">{Math.max(row.total - (row.development + row.operations + row.architecture + row.innovation + row.data + row.security + row.management), 0)}</TableCell>
-                                <TableCell className="px-1.5 py-1 text-center">
-                                  <span className="inline-flex min-w-[2.5rem] justify-center rounded-md bg-primary/10 px-2.5 py-1 font-mono text-[12px] font-bold text-primary">{row.total}</span>
+                                <TableCell className="px-1.5 py-0.5 font-medium text-[10px] text-foreground/90">{row.name}</TableCell>
+                                <TableCell className="px-1.5 py-0.5 text-center font-mono text-foreground/80">{row.development}</TableCell>
+                                <TableCell className="px-1.5 py-0.5 text-center font-mono text-foreground/80">{row.operations}</TableCell>
+                                <TableCell className="px-1.5 py-0.5 text-center font-mono text-foreground/80">{row.architecture}</TableCell>
+                                <TableCell className="px-1.5 py-0.5 text-center font-mono text-foreground/80">{row.innovation}</TableCell>
+                                <TableCell className="px-1.5 py-0.5 text-center font-mono text-foreground/80">{row.data}</TableCell>
+                                <TableCell className="px-1.5 py-0.5 text-center font-mono text-foreground/80">{row.security}</TableCell>
+                                <TableCell className="px-1.5 py-0.5 text-center font-mono text-foreground/80">{row.management}</TableCell>
+                                <TableCell className="px-1.5 py-0.5 text-center font-mono text-foreground/80">{Math.max(row.total - (row.development + row.operations + row.architecture + row.innovation + row.data + row.security + row.management), 0)}</TableCell>
+                                <TableCell className="px-1.5 py-0.5 text-center">
+                                  <span className="inline-flex min-w-[2.5rem] justify-center rounded-md bg-primary/10 px-2 py-0.5 font-mono text-[11px] font-bold text-primary">{row.total}</span>
                                 </TableCell>
                               </TableRow>
                             ))}
