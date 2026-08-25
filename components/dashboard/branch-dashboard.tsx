@@ -534,8 +534,8 @@ function TechLevelPanel({ rows, selectedKey, onSelect }: { rows: Array<{ key: st
         </div>
         <div className="overflow-hidden rounded-lg border border-border/70">
           <Table className="text-[11px]">
-            <TableHeader className="bg-primary/10"><TableRow><TableHead>分行名称</TableHead><TableHead>科技等级</TableHead><TableHead className="text-right">综合评分</TableHead></TableRow></TableHeader>
-            <TableBody>{rows.map(({ key, data }) => <TableRow key={key} onClick={() => onSelect(key)} className={cn("cursor-pointer", key === selectedKey && "bg-primary/10") }><TableCell className="py-2 font-medium">{data.label}</TableCell><TableCell className="py-2">{data.techLevel?.level ?? "B类"}</TableCell><TableCell className="py-2 text-right font-mono font-bold text-primary">{data.techLevel?.score ?? 82}</TableCell></TableRow>)}</TableBody>
+            <TableHeader className="bg-primary/10"><TableRow><TableHead>分行名称</TableHead><TableHead>科技等级</TableHead><TableHead className="text-center">基础设施</TableHead><TableHead className="text-center">安全能力</TableHead><TableHead className="text-center">数据治理</TableHead><TableHead className="text-center">应用研发</TableHead><TableHead className="text-center">运维管理</TableHead><TableHead className="text-center">创新能力</TableHead><TableHead className="text-right">综合评分</TableHead></TableRow></TableHeader>
+            <TableBody>{rows.map(({ key, data }) => <TableRow key={key} onClick={() => onSelect(key)} className={cn("cursor-pointer", key === selectedKey && "bg-primary/10") }><TableCell className="whitespace-nowrap py-2 font-medium">{data.label}</TableCell><TableCell className="whitespace-nowrap py-2">{data.techLevel?.level ?? "B类"}</TableCell>{(data.techLevel?.dimensions ?? [82, 78, 84, 80, 86, 76]).map((value, index) => <TableCell key={`${key}-${index}`} className="py-2 text-center font-mono text-foreground/80">{value}</TableCell>)}<TableCell className="py-2 text-right font-mono font-bold text-primary">{data.techLevel?.score ?? 82}</TableCell></TableRow>)}</TableBody>
           </Table>
         </div>
       </div>
@@ -630,22 +630,14 @@ export function BranchDashboard() {
               <TechLevelPanel rows={techRows} selectedKey={activeTechKey} onSelect={setTechSelectedKey} />
 
               <div className="grid min-w-0 gap-3 xl:grid-cols-1 xl:items-start">
-              <PanelCard className="h-full" title="运维指标" icon={<Gauge className="size-4" />}>
-                <div className="grid gap-y-1">
-                  <div className="grid gap-x-2 md:grid-cols-3">
-                    {current.operationMetrics.slice(0, 2).map((item) => <MetricTile key={item.label} item={item} />)}
-                  </div>
-                  <div className="grid gap-x-2 md:grid-cols-3">
-                    {current.operationMetrics.slice(2, 5).map((item) => <MetricTile key={item.label} item={item} />)}
-                  </div>
-                  <div className="grid gap-x-2 md:grid-cols-3">
-                    {current.operationMetrics.slice(5, 8).map((item) => <MetricTile key={item.label} item={item} />)}
-                  </div>
+              <PanelCard className="order-3 h-full" title="运维指标" icon={<Gauge className="size-4" />}>
+                <div className="grid grid-cols-2 gap-2 md:grid-cols-4">
+                  {current.operationMetrics.map((item) => <MetricTile key={item.label} item={item} />)}
                 </div>
 
                 <div className="mt-2 border-t border-dashed border-border/70 pt-3">
 
-                  <div className="mt-3 grid gap-3 grid-cols-1">
+                  <div className="mt-3 grid gap-2 md:grid-cols-2">
                     <div onClick={(event) => { if ((event.target as HTMLElement).closest("button")) return; setRoomDetails((value) => !value) }} className="cursor-pointer rounded-[12px] border border-border/80 bg-card/80 px-3 py-3 shadow-[inset_0_1px_0_oklch(0.72_0.15_220/6%)]">
                       <div className="mb-2 text-[11px] text-muted-foreground">点击查看{selectedScopeLabel}中心机房建设模式及详情。</div>
                       <button type="button" onClick={() => setRoomDetails(!roomDetails)} className="mb-2 flex w-full items-center gap-2 text-left text-[12px] font-semibold text-slate-700 hover:text-primary">
@@ -675,7 +667,7 @@ export function BranchDashboard() {
                 </div>
               </PanelCard>
 
-              <div className="grid min-w-0 gap-2">
+              <div className="order-1 grid min-w-0 gap-2">
                 <div className="grid min-w-0 items-stretch gap-2 md:grid-cols-2 md:[&>*]:min-w-0">
                   <PanelCard className="h-full cursor-pointer" bodyClassName="p-3" title="信创改造" icon={<ShieldCheck className="size-4" />} onClick={() => setInnovationRanking((value) => !value)}>
                     <button type="button" onClick={(event) => { event.stopPropagation(); setInnovationRanking((value) => !value) }} className="w-full text-left" aria-label="切换信创改造完成度排行">
@@ -736,19 +728,19 @@ export function BranchDashboard() {
                   </PanelCard>
                 </div>
 
-                <PanelCard className="min-w-0 h-full" bodyClassName="min-w-0 p-3" title="科技人员数量" icon={<UsersRound className="size-4" />}>
-                  <div className="grid min-w-0 gap-4 xl:grid-cols-[minmax(0,0.92fr)_minmax(0,1.08fr)] xl:[&>*]:min-w-0">
-                    <div className="space-y-4">
-                      <div className="rounded-[12px] border border-border/80 bg-card/80 px-4 pt-[19px] pb-[22px] shadow-[inset_0_1px_0_oklch(0.72_0.15_220/6%)]">
-                        <div className="text-[12px] text-foreground/80">科技人员总数</div>
-                        <div className="mt-2 flex items-end gap-2">
-                          <span className="font-mono text-[34px] font-black leading-none text-primary">{current.personnelTotal}</span>
+                <PanelCard className="order-2 min-w-0 h-full" bodyClassName="min-w-0 p-2" title="科技人员数量" icon={<UsersRound className="size-4" />}>
+                  <div className="grid min-w-0 gap-2 xl:grid-cols-[minmax(0,0.72fr)_minmax(0,1.28fr)] xl:[&>*]:min-w-0">
+                    <div className="space-y-2">
+                      <div className="rounded-[10px] border border-border/80 bg-card/80 px-3 py-2 shadow-[inset_0_1px_0_oklch(0.72_0.15_220/6%)]">
+                        <div className="text-[11px] text-foreground/80">科技人员总数</div>
+                        <div className="mt-1 flex items-end gap-2">
+                          <span className="font-mono text-[26px] font-black leading-none text-primary">{current.personnelTotal}</span>
                           <span className="pb-1 text-[14px] text-muted-foreground">人</span>
                         </div>
                       </div>
 
-                      <div className="rounded-[12px] border border-border/80 bg-card/80 px-4 py-4 shadow-[inset_0_1px_0_oklch(0.72_0.15_220/6%)]">
-                        <div className="grid gap-3">
+                      <div className="rounded-[10px] border border-border/80 bg-card/80 px-3 py-2 shadow-[inset_0_1px_0_oklch(0.72_0.15_220/6%)]">
+                        <div className="grid gap-2">
                           {current.personnelRoles.map((role) => (
                             <RoleBar key={role.label} label={role.label} value={role.value} tone={role.tone} />
                           ))}
