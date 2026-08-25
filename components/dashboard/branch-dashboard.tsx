@@ -509,9 +509,9 @@ function PanelCard({ title, icon, children, className }: { title: string; icon: 
 
 function TechLevelPanel({ rows, selectedKey, onSelect }: { rows: Array<{ key: string; data: BranchData }>; selectedKey: string; onSelect: (key: string) => void }) {
   const selected = rows.find((row) => row.key === selectedKey)?.data ?? rows[0]?.data
-  const techLevel = selected?.techLevel ?? { level: "B类", score: 82, dimensions: [82, 78, 84, 80, 86, 76] }
-  const points = techLevel.dimensions
-  const dimensionLabels = ["基础设施", "安全能力", "数据治理", "应用研发", "运维管理", "创新能力"]
+  const techLevel = selected?.techLevel ?? { level: "B类", score: 82, dimensions: [82, 78, 84, 80, 86] }
+  const points = techLevel.dimensions.slice(0, 5)
+  const dimensionLabels = ["基础设施", "安全能力", "数据治理", "应用研发", "运维管理"]
   const radarPoints = points.map((value, index) => {
     const angle = (Math.PI * 2 * index) / points.length - Math.PI / 2
     const radius = 18 + value * 0.42
@@ -534,8 +534,8 @@ function TechLevelPanel({ rows, selectedKey, onSelect }: { rows: Array<{ key: st
         </div>
         <div className="overflow-hidden rounded-lg border border-border/70">
           <Table className="text-[11px]">
-            <TableHeader className="bg-primary/10"><TableRow><TableHead>分行名称</TableHead><TableHead>科技等级</TableHead><TableHead className="text-center">基础设施</TableHead><TableHead className="text-center">安全能力</TableHead><TableHead className="text-center">数据治理</TableHead><TableHead className="text-center">应用研发</TableHead><TableHead className="text-center">运维管理</TableHead><TableHead className="text-center">创新能力</TableHead><TableHead className="text-right">综合评分</TableHead></TableRow></TableHeader>
-            <TableBody>{rows.map(({ key, data }) => <TableRow key={key} onClick={() => onSelect(key)} className={cn("cursor-pointer", key === selectedKey && "bg-primary/10") }><TableCell className="whitespace-nowrap py-2 font-medium">{data.label}</TableCell><TableCell className="whitespace-nowrap py-2">{data.techLevel?.level ?? "B类"}</TableCell>{(data.techLevel?.dimensions ?? [82, 78, 84, 80, 86, 76]).map((value, index) => <TableCell key={`${key}-${index}`} className="py-2 text-center font-mono text-foreground/80">{value}</TableCell>)}<TableCell className="py-2 text-right font-mono font-bold text-primary">{data.techLevel?.score ?? 82}</TableCell></TableRow>)}</TableBody>
+            <TableHeader className="bg-primary/10"><TableRow><TableHead>分行名称</TableHead><TableHead>科技等级</TableHead><TableHead className="text-center">基础设施</TableHead><TableHead className="text-center">安全能力</TableHead><TableHead className="text-center">数据治理</TableHead><TableHead className="text-center">应用研发</TableHead><TableHead className="text-center">运维管理</TableHead><TableHead className="text-right">综合评分</TableHead></TableRow></TableHeader>
+            <TableBody>{rows.map(({ key, data }) => <TableRow key={key} onClick={() => onSelect(key)} className={cn("cursor-pointer", key === selectedKey && "bg-primary/10") }><TableCell className="whitespace-nowrap py-2 font-medium">{data.label}</TableCell><TableCell className="whitespace-nowrap py-2">{data.techLevel?.level ?? "B类"}</TableCell>{(data.techLevel?.dimensions ?? [82, 78, 84, 80, 86]).slice(0, 5).map((value, index) => <TableCell key={`${key}-${index}`} className="py-2 text-center font-mono text-foreground/80">{value}</TableCell>)}<TableCell className="py-2 text-right font-mono font-bold text-primary">{data.techLevel?.score ?? 82}</TableCell></TableRow>)}</TableBody>
           </Table>
         </div>
       </div>
@@ -750,10 +750,10 @@ export function BranchDashboard() {
 
 <div className="min-w-0 overflow-hidden rounded-[12px] border border-border/80 bg-card/80 shadow-[inset_0_1px_0_oklch(0.72_0.15_220/6%)]">
 	<div className="block w-full min-w-0 max-w-full overflow-x-auto overscroll-x-contain [WebkitOverflowScrolling:touch]">
-                          <Table className="w-full min-w-[860px] table-fixed text-sm">
+                          <Table className="w-full min-w-[700px] table-fixed text-[10px]">
                           <TableHeader className="bg-gradient-to-r from-primary via-primary to-accent">
                             <TableRow className="border-transparent hover:bg-transparent">
-                              <TableHead className="px-3 py-3 text-[12px] font-semibold text-foreground">分行名称</TableHead>
+                              <TableHead className="px-2 py-2 text-[10px] font-semibold text-foreground">分行名称</TableHead>
                               <TableHead className="px-3 py-3 text-center text-[12px] font-semibold text-foreground">研发</TableHead>
                               <TableHead className="px-3 py-3 text-center text-[12px] font-semibold text-foreground">运维</TableHead>
                               <TableHead className="px-3 py-3 text-center text-[12px] font-semibold text-foreground">架构</TableHead>
