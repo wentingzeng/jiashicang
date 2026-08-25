@@ -35,6 +35,7 @@ type RowItem = {
 type BranchData = {
   label: string
   quickStats: Array<{ label: string; value: number; suffix: string }>
+  techLevel?: { level: string; score: number; dimensions: number[] }
   operationMetrics: MetricItem[]
   innovation: { title: string; value: number; done: number; remaining: number }
   cloud: { value: number; total: number; note: string }
@@ -73,6 +74,7 @@ const branchData: Record<string, BranchData> = {
       { label: "接入系统", value: 328, suffix: "个" },
       { label: "治理项", value: 86, suffix: "项" },
     ],
+    techLevel: { level: "A类", score: 92, dimensions: [92, 88, 95, 90, 94, 86] },
     operationMetrics: [
       { label: "父系统数", value: 230, unit: "个", tone: "primary" },
       { label: "子系统数", value: 522, unit: "个", tone: "accent" },
@@ -227,6 +229,7 @@ for (const [key, label, grade, parentSystems, childSystems, cloudValue, planValu
   branchData[key] = {
     ...source,
     label,
+    techLevel: { level: grade === "level-1" ? "A类" : grade === "level-2" ? "B类" : "C类", score: Math.round(76 + roleScale * 16), dimensions: [Math.round(70 + roleScale * 22), Math.round(68 + roleScale * 24), Math.round(72 + roleScale * 20), Math.round(65 + roleScale * 25), Math.round(74 + roleScale * 18), Math.round(69 + roleScale * 23)] },
     quickStats: source.quickStats.map((stat, index) => ({ ...stat, value: Math.round(stat.value * roleScale) })),
     operationMetrics: source.operationMetrics.map((metric, index) => ({
       ...metric,
@@ -504,6 +507,34 @@ function PanelCard({ title, icon, children, className }: { title: string; icon: 
   )
 }
 
+function TechLevelPanel({ rows, selectedKey, onSelect }: { rows: Array<{ key: string; data: BranchData }>; selectedKey: string; onSelect: (key: string) => void }) {
+  const selected = rows.find((row) => row.key === selectedKey)?.data ?? rows[0]?.data
+  const techLevel = selected?.techLevel ?? { level: "B类", score: 82, dimensions: [82, 78, 84, 80, 86, 76] }
+  const points = techLevel.dimensions
+  const radarPoints = points.map((value, index) => {
+    const angle = (Math.PI * 2 * index) / points.length - Math.PI / 2
+    const radius = 18 + value * 0.42
+    return `${80 + Math.cos(angle) * radius},${80 + Math.sin(angle) * radius}`
+  }).join(" ")
+  return (
+    <PanelCard title="分行科技分级" icon={<Gauge className="size-4" />}>
+      <div className="grid gap-4 lg:grid-cols-[minmax(190px,0.9fr)_minmax(0,1.1fr)] lg:items-center">
+        <div className="flex justify-center">
+          <svg viewBox="0 0 160 160" className="h-44 w-44" role="img" aria-label={`${selected?.label ?? "分行"}科技能力雷达图`}>
+            {[30, 50, 70].map((radius) => <polygon key={radius} points={points.map((_, index) => { const angle = (Math.PI * 2 * index) / points.length - Math.PI / 2; return `${80 + Math.cos(angle) * radius},${80 + Math.sin(angle) * radius}` }).join(" ")} fill="none" stroke="currentColor" className="text-border" strokeWidth="1" />)}
+            <polygon points={radarPoints} fill="rgba(45,194,190,0.28)" stroke="#2dc2be" strokeWidth="2" />
+            <text x="80" y="76" textAnchor="middle" className="fill-primary font-mono text-[20px] font-bold">{techLevel.score}</text>
+            <text x="80" y="92" textAnchor="middle" className="fill-muted-foreground text-[8px]">综合评分</text>
+          </svg>
+        </div>
+        <div className="grid gap-2">
+          {rows.map(({ key, data }) => <button key={key} type="button" onClick={() => onSelect(key)} className={cn("flex items-center justify-between rounded-md border px-3 py-2 text-left transition", key === selectedKey ? "border-primary bg-primary/10" : "border-border/70 bg-card/60 hover:border-primary/50")}><span className="font-medium">{data.label}</span><span className="flex items-center gap-3"><span className="text-[11px] text-muted-foreground">{data.techLevel?.level ?? "B类"}</span><strong className="font-mono text-primary">{data.techLevel?.score ?? 82}</strong></span></button>)}
+        </div>
+      </div>
+    </PanelCard>
+  )
+}
+
 export function BranchDashboard() {
   const now = useLiveClock()
   const [selectedGrade, setSelectedGrade] = useState("all")
@@ -514,6 +545,7 @@ export function BranchDashboard() {
   const [innovationRanking, setInnovationRanking] = useState(false)
   const [cloudRanking, setCloudRanking] = useState(false)
   const [personnelPage, setPersonnelPage] = useState(1)
+  const [techSelectedKey, setTechSelectedKey] = useState("nanjing")
   const personnelPageSize = 6
 
   useEffect(() => {
@@ -560,7 +592,8 @@ export function BranchDashboard() {
     : selectedGrade !== "all"
       ? gradeOptions.find((option) => option.key === selectedGrade)?.label ?? "筛选范围"
       : "全部分行"
-
+  const techRows = filteredKeys.map((key) => ({ key, data: branchData[key] }))
+  const activeTechKey = techRows.some((row) => row.key === techSelectedKey) ? techSelectedKey : techRows[0]?.key ?? "nanjing"
 
   return (
     <main className="min-h-screen w-full max-w-full overflow-x-hidden bg-background text-foreground selection:bg-primary/30">
@@ -584,6 +617,8 @@ export function BranchDashboard() {
               <SelectBox label="请选择等级" value={selectedGrade} onChange={setSelectedGrade} options={gradeOptions} />
               <SelectBox label="请选择分行" value={selectedBranch} onChange={setSelectedBranch} options={branchOptions} />
             </div>
+
+            <TechLevelPanel rows={techRows} selectedKey={activeTechKey} onSelect={setTechSelectedKey} />
 
             <div className="grid min-w-0 gap-3 xl:grid-cols-[minmax(0,0.75fr)_minmax(0,1.25fr)] xl:items-start">
               <PanelCard className="h-full" title="运维指标" icon={<Gauge className="size-4" />}>
