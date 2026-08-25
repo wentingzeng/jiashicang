@@ -520,8 +520,8 @@ function TechLevelPanel({ rows, selectedKey, onSelect }: { rows: Array<{ key: st
   return (
     <PanelCard title="分行科技分级" icon={<Gauge className="size-4" />}>
       <div className="grid gap-3">
-<div className="grid grid-cols-4 gap-1 sm:grid-cols-7">
-  {[{ label: "EA", count: 1 }, { label: "1A", count: 2 }, { label: "2A", count: 2 }, { label: "3A", count: 2 }, { label: "1B", count: 1 }, { label: "2B", count: 2 }, { label: "3B", count: 2 }, { label: "1C", count: 1 }, { label: "2C", count: 1 }, { label: "3C", count: 1 }, { label: "1D", count: 1 }, { label: "2D", count: 1 }, { label: "3D", count: 1 }].map(({ label, count }) => (
+        <div className="grid grid-cols-3 gap-1.5">
+  {[{ label: "3A", count: 1 }, { label: "3B", count: 1 }, { label: "3C", count: 1 }, { label: "2A", count: 1 }, { label: "2B", count: 1 }, { label: "2C", count: 1 }, { label: "1A", count: 1 }, { label: "1B", count: 1 }, { label: "1C", count: 2 }].map(({ label, count }) => (
             <div key={label} className="rounded-lg border border-border/70 bg-background/40 px-1 py-1.5 text-center">
               <div className="font-mono text-base font-black leading-none text-primary">{count}</div>
               <div className="mt-1 text-[10px] text-muted-foreground">{label}</div>
@@ -678,7 +678,7 @@ export function BranchDashboard() {
               <div className="order-2 col-start-2 row-start-1 grid min-w-0 gap-2">
                 <div className="grid min-w-0 items-stretch gap-2 grid-cols-1 md:[&>*]:min-w-0">
                   <PanelCard className="h-full cursor-pointer" bodyClassName="p-3" title="信创改造" icon={<ShieldCheck className="size-4" />} onClick={() => setInnovationRanking((value) => !value)}>
-                    <button type="button" onClick={(event) => { event.stopPropagation(); setInnovationRanking((value) => !value) }} className="w-full text-left" aria-label="切换信创改造完成度排行">
+                    <button type="button" onClick={(event) => { event.stopPropagation(); setInnovationRanking((value) => !value) }} className="w-full text-left" aria-label="���换信创改造完成度排行">
                     {innovationRanking ? <div className="py-1">
                       <ResponsiveContainer width="100%" height={210} minWidth={1} minHeight={1}>
                         <ComposedChart data={innovationRows} margin={{ top: 20, right: 8, left: -18, bottom: 8 }}>
