@@ -162,7 +162,7 @@ const branchData: Record<string, BranchData> = {
     personnelTotal: 742,
     personnelDelta: "+4.8%",
     personnelRoles: [
-      { label: "���发岗位", value: 160, tone: "primary" },
+      { label: "研发岗位", value: 160, tone: "primary" },
       { label: "运维岗位", value: 174, tone: "accent" },
       { label: "数据岗位", value: 108, tone: "chart-4" },
       { label: "架构岗位", value: 154, tone: "primary" },
@@ -372,14 +372,14 @@ function MetricTile({ item }: { item: MetricItem }) {
         : "from-primary to-primary/80"
 
   return (
-    <div className="rounded-[10px] px-2 py-2.5">
-      <div className="flex items-start gap-2.5">
-        <span className={cn("mt-1 h-2 w-2 rounded-full bg-gradient-to-r", className)} />
+    <div className="rounded-[10px] px-2 py-1.5">
+      <div className="flex items-start gap-2">
+        <span className={cn("mt-1 h-1.5 w-1.5 rounded-full bg-gradient-to-r", className)} />
         <div className="min-w-0">
-          <div className="text-[11px] text-foreground/75">{item.label}</div>
+          <div className="text-[10px] text-foreground/75">{item.label}</div>
           <div className="mt-0.5 flex items-baseline gap-1.5">
-            <span className="font-mono text-[18px] font-bold text-foreground">{item.value.toLocaleString()}</span>
-            <span className="text-[10px] text-muted-foreground">{item.unit}</span>
+            <span className="font-mono text-[15px] font-bold text-foreground">{item.value.toLocaleString()}</span>
+            <span className="text-[9px] text-muted-foreground">{item.unit}</span>
           </div>
         </div>
       </div>
@@ -402,7 +402,7 @@ function RingChart({ value, total, label }: { value: number; total: number; labe
   const offset = dash - (dash * percent) / 100
 
   return (
-    <div className="relative h-[148px] w-[148px] shrink-0">
+    <div className="relative h-[104px] w-[104px] shrink-0">
       <svg viewBox="0 0 120 120" className="h-full w-full -rotate-90 drop-shadow-[0_5px_10px_rgba(36,86,199,0.14)]">
         <circle cx="60" cy="60" r="49" fill="none" stroke="#edf2f8" strokeWidth="13" />
         <circle cx="60" cy="60" r="49" fill="none" stroke="#d5e0ef" strokeWidth="2" />
@@ -426,27 +426,27 @@ function RingChart({ value, total, label }: { value: number; total: number; labe
         </defs>
       </svg>
       <div className="absolute inset-0 flex flex-col items-center justify-center text-center">
-        <div className="text-[11px] text-muted-foreground">{label}</div>
-        <div className="mt-1 font-mono text-[28px] font-black leading-none text-primary">{value}</div>
+        <div className="text-[10px] text-muted-foreground">{label}</div>
+        <div className="mt-0.5 font-mono text-[20px] font-black leading-none text-primary">{value}</div>
       </div>
-      <div className="absolute right-1 top-2 text-[14px] text-muted-foreground">{Math.round(percent)}%</div>
+      <div className="absolute right-0.5 top-1 text-[11px] text-muted-foreground">{Math.round(percent)}%</div>
     </div>
   )
 }
 
 function CloudCircle({ value }: { value: number }) {
   return (
-    <div className="flex h-[148px] w-[148px] flex-col items-center justify-center rounded-full bg-gradient-to-br from-primary/15 via-accent/15 to-primary/5 shadow-[inset_0_0_0_10px_rgba(36,86,199,0.06),0_8px_20px_rgba(36,86,199,0.1)]">
-      <Cloud className="mb-2 size-7 text-primary" aria-hidden="true" />
-      <div className="font-mono text-[32px] font-black leading-none text-primary">{value}</div>
-      <div className="mt-1 text-[11px] font-medium tracking-[0.12em] text-muted-foreground">上云系统数</div>
+    <div className="flex h-[104px] w-[104px] flex-col items-center justify-center rounded-full bg-gradient-to-br from-primary/15 via-accent/15 to-primary/5 shadow-[inset_0_0_0_10px_rgba(36,86,199,0.06),0_8px_20px_rgba(36,86,199,0.1)]">
+      <Cloud className="mb-1 size-5 text-primary" aria-hidden="true" />
+      <div className="font-mono text-[22px] font-black leading-none text-primary">{value}</div>
+      <div className="mt-1 text-[9px] font-medium tracking-[0.1em] text-muted-foreground">上云系统数</div>
     </div>
   )
 }
 
 function GaugeMeter({ roomMode }: { roomMode: "central" | "disaster" }) {
   return (
-    <div className="relative h-[118px] w-full max-w-[220px]">
+    <div className="relative h-[86px] w-full max-w-[180px]">
       <svg viewBox="0 0 220 120" className="absolute inset-0 h-full w-full">
         <path d="M26 90 A84 84 0 0 1 194 90" fill="none" stroke="#d9e1ee" strokeWidth="10" strokeLinecap="round" />
         <path d="M26 90 A84 84 0 0 1 194 90" fill="none" stroke="url(#gaugeGrad)" strokeWidth="10" strokeLinecap="round" strokeDasharray="120 300" />
@@ -457,12 +457,12 @@ function GaugeMeter({ roomMode }: { roomMode: "central" | "disaster" }) {
           </linearGradient>
         </defs>
       </svg>
-      <div className="absolute left-1/2 top-[40%] -translate-x-1/2 text-center">
-        <div className="text-[11px] text-muted-foreground">中心机房配套率</div>
-        <div className="font-mono text-[24px] font-black text-primary">22.22%</div>
+      <div className="absolute left-1/2 top-[38%] -translate-x-1/2 text-center">
+        <div className="text-[10px] text-muted-foreground">中心机房配套率</div>
+        <div className="font-mono text-[18px] font-black text-primary">22.22%</div>
       </div>
-      <div className="absolute left-[8px] bottom-3 text-[10px] text-muted-foreground">0</div>
-<div className="absolute right-[8px] bottom-3 text-[10px] text-muted-foreground">40</div>
+      <div className="absolute left-[6px] bottom-2 text-[9px] text-muted-foreground">0</div>
+<div className="absolute right-[6px] bottom-2 text-[9px] text-muted-foreground">40</div>
     </div>
   )
 }
@@ -530,7 +530,7 @@ function TechLevelPanel({ rows, selectedKey, onSelect }: { rows: Array<{ key: st
         </div>
         <div className="rounded-lg border border-border/70 bg-background/40 p-2">
           <div className="flex justify-center">
-            <svg viewBox="0 0 160 160" className="h-48 w-48" role="img" aria-label={`${selected?.label ?? "分行"}科���能力雷达图`}>
+            <svg viewBox="0 0 160 160" className="h-48 w-48" role="img" aria-label={`${selected?.label ?? "分行"}科技能力雷达图`}>
               {[30, 50, 70].map((radius) => <polygon key={radius} points={points.map((_, index) => { const angle = (Math.PI * 2 * index) / points.length - Math.PI / 2; return `${80 + Math.cos(angle) * radius},${80 + Math.sin(angle) * radius}` }).join(" ")} fill="none" stroke="currentColor" className="text-border" strokeWidth="1" />)}
               <polygon points={radarPoints} fill="rgba(45,194,190,0.28)" stroke="#2dc2be" strokeWidth="2" />
               {dimensionLabels.map((label, index) => { const angle = (Math.PI * 2 * index) / points.length - Math.PI / 2; const x = 80 + Math.cos(angle) * 72; const y = 80 + Math.sin(angle) * 72; return <text key={label} x={x} y={y} textAnchor="middle" dominantBaseline="middle" className="fill-foreground text-[6px] font-medium">{label}</text> })}
@@ -639,16 +639,16 @@ export function BranchDashboard() {
 
               <div className="grid min-w-0 items-start gap-3 lg:grid-cols-2">
               <PanelCard className="order-3 h-full lg:col-span-2 lg:col-start-1 lg:row-start-2" title="运维指标" icon={<Gauge className="size-4" />}>
-                <div className="grid grid-cols-2 gap-2 md:grid-cols-4">
+                <div className="grid grid-cols-2 gap-1.5 md:grid-cols-4">
                   {current.operationMetrics.slice(0, 6).map((item) => <MetricTile key={item.label} item={item} />)}
                 </div>
 
-                <div className="mt-2 border-t border-dashed border-border/70 pt-3">
+                <div className="mt-1.5 border-t border-dashed border-border/70 pt-2">
 
-                  <div className="mt-3 grid gap-2 md:grid-cols-2">
-                    <div onClick={(event) => { if ((event.target as HTMLElement).closest("button")) return; setRoomDetails((value) => !value) }} className="cursor-pointer rounded-[12px] border border-border/80 bg-card/80 px-3 py-3 shadow-[inset_0_1px_0_oklch(0.72_0.15_220/6%)]">
-                      <div className="mb-2 text-[11px] text-muted-foreground">点击查看{selectedScopeLabel}中心机房建设模式及详情。</div>
-                      <button type="button" onClick={() => setRoomDetails(!roomDetails)} className="mb-2 flex w-full items-center gap-2 text-left text-[12px] font-semibold text-slate-700 hover:text-primary">
+                  <div className="mt-1.5 grid gap-2 md:grid-cols-2">
+                    <div onClick={(event) => { if ((event.target as HTMLElement).closest("button")) return; setRoomDetails((value) => !value) }} className="cursor-pointer rounded-[12px] border border-border/80 bg-card/80 px-3 py-2 shadow-[inset_0_1px_0_oklch(0.72_0.15_220/6%)]">
+                      <div className="mb-1.5 text-[10px] text-muted-foreground">点击查看{selectedScopeLabel}中心机房建设模式及详情。</div>
+                      <button type="button" onClick={() => setRoomDetails(!roomDetails)} className="mb-1.5 flex w-full items-center gap-2 text-left text-[11px] font-semibold text-slate-700 hover:text-primary">
                         <span className="inline-flex size-2 rounded-full bg-[#2456c7]" />共{detailRows.length}家分行纳入当前筛选范围
                       </button>
                       {roomDetails ? <div className="overflow-x-auto">
@@ -657,13 +657,13 @@ export function BranchDashboard() {
                           <tbody>{detailRows.map((row, index) => <tr key={row.name} className="border-t border-border/50"><td className="py-1.5">{row.name}</td><td className="py-1.5">{index % 4 === 0 ? "租赁" : "自建"}</td><td className="py-1.5 font-mono">{2021 + (index % 4)}年</td></tr>)}</tbody>
                         </table>
                       </div> : <button type="button" onClick={() => setRoomDetails(true)} className="flex w-full items-center gap-3 text-left">
-                        <div className="relative h-[98px] w-[122px] shrink-0"><svg viewBox="0 0 120 120" className="h-full w-full -rotate-90"><circle cx="60" cy="60" r="42" fill="none" stroke="#d9e1ee" strokeWidth="10" /><circle cx="60" cy="60" r="42" fill="none" stroke="#2456c7" strokeWidth="10" strokeLinecap="round" strokeDasharray="259 300" /><circle cx="60" cy="60" r="42" fill="none" stroke="#2dc2be" strokeWidth="10" strokeLinecap="round" strokeDasharray="41 300" strokeDashoffset="259" /></svg><div className="absolute inset-0 flex flex-col items-center justify-center text-center"><div className="font-mono text-[20px] font-black text-primary">{detailRows.length}</div><div className="text-[10px] text-slate-500">中心机房</div></div></div>
-                        <div className="grid gap-2 text-[12px] text-foreground/75"><div><span className="mr-2 inline-flex size-2 rounded-full bg-[#2456c7]" />自建 <span className="font-mono text-primary">{Math.max(0, detailRows.length - 1)}</span></div><div><span className="mr-2 inline-flex size-2 rounded-full bg-[#2dc2be]" />租赁 <span className="font-mono text-primary">{detailRows.length ? 1 : 0}</span></div></div>
+                        <div className="relative h-[76px] w-[96px] shrink-0"><svg viewBox="0 0 120 120" className="h-full w-full -rotate-90"><circle cx="60" cy="60" r="42" fill="none" stroke="#d9e1ee" strokeWidth="10" /><circle cx="60" cy="60" r="42" fill="none" stroke="#2456c7" strokeWidth="10" strokeLinecap="round" strokeDasharray="259 300" /><circle cx="60" cy="60" r="42" fill="none" stroke="#2dc2be" strokeWidth="10" strokeLinecap="round" strokeDasharray="41 300" strokeDashoffset="259" /></svg><div className="absolute inset-0 flex flex-col items-center justify-center text-center"><div className="font-mono text-[16px] font-black text-primary">{detailRows.length}</div><div className="text-[9px] text-slate-500">中心机房</div></div></div>
+                        <div className="grid gap-1.5 text-[11px] text-foreground/75"><div><span className="mr-2 inline-flex size-2 rounded-full bg-[#2456c7]" />自建 <span className="font-mono text-primary">{Math.max(0, detailRows.length - 1)}</span></div><div><span className="mr-2 inline-flex size-2 rounded-full bg-[#2dc2be]" />租赁 <span className="font-mono text-primary">{detailRows.length ? 1 : 0}</span></div></div>
                       </button>}
-                      <div className="mt-3 flex items-center justify-between rounded-[10px] border border-border/70 bg-background/70 px-3 py-2"><span className="text-[14px] font-bold text-muted-foreground">机���数</span><span className="font-mono text-[14px] font-black text-primary">{(current.personnelTotal * 2).toLocaleString()} <small className="text-[11px] font-normal text-muted-foreground">个</small></span></div>
+                      <div className="mt-2 flex items-center justify-between rounded-[10px] border border-border/70 bg-background/70 px-3 py-1.5"><span className="text-[12px] font-bold text-muted-foreground">机柜数</span><span className="font-mono text-[13px] font-black text-primary">{(current.personnelTotal * 2).toLocaleString()} <small className="text-[10px] font-normal text-muted-foreground">个</small></span></div>
                     </div>
 
-                    <div onClick={(event) => { if ((event.target as HTMLElement).closest("button")) return; setDisasterDetails((value) => !value) }} className="cursor-pointer grid gap-2 rounded-[12px] border border-border/80 bg-card/80 px-3 py-3 shadow-[inset_0_1px_0_oklch(0.72_0.15_220/6%)]">
+                    <div onClick={(event) => { if ((event.target as HTMLElement).closest("button")) return; setDisasterDetails((value) => !value) }} className="cursor-pointer grid gap-1.5 rounded-[12px] border border-border/80 bg-card/80 px-3 py-2 shadow-[inset_0_1px_0_oklch(0.72_0.15_220/6%)]">
                       <div className="text-[11px] text-muted-foreground">点击查看{selectedScopeLabel}中心机房建设模式及详情。</div>
                       <button type="button" onClick={() => setDisasterDetails(!disasterDetails)} className="w-full text-left text-[12px] font-semibold text-slate-700 transition-colors hover:text-primary">
                         <span className="mr-2 inline-flex size-2 rounded-full bg-[#2dc2be]" />其中{detailRows.length}家分行配备灾备机房
@@ -676,10 +676,10 @@ export function BranchDashboard() {
               </PanelCard>
 
               <div className="order-2 col-start-2 row-start-1 grid min-w-0 items-stretch gap-2 grid-cols-1 md:[&>*]:min-w-0">
-                  <PanelCard className="h-full cursor-pointer" bodyClassName="p-3" title="信创改造" icon={<ShieldCheck className="size-4" />} onClick={() => setInnovationRanking((value) => !value)}>
-                    <button type="button" onClick={(event) => { event.stopPropagation(); setInnovationRanking((value) => !value) }} className="w-full text-left" aria-label="���换信创改造完成度排行">
+                  <PanelCard className="h-full cursor-pointer" bodyClassName="p-2.5" title="信创改造" icon={<ShieldCheck className="size-4" />} onClick={() => setInnovationRanking((value) => !value)}>
+                    <button type="button" onClick={(event) => { event.stopPropagation(); setInnovationRanking((value) => !value) }} className="w-full text-left" aria-label="切换信创改造完成度排行">
                     {innovationRanking ? <div className="py-1">
-                      <ResponsiveContainer width="100%" height={210} minWidth={1} minHeight={1}>
+                      <ResponsiveContainer width="100%" height={160} minWidth={1} minHeight={1}>
                         <ComposedChart data={innovationRows} margin={{ top: 20, right: 8, left: -18, bottom: 8 }}>
                           <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" vertical={false} />
                           <XAxis dataKey="name" tick={{ fontSize: 10, fill: "hsl(var(--muted-foreground))" }} interval={0} angle={-25} textAnchor="end" height={42} />
@@ -692,29 +692,29 @@ export function BranchDashboard() {
                         </ComposedChart>
                       </ResponsiveContainer>
                       <div className="text-center text-[10px] text-muted-foreground">信创部改造前十名完成度</div>
-                    </div> : <div className="flex items-center justify-between gap-3">
+                    </div> : <div className="flex items-center justify-between gap-2.5">
                       <div className="flex flex-1 items-center justify-center">
                         <RingChart value={current.innovation.done} total={current.innovation.value} label="已完成" />
                       </div>
-                      <div className="flex-1 space-y-3">
-                        <div className="flex items-center justify-between text-[12px] text-slate-600">
+                      <div className="flex-1 space-y-2">
+                        <div className="flex items-center justify-between text-[11px] text-slate-600">
                           <span>已完成</span>
-                          <span className="font-mono text-[22px] font-black text-primary">{current.innovation.done}</span>
+                          <span className="font-mono text-[18px] font-black text-primary">{current.innovation.done}</span>
                         </div>
-                        <div className="h-2 overflow-hidden rounded-full bg-[#e7edf8]">
+                        <div className="h-1.5 overflow-hidden rounded-full bg-[#e7edf8]">
                           <div className="h-full rounded-full bg-gradient-to-r from-[#2456c7] to-[#2dc2be]" style={{ width: `${(current.innovation.done / current.innovation.value) * 100}%` }} />
                         </div>
-                        <div className="flex items-center justify-between text-[12px] text-slate-600">
+                        <div className="flex items-center justify-between text-[11px] text-slate-600">
                           <span>未完成</span>
-                          <span className="font-mono text-[22px] font-black text-primary">{current.innovation.remaining}</span>
+                          <span className="font-mono text-[18px] font-black text-primary">{current.innovation.remaining}</span>
                         </div>
-                        <div className="h-2 overflow-hidden rounded-full bg-[#e7edf8]">
+                        <div className="h-1.5 overflow-hidden rounded-full bg-[#e7edf8]">
                           <div className="h-full rounded-full bg-gradient-to-r from-[#2dc2be] to-[#86e1de]" style={{ width: `${(current.innovation.remaining / current.innovation.value) * 100}%` }} />
                         </div>
                       </div>
                     </div>}
                     </button>
-                    {!innovationRanking && <><div className="mt-3 flex flex-wrap items-center justify-center gap-4 text-[11px] text-slate-500">
+                    {!innovationRanking && <><div className="mt-2 flex flex-wrap items-center justify-center gap-3 text-[10px] text-slate-500">
                       <div className="flex items-center gap-1.5">
                         <span className="size-2 rounded-full bg-[#2456c7]" />已完成信创改造
                       </div>
@@ -722,22 +722,22 @@ export function BranchDashboard() {
                         <span className="size-2 rounded-full bg-[#2dc2be]" />未完成信创改造
                       </div>
                     </div>
-                    <div className="mt-2 text-center text-[11px] text-slate-500">单击可查看信创改造完成度排序十名。</div></>}
+                    <div className="mt-1 text-center text-[10px] text-slate-500">单击可查看信创改造完成度排序十名。</div></>}
                   </PanelCard>
 
-                  <PanelCard className="h-full" bodyClassName="p-3" title="系统上云" icon={<Cloud className="size-4" />} onClick={() => setCloudRanking((value) => !value)}>
+                  <PanelCard className="h-full" bodyClassName="p-2.5" title="系统上云" icon={<Cloud className="size-4" />} onClick={() => setCloudRanking((value) => !value)}>
                     <button type="button" onClick={(event) => { event.stopPropagation(); setCloudRanking((value) => !value) }} className="w-full text-left" aria-label="切换上云系统前十名">
-                    {cloudRanking ? <div className="grid gap-2 py-1">{cloudRows.map(({ name, count }, index) => <div key={name} className="grid grid-cols-[1.2fr_1fr_auto] items-center gap-2 text-[11px]"><span>{String(index + 1).padStart(2, "0")} {name}</span><span className="h-2 rounded-full bg-gradient-to-r from-accent to-primary" style={{ width: `${Math.max(20, Number(count) / Math.max(cloudRows[0]?.count ?? 1, 1) * 100)}%` }} /><strong className="font-mono text-primary">{count}</strong></div>)}</div> : <div className="flex flex-col items-center gap-2">
+                    {cloudRanking ? <div className="grid gap-2 py-1">{cloudRows.map(({ name, count }, index) => <div key={name} className="grid grid-cols-[1.2fr_1fr_auto] items-center gap-2 text-[11px]"><span>{String(index + 1).padStart(2, "0")} {name}</span><span className="h-2 rounded-full bg-gradient-to-r from-accent to-primary" style={{ width: `${Math.max(20, Number(count) / Math.max(cloudRows[0]?.count ?? 1, 1) * 100)}%` }} /><strong className="font-mono text-primary">{count}</strong></div>)}</div> : <div className="flex flex-col items-center gap-1.5">
                       <CloudCircle value={current.cloud.value} />
-                      <div className="text-center text-[12px] text-slate-500">{current.cloud.note}</div>
-                      <div className="text-center text-[11px] text-muted-foreground">单击可查看上云系统前十名。</div></div>}
+                      <div className="text-center text-[11px] text-slate-500">{current.cloud.note}</div>
+                      <div className="text-center text-[10px] text-muted-foreground">单击可查看上云系统前十名。</div></div>}
                     </button>
                   </PanelCard>
               </div>
 
               <PanelCard className="order-1 col-start-1 row-start-1 h-full min-w-0" bodyClassName="min-w-0 p-1.5" title="科技人员数量" icon={<UsersRound className="size-4" />}>
-                  <div className="grid min-w-0 gap-2 xl:grid-cols-[minmax(0,0.72fr)_minmax(0,1.28fr)] xl:[&>*]:min-w-0">
-                    <div className="space-y-2">
+                  <div className="grid min-w-0 gap-2">
+                    <div className="grid gap-2 sm:grid-cols-[minmax(0,0.4fr)_minmax(0,0.6fr)]">
                       <div className="rounded-[10px] border border-border/80 bg-card/80 px-3 py-2 shadow-[inset_0_1px_0_oklch(0.72_0.15_220/6%)]">
                         <div className="text-[11px] text-foreground/80">科技人员总数</div>
                         <div className="mt-1 flex items-end gap-2">
@@ -746,8 +746,8 @@ export function BranchDashboard() {
                         </div>
                       </div>
 
-                      <div className="rounded-[10px] border border-border/80 bg-card/80 px-3 py-2 shadow-[inset_0_1px_0_oklch(0.72_0.15_220/6%)]">
-                        <div className="grid gap-2">
+                      <div className="rounded-[10px] border border-border/80 bg-card/80 px-3 py-1.5 shadow-[inset_0_1px_0_oklch(0.72_0.15_220/6%)]">
+                        <div className="grid grid-cols-2 gap-x-3 gap-y-1 sm:grid-cols-3">
                           {current.personnelRoles.map((role) => (
                             <RoleBar key={role.label} label={role.label} value={role.value} tone={role.tone} />
                           ))}
