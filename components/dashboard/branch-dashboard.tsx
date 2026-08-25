@@ -74,7 +74,7 @@ const branchData: Record<string, BranchData> = {
       { label: "接入系统", value: 328, suffix: "个" },
       { label: "治理项", value: 86, suffix: "项" },
     ],
-    techLevel: { level: "A类", score: 92, dimensions: [92, 88, 95, 90, 94, 86] },
+    techLevel: { level: "3A", score: 92, dimensions: [92, 88, 95, 90, 94] },
     operationMetrics: [
       { label: "父系统数", value: 230, unit: "个", tone: "primary" },
       { label: "子系统数", value: 522, unit: "个", tone: "accent" },
@@ -121,6 +121,7 @@ const branchData: Record<string, BranchData> = {
   { label: "存储数", value: 5892100, unit: "GB", tone: "primary" },
   { label: "CPU数", value: 4210, unit: "核", tone: "accent" },
     ],
+    techLevel: { level: "2A", score: 84, dimensions: [82, 92, 75, 88, 85] },
     innovation: { title: "年度计划数", value: 82, done: 67, remaining: 15 },
     cloud: { value: 28, total: 41, note: "杭州分行系统上云推进进度" },
     personnelTotal: 804,
@@ -157,6 +158,7 @@ const branchData: Record<string, BranchData> = {
   { label: "存储数", value: 4882100, unit: "GB", tone: "primary" },
   { label: "CPU数", value: 3510, unit: "核", tone: "accent" },
     ],
+    techLevel: { level: "3B", score: 70, dimensions: [65, 78, 58, 72, 76] },
     innovation: { title: "年度计划数", value: 76, done: 60, remaining: 16 },
     cloud: { value: 24, total: 36, note: "广州分行上云与治理同步推进" },
     personnelTotal: 742,
@@ -193,6 +195,7 @@ const branchData: Record<string, BranchData> = {
   { label: "存储数", value: 3568400, unit: "GB", tone: "primary" },
   { label: "CPU数", value: 2390, unit: "核", tone: "accent" },
     ],
+    techLevel: { level: "2B", score: 91, dimensions: [90, 94, 85, 95, 93] },
     innovation: { title: "年度计划数", value: 58, done: 44, remaining: 14 },
     cloud: { value: 18, total: 27, note: "福州分行系统纳管情况" },
     personnelTotal: 536,
@@ -223,13 +226,22 @@ const additionalBranchData: Array<[string, string, string, number, number, numbe
   ["xian", "西安分行", "level-3", 126, 298, 18, 24, 524],
 ]
 
+const fixedTechLevels: Record<string, { level: string; score: number; dimensions: number[] }> = {
+  wuhan: { level: "1A", score: 77, dimensions: [70, 84, 68, 80, 82] },
+  beijing: { level: "3C", score: 77, dimensions: [76, 80, 70, 82, 78] },
+  shanghai: { level: "2C", score: 81, dimensions: [80, 85, 74, 86, 82] },
+  shenzhen: { level: "1B", score: 68, dimensions: [66, 74, 60, 70, 72] },
+  chengdu: { level: "1C", score: 63, dimensions: [60, 68, 55, 64, 66] },
+  xian: { level: "1C", score: 60, dimensions: [58, 66, 52, 62, 64] },
+}
+
 for (const [key, label, grade, parentSystems, childSystems, cloudValue, planValue, personnelTotal] of additionalBranchData) {
   const source = branchData.nanjing
   const roleScale = personnelTotal / source.personnelTotal
   branchData[key] = {
     ...source,
     label,
-    techLevel: { level: grade === "level-1" ? "A类" : grade === "level-2" ? "B类" : "C类", score: Math.round(76 + roleScale * 16), dimensions: [Math.round(70 + roleScale * 22), Math.round(68 + roleScale * 24), Math.round(72 + roleScale * 20), Math.round(65 + roleScale * 25), Math.round(74 + roleScale * 18), Math.round(69 + roleScale * 23)] },
+    techLevel: fixedTechLevels[key] ?? { level: "1C", score: 60, dimensions: [60, 60, 60, 60, 60] },
     quickStats: source.quickStats.map((stat, index) => ({ ...stat, value: Math.round(stat.value * roleScale) })),
     operationMetrics: source.operationMetrics.map((metric, index) => ({
       ...metric,
@@ -478,15 +490,13 @@ function RoleBar({ label, value, tone }: { label: string; value: number; tone: M
         : "bg-gradient-to-r from-primary to-primary/80"
 
   return (
-    <div className="grid gap-1.5">
-      <div className="flex items-center justify-between gap-3 text-[12px]">
-        <span className="truncate text-slate-700">{label}</span>
-        <span className="font-mono font-bold text-primary">{value}</span>
-      </div>
-      <div className="h-2.5 overflow-hidden rounded-full bg-[#e7edf8]">
-        <div className={cn("h-full rounded-full", fill)} style={{ width: `${width}%` }} />
-      </div>
-    </div>
+  <div className="flex items-center gap-2 text-[11px]">
+  <span className="w-14 shrink-0 truncate text-slate-700">{label}</span>
+  <div className="h-2 flex-1 overflow-hidden rounded-full bg-[#e7edf8]">
+  <div className={cn("h-full rounded-full", fill)} style={{ width: `${width}%` }} />
+  </div>
+  <span className="w-9 shrink-0 text-right font-mono font-bold text-primary">{value}</span>
+  </div>
   )
 }
 
@@ -508,15 +518,23 @@ function PanelCard({ title, icon, children, className }: { title: string; icon: 
 }
 
 function TechLevelPanel({ rows, selectedKey, onSelect }: { rows: Array<{ key: string; data: BranchData }>; selectedKey: string; onSelect: (key: string) => void }) {
+  const [activeDim, setActiveDim] = useState<number | null>(null)
   const selected = rows.find((row) => row.key === selectedKey)?.data ?? rows[0]?.data
   const techLevel = selected?.techLevel ?? { level: "B类", score: 82, dimensions: [82, 78, 84, 80, 86] }
   const points = techLevel.dimensions.slice(0, 5)
   const dimensionLabels = ["科技治理", "风险安全", "研发创新", "运维管理", "数据管理"]
-  const radarPoints = points.map((value, index) => {
+
+  useEffect(() => {
+    setActiveDim(null)
+  }, [selectedKey])
+
+  const vertexCoords = points.map((value, index) => {
     const angle = (Math.PI * 2 * index) / points.length - Math.PI / 2
     const radius = 18 + value * 0.42
-    return `${80 + Math.cos(angle) * radius},${80 + Math.sin(angle) * radius}`
-  }).join(" ")
+    return { x: 80 + Math.cos(angle) * radius, y: 80 + Math.sin(angle) * radius }
+  })
+  const radarPoints = vertexCoords.map((point) => `${point.x},${point.y}`).join(" ")
+
   return (
     <PanelCard title="分行科技分级" icon={<Gauge className="size-4" />}>
       <div className="grid gap-3">
@@ -533,17 +551,72 @@ function TechLevelPanel({ rows, selectedKey, onSelect }: { rows: Array<{ key: st
             <svg viewBox="0 0 160 160" className="h-48 w-48" role="img" aria-label={`${selected?.label ?? "分行"}科技能力雷达图`}>
               {[30, 50, 70].map((radius) => <polygon key={radius} points={points.map((_, index) => { const angle = (Math.PI * 2 * index) / points.length - Math.PI / 2; return `${80 + Math.cos(angle) * radius},${80 + Math.sin(angle) * radius}` }).join(" ")} fill="none" stroke="currentColor" className="text-border" strokeWidth="1" />)}
               <polygon points={radarPoints} fill="rgba(45,194,190,0.28)" stroke="#2dc2be" strokeWidth="2" />
-              {dimensionLabels.map((label, index) => { const angle = (Math.PI * 2 * index) / points.length - Math.PI / 2; const x = 80 + Math.cos(angle) * 72; const y = 80 + Math.sin(angle) * 72; return <text key={label} x={x} y={y} textAnchor="middle" dominantBaseline="middle" className="fill-foreground text-[6px] font-medium">{label}</text> })}
-              <text x="80" y="76" textAnchor="middle" className="fill-primary font-mono text-[20px] font-bold">{techLevel.score}</text>
-              <text x="80" y="92" textAnchor="middle" className="fill-muted-foreground text-[8px]">综合评分</text>
+              {dimensionLabels.map((label, index) => {
+                const angle = (Math.PI * 2 * index) / points.length - Math.PI / 2
+                const x = 80 + Math.cos(angle) * 72
+                const y = 80 + Math.sin(angle) * 72
+                const isActive = activeDim === index
+                return (
+                  <text
+                    key={label}
+                    x={x}
+                    y={y}
+                    textAnchor="middle"
+                    dominantBaseline="middle"
+                    onClick={() => setActiveDim(index)}
+                    className={cn("cursor-pointer text-[6px] font-medium", isActive ? "fill-primary font-bold" : "fill-foreground")}
+                  >
+                    {label}
+                  </text>
+                )
+              })}
+              {vertexCoords.map((point, index) => (
+                <circle
+                  key={`vertex-${index}`}
+                  cx={point.x}
+                  cy={point.y}
+                  r={activeDim === index ? 4.5 : 3}
+                  fill={activeDim === index ? "#f3c46b" : "#2dc2be"}
+                  stroke="white"
+                  strokeWidth="1"
+                  className="cursor-pointer"
+                  onClick={() => setActiveDim(index)}
+                />
+              ))}
+              {activeDim === null ? (
+                <>
+                  <text x="80" y="76" textAnchor="middle" className="fill-primary font-mono text-[20px] font-bold">{techLevel.score}</text>
+                  <text x="80" y="92" textAnchor="middle" className="fill-muted-foreground text-[8px]">综合评分</text>
+                </>
+              ) : (
+                <>
+                  <text x="80" y="76" textAnchor="middle" className="fill-primary font-mono text-[20px] font-bold">{points[activeDim]}</text>
+                  <text x="80" y="92" textAnchor="middle" className="fill-muted-foreground text-[8px]">{dimensionLabels[activeDim]}</text>
+                </>
+              )}
             </svg>
           </div>
-          <div className="text-center text-[11px] text-muted-foreground">{selected?.label ?? "当前分行"} · {techLevel.level}</div>
+          <div className="text-center text-[11px] text-muted-foreground">{selected?.label ?? "当前分行"} · {techLevel.level} · 点击雷达图或表头查看单项指标</div>
         </div>
         <div className="max-h-[268px] overflow-auto rounded-lg border border-border/70">
           <Table className="min-w-[560px] text-[11px]">
-            <TableHeader className="bg-primary/10"><TableRow><TableHead className="px-1.5 py-1.5">分行名称</TableHead><TableHead className="px-1.5 py-1.5">科技等级</TableHead><TableHead className="px-1 py-1.5 text-center">科技治理</TableHead><TableHead className="px-1 py-1.5 text-center">风险安全</TableHead><TableHead className="px-1 py-1.5 text-center">研发创新</TableHead><TableHead className="px-1 py-1.5 text-center">运维管理</TableHead><TableHead className="px-1 py-1.5 text-center">数据管理</TableHead><TableHead className="px-1.5 py-1.5 text-right">综合评分</TableHead></TableRow></TableHeader>
-            <TableBody>{rows.map(({ key, data }) => <TableRow key={key} onClick={() => onSelect(key)} className={cn("cursor-pointer", key === selectedKey && "bg-primary/10") }><TableCell className="whitespace-nowrap px-1.5 py-1.5 font-medium">{data.label}</TableCell><TableCell className="whitespace-nowrap px-1.5 py-1.5">{data.techLevel?.level ?? "B类"}</TableCell>{(data.techLevel?.dimensions ?? [82, 78, 84, 80, 86]).slice(0, 5).map((value, index) => <TableCell key={`${key}-${index}`} className="px-1 py-1.5 text-center font-mono text-foreground/80">{value}</TableCell>)}<TableCell className="px-1.5 py-1.5 text-right font-mono font-bold text-primary">{data.techLevel?.score ?? 82}</TableCell></TableRow>)}</TableBody>
+            <TableHeader className="bg-primary/10">
+              <TableRow>
+                <TableHead className="px-1.5 py-1.5">分行名称</TableHead>
+                <TableHead className="px-1.5 py-1.5">科技等级</TableHead>
+                {dimensionLabels.map((label, index) => (
+                  <TableHead
+                    key={label}
+                    onClick={() => setActiveDim(index)}
+                    className={cn("cursor-pointer px-1 py-1.5 text-center", activeDim === index && "bg-primary/20 text-primary")}
+                  >
+                    {label}
+                  </TableHead>
+                ))}
+                <TableHead className="px-1.5 py-1.5 text-right">综合评分</TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>{rows.map(({ key, data }) => <TableRow key={key} onClick={() => onSelect(key)} className={cn("cursor-pointer", key === selectedKey && "bg-primary/10") }><TableCell className="whitespace-nowrap px-1.5 py-1.5 font-medium">{data.label}</TableCell><TableCell className="whitespace-nowrap px-1.5 py-1.5">{data.techLevel?.level ?? "B类"}</TableCell>{(data.techLevel?.dimensions ?? [82, 78, 84, 80, 86]).slice(0, 5).map((value, index) => <TableCell key={`${key}-${index}`} className={cn("px-1 py-1.5 text-center font-mono text-foreground/80", activeDim === index && "bg-primary/10 text-primary")}>{value}</TableCell>)}<TableCell className="px-1.5 py-1.5 text-right font-mono font-bold text-primary">{data.techLevel?.score ?? 82}</TableCell></TableRow>)}</TableBody>
           </Table>
         </div>
       </div>
@@ -677,7 +750,7 @@ export function BranchDashboard() {
 
               <div className="order-2 col-start-2 row-start-1 grid min-w-0 items-stretch gap-2 grid-cols-1 md:[&>*]:min-w-0">
                   <PanelCard className="h-full cursor-pointer" bodyClassName="p-2.5" title="信创改造" icon={<ShieldCheck className="size-4" />} onClick={() => setInnovationRanking((value) => !value)}>
-                    <button type="button" onClick={(event) => { event.stopPropagation(); setInnovationRanking((value) => !value) }} className="w-full text-left" aria-label="切换信创改造完成度排行">
+                    <button type="button" onClick={(event) => { event.stopPropagation(); setInnovationRanking((value) => !value) }} className="w-full text-left" aria-label="切换信创改���完成度排行">
                     {innovationRanking ? <div className="py-1">
                       <ResponsiveContainer width="100%" height={160} minWidth={1} minHeight={1}>
                         <ComposedChart data={innovationRows} margin={{ top: 20, right: 8, left: -18, bottom: 8 }}>
