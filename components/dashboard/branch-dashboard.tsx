@@ -675,8 +675,7 @@ export function BranchDashboard() {
                 </div>
               </PanelCard>
 
-              <div className="order-2 col-start-2 row-start-1 grid min-w-0 gap-2">
-                <div className="grid min-w-0 items-stretch gap-2 grid-cols-1 md:[&>*]:min-w-0">
+              <div className="order-2 col-start-2 row-start-1 grid min-w-0 items-stretch gap-2 grid-cols-1 md:[&>*]:min-w-0">
                   <PanelCard className="h-full cursor-pointer" bodyClassName="p-3" title="信创改造" icon={<ShieldCheck className="size-4" />} onClick={() => setInnovationRanking((value) => !value)}>
                     <button type="button" onClick={(event) => { event.stopPropagation(); setInnovationRanking((value) => !value) }} className="w-full text-left" aria-label="���换信创改造完成度排行">
                     {innovationRanking ? <div className="py-1">
@@ -734,9 +733,9 @@ export function BranchDashboard() {
                       <div className="text-center text-[11px] text-muted-foreground">单击可查看上云系统前十名。</div></div>}
                     </button>
                   </PanelCard>
-                </div>
+              </div>
 
-                <PanelCard className="order-1 col-start-1 row-start-1 min-w-0" bodyClassName="min-w-0 p-1.5" title="科技人员数量" icon={<UsersRound className="size-4" />}>
+              <PanelCard className="order-1 col-start-1 row-start-1 h-full min-w-0" bodyClassName="min-w-0 p-1.5" title="科技人员数量" icon={<UsersRound className="size-4" />}>
                   <div className="grid min-w-0 gap-2 xl:grid-cols-[minmax(0,0.72fr)_minmax(0,1.28fr)] xl:[&>*]:min-w-0">
                     <div className="space-y-2">
                       <div className="rounded-[10px] border border-border/80 bg-card/80 px-3 py-2 shadow-[inset_0_1px_0_oklch(0.72_0.15_220/6%)]">
@@ -820,7 +819,6 @@ export function BranchDashboard() {
               </div>
               </div>
             </div>
-          </div>
         </section>
       </div>
     </main>
