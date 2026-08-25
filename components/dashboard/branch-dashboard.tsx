@@ -541,9 +541,9 @@ function TechLevelPanel({ rows, selectedKey, onSelect }: { rows: Array<{ key: st
           <div className="text-center text-[11px] text-muted-foreground">{selected?.label ?? "当前分行"} · {techLevel.level}</div>
         </div>
         <div className="max-h-[268px] overflow-auto rounded-lg border border-border/70">
-          <Table className="min-w-[760px] text-[11px]">
-            <TableHeader className="bg-primary/10"><TableRow><TableHead>分行名称</TableHead><TableHead>科技等级</TableHead><TableHead className="text-center">科技治理</TableHead><TableHead className="text-center">风险安全</TableHead><TableHead className="text-center">研发创新</TableHead><TableHead className="text-center">运维管理</TableHead><TableHead className="text-center">数据管理</TableHead><TableHead className="text-right">综合评分</TableHead></TableRow></TableHeader>
-            <TableBody>{rows.map(({ key, data }) => <TableRow key={key} onClick={() => onSelect(key)} className={cn("cursor-pointer", key === selectedKey && "bg-primary/10") }><TableCell className="whitespace-nowrap py-2 font-medium">{data.label}</TableCell><TableCell className="whitespace-nowrap py-2">{data.techLevel?.level ?? "B类"}</TableCell>{(data.techLevel?.dimensions ?? [82, 78, 84, 80, 86]).slice(0, 5).map((value, index) => <TableCell key={`${key}-${index}`} className="py-2 text-center font-mono text-foreground/80">{value}</TableCell>)}<TableCell className="py-2 text-right font-mono font-bold text-primary">{data.techLevel?.score ?? 82}</TableCell></TableRow>)}</TableBody>
+          <Table className="min-w-[560px] text-[11px]">
+            <TableHeader className="bg-primary/10"><TableRow><TableHead className="px-1.5 py-1.5">分行名称</TableHead><TableHead className="px-1.5 py-1.5">科技等级</TableHead><TableHead className="px-1 py-1.5 text-center">科技治理</TableHead><TableHead className="px-1 py-1.5 text-center">风险安全</TableHead><TableHead className="px-1 py-1.5 text-center">研发创新</TableHead><TableHead className="px-1 py-1.5 text-center">运维管理</TableHead><TableHead className="px-1 py-1.5 text-center">数据管理</TableHead><TableHead className="px-1.5 py-1.5 text-right">综合评分</TableHead></TableRow></TableHeader>
+            <TableBody>{rows.map(({ key, data }) => <TableRow key={key} onClick={() => onSelect(key)} className={cn("cursor-pointer", key === selectedKey && "bg-primary/10") }><TableCell className="whitespace-nowrap px-1.5 py-1.5 font-medium">{data.label}</TableCell><TableCell className="whitespace-nowrap px-1.5 py-1.5">{data.techLevel?.level ?? "B类"}</TableCell>{(data.techLevel?.dimensions ?? [82, 78, 84, 80, 86]).slice(0, 5).map((value, index) => <TableCell key={`${key}-${index}`} className="px-1 py-1.5 text-center font-mono text-foreground/80">{value}</TableCell>)}<TableCell className="px-1.5 py-1.5 text-right font-mono font-bold text-primary">{data.techLevel?.score ?? 82}</TableCell></TableRow>)}</TableBody>
           </Table>
         </div>
       </div>
@@ -737,21 +737,18 @@ export function BranchDashboard() {
 
               <PanelCard className="order-1 col-start-1 row-start-1 h-full min-w-0" bodyClassName="min-w-0 p-1.5" title="科技人员数量" icon={<UsersRound className="size-4" />}>
                   <div className="grid min-w-0 gap-2">
-                    <div className="grid gap-2 sm:grid-cols-[minmax(0,0.4fr)_minmax(0,0.6fr)]">
-                      <div className="rounded-[10px] border border-border/80 bg-card/80 px-3 py-1.5 shadow-[inset_0_1px_0_oklch(0.72_0.15_220/6%)]">
-                        <div className="text-[10px] text-foreground/80">科技人员总数</div>
-                        <div className="mt-0.5 flex items-end gap-1.5">
-                          <span className="font-mono text-[18px] font-black leading-none text-primary">{current.personnelTotal}</span>
-                          <span className="pb-0.5 text-[11px] text-muted-foreground">人</span>
-                        </div>
+                    <div className="rounded-[10px] border border-border/80 bg-card/80 px-3 py-1.5 shadow-[inset_0_1px_0_oklch(0.72_0.15_220/6%)]">
+                      <div className="flex items-center justify-between gap-2">
+                        <span className="text-[10px] text-foreground/80">科技人员总数</span>
+                        <span className="font-mono text-[13px] font-black leading-none text-primary">
+                          {current.personnelTotal}
+                          <span className="ml-1 text-[10px] font-normal text-muted-foreground">人</span>
+                        </span>
                       </div>
-
-                      <div className="rounded-[10px] border border-border/80 bg-card/80 px-3 py-1.5 shadow-[inset_0_1px_0_oklch(0.72_0.15_220/6%)]">
-                        <div className="grid grid-cols-2 gap-x-3 gap-y-2.5 sm:grid-cols-3">
-                          {current.personnelRoles.map((role) => (
-                            <RoleBar key={role.label} label={role.label} value={role.value} tone={role.tone} />
-                          ))}
-                        </div>
+                      <div className="mt-2 grid gap-2">
+                        {current.personnelRoles.map((role) => (
+                          <RoleBar key={role.label} label={role.label} value={role.value} tone={role.tone} />
+                        ))}
                       </div>
                     </div>
 
@@ -760,7 +757,7 @@ export function BranchDashboard() {
                           <Table className="w-full min-w-[700px] table-fixed text-[10px]">
                           <TableHeader className="bg-gradient-to-r from-primary via-primary to-accent">
                             <TableRow className="border-transparent hover:bg-transparent">
-                              <TableHead className="px-2 py-2 text-[10px] font-semibold text-foreground">分行名称</TableHead>
+                              <TableHead className="px-2 py-2 text-[10px] font-semibold text-foreground">分行名��</TableHead>
                               <TableHead className="px-1.5 py-1 text-center text-[10px] font-semibold text-foreground">研发</TableHead>
                               <TableHead className="px-1.5 py-1 text-center text-[10px] font-semibold text-foreground">运维</TableHead>
                               <TableHead className="px-1.5 py-1 text-center text-[10px] font-semibold text-foreground">架构</TableHead>
