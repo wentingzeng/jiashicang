@@ -530,7 +530,7 @@ function TechLevelPanel({ rows, selectedKey, onSelect }: { rows: Array<{ key: st
         </div>
         <div className="rounded-lg border border-border/70 bg-background/40 p-2">
           <div className="flex justify-center">
-            <svg viewBox="0 0 160 160" className="h-48 w-48" role="img" aria-label={`${selected?.label ?? "分行"}科技能力雷达图`}>
+            <svg viewBox="0 0 160 160" className="h-48 w-48" role="img" aria-label={`${selected?.label ?? "分行"}科���能力雷达图`}>
               {[30, 50, 70].map((radius) => <polygon key={radius} points={points.map((_, index) => { const angle = (Math.PI * 2 * index) / points.length - Math.PI / 2; return `${80 + Math.cos(angle) * radius},${80 + Math.sin(angle) * radius}` }).join(" ")} fill="none" stroke="currentColor" className="text-border" strokeWidth="1" />)}
               <polygon points={radarPoints} fill="rgba(45,194,190,0.28)" stroke="#2dc2be" strokeWidth="2" />
               {dimensionLabels.map((label, index) => { const angle = (Math.PI * 2 * index) / points.length - Math.PI / 2; const x = 80 + Math.cos(angle) * 72; const y = 80 + Math.sin(angle) * 72; return <text key={label} x={x} y={y} textAnchor="middle" dominantBaseline="middle" className="fill-foreground text-[6px] font-medium">{label}</text> })}
@@ -637,8 +637,8 @@ export function BranchDashboard() {
             <div className="grid min-w-0 items-stretch gap-3 lg:grid-cols-[minmax(280px,0.42fr)_minmax(0,0.58fr)]">
               <TechLevelPanel rows={techRows} selectedKey={activeTechKey} onSelect={setTechSelectedKey} />
 
-              <div className="grid min-w-0 gap-3 xl:grid-cols-1 xl:items-start">
-              <PanelCard className="order-3 h-full" title="运维指标" icon={<Gauge className="size-4" />}>
+              <div className="grid min-w-0 items-start gap-3 lg:grid-cols-2">
+              <PanelCard className="order-3 h-full lg:col-span-2" title="运维指标" icon={<Gauge className="size-4" />}>
                 <div className="grid grid-cols-2 gap-2 md:grid-cols-4">
                   {current.operationMetrics.slice(0, 6).map((item) => <MetricTile key={item.label} item={item} />)}
                 </div>
@@ -675,8 +675,8 @@ export function BranchDashboard() {
                 </div>
               </PanelCard>
 
-              <div className="order-1 grid min-w-0 gap-2">
-                <div className="grid min-w-0 items-stretch gap-2 md:grid-cols-2 md:[&>*]:min-w-0">
+              <div className="order-2 col-start-2 row-start-1 grid min-w-0 gap-2">
+                <div className="grid min-w-0 items-stretch gap-2 grid-cols-1 md:[&>*]:min-w-0">
                   <PanelCard className="h-full cursor-pointer" bodyClassName="p-3" title="信创改造" icon={<ShieldCheck className="size-4" />} onClick={() => setInnovationRanking((value) => !value)}>
                     <button type="button" onClick={(event) => { event.stopPropagation(); setInnovationRanking((value) => !value) }} className="w-full text-left" aria-label="切换信创改造完成度排行">
                     {innovationRanking ? <div className="py-1">
@@ -736,7 +736,7 @@ export function BranchDashboard() {
                   </PanelCard>
                 </div>
 
-                <PanelCard className="order-1 min-w-0" bodyClassName="min-w-0 p-1.5" title="科技人员数量" icon={<UsersRound className="size-4" />}>
+                <PanelCard className="order-1 col-start-1 row-start-1 min-w-0" bodyClassName="min-w-0 p-1.5" title="科技人员数量" icon={<UsersRound className="size-4" />}>
                   <div className="grid min-w-0 gap-2 xl:grid-cols-[minmax(0,0.72fr)_minmax(0,1.28fr)] xl:[&>*]:min-w-0">
                     <div className="space-y-2">
                       <div className="rounded-[10px] border border-border/80 bg-card/80 px-3 py-2 shadow-[inset_0_1px_0_oklch(0.72_0.15_220/6%)]">
