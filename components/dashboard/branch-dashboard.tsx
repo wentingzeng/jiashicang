@@ -511,6 +511,7 @@ function TechLevelPanel({ rows, selectedKey, onSelect }: { rows: Array<{ key: st
   const selected = rows.find((row) => row.key === selectedKey)?.data ?? rows[0]?.data
   const techLevel = selected?.techLevel ?? { level: "B类", score: 82, dimensions: [82, 78, 84, 80, 86, 76] }
   const points = techLevel.dimensions
+  const dimensionLabels = ["基础设施", "安全能力", "数据治理", "应用研发", "运维管理", "创新能力"]
   const radarPoints = points.map((value, index) => {
     const angle = (Math.PI * 2 * index) / points.length - Math.PI / 2
     const radius = 18 + value * 0.42
@@ -518,17 +519,24 @@ function TechLevelPanel({ rows, selectedKey, onSelect }: { rows: Array<{ key: st
   }).join(" ")
   return (
     <PanelCard title="分行科技分级" icon={<Gauge className="size-4" />}>
-      <div className="grid gap-4 lg:grid-cols-[minmax(190px,0.9fr)_minmax(0,1.1fr)] lg:items-center">
-        <div className="flex justify-center">
-          <svg viewBox="0 0 160 160" className="h-44 w-44" role="img" aria-label={`${selected?.label ?? "分行"}科技能力雷达图`}>
-            {[30, 50, 70].map((radius) => <polygon key={radius} points={points.map((_, index) => { const angle = (Math.PI * 2 * index) / points.length - Math.PI / 2; return `${80 + Math.cos(angle) * radius},${80 + Math.sin(angle) * radius}` }).join(" ")} fill="none" stroke="currentColor" className="text-border" strokeWidth="1" />)}
-            <polygon points={radarPoints} fill="rgba(45,194,190,0.28)" stroke="#2dc2be" strokeWidth="2" />
-            <text x="80" y="76" textAnchor="middle" className="fill-primary font-mono text-[20px] font-bold">{techLevel.score}</text>
-            <text x="80" y="92" textAnchor="middle" className="fill-muted-foreground text-[8px]">综合评分</text>
-          </svg>
+      <div className="grid gap-3">
+        <div className="rounded-lg border border-border/70 bg-background/40 p-2">
+          <div className="flex justify-center">
+            <svg viewBox="0 0 160 160" className="h-48 w-48" role="img" aria-label={`${selected?.label ?? "分行"}科技能力雷达图`}>
+              {[30, 50, 70].map((radius) => <polygon key={radius} points={points.map((_, index) => { const angle = (Math.PI * 2 * index) / points.length - Math.PI / 2; return `${80 + Math.cos(angle) * radius},${80 + Math.sin(angle) * radius}` }).join(" ")} fill="none" stroke="currentColor" className="text-border" strokeWidth="1" />)}
+              <polygon points={radarPoints} fill="rgba(45,194,190,0.28)" stroke="#2dc2be" strokeWidth="2" />
+              {dimensionLabels.map((label, index) => { const angle = (Math.PI * 2 * index) / points.length - Math.PI / 2; const x = 80 + Math.cos(angle) * 72; const y = 80 + Math.sin(angle) * 72; return <text key={label} x={x} y={y} textAnchor="middle" dominantBaseline="middle" className="fill-foreground text-[6px] font-medium">{label}</text> })}
+              <text x="80" y="76" textAnchor="middle" className="fill-primary font-mono text-[20px] font-bold">{techLevel.score}</text>
+              <text x="80" y="92" textAnchor="middle" className="fill-muted-foreground text-[8px]">综合评分</text>
+            </svg>
+          </div>
+          <div className="text-center text-[11px] text-muted-foreground">{selected?.label ?? "当前分行"} · {techLevel.level}</div>
         </div>
-        <div className="grid gap-2">
-          {rows.map(({ key, data }) => <button key={key} type="button" onClick={() => onSelect(key)} className={cn("flex items-center justify-between rounded-md border px-3 py-2 text-left transition", key === selectedKey ? "border-primary bg-primary/10" : "border-border/70 bg-card/60 hover:border-primary/50")}><span className="font-medium">{data.label}</span><span className="flex items-center gap-3"><span className="text-[11px] text-muted-foreground">{data.techLevel?.level ?? "B类"}</span><strong className="font-mono text-primary">{data.techLevel?.score ?? 82}</strong></span></button>)}
+        <div className="overflow-hidden rounded-lg border border-border/70">
+          <Table className="text-[11px]">
+            <TableHeader className="bg-primary/10"><TableRow><TableHead>分行名称</TableHead><TableHead>科技等级</TableHead><TableHead className="text-right">综合评分</TableHead></TableRow></TableHeader>
+            <TableBody>{rows.map(({ key, data }) => <TableRow key={key} onClick={() => onSelect(key)} className={cn("cursor-pointer", key === selectedKey && "bg-primary/10") }><TableCell className="py-2 font-medium">{data.label}</TableCell><TableCell className="py-2">{data.techLevel?.level ?? "B类"}</TableCell><TableCell className="py-2 text-right font-mono font-bold text-primary">{data.techLevel?.score ?? 82}</TableCell></TableRow>)}</TableBody>
+          </Table>
         </div>
       </div>
     </PanelCard>
@@ -618,9 +626,10 @@ export function BranchDashboard() {
               <SelectBox label="请选择分行" value={selectedBranch} onChange={setSelectedBranch} options={branchOptions} />
             </div>
 
-            <TechLevelPanel rows={techRows} selectedKey={activeTechKey} onSelect={setTechSelectedKey} />
+            <div className="grid min-w-0 items-stretch gap-3 lg:grid-cols-[minmax(280px,0.42fr)_minmax(0,0.58fr)]">
+              <TechLevelPanel rows={techRows} selectedKey={activeTechKey} onSelect={setTechSelectedKey} />
 
-            <div className="grid min-w-0 gap-3 xl:grid-cols-[minmax(0,0.75fr)_minmax(0,1.25fr)] xl:items-start">
+              <div className="grid min-w-0 gap-3 xl:grid-cols-1 xl:items-start">
               <PanelCard className="h-full" title="运维指标" icon={<Gauge className="size-4" />}>
                 <div className="grid gap-y-1">
                   <div className="grid gap-x-2 md:grid-cols-3">
@@ -808,6 +817,7 @@ export function BranchDashboard() {
                     </div>
                   </div>
                 </PanelCard>
+              </div>
               </div>
             </div>
           </div>
