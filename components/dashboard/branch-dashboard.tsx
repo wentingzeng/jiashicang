@@ -520,16 +520,13 @@ function TechLevelPanel({ rows, selectedKey, onSelect }: { rows: Array<{ key: st
   return (
     <PanelCard title="分行科技分级" icon={<Gauge className="size-4" />}>
       <div className="grid gap-3">
-        <div className="grid grid-cols-3 gap-2">
-          {[{ label: "3A", key: "level-3" }, { label: "2A", key: "level-2" }, { label: "1A", key: "level-1" }].map(({ label, key }) => {
-            const count = rows.filter(({ key: rowKey }) => branchGrades[rowKey] === key).length
-            return (
-              <div key={label} className="rounded-lg border border-border/70 bg-background/40 px-2 py-1.5 text-center">
-                <div className="font-mono text-lg font-black leading-none text-primary">{count}</div>
-                <div className="mt-1 text-[10px] text-muted-foreground">{label}分行</div>
-              </div>
-            )
-          })}
+        <div className="grid grid-cols-6 gap-1.5">
+          {[{ label: "3A", count: 2 }, { label: "3B", count: 2 }, { label: "3C", count: 1 }, { label: "2A", count: 2 }, { label: "2B", count: 2 }, { label: "2C", count: 1 }].map(({ label, count }) => (
+            <div key={label} className="rounded-lg border border-border/70 bg-background/40 px-1 py-1.5 text-center">
+              <div className="font-mono text-base font-black leading-none text-primary">{count}</div>
+              <div className="mt-1 text-[10px] text-muted-foreground">{label}</div>
+            </div>
+          ))}
         </div>
         <div className="rounded-lg border border-border/70 bg-background/40 p-2">
           <div className="flex justify-center">
@@ -643,7 +640,7 @@ export function BranchDashboard() {
               <div className="grid min-w-0 gap-3 xl:grid-cols-1 xl:items-start">
               <PanelCard className="order-3 h-full" title="运维指标" icon={<Gauge className="size-4" />}>
                 <div className="grid grid-cols-2 gap-2 md:grid-cols-4">
-                  {current.operationMetrics.map((item) => <MetricTile key={item.label} item={item} />)}
+                  {current.operationMetrics.slice(0, 6).map((item) => <MetricTile key={item.label} item={item} />)}
                 </div>
 
                 <div className="mt-2 border-t border-dashed border-border/70 pt-3">
@@ -780,15 +777,15 @@ export function BranchDashboard() {
                             {personnelRows.map((row, index) => (
                               <TableRow key={row.name} className={cn("border-border/60 hover:bg-primary/5", index % 2 === 1 && "bg-primary/3")}>
                                 <TableCell className="px-1.5 py-1 font-medium text-[10px] text-foreground/90">{row.name}</TableCell>
-                                <TableCell className="px-3 py-3 text-center font-mono text-foreground/80">{row.development}</TableCell>
-                                <TableCell className="px-3 py-3 text-center font-mono text-foreground/80">{row.operations}</TableCell>
-                                <TableCell className="px-3 py-3 text-center font-mono text-foreground/80">{row.architecture}</TableCell>
-                                <TableCell className="px-3 py-3 text-center font-mono text-foreground/80">{row.innovation}</TableCell>
-                                <TableCell className="px-3 py-3 text-center font-mono text-foreground/80">{row.data}</TableCell>
-                                <TableCell className="px-3 py-3 text-center font-mono text-foreground/80">{row.security}</TableCell>
-                                <TableCell className="px-3 py-3 text-center font-mono text-foreground/80">{row.management}</TableCell>
-                                <TableCell className="px-3 py-3 text-center font-mono text-foreground/80">{Math.max(row.total - (row.development + row.operations + row.architecture + row.innovation + row.data + row.security + row.management), 0)}</TableCell>
-                                <TableCell className="px-3 py-3 text-center">
+                                <TableCell className="px-1.5 py-1 text-center font-mono text-foreground/80">{row.development}</TableCell>
+                                <TableCell className="px-1.5 py-1 text-center font-mono text-foreground/80">{row.operations}</TableCell>
+                                <TableCell className="px-1.5 py-1 text-center font-mono text-foreground/80">{row.architecture}</TableCell>
+                                <TableCell className="px-1.5 py-1 text-center font-mono text-foreground/80">{row.innovation}</TableCell>
+                                <TableCell className="px-1.5 py-1 text-center font-mono text-foreground/80">{row.data}</TableCell>
+                                <TableCell className="px-1.5 py-1 text-center font-mono text-foreground/80">{row.security}</TableCell>
+                                <TableCell className="px-1.5 py-1 text-center font-mono text-foreground/80">{row.management}</TableCell>
+                                <TableCell className="px-1.5 py-1 text-center font-mono text-foreground/80">{Math.max(row.total - (row.development + row.operations + row.architecture + row.innovation + row.data + row.security + row.management), 0)}</TableCell>
+                                <TableCell className="px-1.5 py-1 text-center">
                                   <span className="inline-flex min-w-[2.5rem] justify-center rounded-md bg-primary/10 px-2.5 py-1 font-mono text-[12px] font-bold text-primary">{row.total}</span>
                                 </TableCell>
                               </TableRow>
