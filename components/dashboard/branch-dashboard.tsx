@@ -520,6 +520,17 @@ function TechLevelPanel({ rows, selectedKey, onSelect }: { rows: Array<{ key: st
   return (
     <PanelCard title="分行科技分级" icon={<Gauge className="size-4" />}>
       <div className="grid gap-3">
+        <div className="grid grid-cols-3 gap-2">
+          {[{ label: "3A", key: "level-3" }, { label: "2A", key: "level-2" }, { label: "1A", key: "level-1" }].map(({ label, key }) => {
+            const count = rows.filter(({ key: rowKey }) => branchGrades[rowKey] === key).length
+            return (
+              <div key={label} className="rounded-lg border border-border/70 bg-background/40 px-2 py-1.5 text-center">
+                <div className="font-mono text-lg font-black leading-none text-primary">{count}</div>
+                <div className="mt-1 text-[10px] text-muted-foreground">{label}分行</div>
+              </div>
+            )
+          })}
+        </div>
         <div className="rounded-lg border border-border/70 bg-background/40 p-2">
           <div className="flex justify-center">
             <svg viewBox="0 0 160 160" className="h-48 w-48" role="img" aria-label={`${selected?.label ?? "分行"}科技能力雷达图`}>
@@ -532,8 +543,8 @@ function TechLevelPanel({ rows, selectedKey, onSelect }: { rows: Array<{ key: st
           </div>
           <div className="text-center text-[11px] text-muted-foreground">{selected?.label ?? "当前分行"} · {techLevel.level}</div>
         </div>
-        <div className="overflow-hidden rounded-lg border border-border/70">
-          <Table className="text-[11px]">
+        <div className="max-h-[268px] overflow-auto rounded-lg border border-border/70">
+          <Table className="min-w-[760px] text-[11px]">
             <TableHeader className="bg-primary/10"><TableRow><TableHead>分行名称</TableHead><TableHead>科技等级</TableHead><TableHead className="text-center">基础设施</TableHead><TableHead className="text-center">安全能力</TableHead><TableHead className="text-center">数据治理</TableHead><TableHead className="text-center">应用研发</TableHead><TableHead className="text-center">运维管理</TableHead><TableHead className="text-right">综合评分</TableHead></TableRow></TableHeader>
             <TableBody>{rows.map(({ key, data }) => <TableRow key={key} onClick={() => onSelect(key)} className={cn("cursor-pointer", key === selectedKey && "bg-primary/10") }><TableCell className="whitespace-nowrap py-2 font-medium">{data.label}</TableCell><TableCell className="whitespace-nowrap py-2">{data.techLevel?.level ?? "B类"}</TableCell>{(data.techLevel?.dimensions ?? [82, 78, 84, 80, 86]).slice(0, 5).map((value, index) => <TableCell key={`${key}-${index}`} className="py-2 text-center font-mono text-foreground/80">{value}</TableCell>)}<TableCell className="py-2 text-right font-mono font-bold text-primary">{data.techLevel?.score ?? 82}</TableCell></TableRow>)}</TableBody>
           </Table>
@@ -652,7 +663,7 @@ export function BranchDashboard() {
                         <div className="relative h-[98px] w-[122px] shrink-0"><svg viewBox="0 0 120 120" className="h-full w-full -rotate-90"><circle cx="60" cy="60" r="42" fill="none" stroke="#d9e1ee" strokeWidth="10" /><circle cx="60" cy="60" r="42" fill="none" stroke="#2456c7" strokeWidth="10" strokeLinecap="round" strokeDasharray="259 300" /><circle cx="60" cy="60" r="42" fill="none" stroke="#2dc2be" strokeWidth="10" strokeLinecap="round" strokeDasharray="41 300" strokeDashoffset="259" /></svg><div className="absolute inset-0 flex flex-col items-center justify-center text-center"><div className="font-mono text-[20px] font-black text-primary">{detailRows.length}</div><div className="text-[10px] text-slate-500">中心机房</div></div></div>
                         <div className="grid gap-2 text-[12px] text-foreground/75"><div><span className="mr-2 inline-flex size-2 rounded-full bg-[#2456c7]" />自建 <span className="font-mono text-primary">{Math.max(0, detailRows.length - 1)}</span></div><div><span className="mr-2 inline-flex size-2 rounded-full bg-[#2dc2be]" />租赁 <span className="font-mono text-primary">{detailRows.length ? 1 : 0}</span></div></div>
                       </button>}
-                      <div className="mt-3 flex items-center justify-between rounded-[10px] border border-border/70 bg-background/70 px-3 py-2"><span className="text-[14px] font-bold text-muted-foreground">机柜数</span><span className="font-mono text-[14px] font-black text-primary">{(current.personnelTotal * 2).toLocaleString()} <small className="text-[11px] font-normal text-muted-foreground">个</small></span></div>
+                      <div className="mt-3 flex items-center justify-between rounded-[10px] border border-border/70 bg-background/70 px-3 py-2"><span className="text-[14px] font-bold text-muted-foreground">机���数</span><span className="font-mono text-[14px] font-black text-primary">{(current.personnelTotal * 2).toLocaleString()} <small className="text-[11px] font-normal text-muted-foreground">个</small></span></div>
                     </div>
 
                     <div onClick={(event) => { if ((event.target as HTMLElement).closest("button")) return; setDisasterDetails((value) => !value) }} className="cursor-pointer grid gap-2 rounded-[12px] border border-border/80 bg-card/80 px-3 py-3 shadow-[inset_0_1px_0_oklch(0.72_0.15_220/6%)]">
@@ -728,7 +739,7 @@ export function BranchDashboard() {
                   </PanelCard>
                 </div>
 
-                <PanelCard className="order-2 min-w-0 h-full" bodyClassName="min-w-0 p-2" title="科技人员数量" icon={<UsersRound className="size-4" />}>
+                <PanelCard className="order-1 min-w-0" bodyClassName="min-w-0 p-1.5" title="科技人员数量" icon={<UsersRound className="size-4" />}>
                   <div className="grid min-w-0 gap-2 xl:grid-cols-[minmax(0,0.72fr)_minmax(0,1.28fr)] xl:[&>*]:min-w-0">
                     <div className="space-y-2">
                       <div className="rounded-[10px] border border-border/80 bg-card/80 px-3 py-2 shadow-[inset_0_1px_0_oklch(0.72_0.15_220/6%)]">
@@ -749,26 +760,26 @@ export function BranchDashboard() {
                     </div>
 
 <div className="min-w-0 overflow-hidden rounded-[12px] border border-border/80 bg-card/80 shadow-[inset_0_1px_0_oklch(0.72_0.15_220/6%)]">
-	<div className="block w-full min-w-0 max-w-full overflow-x-auto overscroll-x-contain [WebkitOverflowScrolling:touch]">
+	<div className="block max-h-[238px] w-full min-w-0 max-w-full overflow-x-auto overflow-y-auto overscroll-contain [WebkitOverflowScrolling:touch]">
                           <Table className="w-full min-w-[700px] table-fixed text-[10px]">
                           <TableHeader className="bg-gradient-to-r from-primary via-primary to-accent">
                             <TableRow className="border-transparent hover:bg-transparent">
                               <TableHead className="px-2 py-2 text-[10px] font-semibold text-foreground">分行名称</TableHead>
-                              <TableHead className="px-3 py-3 text-center text-[12px] font-semibold text-foreground">研发</TableHead>
-                              <TableHead className="px-3 py-3 text-center text-[12px] font-semibold text-foreground">运维</TableHead>
-                              <TableHead className="px-3 py-3 text-center text-[12px] font-semibold text-foreground">架构</TableHead>
-                              <TableHead className="px-3 py-3 text-center text-[12px] font-semibold text-foreground">创新</TableHead>
-                              <TableHead className="px-3 py-3 text-center text-[12px] font-semibold text-foreground">数据</TableHead>
-                              <TableHead className="px-3 py-3 text-center text-[12px] font-semibold text-foreground">安全</TableHead>
-                              <TableHead className="px-3 py-3 text-center text-[12px] font-semibold text-foreground">管理</TableHead>
-                              <TableHead className="px-3 py-3 text-center text-[12px] font-semibold text-foreground">干部</TableHead>
-                              <TableHead className="px-3 py-3 text-center text-[12px] font-semibold text-foreground">总数</TableHead>
+                              <TableHead className="px-1.5 py-1 text-center text-[10px] font-semibold text-foreground">研发</TableHead>
+                              <TableHead className="px-1.5 py-1 text-center text-[10px] font-semibold text-foreground">运维</TableHead>
+                              <TableHead className="px-1.5 py-1 text-center text-[10px] font-semibold text-foreground">架构</TableHead>
+                              <TableHead className="px-1.5 py-1 text-center text-[10px] font-semibold text-foreground">创新</TableHead>
+                              <TableHead className="px-1.5 py-1 text-center text-[10px] font-semibold text-foreground">数据</TableHead>
+                              <TableHead className="px-1.5 py-1 text-center text-[10px] font-semibold text-foreground">安全</TableHead>
+                              <TableHead className="px-1.5 py-1 text-center text-[10px] font-semibold text-foreground">管理</TableHead>
+                              <TableHead className="px-1.5 py-1 text-center text-[10px] font-semibold text-foreground">干部</TableHead>
+                              <TableHead className="px-1.5 py-1 text-center text-[10px] font-semibold text-foreground">总数</TableHead>
                             </TableRow>
                           </TableHeader>
                           <TableBody>
                             {personnelRows.map((row, index) => (
                               <TableRow key={row.name} className={cn("border-border/60 hover:bg-primary/5", index % 2 === 1 && "bg-primary/3")}>
-                                <TableCell className="px-3 py-3 font-medium text-foreground/90">{row.name}</TableCell>
+                                <TableCell className="px-1.5 py-1 font-medium text-[10px] text-foreground/90">{row.name}</TableCell>
                                 <TableCell className="px-3 py-3 text-center font-mono text-foreground/80">{row.development}</TableCell>
                                 <TableCell className="px-3 py-3 text-center font-mono text-foreground/80">{row.operations}</TableCell>
                                 <TableCell className="px-3 py-3 text-center font-mono text-foreground/80">{row.architecture}</TableCell>
