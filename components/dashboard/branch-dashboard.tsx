@@ -918,7 +918,7 @@ export function BranchDashboard() {
                           <div className="h-full rounded-full bg-gradient-to-r from-primary to-accent" style={{ width: `${Math.min(100, Math.max(12, Number(current.personnelTotal) / Math.max(...personnelRows.map((row) => row.total), 1) * 100))}%` }} />
                         </div>
                       </div>
-                      <div className="grid gap-3">
+                      <div className="grid gap-1.5">
                         {current.personnelRoles.map((role) => (
                           <RoleBar
                             key={role.label}
