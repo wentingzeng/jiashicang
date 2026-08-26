@@ -312,7 +312,7 @@ function aggregateBranchData(keys: string[]): BranchData {
   const tableRows = rows.map(toBranchRow)
   return {
     ...base,
-    label: keys.length === 1 ? base.label : "筛选结���汇总",
+    label: keys.length === 1 ? base.label : "筛选结����汇总",
     quickStats: base.quickStats.map((stat, index) => ({ ...stat, value: sumBy(rows, (row) => row.quickStats[index]?.value ?? 0) })),
     operationMetrics,
     innovation: {
@@ -494,12 +494,14 @@ function RoleBar({ label, value, tone }: { label: string; value: number; tone: M
         : "bg-gradient-to-r from-primary to-primary/80"
 
   return (
-  <div className="flex items-center gap-2 text-[11px]">
-  <span className="w-14 shrink-0 truncate text-slate-700">{label}</span>
-  <div className="h-2 flex-1 overflow-hidden rounded-full bg-[#e7edf8]">
+  <div className="space-y-1 text-[11px]">
+  <div className="flex items-center justify-between gap-2">
+  <span className="truncate text-slate-700">{label}</span>
+  <span className="shrink-0 font-mono font-bold text-primary">{value}</span>
+  </div>
+  <div className="h-2 overflow-hidden rounded-full bg-[#e7edf8]">
   <div className={cn("h-full rounded-full", fill)} style={{ width: `${width}%` }} />
   </div>
-  <span className="w-9 shrink-0 text-right font-mono font-bold text-primary">{value}</span>
   </div>
   )
 }
@@ -540,7 +542,7 @@ function TechLevelPanel({ rows, selectedKey, onSelect }: { rows: Array<{ key: st
   const radarPoints = vertexCoords.map((point) => `${point.x},${point.y}`).join(" ")
 
   return (
-    <PanelCard title="分行科技分级" icon={<Gauge className="size-4" />}>
+    <PanelCard title="分���科技分级" icon={<Gauge className="size-4" />}>
       <div className="grid gap-3">
         <div className="grid grid-cols-3 gap-1.5">
   {[{ label: "3A", count: 1 }, { label: "3B", count: 1 }, { label: "3C", count: 1 }, { label: "2A", count: 1 }, { label: "2B", count: 1 }, { label: "2C", count: 1 }, { label: "1A", count: 1 }, { label: "1B", count: 1 }, { label: "1C", count: 2 }].map(({ label, count }) => (
