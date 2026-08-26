@@ -312,7 +312,7 @@ function aggregateBranchData(keys: string[]): BranchData {
   const tableRows = rows.map(toBranchRow)
   return {
     ...base,
-    label: keys.length === 1 ? base.label : "筛选结���������汇总",
+    label: keys.length === 1 ? base.label : "筛选结����������汇总",
     quickStats: base.quickStats.map((stat, index) => ({ ...stat, value: sumBy(rows, (row) => row.quickStats[index]?.value ?? 0) })),
     operationMetrics,
     innovation: {
@@ -740,12 +740,12 @@ export function BranchDashboard() {
   // 左侧分行科技分级是独立总览，始终展示全部分行，不受等级或分行筛选影响。
   const techRows = Object.keys(branchData).map((key) => ({ key, data: branchData[key] }))
   const activeTechKey = techRows.some((row) => row.key === techSelectedKey) ? techSelectedKey : "all"
-  // Scale each role against the largest value in the currently filtered branches.
-  // This keeps the selected scope readable while preserving relative differences.
-  const personnelRoleMaxima = filteredKeys.reduce<number[]>(
-    (maxima, key) =>
-      (branchData[key]?.personnelRoles ?? []).map((role, index) => Math.max(maxima[index] ?? 0, role.value)),
-    [],
+  // Use one shared maximum from the active filter scope so every role is comparable.
+  // For a single branch, this is that branch's largest role count; for a group,
+  // it is the largest role count in the aggregated filtered data.
+  const personnelRoleMax = Math.max(
+    1,
+    ...filteredKeys.flatMap((key) => branchData[key]?.personnelRoles.map((role) => role.value) ?? []),
   )
 
   return (
@@ -885,7 +885,7 @@ export function BranchDashboard() {
                             label={role.label}
                             value={role.value}
                             tone={role.tone}
-                            maxValue={personnelRoleMaxima[index] ?? role.value}
+                            maxValue={personnelRoleMax}
                           />
                         ))}
                       </div>
