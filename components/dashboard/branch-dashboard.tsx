@@ -46,6 +46,61 @@ type BranchData = {
   tableRows: RowItem[]
 }
 
+type DashboardApiResponse = {
+  personnel?: { total?: number; roles?: Record<string, number | null> }
+  innovation?: { total?: number; completed?: number; uncompleted?: number }
+  cloud?: { total?: number; completed?: number; uncompleted?: number }
+  operation?: Record<string, number | null>
+}
+
+const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL ?? "http://localhost:8080"
+
+function toNumber(value: number | null | undefined) {
+  return typeof value === "number" && Number.isFinite(value) ? value : 0
+}
+
+function applyDashboardApiData(base: BranchData, api: DashboardApiResponse): BranchData {
+  const roles = api.personnel?.roles ?? {}
+  const roleMap: Array<[string, string, MetricTone]> = [
+    ["development", "研发岗位", "primary"],
+    ["operations", "运维岗位", "accent"],
+    ["data", "数据岗位", "chart-4"],
+    ["management", "管理岗位", "chart-4"],
+    ["architecture", "架构岗位", "primary"],
+    ["security", "安全岗位", "accent"],
+    ["technologyManagementCadre", "科技管理干部", "chart-4"],
+    ["innovation", "创新岗位", "primary"],
+  ]
+  const personnelRoles = roleMap.map(([key, label, tone]) => ({ label, value: toNumber(roles[key]), tone }))
+  const operationLabels: Array<[string, string, string, MetricTone]> = [
+    ["parentSystemCount", "父系统数", "个", "primary"],
+    ["childSystemCount", "子系统数", "个", "accent"],
+    ["serverHostCount", "服务器主机数", "台", "primary"],
+    ["networkDeviceCount", "网络设备数", "台", "accent"],
+    ["officeTerminalCount", "分行办公终端数", "台", "chart-4"],
+    ["dedicatedLineCount", "专线数", "条", "chart-4"],
+    ["storageGb", "存储数", "GB", "primary"],
+    ["cpuCoreCount", "CPU数", "核", "accent"],
+  ]
+  return {
+    ...base,
+    personnelTotal: toNumber(api.personnel?.total),
+    personnelRoles,
+    operationMetrics: operationLabels.map(([key, label, unit, tone]) => ({ label, unit, tone, value: toNumber(api.operation?.[key]) })),
+    innovation: {
+      ...base.innovation,
+      value: toNumber(api.innovation?.total),
+      done: toNumber(api.innovation?.completed),
+      remaining: toNumber(api.innovation?.uncompleted),
+    },
+    cloud: {
+      ...base.cloud,
+      value: toNumber(api.cloud?.completed),
+      total: toNumber(api.cloud?.total),
+    },
+  }
+}
+
 const gradeOptions = [
   { key: "all", label: "全部等级" },
   { key: "level-1", label: "一级分行" },
@@ -716,6 +771,8 @@ export function BranchDashboard() {
   const [personnelPage, setPersonnelPage] = useState(1)
   const [personnelDetails, setPersonnelDetails] = useState(false)
   const [techSelectedKey, setTechSelectedKey] = useState("all")
+  const [dashboardApiData, setDashboardApiData] = useState<DashboardApiResponse | null>(null)
+  const [dashboardApiError, setDashboardApiError] = useState(false)
   const personnelPageSize = 6
 
   useEffect(() => {
@@ -729,6 +786,30 @@ export function BranchDashboard() {
     setTechSelectedKey("all")
   }, [selectedBranch])
 
+  useEffect(() => {
+    const controller = new AbortController()
+    const levelLabel = gradeOptions.find((option) => option.key === selectedGrade)?.label ?? "全部等级"
+    const branchLabel = branchOptions.find((option) => option.key === selectedBranch)?.label ?? "全部分行"
+    const params = new URLSearchParams()
+    if (selectedGrade !== "all") params.set("level", levelLabel.replace("一级", "一").replace("二级", "二").replace("三级", "三"))
+    if (selectedBranch !== "all") params.set("branchName", branchLabel)
+
+    setDashboardApiError(false)
+    fetch(`${API_BASE_URL}/api/branches/dashboard?${params.toString()}`, { signal: controller.signal })
+      .then((response) => {
+        if (!response.ok) throw new Error(`Dashboard API ${response.status}`)
+        return response.json() as Promise<DashboardApiResponse>
+      })
+      .then((data) => setDashboardApiData(data))
+      .catch((error: unknown) => {
+        if (error instanceof DOMException && error.name === "AbortError") return
+        setDashboardApiData(null)
+        setDashboardApiError(true)
+      })
+
+    return () => controller.abort()
+  }, [selectedGrade, selectedBranch])
+
   const filteredKeys = Object.keys(branchData).filter((key) => {
     if (selectedBranch !== "all") return key === selectedBranch
     return selectedGrade === "all" || branchGrades[key] === selectedGrade
@@ -739,7 +820,10 @@ export function BranchDashboard() {
   const currentBase = selectedData
     ? { ...selectedData, tableRows: [toBranchRow(selectedData)] }
     : aggregateBranchData(filteredKeys)
-  const current = { ...currentBase, personnelRoles: completePersonnelRoles(currentBase) }
+  const current = {
+    ...(dashboardApiData ? applyDashboardApiData(currentBase, dashboardApiData) : currentBase),
+    personnelRoles: completePersonnelRoles(dashboardApiData ? applyDashboardApiData(currentBase, dashboardApiData) : currentBase),
+  }
   const personnelPageCount = Math.max(1, Math.ceil(current.tableRows.length / personnelPageSize))
   const personnelRows = current.tableRows.slice(
     (personnelPage - 1) * personnelPageSize,
