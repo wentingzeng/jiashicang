@@ -790,6 +790,7 @@ export function BranchDashboard() {
                   </div>
 
                   <div onClick={(event) => { if ((event.target as HTMLElement).closest("button")) return; setRoomDetails((value) => !value) }} className="flex h-[210px] cursor-pointer flex-col overflow-hidden rounded-[12px] border border-border/80 bg-card/80 px-3 py-2 shadow-[inset_0_1px_0_oklch(0.72_0.15_220/6%)] lg:ml-2">
+                    <div className="mb-1 flex items-center justify-between"><span className="text-[14px] font-bold text-foreground">中心机房</span><span className="text-[10px] text-muted-foreground">建设模式</span></div>
                     <div className="flex min-h-7 items-center text-[12px] leading-4 text-muted-foreground">点击查看全部分行中心机房建设模式及详情。</div>
                     <button type="button" onClick={() => setRoomDetails(!roomDetails)} className="mb-1.5 flex min-h-7 w-full items-center gap-2 text-left text-[12px] font-semibold leading-4 text-slate-700 hover:text-primary">
                       <span className="inline-flex size-2 rounded-full bg-[#2456c7]" />共{detailRows.length}家分行纳入当前筛选范围
@@ -807,7 +808,8 @@ export function BranchDashboard() {
                   </div>
 
                   <div onClick={(event) => { if ((event.target as HTMLElement).closest("button")) return; setDisasterDetails((value) => !value) }} className="flex h-[210px] cursor-pointer flex-col gap-1.5 overflow-hidden rounded-[12px] border border-border/80 bg-card/80 px-3 py-2 shadow-[inset_0_1px_0_oklch(0.72_0.15_220/6%)] lg:ml-2">
-                    <div className="text-[12px] text-muted-foreground">点击查看{selectedScopeLabel}中心机房建设模式及详情。</div>
+                    <div className="mb-1 flex items-center justify-between"><span className="text-[14px] font-bold text-foreground">灾备机房</span><span className="text-[10px] text-muted-foreground">配套情况</span></div>
+                    <div className="text-[12px] text-muted-foreground">点击查看{selectedScopeLabel}灾备机房建设模式及详情。</div>
                     <button type="button" onClick={() => setDisasterDetails(!disasterDetails)} className="mb-1.5 min-h-7 w-full text-left text-[12px] font-semibold leading-4 text-slate-700 transition-colors hover:text-primary">
                       <span className="mr-2 inline-flex size-2 rounded-full bg-[#2dc2be]" />其中{detailRows.length}家分行配备灾备机房
                     </button>
