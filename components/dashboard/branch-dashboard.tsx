@@ -876,16 +876,24 @@ export function BranchDashboard() {
 
               <PanelCard className="order-1 col-start-1 row-start-1 row-span-2 h-[512px] min-w-0 cursor-pointer" bodyClassName="min-w-0 p-1.5" title="科技人员数量" icon={<UsersRound className="size-4" />} onClick={() => setPersonnelDetails((value) => !value)}>
                   <div className="grid min-w-0 gap-2">
-                    {!personnelDetails && <div className="rounded-[10px] border border-border/80 bg-card/80 px-3 py-2 shadow-[inset_0_1px_0_oklch(0.72_0.15_220/6%)]">
-                      <div className="flex items-center justify-between gap-2">
-                        <span className="text-[12px] text-foreground/80">科技人员总数</span>
-                        <span className="font-mono text-[13px] font-black leading-none text-primary">
-                          {current.personnelTotal}
-                          <span className="ml-1 text-[12px] font-normal text-muted-foreground">人</span>
-                        </span>
+                    {!personnelDetails && <div className="grid gap-2 rounded-[10px] border border-border/80 bg-card/80 px-3 py-2.5 shadow-[inset_0_1px_0_oklch(0.72_0.15_220/6%)]">
+                      <div className="relative overflow-hidden rounded-[10px] border border-primary/20 bg-gradient-to-br from-primary/10 via-card to-accent/10 px-4 py-3">
+                        <div className="flex items-start justify-between gap-4">
+                          <div>
+                            <div className="text-[12px] font-medium tracking-wide text-muted-foreground">当前筛选科技人员</div>
+                            <div className="mt-1 flex items-baseline gap-1.5">
+                              <span className="font-mono text-[32px] font-black leading-none tracking-tight text-primary">{current.personnelTotal}</span>
+                              <span className="text-[14px] font-semibold text-primary/80">人</span>
+                            </div>
+                          </div>
+                          <div className="mt-1 rounded-full bg-primary/10 px-2 py-1 text-[11px] font-semibold text-primary">人员总览</div>
+                        </div>
+                        <div className="mt-2 h-1.5 overflow-hidden rounded-full bg-primary/10">
+                          <div className="h-full rounded-full bg-gradient-to-r from-primary to-accent" style={{ width: `${Math.min(100, Math.max(12, Number(current.personnelTotal) / Math.max(...personnelRows.map((row) => row.total), 1) * 100))}%` }} />
+                        </div>
                       </div>
-                      <div className="mt-1.5 grid gap-1">
-                        {current.personnelRoles.map((role, index) => (
+                      <div className="grid gap-1">
+                        {current.personnelRoles.map((role) => (
                           <RoleBar
                             key={role.label}
                             label={role.label}
