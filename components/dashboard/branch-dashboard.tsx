@@ -544,21 +544,51 @@ function TechLevelPanel({ rows, selectedKey, onSelect }: { rows: Array<{ key: st
   return (
 <PanelCard title="分行科技分级" icon={<Gauge className="size-4" />}>
   <div className="grid gap-3">
-        <div className="grid grid-cols-3 gap-1.5">
-  {[
-            { label: "3A", count: 1, tone: "border-primary/25 bg-primary/10 text-primary" },
-            { label: "3B", count: 1, tone: "border-primary/25 bg-primary/10 text-primary" },
-            { label: "3C", count: 1, tone: "border-primary/25 bg-primary/10 text-primary" },
-            { label: "2A", count: 1, tone: "border-accent/30 bg-accent/10 text-accent-foreground" },
-            { label: "2B", count: 1, tone: "border-accent/30 bg-accent/10 text-accent-foreground" },
-            { label: "2C", count: 1, tone: "border-accent/30 bg-accent/10 text-accent-foreground" },
-            { label: "1A", count: 1, tone: "border-chart-4/30 bg-chart-4/10 text-chart-4" },
-            { label: "1B", count: 1, tone: "border-chart-4/30 bg-chart-4/10 text-chart-4" },
-            { label: "1C", count: 2, tone: "border-chart-4/30 bg-chart-4/10 text-chart-4" },
-          ].map(({ label, count, tone }) => (
-            <div key={label} className={cn("flex items-center justify-between rounded-lg border px-2 py-1.5 shadow-sm", tone)}>
-              <span className="inline-flex h-6 min-w-8 items-center justify-center rounded-md bg-card px-1.5 font-mono text-[11px] font-black ring-1 ring-current/20">{label}</span>
-              <span className="font-mono text-base font-black leading-none text-foreground">{count}</span>
+        <div className="grid grid-cols-3 gap-2">
+          {[
+            {
+              tier: "3级",
+              panel: "border-primary/20 bg-primary/[0.06]",
+              chip: "bg-primary text-primary-foreground",
+              items: [
+                { label: "3A", count: 1 },
+                { label: "3B", count: 1 },
+                { label: "3C", count: 1 },
+              ],
+            },
+            {
+              tier: "2级",
+              panel: "border-accent/25 bg-accent/[0.08]",
+              chip: "bg-accent text-accent-foreground",
+              items: [
+                { label: "2A", count: 1 },
+                { label: "2B", count: 1 },
+                { label: "2C", count: 1 },
+              ],
+            },
+            {
+              tier: "1级",
+              panel: "border-chart-4/25 bg-chart-4/[0.08]",
+              chip: "bg-chart-4 text-background",
+              items: [
+                { label: "1A", count: 1 },
+                { label: "1B", count: 1 },
+                { label: "1C", count: 2 },
+              ],
+            },
+          ].map(({ tier, panel, chip, items }) => (
+            <div key={tier} className={cn("rounded-lg border p-2", panel)}>
+              <div className="mb-1.5 text-center text-[11px] font-semibold text-muted-foreground">{tier}</div>
+              <div className="flex flex-col gap-1">
+                {items.map(({ label, count }) => (
+                  <div key={label} className="flex items-center justify-between rounded-md bg-card px-1.5 py-1 shadow-sm">
+                    <span className={cn("inline-flex h-5 min-w-8 items-center justify-center rounded-md px-1.5 font-mono text-[10px] font-bold", chip)}>
+                      {label}
+                    </span>
+                    <span className="font-mono text-sm font-black leading-none text-foreground">{count}</span>
+                  </div>
+                ))}
+              </div>
             </div>
           ))}
         </div>
