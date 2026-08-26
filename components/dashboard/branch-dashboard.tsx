@@ -29,6 +29,7 @@ type RowItem = {
   data: number
   security: number
   management: number
+  managementCadre: number
   total: number
 }
 
@@ -291,14 +292,19 @@ function sumBy<T>(items: T[], getValue: (item: T) => number) {
   return items.reduce((sum, item) => sum + getValue(item), 0)
 }
 
+  function getPersonnelRole(branch: BranchData, label: string) {
+  return branch.personnelRoles.find((role) => role.label === label)?.value ?? 0
+  }
+
   function toBranchRow(branch: BranchData): RowItem {
-  const development = branch.personnelRoles[0]?.value ?? 0
-  const operations = branch.personnelRoles[1]?.value ?? 0
-  const architecture = branch.personnelRoles[3]?.value ?? 0
-  const innovation = branch.personnelRoles[6]?.value ?? 0
-  const data = branch.personnelRoles[2]?.value ?? 0
-  const security = branch.personnelRoles[4]?.value ?? 0
-  const management = Math.max(0, branch.personnelTotal - development - operations - architecture - innovation - data - security)
+  const development = getPersonnelRole(branch, "研发岗位")
+  const operations = getPersonnelRole(branch, "运维岗位")
+  const data = getPersonnelRole(branch, "数据岗位")
+  const management = getPersonnelRole(branch, "管理岗位") || Math.max(0, branch.personnelTotal - branch.personnelRoles.reduce((sum, role) => sum + role.value, 0))
+  const architecture = getPersonnelRole(branch, "架构岗位")
+  const security = getPersonnelRole(branch, "安全岗位")
+  const managementCadre = getPersonnelRole(branch, "科技管理干部")
+  const innovation = getPersonnelRole(branch, "创新岗位")
   return {
   name: branch.label,
   development,
@@ -308,21 +314,30 @@ function sumBy<T>(items: T[], getValue: (item: T) => number) {
   data,
   security,
   management,
-  total: development + operations + architecture + innovation + data + security + management,
+  managementCadre,
+  total: development + operations + data + management + architecture + security + managementCadre + innovation,
   }
   }
 
-function aggregateBranchData(keys: string[]): BranchData {
+  function completePersonnelRoles(branch: BranchData) {
+  const roles = [...branch.personnelRoles]
+  if (!roles.some((role) => role.label === "管理岗位")) {
+    const assigned = roles.reduce((sum, role) => sum + role.value, 0)
+    roles.splice(3, 0, { label: "管理岗位", value: Math.max(0, branch.personnelTotal - assigned), tone: "chart-4" })
+  }
+  return roles
+  }
+
+  function aggregateBranchData(keys: string[]): BranchData {
+
   const rows = keys.map((key) => branchData[key])
   const base = rows[0] ?? branchData.nanjing
   const operationMetrics = base.operationMetrics.map((metric, index) => ({
     ...metric,
     value: sumBy(rows, (row) => row.operationMetrics[index]?.value ?? 0),
   }))
-  const personnelRoles = base.personnelRoles.map((role, index) => ({
-    ...role,
-    value: sumBy(rows, (row) => row.personnelRoles[index]?.value ?? 0),
-  }))
+  const personnelRoles = completePersonnelRoles({ ...base, personnelTotal: sumBy(rows, (row) => row.personnelTotal), personnelRoles: base.personnelRoles.map((role, index) => ({ ...role, value: sumBy(rows, (row) => row.personnelRoles[index]?.value ?? 0) })) })
+
   const tableRows = rows.map(toBranchRow)
   return {
     ...base,
@@ -721,9 +736,10 @@ export function BranchDashboard() {
   const selectedData = selectedBranch !== "all"
     ? branchData[selectedBranch] ?? branchData.nanjing
     : null
-  const current = selectedData
+  const currentBase = selectedData
     ? { ...selectedData, tableRows: [toBranchRow(selectedData)] }
     : aggregateBranchData(filteredKeys)
+  const current = { ...currentBase, personnelRoles: completePersonnelRoles(currentBase) }
   const personnelPageCount = Math.max(1, Math.ceil(current.tableRows.length / personnelPageSize))
   const personnelRows = current.tableRows.slice(
     (personnelPage - 1) * personnelPageSize,
@@ -924,12 +940,12 @@ export function BranchDashboard() {
                               <TableHead className="px-2 py-2 text-[12px] font-semibold text-foreground">分行名称</TableHead>
                               <TableHead className="px-1.5 py-1 text-center text-[12px] font-semibold text-foreground">研发</TableHead>
                               <TableHead className="px-1.5 py-1 text-center text-[12px] font-semibold text-foreground">运维</TableHead>
-                              <TableHead className="px-1.5 py-1 text-center text-[12px] font-semibold text-foreground">架构</TableHead>
-                              <TableHead className="px-1.5 py-1 text-center text-[12px] font-semibold text-foreground">创新</TableHead>
                               <TableHead className="px-1.5 py-1 text-center text-[12px] font-semibold text-foreground">数据</TableHead>
-                              <TableHead className="px-1.5 py-1 text-center text-[12px] font-semibold text-foreground">安全</TableHead>
                               <TableHead className="px-1.5 py-1 text-center text-[12px] font-semibold text-foreground">管理</TableHead>
-                              <TableHead className="px-1.5 py-1 text-center text-[12px] font-semibold text-foreground">干部</TableHead>
+                              <TableHead className="px-1.5 py-1 text-center text-[12px] font-semibold text-foreground">架构</TableHead>
+                              <TableHead className="px-1.5 py-1 text-center text-[12px] font-semibold text-foreground">安全</TableHead>
+                              <TableHead className="px-1.5 py-1 text-center text-[12px] font-semibold text-foreground">科技管理干部</TableHead>
+                              <TableHead className="px-1.5 py-1 text-center text-[12px] font-semibold text-foreground">创新</TableHead>
                               <TableHead className="px-1.5 py-1 text-center text-[12px] font-semibold text-foreground">总数</TableHead>
                             </TableRow>
                           </TableHeader>
@@ -939,12 +955,12 @@ export function BranchDashboard() {
                                 <TableCell className="px-1.5 py-1.5 font-medium text-[12px] text-foreground/90">{row.name}</TableCell>
                                 <TableCell className="px-1.5 py-1.5 text-center font-mono text-foreground/80">{row.development}</TableCell>
                                 <TableCell className="px-1.5 py-1.5 text-center font-mono text-foreground/80">{row.operations}</TableCell>
-                                <TableCell className="px-1.5 py-1.5 text-center font-mono text-foreground/80">{row.architecture}</TableCell>
-                                <TableCell className="px-1.5 py-1.5 text-center font-mono text-foreground/80">{row.innovation}</TableCell>
                                 <TableCell className="px-1.5 py-1.5 text-center font-mono text-foreground/80">{row.data}</TableCell>
-                                <TableCell className="px-1.5 py-1.5 text-center font-mono text-foreground/80">{row.security}</TableCell>
                                 <TableCell className="px-1.5 py-1.5 text-center font-mono text-foreground/80">{row.management}</TableCell>
-                                <TableCell className="px-1.5 py-1.5 text-center font-mono text-foreground/80">{Math.max(row.total - (row.development + row.operations + row.architecture + row.innovation + row.data + row.security + row.management), 0)}</TableCell>
+                                <TableCell className="px-1.5 py-1.5 text-center font-mono text-foreground/80">{row.architecture}</TableCell>
+                                <TableCell className="px-1.5 py-1.5 text-center font-mono text-foreground/80">{row.security}</TableCell>
+                                <TableCell className="px-1.5 py-1.5 text-center font-mono text-foreground/80">{row.managementCadre}</TableCell>
+                                <TableCell className="px-1.5 py-1.5 text-center font-mono text-foreground/80">{row.innovation}</TableCell>
                                 <TableCell className="px-1.5 py-1.5 text-center">
                                   <span className="inline-flex min-w-[2.5rem] justify-center rounded-md bg-primary/10 px-2 py-1 font-mono text-[12px] font-bold text-primary">{row.total}</span>
                                 </TableCell>
