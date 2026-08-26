@@ -135,8 +135,8 @@ function ProductBars() {
                 const replaced = Math.round((amount * ratio) / 100)
                 const barHeight = Math.max(10, (amount / niceMax) * chartHeight)
                 return (
-                  <div key={name} className="group relative flex h-full min-w-0 flex-col items-center justify-end">
-                    <div className="pointer-events-none absolute bottom-full z-10 mb-2 hidden w-28 -translate-x-1/2 rounded border border-border bg-card p-1 text-[10px] shadow-lg group-hover:block">
+                  <div key={name} className="group relative flex h-full min-w-0 items-end justify-center">
+                    <div className="pointer-events-none absolute bottom-full left-1/2 z-10 mb-2 hidden w-28 -translate-x-1/2 rounded border border-border bg-card p-1 text-[10px] shadow-lg group-hover:block">
                       {name}
                       <br />总量 {amount}，已替代 {replaced}，未替代 {amount - replaced}
                     </div>
@@ -144,15 +144,19 @@ function ProductBars() {
                       <div className="flex items-center justify-center overflow-hidden text-[9px] font-bold text-slate-700" style={{ height: `${ratio}%`, background: DONE }}>{replaced}</div>
                       <div className="flex items-center justify-center overflow-hidden text-[9px] font-bold text-slate-600" style={{ height: `${100 - ratio}%`, background: UNDONE }}>{amount - replaced}</div>
                     </div>
-                    <span className="mt-1 w-full truncate text-center text-[10px] font-medium text-muted-foreground">{name}</span>
                   </div>
                 )
               })}
             </div>
           </div>
+          <div className="grid grid-cols-8 gap-1 px-2 pt-1">
+            {productRows.map(([name]) => (
+              <span key={name} className="min-w-0 truncate text-center text-[10px] font-medium text-muted-foreground">{name}</span>
+            ))}
+          </div>
+          </div>
         </div>
       </div>
-    </div>
   )
 }
 
