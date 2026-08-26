@@ -312,7 +312,7 @@ function aggregateBranchData(keys: string[]): BranchData {
   const tableRows = rows.map(toBranchRow)
   return {
     ...base,
-    label: keys.length === 1 ? base.label : "筛选结��������汇总",
+    label: keys.length === 1 ? base.label : "筛选结���������汇总",
     quickStats: base.quickStats.map((stat, index) => ({ ...stat, value: sumBy(rows, (row) => row.quickStats[index]?.value ?? 0) })),
     operationMetrics,
     innovation: {
@@ -738,11 +738,13 @@ export function BranchDashboard() {
       : "全部分行"
   const techRows = filteredKeys.map((key) => ({ key, data: branchData[key] }))
   const activeTechKey = techRows.some((row) => row.key === techSelectedKey) ? techSelectedKey : "all"
-  // Use the same organization-wide scale for every filter state so bars remain comparable.
-  const personnelRoleMaxima = branchOptions
-    .filter((option) => option.key !== "all")
-    .map((option) => branchData[option.key]?.personnelRoles ?? [])
-    .reduce<number[]>((maxima, roles) => roles.map((role, index) => Math.max(maxima[index] ?? 0, role.value)), [])
+  // Scale each role against the largest value in the currently filtered branches.
+  // This keeps the selected scope readable while preserving relative differences.
+  const personnelRoleMaxima = filteredKeys.reduce<number[]>(
+    (maxima, key) =>
+      (branchData[key]?.personnelRoles ?? []).map((role, index) => Math.max(maxima[index] ?? 0, role.value)),
+    [],
+  )
 
   return (
     <main className="min-h-screen w-full max-w-full overflow-x-hidden bg-background text-foreground selection:bg-primary/30">
