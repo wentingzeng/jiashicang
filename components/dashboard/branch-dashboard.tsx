@@ -794,7 +794,7 @@ export function BranchDashboard() {
                   <div onClick={(event) => { if ((event.target as HTMLElement).closest("button")) return; setRoomDetails((value) => !value) }} className="flex h-[210px] cursor-pointer flex-col overflow-hidden rounded-[12px] border border-border/80 bg-card/80 px-3 py-2 shadow-[inset_0_1px_0_oklch(0.72_0.15_220/6%)] lg:ml-2">
                     <div className="mb-1 flex items-center justify-between"><span className="text-[14px] font-bold text-foreground">中心机房</span><span className="text-[10px] text-muted-foreground">建设模式</span></div>
                     <button type="button" onClick={() => setRoomDetails(!roomDetails)} className="mb-1.5 flex min-h-7 w-full items-center gap-2 text-left text-[12px] font-semibold leading-4 text-slate-700 hover:text-primary">
-                      <span className="inline-flex size-2 rounded-full bg-[#2456c7]" />共{detailRows.length}家分行纳入当前筛选范围
+                      <span className="inline-flex size-2 rounded-full bg-[#2456c7]" />共{detailRows.length}家分行配备中心机房
                     </button>
                     {roomDetails ? <div className="max-h-[142px] overflow-auto overscroll-contain [WebkitOverflowScrolling:touch]">
                       <table className="w-full min-w-[300px] text-left text-[12px]">
@@ -802,9 +802,10 @@ export function BranchDashboard() {
                         <tbody>{detailRows.map((row, index) => <tr key={row.name} className="border-t border-border/50"><td className="py-1.5">{row.name}</td><td className="py-1.5">{index % 4 === 0 ? "租赁" : "自建"}</td><td className="py-1.5 font-mono">{2021 + (index % 4)}年</td></tr>)}</tbody>
                       </table>
                     </div> : <button type="button" onClick={() => setRoomDetails(true)} className="flex w-full items-center gap-3 text-left">
-                      <div className="relative h-[76px] w-[96px] shrink-0"><svg viewBox="0 0 120 120" className="h-full w-full -rotate-90"><circle cx="60" cy="60" r="42" fill="none" stroke="#d9e1ee" strokeWidth="10" /><circle cx="60" cy="60" r="42" fill="none" stroke="#2456c7" strokeWidth="10" strokeLinecap="round" strokeDasharray="259 300" /><circle cx="60" cy="60" r="42" fill="none" stroke="#2dc2be" strokeWidth="10" strokeLinecap="round" strokeDasharray="41 300" strokeDashoffset="259" /></svg><div className="absolute inset-0 flex flex-col items-center justify-center text-center"><div className="font-mono text-[16px] font-black text-primary">{detailRows.length}</div><div className="text-[10px] text-slate-500">点击查看详情</div></div></div>
+                      <div className="relative h-[76px] w-[96px] shrink-0"><svg viewBox="0 0 120 120" className="h-full w-full -rotate-90"><circle cx="60" cy="60" r="42" fill="none" stroke="#d9e1ee" strokeWidth="10" /><circle cx="60" cy="60" r="42" fill="none" stroke="#2456c7" strokeWidth="10" strokeLinecap="round" strokeDasharray="259 300" /><circle cx="60" cy="60" r="42" fill="none" stroke="#2dc2be" strokeWidth="10" strokeLinecap="round" strokeDasharray="41 300" strokeDashoffset="259" /></svg><div className="absolute inset-0 flex flex-col items-center justify-center text-center"><div className="font-mono text-[16px] font-black text-primary">{detailRows.length}</div></div></div>
                       <div className="grid gap-1.5 text-[12px] text-foreground/75"><div><span className="mr-2 inline-flex size-2 rounded-full bg-[#2456c7]" />自建 <span className="font-mono text-primary">{Math.max(0, detailRows.length - 1)}</span></div><div><span className="mr-2 inline-flex size-2 rounded-full bg-[#2dc2be]" />租赁 <span className="font-mono text-primary">{detailRows.length ? 1 : 0}</span></div></div>
                     </button>}
+                    <div className="mt-1 text-center text-[11px] text-muted-foreground">点击查看详情</div>
                     <div className="mt-auto flex min-h-9 items-center justify-between rounded-[10px] border border-border/70 bg-background/70 px-3 py-1.5"><span className="text-[12px] font-bold text-muted-foreground">机柜数</span><span className="font-mono text-[13px] font-black text-primary">{(current.personnelTotal * 2).toLocaleString()} <small className="text-[12px] font-normal text-muted-foreground">个</small></span></div>
                   </div>
 
@@ -895,7 +896,7 @@ export function BranchDashboard() {
                           <div className="h-full rounded-full bg-gradient-to-r from-primary to-accent" style={{ width: `${Math.min(100, Math.max(12, Number(current.personnelTotal) / Math.max(...personnelRows.map((row) => row.total), 1) * 100))}%` }} />
                         </div>
                       </div>
-                      <div className="grid gap-1">
+                      <div className="grid gap-3">
                         {current.personnelRoles.map((role) => (
                           <RoleBar
                             key={role.label}
@@ -906,6 +907,7 @@ export function BranchDashboard() {
                           />
                         ))}
                       </div>
+                      <div className="pt-1 text-center text-[11px] text-muted-foreground">点击查看详情</div>
                     </div>}
 
 {personnelDetails && <div className="min-w-0 overflow-hidden rounded-[12px] border border-border/80 bg-card/80 shadow-[inset_0_1px_0_oklch(0.72_0.15_220/6%)]">
