@@ -612,9 +612,9 @@ function TechLevelPanel({ rows, selectedKey, onSelect }: { rows: Array<{ key: st
                 return (
                   <text
                     key={label}
-                    x={x}
+                    x={index === 1 || index === 2 ? 76 : index === 3 || index === 4 ? 84 : x}
                     y={y}
-                    textAnchor="middle"
+                    textAnchor={index === 1 || index === 2 ? "start" : index === 3 || index === 4 ? "end" : "middle"}
                     dominantBaseline="middle"
                     onClick={() => setActiveDim(index)}
                     className={cn("cursor-pointer text-[8px] font-medium", isActive ? "fill-primary font-bold" : "fill-foreground")}
@@ -646,7 +646,7 @@ function TechLevelPanel({ rows, selectedKey, onSelect }: { rows: Array<{ key: st
               )}
             </svg>
           </div>
-          <div className="text-center text-[12px] text-muted-foreground">{displayLabel}{displayLevel ? ` · ${displayLevel}` : ""} · 点击雷达图或表头查看单���指标</div>
+          <div className="text-center text-[12px] text-muted-foreground">{displayLabel}{displayLevel ? ` · ${displayLevel}` : ""} · 点击雷达图或表头查看单项指标</div>
         </div>
         <div className="max-h-[268px] overflow-auto rounded-lg border border-border/70">
           <Table className="min-w-[560px] text-[12px]">
