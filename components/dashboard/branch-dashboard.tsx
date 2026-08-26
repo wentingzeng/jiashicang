@@ -312,7 +312,7 @@ function aggregateBranchData(keys: string[]): BranchData {
   const tableRows = rows.map(toBranchRow)
   return {
     ...base,
-    label: keys.length === 1 ? base.label : "筛选结����������汇总",
+    label: keys.length === 1 ? base.label : "筛选结�����������汇总",
     quickStats: base.quickStats.map((stat, index) => ({ ...stat, value: sumBy(rows, (row) => row.quickStats[index]?.value ?? 0) })),
     operationMetrics,
     innovation: {
@@ -325,7 +325,7 @@ function aggregateBranchData(keys: string[]): BranchData {
       ...base.cloud,
       value: sumBy(rows, (row) => row.cloud.value),
       total: sumBy(rows, (row) => row.cloud.total),
-      note: "当前筛选��围内系统上云进度",
+      note: "当前筛选系统上云进度",
     },
     personnelTotal: sumBy(rows, (row) => row.personnelTotal),
     personnelDelta: "—",
