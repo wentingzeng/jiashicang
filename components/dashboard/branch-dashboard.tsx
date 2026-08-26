@@ -81,7 +81,7 @@ const branchData: Record<string, BranchData> = {
       { label: "服务器主机数", value: 2299, unit: "台", tone: "primary" },
       { label: "网络设备数", value: 12460, unit: "个", tone: "accent" },
   { label: "分行办公终端数", value: 77343, unit: "个", tone: "chart-4" },
-  { label: "专项数", value: 8075, unit: "条", tone: "chart-4" },
+  { label: "专线数", value: 8075, unit: "条", tone: "chart-4" },
   { label: "存储数", value: 7608310, unit: "GB", tone: "primary" },
   { label: "CPU数", value: 5987, unit: "核", tone: "accent" },
     ],
@@ -312,7 +312,7 @@ function aggregateBranchData(keys: string[]): BranchData {
   const tableRows = rows.map(toBranchRow)
   return {
     ...base,
-    label: keys.length === 1 ? base.label : "筛选结�������汇总",
+    label: keys.length === 1 ? base.label : "筛选结��������汇总",
     quickStats: base.quickStats.map((stat, index) => ({ ...stat, value: sumBy(rows, (row) => row.quickStats[index]?.value ?? 0) })),
     operationMetrics,
     innovation: {
