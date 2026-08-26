@@ -443,7 +443,24 @@ export function SecurityDashboard() {
           </button>
         </section>
 
-        <div className="grid items-stretch gap-5 xl:min-h-[900px] xl:grid-cols-3 xl:grid-rows-[minmax(0,1fr)]">
+        <Panel title="网络安全管理指标" tone="primary" bodyClassName="p-3">
+          <div className="grid grid-cols-2 gap-2.5 md:grid-cols-6">
+            {securityManagementIndicators.map((item, index) => {
+              const [label, value] = item.split("：")
+              return (
+                <div key={item} className="min-w-0 rounded-lg border border-border/50 bg-background/25 p-3 shadow-sm">
+                  <div className="mb-2 flex min-h-10 items-start gap-2 text-xs leading-5 text-muted-foreground">
+                    <span className="mt-1.5 size-2 shrink-0 rounded-full bg-accent" />
+                    <span>{label}</span>
+                  </div>
+                  <strong className={`font-mono text-xl tabular-nums ${index < 2 ? "text-accent" : "text-primary"}`}>{value}</strong>
+                </div>
+              )
+            })}
+          </div>
+        </Panel>
+
+        <div className="mt-5 grid items-stretch gap-5 xl:min-h-[900px] xl:grid-cols-3 xl:grid-rows-[minmax(0,1fr)]">
           <section className="flex h-full min-h-0 min-w-0 flex-col gap-4">
               <Panel title="网络安全综合能力" tone="primary">
                 <CapabilityBars data={filteredCapability} label="各分行综合能力评分" selectedInstitution={selectedInstitution} />
@@ -491,22 +508,6 @@ export function SecurityDashboard() {
                 <ChinaSecurityMap data={filteredBranches} selectedInstitution={selectedInstitution} />
               </Panel>
 
-              <Panel title="网络安全管理指标" tone="primary" className="flex flex-1 flex-col">
-                <div className="grid flex-1 grid-cols-1 gap-2.5 sm:grid-cols-2">
-                  {securityManagementIndicators.map((item, index) => {
-                    const [label, value] = item.split("：")
-                    return (
-                      <div key={item} className="rounded-lg border border-border/50 bg-background/25 p-3 shadow-sm">
-                        <div className="mb-2 flex items-start gap-2 text-xs leading-5 text-muted-foreground">
-                          <span className="mt-1.5 size-2 shrink-0 rounded-full bg-accent" />
-                          <span>{label}</span>
-                        </div>
-                        <strong className={`font-mono text-xl tabular-nums ${index < 2 ? "text-accent" : "text-primary"}`}>{value}</strong>
-                      </div>
-                    )
-                  })}
-                </div>
-              </Panel>
           </section>
 
           <section className="flex h-full min-h-0 min-w-0 flex-col gap-4">

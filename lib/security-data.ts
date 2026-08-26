@@ -69,7 +69,8 @@ export const securityManagementIndicators = [
   "全行发生特别重大、重大数据安全事件数：0",
   "网络安全综合检查和专项检查分支机构覆盖率：90%",
   "安全工单自动化派发率：5%",
-  "安全生产标准化达标率：70%",
+  "安全告警AI研判准确率：70%",
+  "商用密码应用安全性评估通过率：25%",
 ]
 
 export const trainingTrendData = [
