@@ -312,7 +312,7 @@ function aggregateBranchData(keys: string[]): BranchData {
   const tableRows = rows.map(toBranchRow)
   return {
     ...base,
-    label: keys.length === 1 ? base.label : "筛选结������汇总",
+    label: keys.length === 1 ? base.label : "筛选结�������汇总",
     quickStats: base.quickStats.map((stat, index) => ({ ...stat, value: sumBy(rows, (row) => row.quickStats[index]?.value ?? 0) })),
     operationMetrics,
     innovation: {
@@ -408,7 +408,7 @@ function DotLegend({ color, text }: { color: string; text: string }) {
   )
 }
 
-function RingChart({ value, total, label }: { value: number; total: number; label: string }) {
+function RingChart({ value, total, label, displayValue = value }: { value: number; total: number; label: string; displayValue?: number }) {
   const percent = total > 0 ? Math.min((value / total) * 100, 100) : 0
   const dash = 283
   const offset = dash - (dash * percent) / 100
@@ -439,7 +439,7 @@ function RingChart({ value, total, label }: { value: number; total: number; labe
       </svg>
       <div className="absolute inset-0 flex flex-col items-center justify-center text-center">
         <div className="text-[10px] text-muted-foreground">{label}</div>
-        <div className="mt-0.5 font-mono text-[20px] font-black leading-none text-primary">{value}</div>
+        <div className="mt-0.5 font-mono text-[20px] font-black leading-none text-primary">{displayValue}</div>
       </div>
       <div className="absolute right-0.5 top-1 text-[11px] text-muted-foreground">{Math.round(percent)}%</div>
     </div>
@@ -545,9 +545,19 @@ function TechLevelPanel({ rows, selectedKey, onSelect }: { rows: Array<{ key: st
 <PanelCard title="分行科技分级" icon={<Gauge className="size-4" />}>
   <div className="grid gap-3">
         <div className="grid grid-cols-3 gap-1.5">
-  {[{ label: "3A", count: 1 }, { label: "3B", count: 1 }, { label: "3C", count: 1 }, { label: "2A", count: 1 }, { label: "2B", count: 1 }, { label: "2C", count: 1 }, { label: "1A", count: 1 }, { label: "1B", count: 1 }, { label: "1C", count: 2 }].map(({ label, count }) => (
-            <div key={label} className="flex items-center justify-between rounded-lg border border-primary/15 bg-gradient-to-br from-primary/10 to-accent/10 px-2 py-1.5 shadow-sm">
-              <span className="inline-flex size-6 items-center justify-center rounded-md bg-card font-mono text-[11px] font-black text-primary ring-1 ring-primary/20">{label}</span>
+  {[
+            { label: "3A", count: 1, tone: "border-primary/25 bg-primary/10 text-primary" },
+            { label: "3B", count: 1, tone: "border-primary/25 bg-primary/10 text-primary" },
+            { label: "3C", count: 1, tone: "border-primary/25 bg-primary/10 text-primary" },
+            { label: "2A", count: 1, tone: "border-accent/30 bg-accent/10 text-accent-foreground" },
+            { label: "2B", count: 1, tone: "border-accent/30 bg-accent/10 text-accent-foreground" },
+            { label: "2C", count: 1, tone: "border-accent/30 bg-accent/10 text-accent-foreground" },
+            { label: "1A", count: 1, tone: "border-chart-4/30 bg-chart-4/10 text-chart-4" },
+            { label: "1B", count: 1, tone: "border-chart-4/30 bg-chart-4/10 text-chart-4" },
+            { label: "1C", count: 2, tone: "border-chart-4/30 bg-chart-4/10 text-chart-4" },
+          ].map(({ label, count, tone }) => (
+            <div key={label} className={cn("flex items-center justify-between rounded-lg border px-2 py-1.5 shadow-sm", tone)}>
+              <span className="inline-flex h-6 min-w-8 items-center justify-center rounded-md bg-card px-1.5 font-mono text-[11px] font-black ring-1 ring-current/20">{label}</span>
               <span className="font-mono text-base font-black leading-none text-foreground">{count}</span>
             </div>
           ))}
@@ -770,7 +780,7 @@ export function BranchDashboard() {
                       <div className="text-center text-[10px] text-muted-foreground">信创部改造前十名完成度</div>
                     </div> : <div className="flex items-center justify-between gap-2.5">
                       <div className="flex flex-1 items-center justify-center">
-                        <RingChart value={current.innovation.done + current.innovation.remaining} total={current.innovation.done + current.innovation.remaining} label="计划总数" />
+                        <RingChart value={current.innovation.done} total={current.innovation.done + current.innovation.remaining} displayValue={current.innovation.done + current.innovation.remaining} label="计划总数" />
                       </div>
                       <div className="flex-1 space-y-2">
                         <div className="flex items-center justify-between text-[11px] text-slate-600">
