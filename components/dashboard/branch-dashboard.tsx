@@ -325,7 +325,7 @@ function aggregateBranchData(keys: string[]): BranchData {
       ...base.cloud,
       value: sumBy(rows, (row) => row.cloud.value),
       total: sumBy(rows, (row) => row.cloud.total),
-      note: "当前筛选范围内系统上云进度",
+      note: "当前筛选��围内系统上云进度",
     },
     personnelTotal: sumBy(rows, (row) => row.personnelTotal),
     personnelDelta: "—",
@@ -693,7 +693,8 @@ export function BranchDashboard() {
 
   useEffect(() => {
     setPersonnelPage(1)
-    setTechSelectedKey(selectedBranch !== "all" ? selectedBranch : "all")
+    // 分行科技分级始终展示完整分行数据，不受右侧筛选条件影响。
+    setTechSelectedKey("all")
   }, [selectedBranch])
 
   const filteredKeys = Object.keys(branchData).filter((key) => {
@@ -736,7 +737,8 @@ export function BranchDashboard() {
     : selectedGrade !== "all"
       ? gradeOptions.find((option) => option.key === selectedGrade)?.label ?? "筛选范围"
       : "全部分行"
-  const techRows = filteredKeys.map((key) => ({ key, data: branchData[key] }))
+  // 左侧分行科技分级是独立总览，始终展示全部分行，不受等级或分行筛选影响。
+  const techRows = Object.keys(branchData).map((key) => ({ key, data: branchData[key] }))
   const activeTechKey = techRows.some((row) => row.key === techSelectedKey) ? techSelectedKey : "all"
   // Scale each role against the largest value in the currently filtered branches.
   // This keeps the selected scope readable while preserving relative differences.
