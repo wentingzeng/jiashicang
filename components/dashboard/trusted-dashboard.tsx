@@ -36,6 +36,30 @@ function StatCard({ label, value, sub, color = colors.blue }: { label: string; v
   )
 }
 
+function RingStat({ label, ratio, value, sub, color = colors.blue }: { label: string; ratio: number; value: string; sub: string; color?: string }) {
+  const c = 2 * Math.PI * 34
+  return (
+    <div className="flex items-center gap-3 rounded-lg bg-secondary/40 px-3 py-2.5">
+      <div className="relative size-[58px] shrink-0">
+        <svg viewBox="0 0 80 80" className="size-full -rotate-90">
+          <circle cx="40" cy="40" r="34" fill="none" stroke="currentColor" strokeWidth="9" className="text-secondary" />
+          <circle cx="40" cy="40" r="34" fill="none" stroke={color} strokeWidth="9" strokeLinecap="round" strokeDasharray={c} strokeDashoffset={c * (1 - ratio / 100)} />
+        </svg>
+        <strong className="absolute inset-0 flex items-center justify-center font-mono text-[11px]" style={{ color }}>
+          {ratio.toFixed(0)}%
+        </strong>
+      </div>
+      <div className="min-w-0">
+        <p className="truncate text-xs font-semibold text-foreground">{label}</p>
+        <p className="mt-0.5 truncate font-mono text-lg font-black" style={{ color }}>
+          {value}
+        </p>
+        <p className="mt-0.5 truncate text-[11px] text-muted-foreground">{sub}</p>
+      </div>
+    </div>
+  )
+}
+
 function CoreBars() {
   const rows: Array<[string, number, number]> = [["对公核心", 66, 531], ["零售存款", 663, 1031], ["总账核算", 664, 859]]
   return (
@@ -235,8 +259,8 @@ export function TrustedDashboard() {
                 <div className="flex flex-col gap-3">
                   <Panel title="一般系统信创进度">
                     <div className="grid gap-2 md:grid-cols-2">
-                      <StatCard label="已单轨" value="412" sub="未单轨 214" />
-                      <StatCard label="年度已完成" value="58" sub="未完成 177" color={colors.violet} />
+                      <RingStat label="已单轨" ratio={(412 / (412 + 214)) * 100} value="412" sub="未单轨 214" />
+                      <RingStat label="年度已完成" ratio={(58 / (58 + 177)) * 100} value="58" sub="未完成 177" color={colors.violet} />
                     </div>
                   </Panel>
                   <Panel title="核心系统信创进度">
@@ -263,8 +287,8 @@ export function TrustedDashboard() {
               <div className="flex flex-col gap-3">
                 <Panel title="麒麟界面推广进度">
                   <div className="grid gap-2 md:grid-cols-2">
-                    <StatCard label="已推广" value="16.68K" sub="未推广 68.58K" color={colors.violet} />
-                    <StatCard label="年度已推广" value="16.68K" sub="年度未推广 37.24K" color={colors.violet} />
+                    <RingStat label="已推广" ratio={(16.68 / (16.68 + 68.58)) * 100} value="16.68K" sub="未推广 68.58K" color={colors.violet} />
+                    <RingStat label="年度已推广" ratio={(16.68 / (16.68 + 37.24)) * 100} value="16.68K" sub="年度未推广 37.24K" color={colors.violet} />
                   </div>
                 </Panel>
                 <Panel title="小型机下线进展">
