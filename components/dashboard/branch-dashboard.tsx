@@ -312,7 +312,7 @@ function aggregateBranchData(keys: string[]): BranchData {
   const tableRows = rows.map(toBranchRow)
   return {
     ...base,
-    label: keys.length === 1 ? base.label : "筛选结��汇总",
+    label: keys.length === 1 ? base.label : "筛选结���汇总",
     quickStats: base.quickStats.map((stat, index) => ({ ...stat, value: sumBy(rows, (row) => row.quickStats[index]?.value ?? 0) })),
     operationMetrics,
     innovation: {
@@ -456,12 +456,16 @@ function CloudCircle({ value }: { value: number }) {
   )
 }
 
-function GaugeMeter({ roomMode }: { roomMode: "central" | "disaster" }) {
+function GaugeMeter({ roomMode, percentage = 22.22 }: { roomMode: "central" | "disaster"; percentage?: number }) {
+  const safePercentage = Math.max(0, Math.min(100, percentage))
+  const gaugeLength = 264
+  const progressLength = (safePercentage / 100) * gaugeLength
+
   return (
     <div className="relative h-[86px] w-full max-w-[180px]">
       <svg viewBox="0 0 220 120" className="absolute inset-0 h-full w-full">
         <path d="M26 90 A84 84 0 0 1 194 90" fill="none" stroke="#d9e1ee" strokeWidth="10" strokeLinecap="round" />
-        <path d="M26 90 A84 84 0 0 1 194 90" fill="none" stroke="url(#gaugeGrad)" strokeWidth="10" strokeLinecap="round" strokeDasharray="120 300" />
+        <path d="M26 90 A84 84 0 0 1 194 90" fill="none" stroke="url(#gaugeGrad)" strokeWidth="10" strokeLinecap="round" strokeDasharray={`${progressLength} ${gaugeLength}`} />
         <defs>
           <linearGradient id="gaugeGrad" x1="0" y1="0" x2="1" y2="0">
             <stop offset="0%" stopColor="#2dc2be" />
@@ -470,8 +474,8 @@ function GaugeMeter({ roomMode }: { roomMode: "central" | "disaster" }) {
         </defs>
       </svg>
       <div className="absolute left-1/2 top-[38%] -translate-x-1/2 text-center">
-        <div className="text-[10px] text-muted-foreground">中心机房配套率</div>
-        <div className="font-mono text-[18px] font-black text-primary">22.22%</div>
+<div className="text-[10px] text-muted-foreground">{roomMode === "disaster" ? "灾备机房配套率" : "中心机房配套率"}</div>
+  <div className="font-mono text-[18px] font-black text-primary">{safePercentage.toFixed(2)}%</div>
       </div>
       <div className="absolute left-[6px] bottom-2 text-[9px] text-muted-foreground">0</div>
 <div className="absolute right-[6px] bottom-2 text-[9px] text-muted-foreground">40</div>
@@ -584,10 +588,7 @@ function TechLevelPanel({ rows, selectedKey, onSelect }: { rows: Array<{ key: st
                 />
               ))}
               {activeDim === null ? (
-                <>
-                  <text x="80" y="76" textAnchor="middle" className="fill-primary font-mono text-[20px] font-bold">{techLevel.score}</text>
-                  <text x="80" y="92" textAnchor="middle" className="fill-muted-foreground text-[8px]">综合评分</text>
-                </>
+                <text x="80" y="84" textAnchor="middle" className="fill-muted-foreground text-[8px]">点击指标查看分值</text>
               ) : (
                 <>
                   <text x="80" y="76" textAnchor="middle" className="fill-primary font-mono text-[20px] font-bold">{points[activeDim]}</text>
@@ -613,10 +614,9 @@ function TechLevelPanel({ rows, selectedKey, onSelect }: { rows: Array<{ key: st
                     {label}
                   </TableHead>
                 ))}
-                <TableHead className="px-1.5 py-1.5 text-right">综合评分</TableHead>
               </TableRow>
             </TableHeader>
-            <TableBody>{rows.map(({ key, data }) => <TableRow key={key} onClick={() => onSelect(key)} className={cn("cursor-pointer", key === selectedKey && "bg-primary/10") }><TableCell className="whitespace-nowrap px-1.5 py-1.5 font-medium">{data.label}</TableCell><TableCell className="whitespace-nowrap px-1.5 py-1.5">{data.techLevel?.level ?? "B类"}</TableCell>{(data.techLevel?.dimensions ?? [82, 78, 84, 80, 86]).slice(0, 5).map((value, index) => <TableCell key={`${key}-${index}`} className={cn("px-1 py-1.5 text-center font-mono text-foreground/80", activeDim === index && "bg-primary/10 text-primary")}>{value}</TableCell>)}<TableCell className="px-1.5 py-1.5 text-right font-mono font-bold text-primary">{data.techLevel?.score ?? 82}</TableCell></TableRow>)}</TableBody>
+            <TableBody>{rows.map(({ key, data }) => <TableRow key={key} onClick={() => onSelect(key)} className={cn("cursor-pointer", key === selectedKey && "bg-primary/10") }><TableCell className="whitespace-nowrap px-1.5 py-1.5 font-medium">{data.label}</TableCell><TableCell className="whitespace-nowrap px-1.5 py-1.5">{data.techLevel?.level ?? "B类"}</TableCell>{(data.techLevel?.dimensions ?? [82, 78, 84, 80, 86]).slice(0, 5).map((value, index) => <TableCell key={`${key}-${index}`} className={cn("px-1 py-1.5 text-center font-mono text-foreground/80", activeDim === index && "bg-primary/10 text-primary")}>{value}</TableCell>)}</TableRow>)}</TableBody>
           </Table>
         </div>
       </div>
@@ -667,7 +667,12 @@ export function BranchDashboard() {
     : Array.from(new Map(current.tableRows.map((row) => [row.name, row])).values())
   const detailRows = selectedBranch !== "all" ? scopedRows.slice(0, 1) : scopedRows.slice(0, 10)
   const innovationRows = [...scopedRows]
-    .map((row) => ({ name: row.name, count: row.innovation, rate: row.total ? Math.round((row.innovation / row.total) * 100) : 0 }))
+    .map((row) => {
+      const branch = branchData[Object.keys(branchData).find((key) => branchData[key].label === row.name) ?? ""]
+      const required = branch?.innovation.value ?? row.innovation
+      const done = branch?.innovation.done ?? row.innovation
+      return { name: row.name, count: done, rate: required ? Math.round((done / required) * 100) : 0 }
+    })
     .sort((a, b) => b.count - a.count)
     .slice(0, 10)
   const cloudRows = selectedBranch !== "all"
