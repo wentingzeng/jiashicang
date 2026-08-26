@@ -525,10 +525,18 @@ function PanelCard({ title, icon, children, className }: { title: string; icon: 
 
 function TechLevelPanel({ rows, selectedKey, onSelect }: { rows: Array<{ key: string; data: BranchData }>; selectedKey: string; onSelect: (key: string) => void }) {
   const [activeDim, setActiveDim] = useState<number | null>(null)
-  const selected = rows.find((row) => row.key === selectedKey)?.data ?? rows[0]?.data
-  const techLevel = selected?.techLevel ?? { level: "B类", score: 82, dimensions: [82, 78, 84, 80, 86] }
-  const points = techLevel.dimensions.slice(0, 5)
   const dimensionLabels = ["科技治理", "风险安全", "研发创新", "运维管理", "数据管理"]
+  const selectedRow = rows.find((row) => row.key === selectedKey)
+  const isAverage = !selectedRow
+  const selected = selectedRow?.data
+  const averageDimensions = dimensionLabels.map((_, index) => {
+    if (rows.length === 0) return 0
+    const total = rows.reduce((sum, row) => sum + (row.data.techLevel?.dimensions?.[index] ?? 0), 0)
+    return Math.round(total / rows.length)
+  })
+  const points = isAverage ? averageDimensions : (selected?.techLevel?.dimensions.slice(0, 5) ?? [82, 78, 84, 80, 86])
+  const displayLabel = isAverage ? "全部分行（平均值）" : selected?.label ?? "当前分行"
+  const displayLevel = isAverage ? null : selected?.techLevel?.level ?? "B类"
 
   useEffect(() => {
     setActiveDim(null)
@@ -594,7 +602,7 @@ function TechLevelPanel({ rows, selectedKey, onSelect }: { rows: Array<{ key: st
         </div>
         <div className="rounded-lg border border-border/70 bg-background/40 p-2">
           <div className="flex justify-center">
-            <svg viewBox="0 0 160 160" className="h-48 w-48" role="img" aria-label={`${selected?.label ?? "分行"}科技能力雷达图`}>
+            <svg viewBox="0 0 160 160" className="h-48 w-48" role="img" aria-label={`${displayLabel}科技能力雷达图`}>
               {[30, 50, 70].map((radius) => <polygon key={radius} points={points.map((_, index) => { const angle = (Math.PI * 2 * index) / points.length - Math.PI / 2; return `${80 + Math.cos(angle) * radius},${80 + Math.sin(angle) * radius}` }).join(" ")} fill="none" stroke="currentColor" className="text-border" strokeWidth="1" />)}
               <polygon points={radarPoints} fill="rgba(45,194,190,0.28)" stroke="#2dc2be" strokeWidth="2" />
               {dimensionLabels.map((label, index) => {
@@ -639,7 +647,7 @@ function TechLevelPanel({ rows, selectedKey, onSelect }: { rows: Array<{ key: st
               )}
             </svg>
           </div>
-          <div className="text-center text-[11px] text-muted-foreground">{selected?.label ?? "当前分行"} · {techLevel.level} · 点击雷达图或表头查看单项指标</div>
+          <div className="text-center text-[11px] text-muted-foreground">{displayLabel}{displayLevel ? ` · ${displayLevel}` : ""} · 点击雷达图或表头查看单项指标</div>
         </div>
         <div className="max-h-[268px] overflow-auto rounded-lg border border-border/70">
           <Table className="min-w-[560px] text-[11px]">
@@ -676,7 +684,7 @@ export function BranchDashboard() {
   const [innovationRanking, setInnovationRanking] = useState(false)
   const [cloudRanking, setCloudRanking] = useState(false)
   const [personnelPage, setPersonnelPage] = useState(1)
-  const [techSelectedKey, setTechSelectedKey] = useState("nanjing")
+  const [techSelectedKey, setTechSelectedKey] = useState("all")
   const personnelPageSize = 6
 
   useEffect(() => {
@@ -686,6 +694,7 @@ export function BranchDashboard() {
 
   useEffect(() => {
     setPersonnelPage(1)
+    setTechSelectedKey(selectedBranch !== "all" ? selectedBranch : "all")
   }, [selectedBranch])
 
   const filteredKeys = Object.keys(branchData).filter((key) => {
@@ -729,7 +738,7 @@ export function BranchDashboard() {
       ? gradeOptions.find((option) => option.key === selectedGrade)?.label ?? "筛选范围"
       : "全部分行"
   const techRows = filteredKeys.map((key) => ({ key, data: branchData[key] }))
-  const activeTechKey = techRows.some((row) => row.key === techSelectedKey) ? techSelectedKey : techRows[0]?.key ?? "nanjing"
+  const activeTechKey = techRows.some((row) => row.key === techSelectedKey) ? techSelectedKey : "all"
 
   return (
     <main className="min-h-screen w-full max-w-full overflow-x-hidden bg-background text-foreground selection:bg-primary/30">
