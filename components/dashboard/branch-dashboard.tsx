@@ -778,9 +778,11 @@ export function BranchDashboard() {
             </div>
 
             <div className="grid min-w-0 items-stretch gap-3 lg:grid-cols-[minmax(240px,0.34fr)_minmax(0,0.66fr)]">
-              <TechLevelPanel rows={techRows} selectedKey={activeTechKey} onSelect={setTechSelectedKey} />
+              <div className="order-2 min-w-0 lg:col-start-1 lg:row-start-1 lg:row-span-2">
+                <TechLevelPanel rows={techRows} selectedKey={activeTechKey} onSelect={setTechSelectedKey} />
+              </div>
 
-              <div className="grid min-w-0 items-start gap-3 lg:grid-cols-2 lg:grid-rows-[248px_248px_auto]">
+              <div className="order-1 grid min-w-0 items-start gap-3 lg:col-start-2 lg:row-start-1 lg:row-span-2 lg:grid-cols-2 lg:grid-rows-[248px_248px_auto]">
               <PanelCard className="order-3 h-full lg:col-span-2 lg:col-start-1 lg:row-start-3" title="运维指标" icon={<Gauge className="size-4" />}>
                 <div className="grid gap-2 lg:grid-cols-[minmax(0,0.72fr)_minmax(0,0.9fr)_minmax(0,0.9fr)] lg:divide-x lg:divide-dashed lg:divide-border/70">
                   <div className="grid grid-cols-2 gap-1.5">
@@ -868,7 +870,6 @@ export function BranchDashboard() {
                     <button type="button" onClick={(event) => { event.stopPropagation(); setCloudRanking((value) => !value) }} className="w-full text-left" aria-label="切换上云系统前十名">
                     {cloudRanking ? <div className="max-h-[166px] overflow-y-auto overflow-x-hidden overscroll-contain grid gap-2 py-1 [WebkitOverflowScrolling:touch]">{cloudRows.map(({ name, count }, index) => <div key={name} className="grid grid-cols-[1.2fr_1fr_auto] items-center gap-2 text-[12px]"><span>{String(index + 1).padStart(2, "0")} {name}</span><span className="h-2 rounded-full bg-gradient-to-r from-accent to-primary" style={{ width: `${Math.max(20, Number(count) / Math.max(cloudRows[0]?.count ?? 1, 1) * 100)}%` }} /><strong className="font-mono text-primary">{count}</strong></div>)}</div> : <div className="flex flex-col items-center gap-1.5">
                       <CloudCircle value={current.cloud.value} />
-                      <div className="text-center text-[12px] text-slate-500">{current.cloud.note}</div>
                       <div className="text-center text-[12px] text-muted-foreground">单击可查看上云系统前十名。</div></div>}
                     </button>
                   </PanelCard>
