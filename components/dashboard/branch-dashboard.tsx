@@ -930,17 +930,17 @@ export function BranchDashboard() {
                           <TableBody>
                             {personnelRows.map((row, index) => (
                               <TableRow key={row.name} className={cn("border-border/60 hover:bg-primary/5", index % 2 === 1 && "bg-primary/3")}>
-                                <TableCell className="px-1.5 py-0.5 font-medium text-[12px] text-foreground/90">{row.name}</TableCell>
-                                <TableCell className="px-1.5 py-0.5 text-center font-mono text-foreground/80">{row.development}</TableCell>
-                                <TableCell className="px-1.5 py-0.5 text-center font-mono text-foreground/80">{row.operations}</TableCell>
-                                <TableCell className="px-1.5 py-0.5 text-center font-mono text-foreground/80">{row.architecture}</TableCell>
-                                <TableCell className="px-1.5 py-0.5 text-center font-mono text-foreground/80">{row.innovation}</TableCell>
-                                <TableCell className="px-1.5 py-0.5 text-center font-mono text-foreground/80">{row.data}</TableCell>
-                                <TableCell className="px-1.5 py-0.5 text-center font-mono text-foreground/80">{row.security}</TableCell>
-                                <TableCell className="px-1.5 py-0.5 text-center font-mono text-foreground/80">{row.management}</TableCell>
-                                <TableCell className="px-1.5 py-0.5 text-center font-mono text-foreground/80">{Math.max(row.total - (row.development + row.operations + row.architecture + row.innovation + row.data + row.security + row.management), 0)}</TableCell>
-                                <TableCell className="px-1.5 py-0.5 text-center">
-                                  <span className="inline-flex min-w-[2.5rem] justify-center rounded-md bg-primary/10 px-2 py-0.5 font-mono text-[12px] font-bold text-primary">{row.total}</span>
+                                <TableCell className="px-1.5 py-1.5 font-medium text-[12px] text-foreground/90">{row.name}</TableCell>
+                                <TableCell className="px-1.5 py-1.5 text-center font-mono text-foreground/80">{row.development}</TableCell>
+                                <TableCell className="px-1.5 py-1.5 text-center font-mono text-foreground/80">{row.operations}</TableCell>
+                                <TableCell className="px-1.5 py-1.5 text-center font-mono text-foreground/80">{row.architecture}</TableCell>
+                                <TableCell className="px-1.5 py-1.5 text-center font-mono text-foreground/80">{row.innovation}</TableCell>
+                                <TableCell className="px-1.5 py-1.5 text-center font-mono text-foreground/80">{row.data}</TableCell>
+                                <TableCell className="px-1.5 py-1.5 text-center font-mono text-foreground/80">{row.security}</TableCell>
+                                <TableCell className="px-1.5 py-1.5 text-center font-mono text-foreground/80">{row.management}</TableCell>
+                                <TableCell className="px-1.5 py-1.5 text-center font-mono text-foreground/80">{Math.max(row.total - (row.development + row.operations + row.architecture + row.innovation + row.data + row.security + row.management), 0)}</TableCell>
+                                <TableCell className="px-1.5 py-1.5 text-center">
+                                  <span className="inline-flex min-w-[2.5rem] justify-center rounded-md bg-primary/10 px-2 py-1 font-mono text-[12px] font-bold text-primary">{row.total}</span>
                                 </TableCell>
                               </TableRow>
                             ))}
