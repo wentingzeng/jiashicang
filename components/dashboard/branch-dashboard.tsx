@@ -483,9 +483,8 @@ function GaugeMeter({ roomMode, percentage = 22.22 }: { roomMode: "central" | "d
   )
 }
 
-function RoleBar({ label, value, tone }: { label: string; value: number; tone: MetricTone }) {
-  const maxValue = 250
-  const width = Math.min((value / maxValue) * 100, 100)
+function RoleBar({ label, value, tone, maxValue }: { label: string; value: number; tone: MetricTone; maxValue: number }) {
+  const width = maxValue > 0 ? Math.min((value / maxValue) * 100, 100) : 0
   const fill =
     tone === "accent"
       ? "bg-gradient-to-r from-accent to-accent/80"
@@ -739,6 +738,11 @@ export function BranchDashboard() {
       : "全部分行"
   const techRows = filteredKeys.map((key) => ({ key, data: branchData[key] }))
   const activeTechKey = techRows.some((row) => row.key === techSelectedKey) ? techSelectedKey : "all"
+  // Use the same organization-wide scale for every filter state so bars remain comparable.
+  const personnelRoleMaxima = branchOptions
+    .filter((option) => option.key !== "all")
+    .map((option) => branchData[option.key]?.personnelRoles ?? [])
+    .reduce<number[]>((maxima, roles) => roles.map((role, index) => Math.max(maxima[index] ?? 0, role.value)), [])
 
   return (
     <main className="min-h-screen w-full max-w-full overflow-x-hidden bg-background text-foreground selection:bg-primary/30">
@@ -871,8 +875,14 @@ export function BranchDashboard() {
                         </span>
                       </div>
                       <div className="mt-1.5 grid gap-1">
-                        {current.personnelRoles.map((role) => (
-                          <RoleBar key={role.label} label={role.label} value={role.value} tone={role.tone} />
+                        {current.personnelRoles.map((role, index) => (
+                          <RoleBar
+                            key={role.label}
+                            label={role.label}
+                            value={role.value}
+                            tone={role.tone}
+                            maxValue={personnelRoleMaxima[index] ?? role.value}
+                          />
                         ))}
                       </div>
                     </div>
