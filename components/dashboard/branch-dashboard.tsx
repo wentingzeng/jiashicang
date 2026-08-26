@@ -291,20 +291,26 @@ function sumBy<T>(items: T[], getValue: (item: T) => number) {
   return items.reduce((sum, item) => sum + getValue(item), 0)
 }
 
-function toBranchRow(branch: BranchData): RowItem {
-  const getMetric = (label: string) => branch.operationMetrics.find((metric) => metric.label === label)?.value ?? 0
+  function toBranchRow(branch: BranchData): RowItem {
+  const development = branch.personnelRoles[0]?.value ?? 0
+  const operations = branch.personnelRoles[1]?.value ?? 0
+  const architecture = branch.personnelRoles[3]?.value ?? 0
+  const innovation = branch.personnelRoles[6]?.value ?? 0
+  const data = branch.personnelRoles[2]?.value ?? 0
+  const security = branch.personnelRoles[4]?.value ?? 0
+  const management = Math.max(0, branch.personnelTotal - development - operations - architecture - innovation - data - security)
   return {
-    name: branch.label,
-    development: branch.personnelRoles[0]?.value ?? 0,
-    operations: branch.personnelRoles[1]?.value ?? 0,
-    architecture: branch.personnelRoles[3]?.value ?? 0,
-    innovation: branch.innovation.done,
-    data: branch.personnelRoles[2]?.value ?? 0,
-    security: branch.personnelRoles[4]?.value ?? 0,
-    management: branch.quickStats[2]?.value ?? 0,
-    total: branch.personnelTotal,
+  name: branch.label,
+  development,
+  operations,
+  architecture,
+  innovation,
+  data,
+  security,
+  management,
+  total: development + operations + architecture + innovation + data + security + management,
   }
-}
+  }
 
 function aggregateBranchData(keys: string[]): BranchData {
   const rows = keys.map((key) => branchData[key])
@@ -333,7 +339,7 @@ function aggregateBranchData(keys: string[]): BranchData {
       ...base.cloud,
       value: sumBy(rows, (row) => row.cloud.value),
       total: sumBy(rows, (row) => row.cloud.total),
-      note: "当前筛选系统上云进度",
+      note: "��前筛选系统上云进度",
     },
     personnelTotal: sumBy(rows, (row) => row.personnelTotal),
     personnelDelta: "—",
