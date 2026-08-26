@@ -312,7 +312,7 @@ function aggregateBranchData(keys: string[]): BranchData {
   const tableRows = rows.map(toBranchRow)
   return {
     ...base,
-    label: keys.length === 1 ? base.label : "筛选结��汇总",
+    label: keys.length === 1 ? base.label : "筛选结���汇总",
     quickStats: base.quickStats.map((stat, index) => ({ ...stat, value: sumBy(rows, (row) => row.quickStats[index]?.value ?? 0) })),
     operationMetrics,
     innovation: {
@@ -540,7 +540,7 @@ function TechLevelPanel({ rows, selectedKey, onSelect }: { rows: Array<{ key: st
   const radarPoints = vertexCoords.map((point) => `${point.x},${point.y}`).join(" ")
 
   return (
-    <PanelCard title="分行科���分级" icon={<Gauge className="size-4" />}>
+    <PanelCard title="分行科技分级" icon={<Gauge className="size-4" />}>
       <div className="grid gap-3">
         <div className="grid grid-cols-3 gap-1.5">
   {[{ label: "3A", count: 1 }, { label: "3B", count: 1 }, { label: "3C", count: 1 }, { label: "2A", count: 1 }, { label: "2B", count: 1 }, { label: "2C", count: 1 }, { label: "1A", count: 1 }, { label: "1B", count: 1 }, { label: "1C", count: 2 }].map(({ label, count }) => (
@@ -616,7 +616,7 @@ function TechLevelPanel({ rows, selectedKey, onSelect }: { rows: Array<{ key: st
                 ))}
               </TableRow>
             </TableHeader>
-            <TableBody>{rows.map(({ key, data }) => <TableRow key={key} onClick={() => onSelect(key)} className={cn("cursor-pointer", key === selectedKey && "bg-primary/10") }><TableCell className="whitespace-nowrap px-1.5 py-1.5 font-medium">{data.label}</TableCell><TableCell className="whitespace-nowrap px-1.5 py-1.5">{data.techLevel?.level ?? "B类"}</TableCell>{(data.techLevel?.dimensions ?? [82, 78, 84, 80, 86]).slice(0, 5).map((value, index) => <TableCell key={`${key}-${index}`} className={cn("px-1 py-1.5 text-center font-mono text-foreground/80", activeDim === index && "bg-primary/10 text-primary")}>{value}</TableCell>)}</TableRow>)}</TableBody>
+            <TableBody>{rows.map(({ key, data }) => <TableRow key={key} onClick={() => onSelect(key)} className={cn("cursor-pointer", key === selectedKey && "bg-primary/10") }><TableCell className="whitespace-nowrap px-1.5 py-1.5 font-medium">{data.label}</TableCell><TableCell className="whitespace-nowrap px-1.5 py-1.5"><Badge variant="outline" className="border-primary/30 bg-primary/10 px-1.5 py-0 font-mono text-[10px] font-bold text-primary">{data.techLevel?.level ?? "B类"}</Badge></TableCell>{(data.techLevel?.dimensions ?? [82, 78, 84, 80, 86]).slice(0, 5).map((value, index) => <TableCell key={`${key}-${index}`} className={cn("px-1 py-1.5 text-center font-mono text-foreground/80", activeDim === index && "bg-primary/10 text-primary")}>{value}</TableCell>)}</TableRow>)}</TableBody>
           </Table>
         </div>
       </div>
@@ -768,7 +768,7 @@ export function BranchDashboard() {
                       <div className="text-center text-[10px] text-muted-foreground">信创部改造前十名完成度</div>
                     </div> : <div className="flex items-center justify-between gap-2.5">
                       <div className="flex flex-1 items-center justify-center">
-                        <RingChart value={current.innovation.done} total={current.innovation.value} label="已完成" />
+                        <RingChart value={current.innovation.value} total={current.innovation.value} label="计划总数" />
                       </div>
                       <div className="flex-1 space-y-2">
                         <div className="flex items-center justify-between text-[11px] text-slate-600">
@@ -819,7 +819,7 @@ export function BranchDashboard() {
                           <span className="ml-1 text-[10px] font-normal text-muted-foreground">人</span>
                         </span>
                       </div>
-                      <div className="mt-2 grid gap-2">
+                      <div className="mt-1.5 grid gap-1">
                         {current.personnelRoles.map((role) => (
                           <RoleBar key={role.label} label={role.label} value={role.value} tone={role.tone} />
                         ))}
