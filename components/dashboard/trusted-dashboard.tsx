@@ -13,48 +13,48 @@ const smallMachineRows: Array<[string, number, number]> = [["南京", 328, 86], 
 function Panel({ title, children, className = "" }: { title: string; children: React.ReactNode; className?: string }) {
   return (
     <section className={`overflow-hidden rounded-lg border border-border/80 bg-card shadow-sm ${className}`}>
-      <header className="flex items-center gap-2 border-b border-border/70 bg-secondary/50 px-3 py-2">
-        <span className="flex size-6 items-center justify-center rounded-md bg-primary/10 text-primary">
-          <BarChart3 className="size-3.5" />
+      <header className="flex items-center gap-2 border-b border-border/70 bg-secondary/50 px-3 py-1.5">
+        <span className="flex size-5 items-center justify-center rounded-md bg-primary/10 text-primary">
+          <BarChart3 className="size-3" />
         </span>
         <h2 className="text-sm font-bold">{title}</h2>
       </header>
-      <div className="p-3">{children}</div>
+      <div className="p-2.5">{children}</div>
     </section>
   )
 }
 
 function StatCard({ label, value, sub, color = colors.blue }: { label: string; value: string; sub: string; color?: string }) {
   return (
-    <div className="rounded-lg bg-secondary/40 px-3 py-2.5">
+    <div className="rounded-lg bg-secondary/40 px-3 py-2">
       <p className="text-xs font-semibold text-foreground">{label}</p>
-      <p className="mt-1 truncate font-mono text-xl font-black" style={{ color }}>
+      <p className="mt-0.5 truncate font-mono text-lg font-black" style={{ color }}>
         {value}
       </p>
-      <p className="mt-0.5 truncate text-[11px] text-muted-foreground">{sub}</p>
+      <p className="truncate text-[11px] text-muted-foreground">{sub}</p>
     </div>
   )
 }
 
 function RingStat({ label, ratio, value, sub, color = colors.blue }: { label: string; ratio: number; value: string; sub: string; color?: string }) {
-  const c = 2 * Math.PI * 34
+  const c = 2 * Math.PI * 30
   return (
-    <div className="flex items-center gap-3 rounded-lg bg-secondary/40 px-3 py-2.5">
-      <div className="relative size-[58px] shrink-0">
-        <svg viewBox="0 0 80 80" className="size-full -rotate-90">
-          <circle cx="40" cy="40" r="34" fill="none" stroke="currentColor" strokeWidth="9" className="text-secondary" />
-          <circle cx="40" cy="40" r="34" fill="none" stroke={color} strokeWidth="9" strokeLinecap="round" strokeDasharray={c} strokeDashoffset={c * (1 - ratio / 100)} />
+    <div className="flex items-center gap-2.5 rounded-lg bg-secondary/40 px-2.5 py-2">
+      <div className="relative size-12 shrink-0">
+        <svg viewBox="0 0 72 72" className="size-full -rotate-90">
+          <circle cx="36" cy="36" r="30" fill="none" stroke="currentColor" strokeWidth="8" className="text-secondary" />
+          <circle cx="36" cy="36" r="30" fill="none" stroke={color} strokeWidth="8" strokeLinecap="round" strokeDasharray={c} strokeDashoffset={c * (1 - ratio / 100)} />
         </svg>
-        <strong className="absolute inset-0 flex items-center justify-center font-mono text-[11px]" style={{ color }}>
+        <strong className="absolute inset-0 flex items-center justify-center font-mono text-[10px]" style={{ color }}>
           {ratio.toFixed(0)}%
         </strong>
       </div>
       <div className="min-w-0">
         <p className="truncate text-xs font-semibold text-foreground">{label}</p>
-        <p className="mt-0.5 truncate font-mono text-lg font-black" style={{ color }}>
+        <p className="truncate font-mono text-base font-black" style={{ color }}>
           {value}
         </p>
-        <p className="mt-0.5 truncate text-[11px] text-muted-foreground">{sub}</p>
+        <p className="truncate text-[11px] text-muted-foreground">{sub}</p>
       </div>
     </div>
   )
@@ -65,7 +65,7 @@ function CoreBars() {
   const ACTUAL = "#63b3ed"
   const PLAN = "#4fc3ab"
   return (
-    <div className="flex flex-col gap-4">
+    <div className="flex flex-col gap-2.5">
       <div className="flex items-center justify-end gap-4 text-[11px] text-muted-foreground">
         <span className="flex items-center gap-1.5">
           <i className="inline-block size-2.5 rounded-full" style={{ background: ACTUAL }} />
@@ -80,14 +80,14 @@ function CoreBars() {
         const ratio = Math.max((actual / plan) * 100, 22)
         return (
           <div key={label}>
-            <p className="mb-1.5 text-sm font-bold text-foreground">{label}</p>
-            <div className="flex flex-col gap-1">
-              <div className="h-7 overflow-hidden rounded-md bg-secondary/50" style={{ width: `${ratio}%` }}>
+            <p className="mb-1 text-sm font-bold text-foreground">{label}</p>
+            <div className="flex flex-col gap-0.5">
+              <div className="h-6 overflow-hidden rounded-md bg-secondary/50" style={{ width: `${ratio}%` }}>
                 <div className="flex h-full items-center rounded-md px-3 font-mono text-xs font-bold text-white" style={{ background: ACTUAL }}>
                   {actual.toLocaleString()}
                 </div>
               </div>
-              <div className="h-7 w-full overflow-hidden rounded-md">
+              <div className="h-6 w-full overflow-hidden rounded-md">
                 <div className="flex h-full items-center rounded-md px-3 font-mono text-xs font-bold text-white" style={{ background: PLAN }}>
                   {plan.toLocaleString()}
                 </div>
@@ -105,11 +105,11 @@ function ProductBars() {
   const UNDONE = "#e8f4fd"
   const max = Math.max(...productRows.map(([, n]) => n))
   const niceMax = Math.ceil(max / 100) * 100
-  const chartHeight = 176
+  const chartHeight = 140
   const ticks = [0, 0.25, 0.5, 0.75, 1].map((f) => Math.round(niceMax * f))
   return (
-    <div className="pt-1">
-      <div className="mb-2 flex items-center justify-end gap-3 text-[10px] text-muted-foreground">
+    <div>
+      <div className="mb-1.5 flex items-center justify-end gap-3 text-[10px] text-muted-foreground">
         <span className="flex items-center gap-1.5">
           <i className="inline-block size-2.5 rounded-full" style={{ background: DONE }} />
           已替代
@@ -164,11 +164,11 @@ function SmallMachineChart() {
   const DONE = "#38b2ac"
   const max = Math.max(...smallMachineRows.map(([, total]) => total))
   const niceMax = Math.ceil(max / 180) * 180
-  const chartHeight = 176
+  const chartHeight = 140
   const ticks = [0, niceMax / 2, niceMax]
   return (
-    <div className="pt-1">
-      <div className="mb-2 flex items-center justify-end gap-3 text-[10px] text-muted-foreground">
+    <div>
+      <div className="mb-1.5 flex items-center justify-end gap-3 text-[10px] text-muted-foreground">
         <span className="flex items-center gap-1.5">
           <i className="inline-block size-2.5 rounded-full" style={{ background: UNDONE }} />
           未下线
@@ -257,26 +257,26 @@ export function TrustedDashboard() {
   const [systemView, setSystemView] = useState<null | "head" | "branch">(null)
   return (
     <main className="min-h-screen bg-background text-foreground">
-      <div className="mx-auto max-w-[1800px] px-4 pb-8 md:px-6">
+      <div className="mx-auto max-w-[1800px] px-4 pb-5 md:px-6">
         <HeroBanner title="信创管理驾驶舱" subtitle="信创改造 · 国产替代 · 系统适配 · 平稳迁移" />
-        <div className="grid gap-4 lg:grid-cols-2">
-          <div className="flex min-w-0 flex-col gap-4">
-            <div className="rounded-xl border-2 border-primary/70 bg-card p-3">
-              <div className="mb-3 border-b border-border pb-2">
+        <div className="grid gap-3 lg:grid-cols-2">
+          <div className="flex min-w-0 flex-col gap-3">
+            <div className="rounded-xl border-2 border-primary/70 bg-card p-2.5">
+              <div className="mb-2 border-b border-border pb-1.5">
                 <h1 className="text-base font-black text-primary">系统改造</h1>
               </div>
-              <div className="mb-3 grid gap-2 md:grid-cols-2">
-                <button type="button" onClick={() => setSystemView("head")} className="rounded-md border border-primary/30 bg-primary/5 px-3 py-2 text-left text-xs font-semibold text-primary hover:bg-primary/10">
+              <div className="mb-2 grid gap-2 md:grid-cols-2">
+                <button type="button" onClick={() => setSystemView("head")} className="rounded-md border border-primary/30 bg-primary/5 px-3 py-1.5 text-left text-xs font-semibold text-primary hover:bg-primary/10">
                   点击查看总行系统改造明细
                 </button>
-                <button type="button" onClick={() => setSystemView("branch")} className="rounded-md border border-primary/30 bg-primary/5 px-3 py-2 text-left text-xs font-semibold text-primary hover:bg-primary/10">
+                <button type="button" onClick={() => setSystemView("branch")} className="rounded-md border border-primary/30 bg-primary/5 px-3 py-1.5 text-left text-xs font-semibold text-primary hover:bg-primary/10">
                   点击查看分行系统改造明细
                 </button>
               </div>
               {systemView ? (
                 <DetailTable title={systemView === "head" ? "总行系统改造进展明细" : "分行系统改造进展明细"} rows={systemView === "head" ? headRows : branchRows} branch={systemView === "branch"} onBack={() => setSystemView(null)} />
               ) : (
-                <div className="flex flex-col gap-3">
+                <div className="flex flex-col gap-2">
                   <Panel title="一般系统信创进度">
                     <div className="grid gap-2 md:grid-cols-2">
                       <RingStat label="已单轨" ratio={(412 / (412 + 214)) * 100} value="412" sub="未单轨 214" />
@@ -289,8 +289,8 @@ export function TrustedDashboard() {
                 </div>
               )}
             </div>
-            <div className="rounded-xl border-2 border-primary/70 bg-card p-3">
-              <div className="mb-3 border-b border-border pb-2">
+            <div className="rounded-xl border-2 border-primary/70 bg-card p-2.5">
+              <div className="mb-2 border-b border-border pb-1.5">
                 <h2 className="text-base font-black text-primary">国密改造和密评进度</h2>
               </div>
               <div className="grid gap-2 md:grid-cols-2">
@@ -299,12 +299,12 @@ export function TrustedDashboard() {
               </div>
             </div>
           </div>
-          <div className="flex min-w-0 flex-col gap-4">
-            <div className="rounded-xl border-2 border-primary/70 bg-card p-3">
-              <div className="mb-3 border-b border-border pb-2">
+          <div className="flex min-w-0 flex-col gap-3">
+            <div className="rounded-xl border-2 border-primary/70 bg-card p-2.5">
+              <div className="mb-2 border-b border-border pb-1.5">
                 <h2 className="text-base font-black text-primary">产品替代</h2>
               </div>
-              <div className="flex flex-col gap-3">
+              <div className="flex flex-col gap-2">
                 <Panel title="麒麟界面推广进度">
                   <div className="grid gap-2 md:grid-cols-2">
                     <RingStat label="已推广" ratio={(16.68 / (16.68 + 68.58)) * 100} value="16.68K" sub="未推广 68.58K" color={colors.violet} />
@@ -315,7 +315,7 @@ export function TrustedDashboard() {
                   <SmallMachineChart />
                 </Panel>
                 <Panel title="其他关键品类产品存量替代进度">
-                  <p className="mb-2 text-xs font-semibold">各品类进度</p>
+                  <p className="mb-1.5 text-xs font-semibold">各品类进度</p>
                   <ProductBars />
                 </Panel>
               </div>
