@@ -140,10 +140,6 @@ function ProductBars() {
                       {name}
                       <br />总量 {amount}，已替代 {replaced}，未替代 {amount - replaced}
                     </div>
-                    <div className="mb-1 flex w-full flex-col items-center gap-0.5 text-[9px] font-semibold leading-none text-muted-foreground">
-                      <span>{replaced}</span>
-                      <span>{amount - replaced}</span>
-                    </div>
                     <div className="flex w-8 flex-col justify-end overflow-hidden rounded-t-md" style={{ height: `${barHeight}px` }}>
                       <div className="flex items-center justify-center overflow-hidden text-[9px] font-bold text-slate-700" style={{ height: `${ratio}%`, background: DONE }}>{replaced}</div>
                       <div className="flex items-center justify-center overflow-hidden text-[9px] font-bold text-slate-600" style={{ height: `${100 - ratio}%`, background: UNDONE }}>{amount - replaced}</div>
