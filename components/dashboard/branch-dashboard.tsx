@@ -312,7 +312,7 @@ function aggregateBranchData(keys: string[]): BranchData {
   const tableRows = rows.map(toBranchRow)
   return {
     ...base,
-    label: keys.length === 1 ? base.label : "筛选结������������汇总",
+    label: keys.length === 1 ? base.label : "筛选结�������������汇总",
     quickStats: base.quickStats.map((stat, index) => ({ ...stat, value: sumBy(rows, (row) => row.quickStats[index]?.value ?? 0) })),
     operationMetrics,
     innovation: {
@@ -782,7 +782,7 @@ export function BranchDashboard() {
                   </div>
 
                   <div onClick={(event) => { if ((event.target as HTMLElement).closest("button")) return; setRoomDetails((value) => !value) }} className="flex h-[210px] cursor-pointer flex-col overflow-hidden rounded-[12px] border border-border/80 bg-card/80 px-3 py-2 shadow-[inset_0_1px_0_oklch(0.72_0.15_220/6%)] lg:ml-2">
-                    <div className="flex min-h-7 items-center text-[12px] leading-4 text-muted-foreground">点��查看{selectedScopeLabel}中心机房建设模式及详情。</div>
+                    <div className="flex min-h-7 items-center text-[12px] leading-4 text-muted-foreground">����查看{selectedScopeLabel}中心机房建设模式及详情。</div>
                     <button type="button" onClick={() => setRoomDetails(!roomDetails)} className="mb-1.5 flex min-h-7 w-full items-center gap-2 text-left text-[12px] font-semibold leading-4 text-slate-700 hover:text-primary">
                       <span className="inline-flex size-2 rounded-full bg-[#2456c7]" />共{detailRows.length}家分行纳入当前筛选范围
                     </button>
@@ -893,7 +893,7 @@ export function BranchDashboard() {
 
 <div className="min-w-0 overflow-hidden rounded-[12px] border border-border/80 bg-card/80 shadow-[inset_0_1px_0_oklch(0.72_0.15_220/6%)]">
 	<div className="block max-h-[238px] w-full min-w-0 max-w-full overflow-x-auto overflow-y-auto overscroll-contain [WebkitOverflowScrolling:touch]">
-                          <Table className="w-full min-w-0 table-fixed text-[12px]">
+                          <Table className="min-w-[700px] text-[12px]">
                           <TableHeader className="bg-gradient-to-r from-primary via-primary to-accent">
                             <TableRow className="border-transparent hover:bg-transparent">
                               <TableHead className="px-2 py-2 text-[12px] font-semibold text-foreground">分行名称</TableHead>
