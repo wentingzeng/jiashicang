@@ -312,7 +312,7 @@ function aggregateBranchData(keys: string[]): BranchData {
   const tableRows = rows.map(toBranchRow)
   return {
     ...base,
-    label: keys.length === 1 ? base.label : "筛选结����汇总",
+    label: keys.length === 1 ? base.label : "筛选结�����汇总",
     quickStats: base.quickStats.map((stat, index) => ({ ...stat, value: sumBy(rows, (row) => row.quickStats[index]?.value ?? 0) })),
     operationMetrics,
     innovation: {
@@ -717,8 +717,8 @@ export function BranchDashboard() {
             <div className="grid min-w-0 items-stretch gap-3 lg:grid-cols-[minmax(240px,0.34fr)_minmax(0,0.66fr)]">
               <TechLevelPanel rows={techRows} selectedKey={activeTechKey} onSelect={setTechSelectedKey} />
 
-              <div className="grid min-w-0 items-start gap-3 lg:grid-cols-2">
-              <PanelCard className="order-3 h-full lg:col-span-2 lg:col-start-1 lg:row-start-2" title="运维指标" icon={<Gauge className="size-4" />}>
+              <div className="grid min-w-0 items-start gap-3 lg:grid-cols-2 lg:grid-rows-[248px_248px_auto]">
+              <PanelCard className="order-3 h-full lg:col-span-2 lg:col-start-1 lg:row-start-3" title="运维指标" icon={<Gauge className="size-4" />}>
                 <div className="grid gap-2 lg:grid-cols-[minmax(0,0.72fr)_minmax(0,0.9fr)_minmax(0,0.9fr)] lg:divide-x lg:divide-dashed lg:divide-border/70">
                   <div className="grid grid-cols-2 gap-1.5">
                     {current.operationMetrics.slice(0, 6).map((item) => <MetricTile key={item.label} item={item} />)}
@@ -751,7 +751,7 @@ export function BranchDashboard() {
                 </div>
               </PanelCard>
 
-              <div className="order-2 col-start-2 row-start-1 grid min-w-0 items-stretch gap-2 grid-cols-1 md:[&>*]:min-w-0">
+              <div className="order-2 col-start-2 row-start-1 row-span-2 grid h-[512px] min-w-0 items-stretch gap-2 grid-cols-1 md:[&>*]:min-w-0">
                   <PanelCard className="h-[248px] cursor-pointer overflow-hidden" bodyClassName="p-2.5" title="信创改造" icon={<ShieldCheck className="size-4" />} onClick={() => setInnovationRanking((value) => !value)}>
                     <button type="button" onClick={(event) => { event.stopPropagation(); setInnovationRanking((value) => !value) }} className="w-full text-left" aria-label="切换信创改���完成度排行">
                     {innovationRanking ? <div className="max-h-[160px] overflow-y-auto overflow-x-hidden overscroll-contain py-1 [WebkitOverflowScrolling:touch]">
@@ -770,7 +770,7 @@ export function BranchDashboard() {
                       <div className="text-center text-[10px] text-muted-foreground">信创部改造前十名完成度</div>
                     </div> : <div className="flex items-center justify-between gap-2.5">
                       <div className="flex flex-1 items-center justify-center">
-                        <RingChart value={current.innovation.value} total={current.innovation.value} label="计划总数" />
+                        <RingChart value={current.innovation.done} total={current.innovation.value} label="计划总数" />
                       </div>
                       <div className="flex-1 space-y-2">
                         <div className="flex items-center justify-between text-[11px] text-slate-600">
@@ -811,7 +811,7 @@ export function BranchDashboard() {
                   </PanelCard>
               </div>
 
-              <PanelCard className="order-1 col-start-1 row-start-1 h-full min-w-0" bodyClassName="min-w-0 p-1.5" title="科技人员数量" icon={<UsersRound className="size-4" />}>
+              <PanelCard className="order-1 col-start-1 row-start-1 row-span-2 h-[512px] min-w-0" bodyClassName="min-w-0 p-1.5" title="科技人员数量" icon={<UsersRound className="size-4" />}>
                   <div className="grid min-w-0 gap-2">
                     <div className="rounded-[10px] border border-border/80 bg-card/80 px-3 py-1.5 shadow-[inset_0_1px_0_oklch(0.72_0.15_220/6%)]">
                       <div className="flex items-center justify-between gap-2">
