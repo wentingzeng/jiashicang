@@ -30,7 +30,6 @@ import {
   capabilityData,
   inspectionCategoryData,
   outstandingBranches,
-  securityAssessmentData,
   securityManagementIndicators,
   securityOverview,
   trainingTrendData,
@@ -196,7 +195,7 @@ function RankedBars({
         <span>单位：分</span>
       </div>
       <div className="flex flex-col gap-2.5" style={{ minHeight: height }}>
-        {data.slice(0, 8).map((item, index) => (
+        {visibleMetrics.map((item, index) => (
           <div key={item.name} className="grid grid-cols-[20px_72px_1fr_42px] items-center gap-2 text-[11px]">
             <span className="font-mono text-muted-foreground">{String(index + 1).padStart(2, "0")}</span>
             <span className="truncate text-foreground/80">{item.name.replace("分行", "")}</span>
@@ -229,7 +228,8 @@ function CapabilityBars({ data, label, selectedInstitution }: { data: { name: st
     highlights: Math.max(55, item.value - 14 - index * 1.4),
     deductions: Math.min(8, 1 + index * 0.6),
   }))
-  return <div className="h-[300px] rounded-lg border border-border/50 bg-background/20 p-3"><div className="mb-2 flex items-center justify-between text-xs text-muted-foreground"><span>{label}</span><span>{selectedBranch ? "点击分行查看详情" : "点击分行"}</span></div>{selectedBranch ? <div><div className="mb-2 flex items-center justify-between rounded-lg border border-primary/15 bg-primary/5 px-3 py-2"><span className="text-xs font-semibold text-foreground">{selectedBranch} · 指标详情</span><button type="button" onClick={() => setSelectedBranch(null)} className="rounded-md border border-primary/20 bg-card px-2 py-1 text-[10px] font-medium text-primary transition-colors hover:bg-primary/10">返回总览</button></div><CompactDetailTable className="max-h-72 rounded-xl bg-card/90 text-[11px] shadow-md" headers={["指标", "得分"]} rows={(() => { const item = metrics.find((entry) => entry.name === selectedBranch); return item ? [["全年合计得分", item.value.toFixed(1)], ["压紧压实网络安全责任", item.responsibility.toFixed(1)], ["重要通知和工作部署落实情况及个人信息保护", item.notification.toFixed(1)], ["及时发现及整改网络安全隐患", item.risk.toFixed(1)], ["研发安全", item.research.toFixed(1)], ["总分行一体化安全运行落实情况", item.integrated.toFixed(1)], ["分行网络安全工作亮点及集团贡献情况", item.highlights.toFixed(1)], ["其他扣分项", item.deductions.toFixed(1)] ] : []})()} /></div> : <div className="max-h-64 space-y-2 overflow-y-auto pr-1">{metrics.map((item) => <button key={item.name} type="button" onClick={() => setSelectedBranch(item.name)} className="grid w-full grid-cols-[72px_1fr_42px] items-center gap-2 text-left text-[10px] hover:bg-primary/5"><span className="truncate text-muted-foreground">{item.name.replace("分行", "")}</span><span className="h-3 overflow-hidden rounded-full bg-primary/10"><span className="block h-full rounded-full bg-gradient-to-r from-[#4ba8d8] to-[#42bdb7]" style={{ width: `${item.value}%` }} /></span><strong className="text-right font-mono font-normal text-foreground">{item.value.toFixed(1)}</strong></button>)}</div>} </div>
+  const visibleMetrics = selectedBranch ? metrics : [...metrics.slice(0, 3), ...metrics.slice(-3)]
+  return <div className="h-[300px] rounded-lg border border-border/50 bg-background/20 p-3"><div className="mb-2 flex items-center justify-between text-xs text-muted-foreground"><span>{label}</span><span>{selectedBranch ? "点击分行查看详情" : "点击分行查看前三和后三名"}</span></div>{selectedBranch ? <div><div className="mb-2 flex items-center justify-between rounded-lg border border-primary/15 bg-primary/5 px-3 py-2"><span className="text-xs font-semibold text-foreground">{selectedBranch} · 指标详情</span><button type="button" onClick={() => setSelectedBranch(null)} className="rounded-md border border-primary/20 bg-card px-2 py-1 text-[10px] font-medium text-primary transition-colors hover:bg-primary/10">返回总览</button></div><CompactDetailTable className="max-h-72 rounded-xl bg-card/90 text-[11px] shadow-md" headers={["指标", "得分"]} rows={(() => { const item = metrics.find((entry) => entry.name === selectedBranch); return item ? [["全年合计得分", item.value.toFixed(1)], ["压紧压实网络安全责任", item.responsibility.toFixed(1)], ["重要通知和工作部署落实情况及个人信息保护", item.notification.toFixed(1)], ["及时发现及整改网络安全隐患", item.risk.toFixed(1)], ["研发安全", item.research.toFixed(1)], ["总分行一体化安全运行落实情况", item.integrated.toFixed(1)], ["分行网络安全工作亮点及集团贡献情况", item.highlights.toFixed(1)], ["其他扣分项", item.deductions.toFixed(1)] ] : []})()} /></div> : <div className="max-h-64 space-y-2 overflow-y-auto pr-1">{metrics.map((item) => <button key={item.name} type="button" onClick={() => setSelectedBranch(item.name)} className="grid w-full grid-cols-[72px_1fr_42px] items-center gap-2 text-left text-[10px] hover:bg-primary/5"><span className="truncate text-muted-foreground">{item.name.replace("分行", "")}</span><span className="h-3 overflow-hidden rounded-full bg-primary/10"><span className="block h-full rounded-full bg-gradient-to-r from-[#4ba8d8] to-[#42bdb7]" style={{ width: `${item.value}%` }} /></span><strong className="text-right font-mono font-normal text-foreground">{item.value.toFixed(1)}</strong></button>)}</div>} </div>
 /* legacy chart body removed */
 /*<span><i className="mr-1 inline-block size-2 rounded-sm bg-[#42bdb7]" />责任落实</span><span><i className="mr-1 inline-block size-2 rounded-sm bg-[#e5b45c]" />通知部署</span><span><i className="mr-1 inline-block size-2 rounded-sm bg-[#8494d8]" />隐患整改</span></div><ResponsiveContainer width="100%" height={230}><BarChart data={metrics} margin={{ top: 8, right: 4, left: -18, bottom: 8 }}><CartesianGrid vertical={false} strokeDasharray="3 3" /><XAxis dataKey="name" tick={{ fontSize: 9 }} tickFormatter={(value) => value.replace("分行", "")} interval={0} /><YAxis domain={[0, 100]} tick={{ fontSize: 9 }} /><Tooltip content={({ active, payload, label }) => active && payload?.length ? <div className="rounded-lg border border-border/50 bg-card/95 px-2 py-1.5 text-[9px] shadow-md"><div className="mb-1 font-medium text-foreground">{label}</div>{payload.map((entry) => <div key={String(entry.dataKey)} className="flex items-center justify-between gap-3 leading-4"><span className="max-w-44 truncate text-muted-foreground">{entry.name}</span><strong className="font-mono text-foreground">{Number(entry.value).toFixed(1)}</strong></div>)}</div> : null} /><Bar dataKey="value" name="全年合计得分" fill="#4ba8d8" radius={[3, 3, 0, 0]} /><Bar dataKey="responsibility" name="压紧压实网络安全责任" fill="#42bdb7" radius={[3, 3, 0, 0]} /><Bar dataKey="notification" name="重要通知和工作部署落实情况及个人信息保护" fill="#e5b45c" radius={[3, 3, 0, 0]} /><Bar dataKey="risk" name="及时发现及整改网络安全风险隐患" fill="#8494d8" radius={[3, 3, 0, 0]} /></BarChart></ResponsiveContainer></>}</div>
 */
@@ -391,9 +391,6 @@ export function SecurityDashboard() {
   const filteredViolations = selectedInstitution === "全部机构"
     ? violationTrendData
     : violationTrendData.filter((item) => item.name === selectedInstitution)
-  const filteredAssessment = selectedInstitution === "全部机构"
-    ? securityAssessmentData
-    : securityAssessmentData.filter((item) => item.name === selectedInstitution)
   const filteredBranches = selectedInstitution === "全部机构"
     ? branchSecurityData
     : branchSecurityData.filter((item) => item.name.includes(selectedInstitution.replace("分行", "")))
@@ -489,24 +486,24 @@ export function SecurityDashboard() {
               </Panel>
 
               <Panel title="网络安全管理指标" tone="primary" className="flex flex-1 flex-col">
-                <div className="flex-1">
-                <ul className="space-y-2.5 text-sm leading-6 text-muted-foreground">
-                  {securityManagementIndicators.map((item) => (
-                    <li key={item} className="flex gap-2.5">
-                      <span className="mt-2 size-1.5 shrink-0 rounded-full bg-accent" />
-                      <span>{item}</span>
-                    </li>
-                  ))}
-                </ul>
+                <div className="grid flex-1 grid-cols-1 gap-2.5 sm:grid-cols-2">
+                  {securityManagementIndicators.map((item, index) => {
+                    const [label, value] = item.split("：")
+                    return (
+                      <div key={item} className="rounded-lg border border-border/50 bg-background/25 p-3 shadow-sm">
+                        <div className="mb-2 flex items-start gap-2 text-xs leading-5 text-muted-foreground">
+                          <span className="mt-1.5 size-2 shrink-0 rounded-full bg-accent" />
+                          <span>{label}</span>
+                        </div>
+                        <strong className={`font-mono text-xl tabular-nums ${index < 2 ? "text-accent" : "text-primary"}`}>{value}</strong>
+                      </div>
+                    )
+                  })}
                 </div>
               </Panel>
           </section>
 
           <section className="flex h-full min-h-0 min-w-0 flex-col gap-4">
-              <Panel title="网络安全考评" tone="chart-4" bodyClassName="p-3">
-                <AssessmentBars data={filteredAssessment} />
-              </Panel>
-
               <Panel title="检查发现问题" tone="accent" bodyClassName="space-y-3">
                 <div className="grid grid-cols-2 gap-3">
                   <StatCard
@@ -532,7 +529,7 @@ export function SecurityDashboard() {
                     color="var(--accent)"
                   />
                   <BranchList
-                    title="表现较差的三家分行"
+                    title="表现较差��三家分行"
                     data={weakBranches}
                     color="#e9ad43"
                   />
