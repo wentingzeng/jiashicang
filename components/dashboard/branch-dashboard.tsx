@@ -617,7 +617,7 @@ function TechLevelPanel({ rows, selectedKey, onSelect }: { rows: Array<{ key: st
                     textAnchor={index === 1 || index === 2 ? "start" : index === 3 || index === 4 ? "end" : "middle"}
                     dominantBaseline="middle"
                     onClick={() => setActiveDim(index)}
-                    className={cn("cursor-pointer text-[8px] font-medium", isActive ? "fill-primary font-bold" : "fill-foreground")}
+                    className={cn("cursor-pointer text-[10px] font-medium", isActive ? "fill-primary font-bold" : "fill-foreground")}
                   >
                     {label}
                   </text>
