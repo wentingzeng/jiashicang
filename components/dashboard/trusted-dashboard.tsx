@@ -62,20 +62,40 @@ function RingStat({ label, ratio, value, sub, color = colors.blue }: { label: st
 
 function CoreBars() {
   const rows: Array<[string, number, number]> = [["对公核心", 66, 531], ["零售存款", 663, 1031], ["总账核算", 664, 859]]
+  const ACTUAL = "#63b3ed"
+  const PLAN = "#4fc3ab"
   return (
-    <div className="flex flex-col gap-3">
-      <p className="text-[11px] text-muted-foreground">进度数值均为：实际天数 / 计划天数</p>
-      {rows.map(([label, actual, plan]) => (
-        <div key={label}>
-          <div className="mb-1 flex justify-between text-xs font-semibold">
-            <span>{label}</span>
-            <span className="font-mono text-muted-foreground">{actual} / {plan} 天</span>
+    <div className="flex flex-col gap-4">
+      <div className="flex items-center justify-end gap-4 text-[11px] text-muted-foreground">
+        <span className="flex items-center gap-1.5">
+          <i className="inline-block size-2.5 rounded-full" style={{ background: ACTUAL }} />
+          实际天数
+        </span>
+        <span className="flex items-center gap-1.5">
+          <i className="inline-block size-2.5 rounded-full" style={{ background: PLAN }} />
+          计划天数
+        </span>
+      </div>
+      {rows.map(([label, actual, plan]) => {
+        const ratio = Math.max((actual / plan) * 100, 22)
+        return (
+          <div key={label}>
+            <p className="mb-1.5 text-sm font-bold text-foreground">{label}</p>
+            <div className="flex flex-col gap-1">
+              <div className="h-7 overflow-hidden rounded-md bg-secondary/50" style={{ width: `${ratio}%` }}>
+                <div className="flex h-full items-center rounded-md px-3 font-mono text-xs font-bold text-white" style={{ background: ACTUAL }}>
+                  {actual.toLocaleString()}
+                </div>
+              </div>
+              <div className="h-7 w-full overflow-hidden rounded-md">
+                <div className="flex h-full items-center rounded-md px-3 font-mono text-xs font-bold text-white" style={{ background: PLAN }}>
+                  {plan.toLocaleString()}
+                </div>
+              </div>
+            </div>
           </div>
-          <div className="h-3 overflow-hidden rounded-full bg-secondary">
-            <div className="h-full rounded-full bg-primary" style={{ width: `${(actual / plan) * 100}%` }} />
-          </div>
-        </div>
-      ))}
+        )
+      })}
     </div>
   )
 }
