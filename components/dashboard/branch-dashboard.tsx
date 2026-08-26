@@ -312,7 +312,7 @@ function aggregateBranchData(keys: string[]): BranchData {
   const tableRows = rows.map(toBranchRow)
   return {
     ...base,
-    label: keys.length === 1 ? base.label : "筛选结����������������汇总",
+    label: keys.length === 1 ? base.label : "筛选结�����������������汇总",
     quickStats: base.quickStats.map((stat, index) => ({ ...stat, value: sumBy(rows, (row) => row.quickStats[index]?.value ?? 0) })),
     operationMetrics,
     innovation: {
@@ -617,7 +617,7 @@ function TechLevelPanel({ rows, selectedKey, onSelect }: { rows: Array<{ key: st
                     textAnchor="middle"
                     dominantBaseline="middle"
                     onClick={() => setActiveDim(index)}
-                    className={cn("cursor-pointer text-[6px] font-medium", isActive ? "fill-primary font-bold" : "fill-foreground")}
+                    className={cn("cursor-pointer text-[8px] font-medium", isActive ? "fill-primary font-bold" : "fill-foreground")}
                   >
                     {label}
                   </text>
@@ -646,7 +646,7 @@ function TechLevelPanel({ rows, selectedKey, onSelect }: { rows: Array<{ key: st
               )}
             </svg>
           </div>
-          <div className="text-center text-[12px] text-muted-foreground">{displayLabel}{displayLevel ? ` · ${displayLevel}` : ""} · 点击雷达图或表头查看单项指标</div>
+          <div className="text-center text-[12px] text-muted-foreground">{displayLabel}{displayLevel ? ` · ${displayLevel}` : ""} · 点击雷达图或表头查看单���指标</div>
         </div>
         <div className="max-h-[268px] overflow-auto rounded-lg border border-border/70">
           <Table className="min-w-[560px] text-[12px]">
