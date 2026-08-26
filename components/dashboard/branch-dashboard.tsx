@@ -949,7 +949,7 @@ export function BranchDashboard() {
                       </div>
                       <div className="flex items-center justify-between border-t border-border/60 bg-card/80 px-3 py-1.5 text-[12px] text-muted-foreground">
                         <span>每页显示 6 条分行数据</span>
-                        <div className="flex items-center gap-1.5" aria-label="科技人员数量分页">
+                        <div className="flex items-center gap-1.5" aria-label="科技人员数量分页" onClick={(event) => event.stopPropagation()}>
                           {Array.from({ length: personnelPageCount }, (_, index) => {
                             const page = index + 1
                             const isActive = personnelPage === page
