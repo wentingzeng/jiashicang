@@ -312,7 +312,7 @@ function aggregateBranchData(keys: string[]): BranchData {
   const tableRows = rows.map(toBranchRow)
   return {
     ...base,
-    label: keys.length === 1 ? base.label : "筛选结�����汇总",
+    label: keys.length === 1 ? base.label : "筛选结果汇总",
     quickStats: base.quickStats.map((stat, index) => ({ ...stat, value: sumBy(rows, (row) => row.quickStats[index]?.value ?? 0) })),
     operationMetrics,
     innovation: {
@@ -540,7 +540,7 @@ function TechLevelPanel({ rows, selectedKey, onSelect }: { rows: Array<{ key: st
   const radarPoints = vertexCoords.map((point) => `${point.x},${point.y}`).join(" ")
 
   return (
-    <PanelCard title="分���科技分级" icon={<Gauge className="size-4" />}>
+    <PanelCard title="分行科技分级" icon={<Gauge className="size-4" />}>
       <div className="grid gap-3">
         <div className="grid grid-cols-3 gap-1.5">
   {[{ label: "3A", count: 1 }, { label: "3B", count: 1 }, { label: "3C", count: 1 }, { label: "2A", count: 1 }, { label: "2B", count: 1 }, { label: "2C", count: 1 }, { label: "1A", count: 1 }, { label: "1B", count: 1 }, { label: "1C", count: 2 }].map(({ label, count }) => (
@@ -722,8 +722,8 @@ export function BranchDashboard() {
                     {current.operationMetrics.slice(0, 6).map((item) => <MetricTile key={item.label} item={item} />)}
                   </div>
 
-                  <div onClick={(event) => { if ((event.target as HTMLElement).closest("button")) return; setRoomDetails((value) => !value) }} className="flex h-[248px] cursor-pointer flex-col overflow-hidden rounded-[12px] border border-border/80 bg-card/80 px-3 py-2 shadow-[inset_0_1px_0_oklch(0.72_0.15_220/6%)] lg:ml-2">
-                    <div className="flex min-h-7 items-center text-[10px] leading-4 text-muted-foreground">点击查看{selectedScopeLabel}中心机房建设模式及详情。</div>
+                  <div onClick={(event) => { if ((event.target as HTMLElement).closest("button")) return; setRoomDetails((value) => !value) }} className="flex h-[210px] cursor-pointer flex-col overflow-hidden rounded-[12px] border border-border/80 bg-card/80 px-3 py-2 shadow-[inset_0_1px_0_oklch(0.72_0.15_220/6%)] lg:ml-2">
+                    <div className="flex min-h-7 items-center text-[11px] leading-4 text-muted-foreground">点击查看{selectedScopeLabel}中心机房建设模式及详情。</div>
                     <button type="button" onClick={() => setRoomDetails(!roomDetails)} className="mb-1.5 flex min-h-7 w-full items-center gap-2 text-left text-[11px] font-semibold leading-4 text-slate-700 hover:text-primary">
                       <span className="inline-flex size-2 rounded-full bg-[#2456c7]" />共{detailRows.length}家分行纳入当前筛选范围
                     </button>
@@ -741,7 +741,7 @@ export function BranchDashboard() {
 
                   <div onClick={(event) => { if ((event.target as HTMLElement).closest("button")) return; setDisasterDetails((value) => !value) }} className="flex h-[248px] cursor-pointer flex-col gap-1.5 overflow-hidden rounded-[12px] border border-border/80 bg-card/80 px-3 py-2 shadow-[inset_0_1px_0_oklch(0.72_0.15_220/6%)] lg:ml-2">
                     <div className="text-[11px] text-muted-foreground">点击查看{selectedScopeLabel}中心机房建设模式及详情。</div>
-                    <button type="button" onClick={() => setDisasterDetails(!disasterDetails)} className="w-full text-left text-[12px] font-semibold text-slate-700 transition-colors hover:text-primary">
+                    <button type="button" onClick={() => setDisasterDetails(!disasterDetails)} className="w-full text-left text-[11px] font-semibold leading-4 text-slate-700 transition-colors hover:text-primary">
                       <span className="mr-2 inline-flex size-2 rounded-full bg-[#2dc2be]" />其中{detailRows.length}家分行配备灾备机房
                     </button>
                     {disasterDetails ? <div className="max-h-[150px] overflow-y-auto overscroll-contain grid gap-2 py-1 text-[11px] text-foreground/80 [WebkitOverflowScrolling:touch]"><div className="font-semibold text-primary">配备灾备机房的分行</div>{detailRows.map((row) => <div key={row.name} className="flex items-center justify-between border-t border-border/50 py-1.5"><span>{row.name}</span><span className="text-muted-foreground">已配备</span></div>)}</div> : <button type="button" onClick={() => setRoomMode(roomMode === "central" ? "disaster" : "central")} className="flex items-center justify-center" aria-label="查看灾备机房配套率"><GaugeMeter roomMode={roomMode} /></button>}
@@ -831,7 +831,7 @@ export function BranchDashboard() {
                           <Table className="w-full min-w-[700px] table-fixed text-[10px]">
                           <TableHeader className="bg-gradient-to-r from-primary via-primary to-accent">
                             <TableRow className="border-transparent hover:bg-transparent">
-                              <TableHead className="px-2 py-2 text-[10px] font-semibold text-foreground">分行名��</TableHead>
+                              <TableHead className="px-2 py-2 text-[10px] font-semibold text-foreground">分行名称</TableHead>
                               <TableHead className="px-1.5 py-1 text-center text-[10px] font-semibold text-foreground">研发</TableHead>
                               <TableHead className="px-1.5 py-1 text-center text-[10px] font-semibold text-foreground">运维</TableHead>
                               <TableHead className="px-1.5 py-1 text-center text-[10px] font-semibold text-foreground">架构</TableHead>
