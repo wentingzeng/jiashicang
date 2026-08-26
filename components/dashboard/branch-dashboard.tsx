@@ -312,7 +312,7 @@ function aggregateBranchData(keys: string[]): BranchData {
   const tableRows = rows.map(toBranchRow)
   return {
     ...base,
-    label: keys.length === 1 ? base.label : "筛选结�����������������汇总",
+    label: keys.length === 1 ? base.label : "筛选结������������������汇总",
     quickStats: base.quickStats.map((stat, index) => ({ ...stat, value: sumBy(rows, (row) => row.quickStats[index]?.value ?? 0) })),
     operationMetrics,
     innovation: {
@@ -544,7 +544,7 @@ function TechLevelPanel({ rows, selectedKey, onSelect }: { rows: Array<{ key: st
   const vertexCoords = points.map((value, index) => {
     const angle = (Math.PI * 2 * index) / points.length - Math.PI / 2
     const radius = 18 + value * 0.42
-    return { x: 80 + Math.cos(angle) * radius, y: 80 + Math.sin(angle) * radius }
+    return { x: 110 + Math.cos(angle) * radius, y: 90 + Math.sin(angle) * radius }
   })
   const radarPoints = vertexCoords.map((point) => `${point.x},${point.y}`).join(" ")
 
@@ -601,18 +601,18 @@ function TechLevelPanel({ rows, selectedKey, onSelect }: { rows: Array<{ key: st
         </div>
         <div className="rounded-lg border border-border/70 bg-background/40 p-2">
           <div className="flex justify-center">
-            <svg viewBox="0 0 160 160" className="h-48 w-48" role="img" aria-label={`${displayLabel}科技能力雷达图`}>
-              {[30, 50, 70].map((radius) => <polygon key={radius} points={points.map((_, index) => { const angle = (Math.PI * 2 * index) / points.length - Math.PI / 2; return `${80 + Math.cos(angle) * radius},${80 + Math.sin(angle) * radius}` }).join(" ")} fill="none" stroke="currentColor" className="text-border" strokeWidth="1" />)}
+            <svg viewBox="0 0 220 180" className="h-48 w-64" role="img" aria-label={`${displayLabel}科技能力雷达图`}>
+              {[30, 50, 70].map((radius) => <polygon key={radius} points={points.map((_, index) => { const angle = (Math.PI * 2 * index) / points.length - Math.PI / 2; return `${110 + Math.cos(angle) * radius},${90 + Math.sin(angle) * radius}` }).join(" ")} fill="none" stroke="currentColor" className="text-border" strokeWidth="1" />)}
               <polygon points={radarPoints} fill="rgba(45,194,190,0.28)" stroke="#2dc2be" strokeWidth="2" />
               {dimensionLabels.map((label, index) => {
                 const angle = (Math.PI * 2 * index) / points.length - Math.PI / 2
-                const x = 80 + Math.cos(angle) * 72
-                const y = 80 + Math.sin(angle) * 72
+                const x = 110 + Math.cos(angle) * 84
+                const y = 90 + Math.sin(angle) * 84
                 const isActive = activeDim === index
                 return (
                   <text
                     key={label}
-                    x={index === 1 || index === 2 ? 76 : index === 3 || index === 4 ? 84 : x}
+                    x={x}
                     y={y}
                     textAnchor={index === 1 || index === 2 ? "start" : index === 3 || index === 4 ? "end" : "middle"}
                     dominantBaseline="middle"
@@ -637,11 +637,11 @@ function TechLevelPanel({ rows, selectedKey, onSelect }: { rows: Array<{ key: st
                 />
               ))}
               {activeDim === null ? (
-                <text x="80" y="84" textAnchor="middle" className="fill-muted-foreground text-[8px]">点击指标查看分值</text>
+                <text x="110" y="94" textAnchor="middle" className="fill-muted-foreground text-[8px]">点击指标查看分值</text>
               ) : (
                 <>
-                  <text x="80" y="76" textAnchor="middle" className="fill-primary font-mono text-[20px] font-bold">{points[activeDim]}</text>
-                  <text x="80" y="92" textAnchor="middle" className="fill-muted-foreground text-[8px]">{dimensionLabels[activeDim]}</text>
+                  <text x="110" y="82" textAnchor="middle" className="fill-primary font-mono text-[20px] font-bold">{points[activeDim]}</text>
+                  <text x="110" y="98" textAnchor="middle" className="fill-muted-foreground text-[8px]">{dimensionLabels[activeDim]}</text>
                 </>
               )}
             </svg>
