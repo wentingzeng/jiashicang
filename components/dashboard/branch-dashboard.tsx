@@ -95,6 +95,8 @@ const branchData: Record<string, BranchData> = {
       { label: "数据岗位", value: 134, tone: "chart-4" },
       { label: "架构岗位", value: 201, tone: "primary" },
       { label: "安全岗位", value: 82, tone: "accent" },
+      { label: "科技管理干部", value: 46, tone: "chart-4" },
+      { label: "创新岗位", value: 38, tone: "primary" },
     ],
     tableRows: [
       { name: "南京分行", development: 19, operations: 5, architecture: 1, innovation: 0, data: 3, security: 2, management: 29, total: 59 },
@@ -132,6 +134,8 @@ const branchData: Record<string, BranchData> = {
       { label: "数据岗位", value: 121, tone: "chart-4" },
       { label: "架构岗位", value: 168, tone: "primary" },
       { label: "安全岗位", value: 61, tone: "accent" },
+      { label: "科技管理干部", value: 34, tone: "chart-4" },
+      { label: "创新岗位", value: 28, tone: "primary" },
     ],
     tableRows: [
       { name: "杭州分行", development: 18, operations: 10, architecture: 1, innovation: 0, data: 4, security: 2, management: 21, total: 56 },
@@ -169,6 +173,8 @@ const branchData: Record<string, BranchData> = {
       { label: "数据岗位", value: 108, tone: "chart-4" },
       { label: "架构岗位", value: 154, tone: "primary" },
       { label: "安全岗位", value: 56, tone: "accent" },
+      { label: "科技管理干部", value: 31, tone: "chart-4" },
+      { label: "创新岗位", value: 26, tone: "primary" },
     ],
     tableRows: [
       { name: "广州分行", development: 17, operations: 8, architecture: 1, innovation: 1, data: 4, security: 2, management: 18, total: 51 },
@@ -206,6 +212,8 @@ const branchData: Record<string, BranchData> = {
       { label: "数据岗位", value: 78, tone: "chart-4" },
       { label: "架构岗位", value: 109, tone: "primary" },
       { label: "安全岗位", value: 42, tone: "accent" },
+      { label: "科技管理干部", value: 24, tone: "chart-4" },
+      { label: "创新岗位", value: 20, tone: "primary" },
     ],
     tableRows: [
       { name: "福州分行", development: 14, operations: 6, architecture: 0, innovation: 0, data: 3, security: 1, management: 14, total: 38 },
@@ -505,9 +513,9 @@ function RoleBar({ label, value, tone, maxValue }: { label: string; value: numbe
   )
 }
 
-function PanelCard({ title, icon, children, className }: { title: string; icon: ReactNode; children: ReactNode; className?: string }) {
+function PanelCard({ title, icon, children, className, onClick }: { title: string; icon: ReactNode; children: ReactNode; className?: string; onClick?: () => void }) {
   return (
-    <section className={cn("h-full overflow-hidden rounded-xl border border-border/80 bg-card/90 shadow-[0_0_0_1px_oklch(0.72_0.15_220/6%),0_12px_40px_oklch(0_0_0/18%)] backdrop-blur-sm", className)}>
+    <section onClick={onClick} className={cn("h-full overflow-hidden rounded-xl border border-border/80 bg-card/90 shadow-[0_0_0_1px_oklch(0.72_0.15_220/6%),0_12px_40px_oklch(0_0_0/18%)] backdrop-blur-sm", className)}>
       <div className="relative flex items-center gap-3 border-b border-border/60 bg-gradient-to-r from-primary/12 via-card to-card px-4 py-3">
         <div className="flex items-center gap-1 opacity-70" aria-hidden="true">
           {[0, 1, 2].map((i) => (
@@ -683,6 +691,7 @@ export function BranchDashboard() {
   const [innovationRanking, setInnovationRanking] = useState(false)
   const [cloudRanking, setCloudRanking] = useState(false)
   const [personnelPage, setPersonnelPage] = useState(1)
+  const [personnelDetails, setPersonnelDetails] = useState(false)
   const [techSelectedKey, setTechSelectedKey] = useState("all")
   const personnelPageSize = 6
 
@@ -743,10 +752,7 @@ export function BranchDashboard() {
   // Use one shared maximum from the active filter scope so every role is comparable.
   // For a single branch, this is that branch's largest role count; for a group,
   // it is the largest role count in the aggregated filtered data.
-  const personnelRoleMax = Math.max(
-    1,
-    ...filteredKeys.flatMap((key) => branchData[key]?.personnelRoles.map((role) => role.value) ?? []),
-  )
+  const personnelRoleMax = Math.max(1, ...current.personnelRoles.map((role) => role.value))
 
   return (
     <main className="min-h-screen w-full max-w-full overflow-x-hidden bg-background text-foreground selection:bg-primary/30">
@@ -868,9 +874,9 @@ export function BranchDashboard() {
                   </PanelCard>
               </div>
 
-              <PanelCard className="order-1 col-start-1 row-start-1 row-span-2 h-[512px] min-w-0" bodyClassName="min-w-0 p-1.5" title="科技人员数量" icon={<UsersRound className="size-4" />}>
+              <PanelCard className="order-1 col-start-1 row-start-1 row-span-2 h-[512px] min-w-0 cursor-pointer" bodyClassName="min-w-0 p-1.5" title="科技人员数量" icon={<UsersRound className="size-4" />} onClick={() => setPersonnelDetails((value) => !value)}>
                   <div className="grid min-w-0 gap-2">
-                    <div className="rounded-[10px] border border-border/80 bg-card/80 px-3 py-1.5 shadow-[inset_0_1px_0_oklch(0.72_0.15_220/6%)]">
+                    {!personnelDetails && <div className="rounded-[10px] border border-border/80 bg-card/80 px-3 py-2 shadow-[inset_0_1px_0_oklch(0.72_0.15_220/6%)]">
                       <div className="flex items-center justify-between gap-2">
                         <span className="text-[12px] text-foreground/80">科技人员总数</span>
                         <span className="font-mono text-[13px] font-black leading-none text-primary">
@@ -889,9 +895,9 @@ export function BranchDashboard() {
                           />
                         ))}
                       </div>
-                    </div>
+                    </div>}
 
-<div className="min-w-0 overflow-hidden rounded-[12px] border border-border/80 bg-card/80 shadow-[inset_0_1px_0_oklch(0.72_0.15_220/6%)]">
+{personnelDetails && <div className="min-w-0 overflow-hidden rounded-[12px] border border-border/80 bg-card/80 shadow-[inset_0_1px_0_oklch(0.72_0.15_220/6%)]">
 	<div className="block h-[190px] max-h-[190px] w-full min-w-0 max-w-full overflow-x-auto overflow-y-auto overscroll-contain [WebkitOverflowScrolling:touch]">
                           <Table className="min-w-[700px] text-[12px]">
                           <TableHeader className="bg-gradient-to-r from-primary via-primary to-accent">
@@ -949,7 +955,7 @@ export function BranchDashboard() {
                           })}
                         </div>
                       </div>
-                    </div>
+                      </div>}
                   </div>
                 </PanelCard>
               </div>
