@@ -474,7 +474,7 @@ function GaugeMeter({ roomMode, percentage = 22.22 }: { roomMode: "central" | "d
         </defs>
       </svg>
       <div className="absolute left-1/2 top-[38%] -translate-x-1/2 text-center">
-<div className="text-[10px] text-muted-foreground">{roomMode === "disaster" ? "灾备机房配套率" : "中心机房配套率"}</div>
+<div className="text-[10px] text-muted-foreground">灾备机房配套率</div>
   <div className="font-mono text-[18px] font-black text-primary">{safePercentage.toFixed(2)}%</div>
       </div>
       <div className="absolute left-[6px] bottom-2 text-[9px] text-muted-foreground">0</div>
@@ -770,7 +770,7 @@ export function BranchDashboard() {
                       <div className="text-center text-[10px] text-muted-foreground">信创部改造前十名完成度</div>
                     </div> : <div className="flex items-center justify-between gap-2.5">
                       <div className="flex flex-1 items-center justify-center">
-                        <RingChart value={current.innovation.done} total={current.innovation.value} label="计划总数" />
+                        <RingChart value={current.innovation.done} total={current.innovation.done + current.innovation.remaining} label="计划总数" />
                       </div>
                       <div className="flex-1 space-y-2">
                         <div className="flex items-center justify-between text-[11px] text-slate-600">
