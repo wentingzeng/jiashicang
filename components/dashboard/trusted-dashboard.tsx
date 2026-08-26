@@ -130,28 +130,29 @@ function ProductBars() {
             {ticks.map((t) => (
               <div key={t} className="absolute left-0 right-0 border-t border-dashed border-border/50" style={{ bottom: `${(t / niceMax) * 100}%` }} />
             ))}
-            <div className="absolute inset-0 flex items-end justify-around px-3">
-              {productRows.map(([name, amount, ratio]) => (
-                <div key={name} className="group relative flex flex-col items-center justify-end">
-                  <div className="pointer-events-none absolute bottom-full z-10 mb-2 hidden w-28 -translate-x-1/2 rounded border border-border bg-card p-1 text-[10px] shadow-lg group-hover:block">
-                    {name}
-                    <br />
-                    总量 {amount}，已替代 {Math.round((amount * ratio) / 100)}
+            <div className="absolute inset-x-0 bottom-0 top-0 grid grid-cols-8 items-end gap-1 px-2">
+              {productRows.map(([name, amount, ratio]) => {
+                const replaced = Math.round((amount * ratio) / 100)
+                const barHeight = Math.max(10, (amount / niceMax) * chartHeight)
+                return (
+                  <div key={name} className="group relative flex h-full min-w-0 flex-col items-center justify-end">
+                    <div className="pointer-events-none absolute bottom-full z-10 mb-2 hidden w-28 -translate-x-1/2 rounded border border-border bg-card p-1 text-[10px] shadow-lg group-hover:block">
+                      {name}
+                      <br />总量 {amount}，已替代 {replaced}，未替代 {amount - replaced}
+                    </div>
+                    <div className="mb-1 flex w-full flex-col items-center gap-0.5 text-[9px] font-semibold leading-none text-muted-foreground">
+                      <span>{replaced}</span>
+                      <span>{amount - replaced}</span>
+                    </div>
+                    <div className="flex w-8 flex-col justify-end overflow-hidden rounded-t-md" style={{ height: `${barHeight}px` }}>
+                      <div className="flex items-center justify-center overflow-hidden text-[9px] font-bold text-slate-700" style={{ height: `${ratio}%`, background: DONE }}>{replaced}</div>
+                      <div className="flex items-center justify-center overflow-hidden text-[9px] font-bold text-slate-600" style={{ height: `${100 - ratio}%`, background: UNDONE }}>{amount - replaced}</div>
+                    </div>
+                    <span className="mt-1 w-full truncate text-center text-[10px] font-medium text-muted-foreground">{name}</span>
                   </div>
-                  <div className="flex w-6 flex-col justify-end overflow-hidden rounded-t-md" style={{ height: `${Math.max(8, (amount / niceMax) * chartHeight)}px` }}>
-                    <div style={{ height: `${ratio}%`, background: DONE }} />
-                    <div style={{ height: `${100 - ratio}%`, background: UNDONE }} />
-                  </div>
-                </div>
-              ))}
+                )
+              })}
             </div>
-          </div>
-          <div className="flex justify-around px-3 pt-1">
-            {productRows.map(([name]) => (
-              <span key={name} className="max-w-[46px] truncate text-center text-[10px] font-medium text-muted-foreground">
-                {name}
-              </span>
-            ))}
           </div>
         </div>
       </div>
