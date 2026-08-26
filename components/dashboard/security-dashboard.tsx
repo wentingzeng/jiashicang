@@ -536,7 +536,7 @@ export function SecurityDashboard() {
                     color="var(--accent)"
                   />
                   <BranchList
-                    title="表现较差��三家分行"
+                    title="表现较差的三家分行"
                     data={weakBranches}
                     color="#e9ad43"
                   />
