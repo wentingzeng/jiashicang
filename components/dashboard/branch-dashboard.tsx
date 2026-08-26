@@ -83,7 +83,7 @@ type BranchApiRow = {
   cabinetCount?: number | null
   centerRoomMode?: string | null
   centerRoomStartDate?: string | null
-  hasDisasterRoom?: boolean | null
+  hasDisasterRoom?: boolean | number | null
   disasterRoomMode?: string | null
 }
 
@@ -928,7 +928,20 @@ export function BranchDashboard() {
     : Array.from(new Map(current.tableRows.map((row) => [row.name, row])).values())
   const detailRows = selectedBranch !== "all" ? scopedRows.slice(0, 1) : scopedRows.slice(0, 10)
   const roomRows = apiScopedRows.length ? apiScopedRows : detailRows.map((row) => ({ branchName: row.name, centerRoomMode: null, centerRoomStartDate: null, hasDisasterRoom: null, cabinetCount: null }))
-  const disasterRows = roomRows.filter((row) => row.hasDisasterRoom === true)
+  const centralRoomRows = roomRows.filter((row) => row.centerRoomMode === "自建" || row.centerRoomMode === "租赁")
+  const centralRoomSelfBuiltCount = roomRows.filter((row) => row.centerRoomMode === "自建").length
+  const centralRoomLeasedCount = roomRows.filter((row) => row.centerRoomMode === "租赁").length
+  const disasterRows = roomRows.filter((row) => row.hasDisasterRoom === true || row.hasDisasterRoom === 1)
+  const roomCoverageTotal = roomRows.length
+  const disasterCoveragePercentage = roomCoverageTotal ? (disasterRows.length / roomCoverageTotal) * 100 : 0
+  const scopedOperationMetrics = apiScopedRows.length
+    ? current.operationMetrics.map((item) => item.label === "父系统数"
+      ? { ...item, value: apiScopedRows.reduce((sum, row) => sum + toNumber(row.parentSystemCount), 0) }
+      : item.label === "子系统数"
+        ? { ...item, value: apiScopedRows.reduce((sum, row) => sum + toNumber(row.childSystemCount), 0) }
+        : item)
+    : current.operationMetrics
+  const scopedCurrent = scopedOperationMetrics === current.operationMetrics ? current : { ...current, operationMetrics: scopedOperationMetrics }
   const innovationRows = apiScopedRows.length
     ? apiScopedRows.map((row) => {
         const total = toNumber(row.innovationTotal)
@@ -990,13 +1003,13 @@ export function BranchDashboard() {
               <PanelCard className="order-3 h-full lg:col-span-2 lg:col-start-1 lg:row-start-3" title="运维指标" icon={<Gauge className="size-4" />}>
                 <div className="grid gap-2 lg:grid-cols-[minmax(0,0.72fr)_minmax(0,0.9fr)_minmax(0,0.9fr)] lg:divide-x lg:divide-dashed lg:divide-border/70">
                   <div className="grid grid-cols-2 gap-1.5">
-                    {current.operationMetrics.slice(0, 6).map((item) => <MetricTile key={item.label} item={item} />)}
+                    {scopedCurrent.operationMetrics.slice(0, 6).map((item) => <MetricTile key={item.label} item={item} />)}
                   </div>
 
                   <div onClick={(event) => { if ((event.target as HTMLElement).closest("button")) return; setRoomDetails((value) => !value) }} className="flex h-[210px] cursor-pointer flex-col overflow-hidden rounded-[12px] border border-border/80 bg-card/80 px-3 py-2 shadow-[inset_0_1px_0_oklch(0.72_0.15_220/6%)] lg:ml-2">
                     <div className="mb-1 flex items-center justify-between"><span className="text-[14px] font-bold text-foreground">中心机房</span><span className="text-[10px] text-muted-foreground">建设模式</span></div>
                     <button type="button" onClick={() => setRoomDetails(!roomDetails)} className="mb-1.5 flex min-h-7 w-full items-center gap-2 text-left text-[12px] font-semibold leading-4 text-slate-700 hover:text-primary">
-                      <span className="inline-flex size-2 rounded-full bg-[#2456c7]" />共{detailRows.length}家分行配备中心机房
+                      <span className="inline-flex size-2 rounded-full bg-[#2456c7]" />共{centralRoomRows.length}家分行配备中心机房
                     </button>
                     {roomDetails ? <div className="max-h-[142px] overflow-auto overscroll-contain [WebkitOverflowScrolling:touch]">
                       <table className="w-full min-w-[300px] text-left text-[12px]">
@@ -1004,8 +1017,8 @@ export function BranchDashboard() {
                         <tbody>{(apiScopedRows.length ? apiScopedRows : detailRows.map((row) => ({ branchName: row.name }))).map((row, index) => <tr key={row.branchName ?? index} className="border-t border-border/50"><td className="py-1.5">{row.branchName}</td><td className="py-1.5">{"centerRoomMode" in row ? (row.centerRoomMode || "未填写") : "未连接后端"}</td><td className="py-1.5 font-mono">{"centerRoomStartDate" in row ? (row.centerRoomStartDate || "未填写") : "未连接后端"}</td></tr>)}</tbody>
                       </table>
                     </div> : <button type="button" onClick={() => setRoomDetails(true)} className="flex w-full items-center gap-3 text-left">
-                      <div className="relative h-[76px] w-[96px] shrink-0"><svg viewBox="0 0 120 120" className="h-full w-full -rotate-90"><circle cx="60" cy="60" r="42" fill="none" stroke="#d9e1ee" strokeWidth="10" /><circle cx="60" cy="60" r="42" fill="none" stroke="#2456c7" strokeWidth="10" strokeLinecap="round" strokeDasharray="259 300" /><circle cx="60" cy="60" r="42" fill="none" stroke="#2dc2be" strokeWidth="10" strokeLinecap="round" strokeDasharray="41 300" strokeDashoffset="259" /></svg><div className="absolute inset-0 flex flex-col items-center justify-center text-center"><div className="font-mono text-[16px] font-black text-primary">{detailRows.length}</div></div></div>
-                      <div className="grid gap-1.5 text-[12px] text-foreground/75"><div><span className="mr-2 inline-flex size-2 rounded-full bg-[#2456c7]" />自建 <span className="font-mono text-primary">{Math.max(0, detailRows.length - 1)}</span></div><div><span className="mr-2 inline-flex size-2 rounded-full bg-[#2dc2be]" />租赁 <span className="font-mono text-primary">{detailRows.length ? 1 : 0}</span></div></div>
+                      <div className="relative h-[76px] w-[96px] shrink-0"><svg viewBox="0 0 120 120" className="h-full w-full -rotate-90"><circle cx="60" cy="60" r="42" fill="none" stroke="#d9e1ee" strokeWidth="10" /><circle cx="60" cy="60" r="42" fill="none" stroke="#2456c7" strokeWidth="10" strokeLinecap="round" strokeDasharray={`${Math.max(0, Math.min(300, (centralRoomSelfBuiltCount / Math.max(centralRoomRows.length, 1)) * 300))} 300`} /><circle cx="60" cy="60" r="42" fill="none" stroke="#2dc2be" strokeWidth="10" strokeLinecap="round" strokeDasharray={`${Math.max(0, Math.min(300, (centralRoomLeasedCount / Math.max(centralRoomRows.length, 1)) * 300))} 300`} strokeDashoffset={Math.max(0, Math.min(300, (centralRoomSelfBuiltCount / Math.max(centralRoomRows.length, 1)) * 300))} /></svg><div className="absolute inset-0 flex flex-col items-center justify-center text-center"><div className="font-mono text-[16px] font-black text-primary">{centralRoomRows.length}</div></div></div>
+                      <div className="grid gap-1.5 text-[12px] text-foreground/75"><div><span className="mr-2 inline-flex size-2 rounded-full bg-[#2456c7]" />自建 <span className="font-mono text-primary">{centralRoomSelfBuiltCount}</span></div><div><span className="mr-2 inline-flex size-2 rounded-full bg-[#2dc2be]" />租赁 <span className="font-mono text-primary">{centralRoomLeasedCount}</span></div></div>
                     </button>}
                     <div className="mt-1 text-center text-[11px] text-muted-foreground">点击查看详情</div>
                     <div className="mt-auto flex min-h-9 items-center justify-between rounded-[10px] border border-border/70 bg-background/70 px-3 py-1.5"><span className="text-[12px] font-bold text-muted-foreground">机柜数</span><span className="font-mono text-[13px] font-black text-primary">{(current.personnelTotal * 2).toLocaleString()} <small className="text-[12px] font-normal text-muted-foreground">个</small></span></div>
@@ -1016,7 +1029,7 @@ export function BranchDashboard() {
                     <button type="button" onClick={() => setDisasterDetails(!disasterDetails)} className="mb-1.5 min-h-7 w-full text-left text-[12px] font-semibold leading-4 text-slate-700 transition-colors hover:text-primary">
                       <span className="mr-2 inline-flex size-2 rounded-full bg-[#2dc2be]" />其中{disasterRows.length}家分行配备灾备机房
                     </button>
-                    {disasterDetails ? <div className="max-h-[150px] overflow-y-auto overscroll-contain grid gap-2 py-1 text-[12px] text-foreground/80 [WebkitOverflowScrolling:touch]"><div className="font-semibold text-primary">配备灾备机房的分行</div>{detailRows.map((row) => <div key={row.name} className="flex items-center justify-between border-t border-border/50 py-1.5"><span>{row.name}</span><span className="text-muted-foreground">已配备</span></div>)}</div> : <button type="button" onClick={() => setRoomMode(roomMode === "central" ? "disaster" : "central")} className="mt-3 flex items-center justify-center" aria-label="查看灾备机房配套率"><GaugeMeter roomMode={roomMode} /></button>}
+                    {disasterDetails ? <div className="max-h-[150px] overflow-y-auto overscroll-contain grid gap-2 py-1 text-[12px] text-foreground/80 [WebkitOverflowScrolling:touch]"><div className="font-semibold text-primary">配备灾备机房的分行</div>{disasterRows.map((row, index) => <div key={row.branchName ?? index} className="flex items-center justify-between border-t border-border/50 py-1.5"><span>{row.branchName}</span><span className="text-muted-foreground">已配备</span></div>)}</div> : <button type="button" onClick={() => setRoomMode(roomMode === "central" ? "disaster" : "central")} className="mt-3 flex items-center justify-center" aria-label="查看灾备机房配套率"><GaugeMeter roomMode={roomMode} percentage={disasterCoveragePercentage} /></button>}
                   </div>
                 </div>
               </PanelCard>
