@@ -53,6 +53,40 @@ type DashboardApiResponse = {
   operation?: Record<string, number | null>
 }
 
+type BranchApiRow = {
+  id?: number
+  branchName?: string
+  branchLevel?: string
+  personnelTotal?: number | null
+  developmentCount?: number | null
+  operationsCount?: number | null
+  dataCount?: number | null
+  managementCount?: number | null
+  architectureCount?: number | null
+  securityCount?: number | null
+  technologyManagementCadre?: number | null
+  innovationCount?: number | null
+  innovationTotal?: number | null
+  innovationCompleted?: number | null
+  innovationUncompleted?: number | null
+  cloudTotal?: number | null
+  cloudCompleted?: number | null
+  cloudUncompleted?: number | null
+  parentSystemCount?: number | null
+  childSystemCount?: number | null
+  serverHostCount?: number | null
+  networkDeviceCount?: number | null
+  officeTerminalCount?: number | null
+  dedicatedLineCount?: number | null
+  storageGb?: number | null
+  cpuCoreCount?: number | null
+  cabinetCount?: number | null
+  centerRoomMode?: string | null
+  centerRoomStartDate?: string | null
+  hasDisasterRoom?: boolean | null
+  disasterRoomMode?: string | null
+}
+
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL ?? "http://localhost:8080"
 
 function toNumber(value: number | null | undefined) {
@@ -372,6 +406,22 @@ function sumBy<T>(items: T[], getValue: (item: T) => number) {
   managementCadre,
   total: development + operations + data + management + architecture + security + managementCadre + innovation,
   }
+  }
+
+  function apiRowToTableRow(row: BranchApiRow): RowItem {
+    const development = toNumber(row.developmentCount)
+    const operations = toNumber(row.operationsCount)
+    const data = toNumber(row.dataCount)
+    const management = toNumber(row.managementCount)
+    const architecture = toNumber(row.architectureCount)
+    const security = toNumber(row.securityCount)
+    const managementCadre = toNumber(row.technologyManagementCadre)
+    const innovation = toNumber(row.innovationCount)
+    return {
+      name: row.branchName ?? "未命名分行",
+      development, operations, data, management, architecture, security, managementCadre, innovation,
+      total: toNumber(row.personnelTotal) || development + operations + data + management + architecture + security + managementCadre + innovation,
+    }
   }
 
   function completePersonnelRoles(branch: BranchData) {
@@ -772,8 +822,44 @@ export function BranchDashboard() {
   const [personnelDetails, setPersonnelDetails] = useState(false)
   const [techSelectedKey, setTechSelectedKey] = useState("all")
   const [dashboardApiData, setDashboardApiData] = useState<DashboardApiResponse | null>(null)
+  const [dashboardApiRows, setDashboardApiRows] = useState<BranchApiRow[]>([])
   const [dashboardApiError, setDashboardApiError] = useState(false)
+  const [apiGradeOptions, setApiGradeOptions] = useState(gradeOptions)
+  const [apiBranchOptions, setApiBranchOptions] = useState(branchOptions)
   const personnelPageSize = 6
+
+  useEffect(() => {
+    const controller = new AbortController()
+    fetch(`${API_BASE_URL}/api/branches/options`, { signal: controller.signal })
+      .then((response) => {
+        if (!response.ok) throw new Error(`Options API ${response.status}`)
+        return response.json() as Promise<{ levels?: string[]; branches?: string[] }>
+      })
+      .then((data) => {
+        const levels = (data.levels ?? []).filter(Boolean)
+        const branches = (data.branches ?? []).filter(Boolean)
+        if (levels.length) setApiGradeOptions([{ key: "all", label: "全部等级" }, ...levels.map((label) => ({ key: label, label }))])
+        if (branches.length) setApiBranchOptions([{ key: "all", label: "全部分行" }, ...branches.map((label) => ({ key: label, label }))])
+      })
+      .catch((error: unknown) => {
+        if (!(error instanceof DOMException && error.name === "AbortError")) return
+      })
+    return () => controller.abort()
+  }, [])
+
+  useEffect(() => {
+    const controller = new AbortController()
+    fetch(`${API_BASE_URL}/api/branches`, { signal: controller.signal })
+      .then((response) => {
+        if (!response.ok) throw new Error(`Branches API ${response.status}`)
+        return response.json() as Promise<BranchApiRow[]>
+      })
+      .then((rows) => setDashboardApiRows(Array.isArray(rows) ? rows : []))
+      .catch((error: unknown) => {
+        if (!(error instanceof DOMException && error.name === "AbortError")) setDashboardApiRows([])
+      })
+    return () => controller.abort()
+  }, [])
 
   useEffect(() => {
     setSelectedBranch("all")
@@ -788,10 +874,10 @@ export function BranchDashboard() {
 
   useEffect(() => {
     const controller = new AbortController()
-    const levelLabel = gradeOptions.find((option) => option.key === selectedGrade)?.label ?? "全部等级"
-    const branchLabel = branchOptions.find((option) => option.key === selectedBranch)?.label ?? "全部分行"
+    const levelLabel = apiGradeOptions.find((option) => option.key === selectedGrade)?.label ?? "全部等级"
+    const branchLabel = apiBranchOptions.find((option) => option.key === selectedBranch)?.label ?? "全部分行"
     const params = new URLSearchParams()
-    if (selectedGrade !== "all") params.set("level", levelLabel.replace("一级", "一").replace("二级", "二").replace("三级", "三"))
+    if (selectedGrade !== "all") params.set("level", levelLabel)
     if (selectedBranch !== "all") params.set("branchName", branchLabel)
 
     setDashboardApiError(false)
@@ -808,7 +894,7 @@ export function BranchDashboard() {
       })
 
     return () => controller.abort()
-  }, [selectedGrade, selectedBranch])
+  }, [selectedGrade, selectedBranch, apiGradeOptions, apiBranchOptions])
 
   const filteredKeys = Object.keys(branchData).filter((key) => {
     if (selectedBranch !== "all") return key === selectedBranch
@@ -820,8 +906,15 @@ export function BranchDashboard() {
   const currentBase = selectedData
     ? { ...selectedData, tableRows: [toBranchRow(selectedData)] }
     : aggregateBranchData(filteredKeys)
+  const apiScopedRows = dashboardApiRows.filter((row) => {
+    if (selectedBranch !== "all") return row.branchName === apiBranchOptions.find((option) => option.key === selectedBranch)?.label
+    if (selectedGrade !== "all") return row.branchLevel === apiGradeOptions.find((option) => option.key === selectedGrade)?.label
+    return true
+  })
+  const currentApiBase = apiScopedRows.length ? apiRowToTableRow(apiScopedRows[0]) : null
   const current = {
     ...(dashboardApiData ? applyDashboardApiData(currentBase, dashboardApiData) : currentBase),
+    ...(currentApiBase ? { tableRows: apiScopedRows.map(apiRowToTableRow) } : {}),
     personnelRoles: completePersonnelRoles(dashboardApiData ? applyDashboardApiData(currentBase, dashboardApiData) : currentBase),
   }
   const personnelPageCount = Math.max(1, Math.ceil(current.tableRows.length / personnelPageSize))
@@ -834,21 +927,24 @@ export function BranchDashboard() {
     ? current.tableRows.filter((row) => row.name === current.label || row.name.endsWith(current.label.replace("分行", "")))
     : Array.from(new Map(current.tableRows.map((row) => [row.name, row])).values())
   const detailRows = selectedBranch !== "all" ? scopedRows.slice(0, 1) : scopedRows.slice(0, 10)
-  const innovationRows = [...scopedRows]
-    .map((row) => {
-      const branch = branchData[Object.keys(branchData).find((key) => branchData[key].label === row.name) ?? ""]
-      const required = branch?.innovation.value ?? row.innovation
-      const done = branch?.innovation.done ?? row.innovation
-      return { name: row.name, count: done, rate: required ? Math.round((done / required) * 100) : 0 }
-    })
+  const roomRows = apiScopedRows.length ? apiScopedRows : detailRows.map((row) => ({ branchName: row.name, centerRoomMode: null, centerRoomStartDate: null, hasDisasterRoom: null, cabinetCount: null }))
+  const disasterRows = roomRows.filter((row) => row.hasDisasterRoom === true)
+  const innovationRows = apiScopedRows.length
+    ? apiScopedRows.map((row) => {
+        const total = toNumber(row.innovationTotal)
+        const done = toNumber(row.innovationCompleted)
+        return { name: row.branchName ?? "未命名分行", count: done, rate: total ? Math.round((done / total) * 100) : 0 }
+      }).sort((a, b) => b.count - a.count).slice(0, 10)
+    : [...scopedRows]
+      .map((row) => ({ name: row.name, count: row.innovation, rate: 0 }))
     .sort((a, b) => b.count - a.count)
     .slice(0, 10)
-  const cloudRows = selectedBranch !== "all"
-    ? [{ name: current.label, count: current.cloud.value }]
-    : [...scopedRows]
-      .map((row) => ({ name: row.name, count: Math.max(0, Math.round((current.cloud.value / Math.max(current.personnelTotal, 1)) * row.total)) }))
-      .sort((a, b) => b.count - a.count)
-      .slice(0, 10)
+  const cloudRows = apiScopedRows.length
+    ? apiScopedRows.map((row) => ({ name: row.branchName ?? "未命名分行", count: toNumber(row.cloudCompleted) }))
+      .sort((a, b) => b.count - a.count).slice(0, 10)
+    : selectedBranch !== "all"
+      ? [{ name: current.label, count: current.cloud.value }]
+      : [...scopedRows].map((row) => ({ name: row.name, count: 0 })).slice(0, 10)
   const selectedScopeLabel = selectedBranch !== "all"
     ? branchOptions.find((option) => option.key === selectedBranch)?.label ?? current.label
     : selectedGrade !== "all"
@@ -881,8 +977,8 @@ export function BranchDashboard() {
         <section aria-labelledby="branch-overview-title" className="animate-in fade-in slide-in-from-bottom-4 duration-700">
           <div className="flex min-w-0 flex-col gap-5">
             <div className="grid min-w-0 gap-3 pt-1 md:grid-cols-2 md:[&>*]:min-w-0 xl:grid-cols-[minmax(0,0.9fr)_minmax(0,1.1fr)]">
-              <SelectBox label="请选择等级" value={selectedGrade} onChange={setSelectedGrade} options={gradeOptions} />
-              <SelectBox label="请选择分行" value={selectedBranch} onChange={setSelectedBranch} options={branchOptions} />
+              <SelectBox label="请选择等级" value={selectedGrade} onChange={setSelectedGrade} options={apiGradeOptions} />
+              <SelectBox label="请选择分行" value={selectedBranch} onChange={setSelectedBranch} options={apiBranchOptions} />
             </div>
 
             <div className="grid min-w-0 items-stretch gap-3 lg:grid-cols-[minmax(240px,0.34fr)_minmax(0,0.66fr)]">
@@ -905,7 +1001,7 @@ export function BranchDashboard() {
                     {roomDetails ? <div className="max-h-[142px] overflow-auto overscroll-contain [WebkitOverflowScrolling:touch]">
                       <table className="w-full min-w-[300px] text-left text-[12px]">
                         <thead className="text-muted-foreground"><tr><th className="pb-2 font-medium">分行名称</th><th className="pb-2 font-medium">中心机房建设方式</th><th className="pb-2 font-medium">启用时间</th></tr></thead>
-                        <tbody>{detailRows.map((row, index) => <tr key={row.name} className="border-t border-border/50"><td className="py-1.5">{row.name}</td><td className="py-1.5">{index % 4 === 0 ? "租赁" : "自建"}</td><td className="py-1.5 font-mono">{2021 + (index % 4)}年</td></tr>)}</tbody>
+                        <tbody>{(apiScopedRows.length ? apiScopedRows : detailRows.map((row) => ({ branchName: row.name }))).map((row, index) => <tr key={row.branchName ?? index} className="border-t border-border/50"><td className="py-1.5">{row.branchName}</td><td className="py-1.5">{"centerRoomMode" in row ? (row.centerRoomMode || "未填写") : "未连接后端"}</td><td className="py-1.5 font-mono">{"centerRoomStartDate" in row ? (row.centerRoomStartDate || "未填写") : "未连接后端"}</td></tr>)}</tbody>
                       </table>
                     </div> : <button type="button" onClick={() => setRoomDetails(true)} className="flex w-full items-center gap-3 text-left">
                       <div className="relative h-[76px] w-[96px] shrink-0"><svg viewBox="0 0 120 120" className="h-full w-full -rotate-90"><circle cx="60" cy="60" r="42" fill="none" stroke="#d9e1ee" strokeWidth="10" /><circle cx="60" cy="60" r="42" fill="none" stroke="#2456c7" strokeWidth="10" strokeLinecap="round" strokeDasharray="259 300" /><circle cx="60" cy="60" r="42" fill="none" stroke="#2dc2be" strokeWidth="10" strokeLinecap="round" strokeDasharray="41 300" strokeDashoffset="259" /></svg><div className="absolute inset-0 flex flex-col items-center justify-center text-center"><div className="font-mono text-[16px] font-black text-primary">{detailRows.length}</div></div></div>
@@ -918,7 +1014,7 @@ export function BranchDashboard() {
                   <div onClick={(event) => { if ((event.target as HTMLElement).closest("button")) return; setDisasterDetails((value) => !value) }} className="flex h-[210px] cursor-pointer flex-col gap-1.5 overflow-hidden rounded-[12px] border border-border/80 bg-card/80 px-3 py-2 shadow-[inset_0_1px_0_oklch(0.72_0.15_220/6%)] lg:ml-2">
                     <div className="mb-1 flex items-center justify-between"><span className="text-[14px] font-bold text-foreground">灾备机房</span><span className="text-[10px] text-muted-foreground">配套情况</span></div>
                     <button type="button" onClick={() => setDisasterDetails(!disasterDetails)} className="mb-1.5 min-h-7 w-full text-left text-[12px] font-semibold leading-4 text-slate-700 transition-colors hover:text-primary">
-                      <span className="mr-2 inline-flex size-2 rounded-full bg-[#2dc2be]" />其中{detailRows.length}家分行配备灾备机房
+                      <span className="mr-2 inline-flex size-2 rounded-full bg-[#2dc2be]" />其中{disasterRows.length}家分行配备灾备机房
                     </button>
                     {disasterDetails ? <div className="max-h-[150px] overflow-y-auto overscroll-contain grid gap-2 py-1 text-[12px] text-foreground/80 [WebkitOverflowScrolling:touch]"><div className="font-semibold text-primary">配备灾备机房的分行</div>{detailRows.map((row) => <div key={row.name} className="flex items-center justify-between border-t border-border/50 py-1.5"><span>{row.name}</span><span className="text-muted-foreground">已配备</span></div>)}</div> : <button type="button" onClick={() => setRoomMode(roomMode === "central" ? "disaster" : "central")} className="mt-3 flex items-center justify-center" aria-label="查看灾备机房配套率"><GaugeMeter roomMode={roomMode} /></button>}
                   </div>
