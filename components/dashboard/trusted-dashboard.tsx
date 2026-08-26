@@ -12,7 +12,7 @@ const smallMachineRows: Array<[string, number, number]> = [["南京", 328, 86], 
 
 function Panel({ title, children, className = "" }: { title: string; children: React.ReactNode; className?: string }) {
   return (
-    <section className={`overflow-hidden rounded-lg border border-border/80 bg-card shadow-sm ${className}`}>
+    <section className={`overflow-visible rounded-lg border border-border/80 bg-card shadow-sm ${className}`}>
       <header className="flex items-center gap-2 border-b border-border/70 bg-secondary/50 px-3 py-1.5">
         <span className="flex size-5 items-center justify-center rounded-md bg-primary/10 text-primary">
           <BarChart3 className="size-3" />
@@ -194,7 +194,13 @@ function SmallMachineChart() {
                 const barHeight = Math.max(8, (total / niceMax) * chartHeight)
                 const doneHeight = (done / total) * barHeight
                 return (
-                  <div key={name} className="flex flex-col items-center">
+                  <div key={name} className="group relative flex flex-col items-center">
+                    <div className="pointer-events-none absolute bottom-full z-20 mb-2 hidden w-28 -translate-x-1/2 rounded-md border border-border bg-card p-2 text-[10px] leading-4 text-foreground shadow-lg group-hover:block">
+                      <p className="font-semibold">{name}</p>
+                      <p>总数：{total}</p>
+                      <p>已下线：{done}</p>
+                      <p>未下线：{total - done}</p>
+                    </div>
                     <span className="mb-1 font-mono text-[11px] font-bold text-foreground">{total}</span>
                     <div className="flex w-9 flex-col justify-end overflow-hidden rounded-t-lg" style={{ height: `${barHeight}px` }}>
                       <div style={{ height: `${barHeight - doneHeight}px`, background: UNDONE }} />
@@ -259,9 +265,9 @@ export function TrustedDashboard() {
     <main className="min-h-screen bg-background text-foreground">
       <div className="mx-auto max-w-[1800px] px-4 pb-5 md:px-6">
         <HeroBanner title="信创管理驾驶舱" subtitle="信创改造 · 国产替代 · 系统适配 · 平稳迁移" />
-        <div className="grid gap-3 lg:grid-cols-2">
+        <div className="grid items-stretch gap-3 lg:grid-cols-2">
           <div className="flex min-w-0 flex-col gap-3">
-            <div className="rounded-xl border-2 border-primary/70 bg-card p-2.5">
+            <div className="flex h-full flex-col rounded-xl border-2 border-primary/70 bg-card p-2.5">
               <div className="mb-2 border-b border-border pb-1.5">
                 <h1 className="text-base font-black text-primary">系统改造</h1>
               </div>
@@ -300,7 +306,7 @@ export function TrustedDashboard() {
             </div>
           </div>
           <div className="flex min-w-0 flex-col gap-3">
-            <div className="rounded-xl border-2 border-primary/70 bg-card p-2.5">
+            <div className="flex h-full flex-col rounded-xl border-2 border-primary/70 bg-card p-2.5">
               <div className="mb-2 border-b border-border pb-1.5">
                 <h2 className="text-base font-black text-primary">产品替代</h2>
               </div>
