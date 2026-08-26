@@ -312,7 +312,7 @@ function aggregateBranchData(keys: string[]): BranchData {
   const tableRows = rows.map(toBranchRow)
   return {
     ...base,
-    label: keys.length === 1 ? base.label : "筛选结����汇总",
+    label: keys.length === 1 ? base.label : "筛选结�����汇总",
     quickStats: base.quickStats.map((stat, index) => ({ ...stat, value: sumBy(rows, (row) => row.quickStats[index]?.value ?? 0) })),
     operationMetrics,
     innovation: {
@@ -722,9 +722,9 @@ export function BranchDashboard() {
                     {current.operationMetrics.slice(0, 6).map((item) => <MetricTile key={item.label} item={item} />)}
                   </div>
 
-                  <div onClick={(event) => { if ((event.target as HTMLElement).closest("button")) return; setRoomDetails((value) => !value) }} className="h-[220px] cursor-pointer overflow-hidden rounded-[12px] border border-border/80 bg-card/80 px-3 py-2 shadow-[inset_0_1px_0_oklch(0.72_0.15_220/6%)] lg:ml-2">
-                    <div className="mb-1.5 text-[10px] text-muted-foreground">点击查看{selectedScopeLabel}中心机房建设模式及详情。</div>
-                    <button type="button" onClick={() => setRoomDetails(!roomDetails)} className="mb-1.5 flex w-full items-center gap-2 text-left text-[11px] font-semibold text-slate-700 hover:text-primary">
+                  <div onClick={(event) => { if ((event.target as HTMLElement).closest("button")) return; setRoomDetails((value) => !value) }} className="flex h-[248px] cursor-pointer flex-col overflow-hidden rounded-[12px] border border-border/80 bg-card/80 px-3 py-2 shadow-[inset_0_1px_0_oklch(0.72_0.15_220/6%)] lg:ml-2">
+                    <div className="flex min-h-7 items-center text-[10px] leading-4 text-muted-foreground">点击查看{selectedScopeLabel}中心机房建设模式及详情。</div>
+                    <button type="button" onClick={() => setRoomDetails(!roomDetails)} className="mb-1.5 flex min-h-7 w-full items-center gap-2 text-left text-[11px] font-semibold leading-4 text-slate-700 hover:text-primary">
                       <span className="inline-flex size-2 rounded-full bg-[#2456c7]" />共{detailRows.length}家分行纳入当前筛选范围
                     </button>
                     {roomDetails ? <div className="max-h-[142px] overflow-auto overscroll-contain [WebkitOverflowScrolling:touch]">
@@ -736,10 +736,10 @@ export function BranchDashboard() {
                       <div className="relative h-[76px] w-[96px] shrink-0"><svg viewBox="0 0 120 120" className="h-full w-full -rotate-90"><circle cx="60" cy="60" r="42" fill="none" stroke="#d9e1ee" strokeWidth="10" /><circle cx="60" cy="60" r="42" fill="none" stroke="#2456c7" strokeWidth="10" strokeLinecap="round" strokeDasharray="259 300" /><circle cx="60" cy="60" r="42" fill="none" stroke="#2dc2be" strokeWidth="10" strokeLinecap="round" strokeDasharray="41 300" strokeDashoffset="259" /></svg><div className="absolute inset-0 flex flex-col items-center justify-center text-center"><div className="font-mono text-[16px] font-black text-primary">{detailRows.length}</div><div className="text-[9px] text-slate-500">中心机房</div></div></div>
                       <div className="grid gap-1.5 text-[11px] text-foreground/75"><div><span className="mr-2 inline-flex size-2 rounded-full bg-[#2456c7]" />自建 <span className="font-mono text-primary">{Math.max(0, detailRows.length - 1)}</span></div><div><span className="mr-2 inline-flex size-2 rounded-full bg-[#2dc2be]" />租赁 <span className="font-mono text-primary">{detailRows.length ? 1 : 0}</span></div></div>
                     </button>}
-                    <div className="mt-2 flex items-center justify-between rounded-[10px] border border-border/70 bg-background/70 px-3 py-1.5"><span className="text-[12px] font-bold text-muted-foreground">机柜数</span><span className="font-mono text-[13px] font-black text-primary">{(current.personnelTotal * 2).toLocaleString()} <small className="text-[10px] font-normal text-muted-foreground">个</small></span></div>
+                    <div className="mt-auto flex min-h-9 items-center justify-between rounded-[10px] border border-border/70 bg-background/70 px-3 py-1.5"><span className="text-[12px] font-bold text-muted-foreground">机柜数</span><span className="font-mono text-[13px] font-black text-primary">{(current.personnelTotal * 2).toLocaleString()} <small className="text-[10px] font-normal text-muted-foreground">个</small></span></div>
                   </div>
 
-                  <div onClick={(event) => { if ((event.target as HTMLElement).closest("button")) return; setDisasterDetails((value) => !value) }} className="h-[220px] cursor-pointer grid gap-1.5 overflow-hidden rounded-[12px] border border-border/80 bg-card/80 px-3 py-2 shadow-[inset_0_1px_0_oklch(0.72_0.15_220/6%)] lg:ml-2">
+                  <div onClick={(event) => { if ((event.target as HTMLElement).closest("button")) return; setDisasterDetails((value) => !value) }} className="flex h-[248px] cursor-pointer flex-col gap-1.5 overflow-hidden rounded-[12px] border border-border/80 bg-card/80 px-3 py-2 shadow-[inset_0_1px_0_oklch(0.72_0.15_220/6%)] lg:ml-2">
                     <div className="text-[11px] text-muted-foreground">点击查看{selectedScopeLabel}中心机房建设模式及详情。</div>
                     <button type="button" onClick={() => setDisasterDetails(!disasterDetails)} className="w-full text-left text-[12px] font-semibold text-slate-700 transition-colors hover:text-primary">
                       <span className="mr-2 inline-flex size-2 rounded-full bg-[#2dc2be]" />其中{detailRows.length}家分行配备灾备机房
@@ -750,7 +750,7 @@ export function BranchDashboard() {
               </PanelCard>
 
               <div className="order-2 col-start-2 row-start-1 grid min-w-0 items-stretch gap-2 grid-cols-1 md:[&>*]:min-w-0">
-                  <PanelCard className="h-[220px] cursor-pointer overflow-hidden" bodyClassName="p-2.5" title="信创改造" icon={<ShieldCheck className="size-4" />} onClick={() => setInnovationRanking((value) => !value)}>
+                  <PanelCard className="h-[248px] cursor-pointer overflow-hidden" bodyClassName="p-2.5" title="信创改造" icon={<ShieldCheck className="size-4" />} onClick={() => setInnovationRanking((value) => !value)}>
                     <button type="button" onClick={(event) => { event.stopPropagation(); setInnovationRanking((value) => !value) }} className="w-full text-left" aria-label="切换信创改���完成度排行">
                     {innovationRanking ? <div className="max-h-[160px] overflow-y-auto overflow-x-hidden overscroll-contain py-1 [WebkitOverflowScrolling:touch]">
                       <ResponsiveContainer width="100%" height={160} minWidth={1} minHeight={1}>
@@ -799,7 +799,7 @@ export function BranchDashboard() {
                     <div className="mt-1 text-center text-[10px] text-slate-500">单击可查看信创改造完成度排序十名。</div></>}
                   </PanelCard>
 
-                  <PanelCard className="h-[220px] overflow-hidden" bodyClassName="p-2.5" title="系统上云" icon={<Cloud className="size-4" />} onClick={() => setCloudRanking((value) => !value)}>
+                  <PanelCard className="h-[248px] overflow-hidden" bodyClassName="p-2.5" title="系统上云" icon={<Cloud className="size-4" />} onClick={() => setCloudRanking((value) => !value)}>
                     <button type="button" onClick={(event) => { event.stopPropagation(); setCloudRanking((value) => !value) }} className="w-full text-left" aria-label="切换上云系统前十名">
                     {cloudRanking ? <div className="max-h-[166px] overflow-y-auto overflow-x-hidden overscroll-contain grid gap-2 py-1 [WebkitOverflowScrolling:touch]">{cloudRows.map(({ name, count }, index) => <div key={name} className="grid grid-cols-[1.2fr_1fr_auto] items-center gap-2 text-[11px]"><span>{String(index + 1).padStart(2, "0")} {name}</span><span className="h-2 rounded-full bg-gradient-to-r from-accent to-primary" style={{ width: `${Math.max(20, Number(count) / Math.max(cloudRows[0]?.count ?? 1, 1) * 100)}%` }} /><strong className="font-mono text-primary">{count}</strong></div>)}</div> : <div className="flex flex-col items-center gap-1.5">
                       <CloudCircle value={current.cloud.value} />
