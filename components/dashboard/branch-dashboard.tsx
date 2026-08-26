@@ -338,7 +338,7 @@ function SectionHeader({ title, icon }: { title: string; icon: ReactNode }) {
   return (
     <div className="flex items-center gap-2 rounded-t-[10px] bg-[#2456c7] px-4 py-2.5 text-foreground shadow-[inset_0_1px_0_rgba(255,255,255,0.16)]">
       <span className="flex size-6 items-center justify-center rounded-full bg-white/12 ring-1 ring-white/20">{icon}</span>
-      <span className="text-[15px] font-semibold tracking-wide">{title}</span>
+      <span className="text-[16px] font-semibold tracking-wide">{title}</span>
     </div>
   )
 }
@@ -357,7 +357,7 @@ function SelectBox({
   return (
     <label className="flex min-w-0 flex-1 items-center gap-3 rounded-[6px] border border-border/80 bg-card/90 px-4 py-3 shadow-[0_0_0_1px_oklch(0.72_0.15_220/6%),0_10px_28px_oklch(0_0_0/10%)]">
       <div className="min-w-0 flex-1">
-        <div className="text-[11px] text-muted-foreground">{label}</div>
+        <div className="text-[12px] text-muted-foreground">{label}</div>
         <select
           value={value}
           onChange={(event) => onChange(event.target.value)}
@@ -388,10 +388,10 @@ function MetricTile({ item }: { item: MetricItem }) {
       <div className="flex items-start gap-2">
         <span className={cn("mt-1 h-1.5 w-1.5 rounded-full bg-gradient-to-r", className)} />
         <div className="min-w-0">
-          <div className="text-[10px] text-foreground/75">{item.label}</div>
+          <div className="text-[12px] text-foreground/75">{item.label}</div>
           <div className="mt-0.5 flex items-baseline gap-1.5">
-            <span className="font-mono text-[15px] font-bold text-foreground">{item.value.toLocaleString()}</span>
-            <span className="text-[9px] text-muted-foreground">{item.unit}</span>
+            <span className="font-mono text-[16px] font-bold text-foreground">{item.value.toLocaleString()}</span>
+            <span className="text-[10px] text-muted-foreground">{item.unit}</span>
           </div>
         </div>
       </div>
@@ -438,10 +438,10 @@ function RingChart({ value, total, label, displayValue = value }: { value: numbe
         </defs>
       </svg>
       <div className="absolute inset-0 flex flex-col items-center justify-center text-center">
-        <div className="text-[10px] text-muted-foreground">{label}</div>
+        <div className="text-[12px] text-muted-foreground">{label}</div>
         <div className="mt-0.5 font-mono text-[20px] font-black leading-none text-primary">{displayValue}</div>
       </div>
-      <div className="absolute right-0.5 top-1 text-[11px] text-muted-foreground">{Math.round(percent)}%</div>
+      <div className="absolute right-0.5 top-1 text-[12px] text-muted-foreground">{Math.round(percent)}%</div>
     </div>
   )
 }
@@ -451,7 +451,7 @@ function CloudCircle({ value }: { value: number }) {
     <div className="flex h-[104px] w-[104px] flex-col items-center justify-center rounded-full bg-gradient-to-br from-primary/15 via-accent/15 to-primary/5 shadow-[inset_0_0_0_10px_rgba(36,86,199,0.06),0_8px_20px_rgba(36,86,199,0.1)]">
       <Cloud className="mb-1 size-5 text-primary" aria-hidden="true" />
       <div className="font-mono text-[22px] font-black leading-none text-primary">{value}</div>
-      <div className="mt-1 text-[9px] font-medium tracking-[0.1em] text-muted-foreground">上云系统数</div>
+      <div className="mt-1 text-[10px] font-medium tracking-[0.1em] text-muted-foreground">上云系统数</div>
     </div>
   )
 }
@@ -474,11 +474,11 @@ function GaugeMeter({ roomMode, percentage = 22.22 }: { roomMode: "central" | "d
         </defs>
       </svg>
       <div className="absolute left-1/2 top-[38%] -translate-x-1/2 text-center">
-<div className="text-[10px] text-muted-foreground">灾备机房配套率</div>
-  <div className="font-mono text-[18px] font-black text-primary">{safePercentage.toFixed(2)}%</div>
+<div className="text-[12px] text-muted-foreground">灾备机房配套率</div>
+  <div className="font-mono text-[19px] font-black text-primary">{safePercentage.toFixed(2)}%</div>
       </div>
-      <div className="absolute left-[6px] bottom-2 text-[9px] text-muted-foreground">0</div>
-<div className="absolute right-[6px] bottom-2 text-[9px] text-muted-foreground">40</div>
+      <div className="absolute left-[6px] bottom-2 text-[10px] text-muted-foreground">0</div>
+<div className="absolute right-[6px] bottom-2 text-[10px] text-muted-foreground">40</div>
     </div>
   )
 }
@@ -493,7 +493,7 @@ function RoleBar({ label, value, tone, maxValue }: { label: string; value: numbe
         : "bg-gradient-to-r from-primary to-primary/80"
 
   return (
-  <div className="space-y-1 text-[11px]">
+  <div className="space-y-1 text-[12px]">
   <div className="flex items-center justify-between gap-2">
   <span className="truncate text-slate-700">{label}</span>
   <span className="shrink-0 font-mono font-bold text-primary">{value}</span>
@@ -585,11 +585,11 @@ function TechLevelPanel({ rows, selectedKey, onSelect }: { rows: Array<{ key: st
             },
           ].map(({ tier, panel, chip, items }) => (
             <div key={tier} className={cn("rounded-lg border p-2", panel)}>
-              <div className="mb-1.5 text-center text-[11px] font-semibold text-muted-foreground">{tier}</div>
+              <div className="mb-1.5 text-center text-[12px] font-semibold text-muted-foreground">{tier}</div>
               <div className="flex flex-col gap-1">
                 {items.map(({ label, count }) => (
                   <div key={label} className="flex items-center justify-between rounded-md bg-card px-1.5 py-1 shadow-sm">
-                    <span className={cn("inline-flex h-5 min-w-8 items-center justify-center rounded-md px-1.5 font-mono text-[10px] font-bold", chip)}>
+                    <span className={cn("inline-flex h-5 min-w-8 items-center justify-center rounded-md px-1.5 font-mono text-[12px] font-bold", chip)}>
                       {label}
                     </span>
                     <span className="font-mono text-sm font-black leading-none text-foreground">{count}</span>
@@ -646,10 +646,10 @@ function TechLevelPanel({ rows, selectedKey, onSelect }: { rows: Array<{ key: st
               )}
             </svg>
           </div>
-          <div className="text-center text-[11px] text-muted-foreground">{displayLabel}{displayLevel ? ` · ${displayLevel}` : ""} · 点击雷达图或表头查看单项指标</div>
+          <div className="text-center text-[12px] text-muted-foreground">{displayLabel}{displayLevel ? ` · ${displayLevel}` : ""} · 点击雷达图或表头查看单项指标</div>
         </div>
         <div className="max-h-[268px] overflow-auto rounded-lg border border-border/70">
-          <Table className="min-w-[560px] text-[11px]">
+          <Table className="min-w-[560px] text-[12px]">
             <TableHeader className="bg-primary/10">
               <TableRow>
                 <TableHead className="px-1.5 py-1.5">分行名称</TableHead>
@@ -665,7 +665,7 @@ function TechLevelPanel({ rows, selectedKey, onSelect }: { rows: Array<{ key: st
                 ))}
               </TableRow>
             </TableHeader>
-            <TableBody>{rows.map(({ key, data }) => <TableRow key={key} onClick={() => onSelect(key)} className={cn("cursor-pointer", key === selectedKey && "bg-primary/10") }><TableCell className="whitespace-nowrap px-1.5 py-1.5 font-medium">{data.label}</TableCell><TableCell className="whitespace-nowrap px-1.5 py-1.5"><Badge variant="outline" className="border-primary/30 bg-primary/10 px-1.5 py-0 font-mono text-[10px] font-bold text-primary">{data.techLevel?.level ?? "B类"}</Badge></TableCell>{(data.techLevel?.dimensions ?? [82, 78, 84, 80, 86]).slice(0, 5).map((value, index) => <TableCell key={`${key}-${index}`} className={cn("px-1 py-1.5 text-center font-mono text-foreground/80", activeDim === index && "bg-primary/10 text-primary")}>{value}</TableCell>)}</TableRow>)}</TableBody>
+            <TableBody>{rows.map(({ key, data }) => <TableRow key={key} onClick={() => onSelect(key)} className={cn("cursor-pointer", key === selectedKey && "bg-primary/10") }><TableCell className="whitespace-nowrap px-1.5 py-1.5 font-medium">{data.label}</TableCell><TableCell className="whitespace-nowrap px-1.5 py-1.5"><Badge variant="outline" className="border-primary/30 bg-primary/10 px-1.5 py-0 font-mono text-[12px] font-bold text-primary">{data.techLevel?.level ?? "B类"}</Badge></TableCell>{(data.techLevel?.dimensions ?? [82, 78, 84, 80, 86]).slice(0, 5).map((value, index) => <TableCell key={`${key}-${index}`} className={cn("px-1 py-1.5 text-center font-mono text-foreground/80", activeDim === index && "bg-primary/10 text-primary")}>{value}</TableCell>)}</TableRow>)}</TableBody>
           </Table>
         </div>
       </div>
@@ -782,28 +782,28 @@ export function BranchDashboard() {
                   </div>
 
                   <div onClick={(event) => { if ((event.target as HTMLElement).closest("button")) return; setRoomDetails((value) => !value) }} className="flex h-[210px] cursor-pointer flex-col overflow-hidden rounded-[12px] border border-border/80 bg-card/80 px-3 py-2 shadow-[inset_0_1px_0_oklch(0.72_0.15_220/6%)] lg:ml-2">
-                    <div className="flex min-h-7 items-center text-[11px] leading-4 text-muted-foreground">点击查看{selectedScopeLabel}中心机房建设模式及详情。</div>
-                    <button type="button" onClick={() => setRoomDetails(!roomDetails)} className="mb-1.5 flex min-h-7 w-full items-center gap-2 text-left text-[11px] font-semibold leading-4 text-slate-700 hover:text-primary">
+                    <div className="flex min-h-7 items-center text-[12px] leading-4 text-muted-foreground">点击查看{selectedScopeLabel}中心机房建设模式及详情。</div>
+                    <button type="button" onClick={() => setRoomDetails(!roomDetails)} className="mb-1.5 flex min-h-7 w-full items-center gap-2 text-left text-[12px] font-semibold leading-4 text-slate-700 hover:text-primary">
                       <span className="inline-flex size-2 rounded-full bg-[#2456c7]" />共{detailRows.length}家分行纳入当前筛选范围
                     </button>
                     {roomDetails ? <div className="max-h-[142px] overflow-auto overscroll-contain [WebkitOverflowScrolling:touch]">
-                      <table className="w-full min-w-[300px] text-left text-[11px]">
+                      <table className="w-full min-w-[300px] text-left text-[12px]">
                         <thead className="text-muted-foreground"><tr><th className="pb-2 font-medium">分行名称</th><th className="pb-2 font-medium">中心机房建设方式</th><th className="pb-2 font-medium">启用时间</th></tr></thead>
                         <tbody>{detailRows.map((row, index) => <tr key={row.name} className="border-t border-border/50"><td className="py-1.5">{row.name}</td><td className="py-1.5">{index % 4 === 0 ? "租赁" : "自建"}</td><td className="py-1.5 font-mono">{2021 + (index % 4)}年</td></tr>)}</tbody>
                       </table>
                     </div> : <button type="button" onClick={() => setRoomDetails(true)} className="flex w-full items-center gap-3 text-left">
-                      <div className="relative h-[76px] w-[96px] shrink-0"><svg viewBox="0 0 120 120" className="h-full w-full -rotate-90"><circle cx="60" cy="60" r="42" fill="none" stroke="#d9e1ee" strokeWidth="10" /><circle cx="60" cy="60" r="42" fill="none" stroke="#2456c7" strokeWidth="10" strokeLinecap="round" strokeDasharray="259 300" /><circle cx="60" cy="60" r="42" fill="none" stroke="#2dc2be" strokeWidth="10" strokeLinecap="round" strokeDasharray="41 300" strokeDashoffset="259" /></svg><div className="absolute inset-0 flex flex-col items-center justify-center text-center"><div className="font-mono text-[16px] font-black text-primary">{detailRows.length}</div><div className="text-[9px] text-slate-500">中心机房</div></div></div>
-                      <div className="grid gap-1.5 text-[11px] text-foreground/75"><div><span className="mr-2 inline-flex size-2 rounded-full bg-[#2456c7]" />自建 <span className="font-mono text-primary">{Math.max(0, detailRows.length - 1)}</span></div><div><span className="mr-2 inline-flex size-2 rounded-full bg-[#2dc2be]" />租赁 <span className="font-mono text-primary">{detailRows.length ? 1 : 0}</span></div></div>
+                      <div className="relative h-[76px] w-[96px] shrink-0"><svg viewBox="0 0 120 120" className="h-full w-full -rotate-90"><circle cx="60" cy="60" r="42" fill="none" stroke="#d9e1ee" strokeWidth="10" /><circle cx="60" cy="60" r="42" fill="none" stroke="#2456c7" strokeWidth="10" strokeLinecap="round" strokeDasharray="259 300" /><circle cx="60" cy="60" r="42" fill="none" stroke="#2dc2be" strokeWidth="10" strokeLinecap="round" strokeDasharray="41 300" strokeDashoffset="259" /></svg><div className="absolute inset-0 flex flex-col items-center justify-center text-center"><div className="font-mono text-[16px] font-black text-primary">{detailRows.length}</div><div className="text-[10px] text-slate-500">中心机房</div></div></div>
+                      <div className="grid gap-1.5 text-[12px] text-foreground/75"><div><span className="mr-2 inline-flex size-2 rounded-full bg-[#2456c7]" />自建 <span className="font-mono text-primary">{Math.max(0, detailRows.length - 1)}</span></div><div><span className="mr-2 inline-flex size-2 rounded-full bg-[#2dc2be]" />租赁 <span className="font-mono text-primary">{detailRows.length ? 1 : 0}</span></div></div>
                     </button>}
-                    <div className="mt-auto flex min-h-9 items-center justify-between rounded-[10px] border border-border/70 bg-background/70 px-3 py-1.5"><span className="text-[12px] font-bold text-muted-foreground">机柜数</span><span className="font-mono text-[13px] font-black text-primary">{(current.personnelTotal * 2).toLocaleString()} <small className="text-[10px] font-normal text-muted-foreground">个</small></span></div>
+                    <div className="mt-auto flex min-h-9 items-center justify-between rounded-[10px] border border-border/70 bg-background/70 px-3 py-1.5"><span className="text-[12px] font-bold text-muted-foreground">机柜数</span><span className="font-mono text-[13px] font-black text-primary">{(current.personnelTotal * 2).toLocaleString()} <small className="text-[12px] font-normal text-muted-foreground">个</small></span></div>
                   </div>
 
                   <div onClick={(event) => { if ((event.target as HTMLElement).closest("button")) return; setDisasterDetails((value) => !value) }} className="flex h-[210px] cursor-pointer flex-col gap-1.5 overflow-hidden rounded-[12px] border border-border/80 bg-card/80 px-3 py-2 shadow-[inset_0_1px_0_oklch(0.72_0.15_220/6%)] lg:ml-2">
-                    <div className="text-[11px] text-muted-foreground">点击查看{selectedScopeLabel}中心机房建设模式及详情。</div>
-                    <button type="button" onClick={() => setDisasterDetails(!disasterDetails)} className="mb-1.5 min-h-7 w-full text-left text-[11px] font-semibold leading-4 text-slate-700 transition-colors hover:text-primary">
+                    <div className="text-[12px] text-muted-foreground">点击查看{selectedScopeLabel}中心机房建设模式及详情。</div>
+                    <button type="button" onClick={() => setDisasterDetails(!disasterDetails)} className="mb-1.5 min-h-7 w-full text-left text-[12px] font-semibold leading-4 text-slate-700 transition-colors hover:text-primary">
                       <span className="mr-2 inline-flex size-2 rounded-full bg-[#2dc2be]" />其中{detailRows.length}家分行配备灾备机房
                     </button>
-                    {disasterDetails ? <div className="max-h-[150px] overflow-y-auto overscroll-contain grid gap-2 py-1 text-[11px] text-foreground/80 [WebkitOverflowScrolling:touch]"><div className="font-semibold text-primary">配备灾备机房的分行</div>{detailRows.map((row) => <div key={row.name} className="flex items-center justify-between border-t border-border/50 py-1.5"><span>{row.name}</span><span className="text-muted-foreground">已配备</span></div>)}</div> : <button type="button" onClick={() => setRoomMode(roomMode === "central" ? "disaster" : "central")} className="mt-3 flex items-center justify-center" aria-label="查看灾备机房配套率"><GaugeMeter roomMode={roomMode} /></button>}
+                    {disasterDetails ? <div className="max-h-[150px] overflow-y-auto overscroll-contain grid gap-2 py-1 text-[12px] text-foreground/80 [WebkitOverflowScrolling:touch]"><div className="font-semibold text-primary">配备灾备机房的分行</div>{detailRows.map((row) => <div key={row.name} className="flex items-center justify-between border-t border-border/50 py-1.5"><span>{row.name}</span><span className="text-muted-foreground">已配备</span></div>)}</div> : <button type="button" onClick={() => setRoomMode(roomMode === "central" ? "disaster" : "central")} className="mt-3 flex items-center justify-center" aria-label="查看灾备机房配套率"><GaugeMeter roomMode={roomMode} /></button>}
                   </div>
                 </div>
               </PanelCard>
@@ -824,22 +824,22 @@ export function BranchDashboard() {
                           <Line yAxisId="rate" type="monotone" dataKey="rate" name="rate" stroke="#e68a4a" strokeWidth={2} dot={{ r: 3, fill: "#e68a4a" }} label={{ position: "top", fontSize: 10, formatter: (value: number) => `${value}%` }} />
                         </ComposedChart>
                       </ResponsiveContainer>
-                      <div className="text-center text-[10px] text-muted-foreground">信创部改造前十名完成度</div>
+                      <div className="text-center text-[12px] text-muted-foreground">信创部改造前十名完成度</div>
                     </div> : <div className="flex items-center justify-between gap-2.5">
                       <div className="flex flex-1 items-center justify-center">
                         <RingChart value={current.innovation.done} total={current.innovation.done + current.innovation.remaining} displayValue={current.innovation.done + current.innovation.remaining} label="计划总数" />
                       </div>
                       <div className="flex-1 space-y-2">
-                        <div className="flex items-center justify-between text-[11px] text-slate-600">
+                        <div className="flex items-center justify-between text-[12px] text-slate-600">
                           <span>已完成</span>
-                          <span className="font-mono text-[18px] font-black text-primary">{current.innovation.done}</span>
+                          <span className="font-mono text-[19px] font-black text-primary">{current.innovation.done}</span>
                         </div>
                         <div className="h-1.5 overflow-hidden rounded-full bg-[#e7edf8]">
                           <div className="h-full rounded-full bg-gradient-to-r from-[#2456c7] to-[#2dc2be]" style={{ width: `${(current.innovation.done / current.innovation.value) * 100}%` }} />
                         </div>
-                        <div className="flex items-center justify-between text-[11px] text-slate-600">
+                        <div className="flex items-center justify-between text-[12px] text-slate-600">
                           <span>未完成</span>
-                          <span className="font-mono text-[18px] font-black text-primary">{current.innovation.remaining}</span>
+                          <span className="font-mono text-[19px] font-black text-primary">{current.innovation.remaining}</span>
                         </div>
                         <div className="h-1.5 overflow-hidden rounded-full bg-[#e7edf8]">
                           <div className="h-full rounded-full bg-gradient-to-r from-[#2dc2be] to-[#86e1de]" style={{ width: `${(current.innovation.remaining / current.innovation.value) * 100}%` }} />
@@ -847,7 +847,7 @@ export function BranchDashboard() {
                       </div>
                     </div>}
                     </button>
-                    {!innovationRanking && <><div className="mt-2 flex flex-wrap items-center justify-center gap-3 text-[10px] text-slate-500">
+                    {!innovationRanking && <><div className="mt-2 flex flex-wrap items-center justify-center gap-3 text-[12px] text-slate-500">
                       <div className="flex items-center gap-1.5">
                         <span className="size-2 rounded-full bg-[#2456c7]" />已完成信创改造
                       </div>
@@ -855,15 +855,15 @@ export function BranchDashboard() {
                         <span className="size-2 rounded-full bg-[#2dc2be]" />未完成信创改造
                       </div>
                     </div>
-                    <div className="mt-1 text-center text-[10px] text-slate-500">单击可查看信创改造完成度排序十名。</div></>}
+                    <div className="mt-1 text-center text-[12px] text-slate-500">单击可查看信创改造完成度排序十名。</div></>}
                   </PanelCard>
 
                   <PanelCard className="h-[248px] overflow-hidden" bodyClassName="p-2.5" title="系统上云" icon={<Cloud className="size-4" />} onClick={() => setCloudRanking((value) => !value)}>
                     <button type="button" onClick={(event) => { event.stopPropagation(); setCloudRanking((value) => !value) }} className="w-full text-left" aria-label="切换上云系统前十名">
-                    {cloudRanking ? <div className="max-h-[166px] overflow-y-auto overflow-x-hidden overscroll-contain grid gap-2 py-1 [WebkitOverflowScrolling:touch]">{cloudRows.map(({ name, count }, index) => <div key={name} className="grid grid-cols-[1.2fr_1fr_auto] items-center gap-2 text-[11px]"><span>{String(index + 1).padStart(2, "0")} {name}</span><span className="h-2 rounded-full bg-gradient-to-r from-accent to-primary" style={{ width: `${Math.max(20, Number(count) / Math.max(cloudRows[0]?.count ?? 1, 1) * 100)}%` }} /><strong className="font-mono text-primary">{count}</strong></div>)}</div> : <div className="flex flex-col items-center gap-1.5">
+                    {cloudRanking ? <div className="max-h-[166px] overflow-y-auto overflow-x-hidden overscroll-contain grid gap-2 py-1 [WebkitOverflowScrolling:touch]">{cloudRows.map(({ name, count }, index) => <div key={name} className="grid grid-cols-[1.2fr_1fr_auto] items-center gap-2 text-[12px]"><span>{String(index + 1).padStart(2, "0")} {name}</span><span className="h-2 rounded-full bg-gradient-to-r from-accent to-primary" style={{ width: `${Math.max(20, Number(count) / Math.max(cloudRows[0]?.count ?? 1, 1) * 100)}%` }} /><strong className="font-mono text-primary">{count}</strong></div>)}</div> : <div className="flex flex-col items-center gap-1.5">
                       <CloudCircle value={current.cloud.value} />
-                      <div className="text-center text-[11px] text-slate-500">{current.cloud.note}</div>
-                      <div className="text-center text-[10px] text-muted-foreground">单击可查看上云系统前十名。</div></div>}
+                      <div className="text-center text-[12px] text-slate-500">{current.cloud.note}</div>
+                      <div className="text-center text-[12px] text-muted-foreground">单击可查看上云系统前十名。</div></div>}
                     </button>
                   </PanelCard>
               </div>
@@ -872,10 +872,10 @@ export function BranchDashboard() {
                   <div className="grid min-w-0 gap-2">
                     <div className="rounded-[10px] border border-border/80 bg-card/80 px-3 py-1.5 shadow-[inset_0_1px_0_oklch(0.72_0.15_220/6%)]">
                       <div className="flex items-center justify-between gap-2">
-                        <span className="text-[10px] text-foreground/80">科技人员总数</span>
+                        <span className="text-[12px] text-foreground/80">科技人员总数</span>
                         <span className="font-mono text-[13px] font-black leading-none text-primary">
                           {current.personnelTotal}
-                          <span className="ml-1 text-[10px] font-normal text-muted-foreground">人</span>
+                          <span className="ml-1 text-[12px] font-normal text-muted-foreground">人</span>
                         </span>
                       </div>
                       <div className="mt-1.5 grid gap-1">
@@ -893,25 +893,25 @@ export function BranchDashboard() {
 
 <div className="min-w-0 overflow-hidden rounded-[12px] border border-border/80 bg-card/80 shadow-[inset_0_1px_0_oklch(0.72_0.15_220/6%)]">
 	<div className="block max-h-[238px] w-full min-w-0 max-w-full overflow-x-auto overflow-y-auto overscroll-contain [WebkitOverflowScrolling:touch]">
-                          <Table className="w-full min-w-[700px] table-fixed text-[10px]">
+                          <Table className="w-full min-w-[700px] table-fixed text-[12px]">
                           <TableHeader className="bg-gradient-to-r from-primary via-primary to-accent">
                             <TableRow className="border-transparent hover:bg-transparent">
-                              <TableHead className="px-2 py-2 text-[10px] font-semibold text-foreground">分行名称</TableHead>
-                              <TableHead className="px-1.5 py-1 text-center text-[10px] font-semibold text-foreground">研发</TableHead>
-                              <TableHead className="px-1.5 py-1 text-center text-[10px] font-semibold text-foreground">运维</TableHead>
-                              <TableHead className="px-1.5 py-1 text-center text-[10px] font-semibold text-foreground">架构</TableHead>
-                              <TableHead className="px-1.5 py-1 text-center text-[10px] font-semibold text-foreground">创新</TableHead>
-                              <TableHead className="px-1.5 py-1 text-center text-[10px] font-semibold text-foreground">数据</TableHead>
-                              <TableHead className="px-1.5 py-1 text-center text-[10px] font-semibold text-foreground">安全</TableHead>
-                              <TableHead className="px-1.5 py-1 text-center text-[10px] font-semibold text-foreground">管理</TableHead>
-                              <TableHead className="px-1.5 py-1 text-center text-[10px] font-semibold text-foreground">干部</TableHead>
-                              <TableHead className="px-1.5 py-1 text-center text-[10px] font-semibold text-foreground">总数</TableHead>
+                              <TableHead className="px-2 py-2 text-[12px] font-semibold text-foreground">分行名称</TableHead>
+                              <TableHead className="px-1.5 py-1 text-center text-[12px] font-semibold text-foreground">研发</TableHead>
+                              <TableHead className="px-1.5 py-1 text-center text-[12px] font-semibold text-foreground">运维</TableHead>
+                              <TableHead className="px-1.5 py-1 text-center text-[12px] font-semibold text-foreground">架构</TableHead>
+                              <TableHead className="px-1.5 py-1 text-center text-[12px] font-semibold text-foreground">创新</TableHead>
+                              <TableHead className="px-1.5 py-1 text-center text-[12px] font-semibold text-foreground">数据</TableHead>
+                              <TableHead className="px-1.5 py-1 text-center text-[12px] font-semibold text-foreground">安全</TableHead>
+                              <TableHead className="px-1.5 py-1 text-center text-[12px] font-semibold text-foreground">管理</TableHead>
+                              <TableHead className="px-1.5 py-1 text-center text-[12px] font-semibold text-foreground">干部</TableHead>
+                              <TableHead className="px-1.5 py-1 text-center text-[12px] font-semibold text-foreground">总数</TableHead>
                             </TableRow>
                           </TableHeader>
                           <TableBody>
                             {personnelRows.map((row, index) => (
                               <TableRow key={row.name} className={cn("border-border/60 hover:bg-primary/5", index % 2 === 1 && "bg-primary/3")}>
-                                <TableCell className="px-1.5 py-0.5 font-medium text-[10px] text-foreground/90">{row.name}</TableCell>
+                                <TableCell className="px-1.5 py-0.5 font-medium text-[12px] text-foreground/90">{row.name}</TableCell>
                                 <TableCell className="px-1.5 py-0.5 text-center font-mono text-foreground/80">{row.development}</TableCell>
                                 <TableCell className="px-1.5 py-0.5 text-center font-mono text-foreground/80">{row.operations}</TableCell>
                                 <TableCell className="px-1.5 py-0.5 text-center font-mono text-foreground/80">{row.architecture}</TableCell>
@@ -921,14 +921,14 @@ export function BranchDashboard() {
                                 <TableCell className="px-1.5 py-0.5 text-center font-mono text-foreground/80">{row.management}</TableCell>
                                 <TableCell className="px-1.5 py-0.5 text-center font-mono text-foreground/80">{Math.max(row.total - (row.development + row.operations + row.architecture + row.innovation + row.data + row.security + row.management), 0)}</TableCell>
                                 <TableCell className="px-1.5 py-0.5 text-center">
-                                  <span className="inline-flex min-w-[2.5rem] justify-center rounded-md bg-primary/10 px-2 py-0.5 font-mono text-[11px] font-bold text-primary">{row.total}</span>
+                                  <span className="inline-flex min-w-[2.5rem] justify-center rounded-md bg-primary/10 px-2 py-0.5 font-mono text-[12px] font-bold text-primary">{row.total}</span>
                                 </TableCell>
                               </TableRow>
                             ))}
                           </TableBody>
                         </Table>
                       </div>
-                      <div className="flex items-center justify-between border-t border-border/60 bg-card/80 px-4 py-2.5 text-[11px] text-muted-foreground">
+                      <div className="flex items-center justify-between border-t border-border/60 bg-card/80 px-4 py-2.5 text-[12px] text-muted-foreground">
                         <span>每页显示 6 条分行数据</span>
                         <div className="flex items-center gap-1.5" aria-label="科技人员数量分页">
                           {Array.from({ length: personnelPageCount }, (_, index) => {
@@ -941,7 +941,7 @@ export function BranchDashboard() {
                                 aria-label={`第 ${page} 页`}
                                 aria-current={isActive ? "page" : undefined}
                                 onClick={() => setPersonnelPage(page)}
-                                className={`inline-flex size-5 items-center justify-center rounded-md text-[11px] font-semibold transition ${isActive ? "bg-primary text-foreground" : "bg-card text-muted-foreground ring-1 ring-border/80 hover:bg-primary/10"}`}
+                                className={`inline-flex size-5 items-center justify-center rounded-md text-[12px] font-semibold transition ${isActive ? "bg-primary text-foreground" : "bg-card text-muted-foreground ring-1 ring-border/80 hover:bg-primary/10"}`}
                               >
                                 {page}
                               </button>
