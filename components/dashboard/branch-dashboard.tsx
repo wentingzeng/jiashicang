@@ -312,7 +312,7 @@ function aggregateBranchData(keys: string[]): BranchData {
   const tableRows = rows.map(toBranchRow)
   return {
     ...base,
-    label: keys.length === 1 ? base.label : "筛选结�������������汇总",
+    label: keys.length === 1 ? base.label : "筛选结��������������汇总",
     quickStats: base.quickStats.map((stat, index) => ({ ...stat, value: sumBy(rows, (row) => row.quickStats[index]?.value ?? 0) })),
     operationMetrics,
     innovation: {
@@ -892,7 +892,7 @@ export function BranchDashboard() {
                     </div>
 
 <div className="min-w-0 overflow-hidden rounded-[12px] border border-border/80 bg-card/80 shadow-[inset_0_1px_0_oklch(0.72_0.15_220/6%)]">
-	<div className="block max-h-[238px] w-full min-w-0 max-w-full overflow-x-auto overflow-y-auto overscroll-contain [WebkitOverflowScrolling:touch]">
+	<div className="block h-[190px] max-h-[190px] w-full min-w-0 max-w-full overflow-x-auto overflow-y-auto overscroll-contain [WebkitOverflowScrolling:touch]">
                           <Table className="min-w-[700px] text-[12px]">
                           <TableHeader className="bg-gradient-to-r from-primary via-primary to-accent">
                             <TableRow className="border-transparent hover:bg-transparent">
@@ -928,7 +928,7 @@ export function BranchDashboard() {
                           </TableBody>
                         </Table>
                       </div>
-                      <div className="flex items-center justify-between border-t border-border/60 bg-card/80 px-4 py-2.5 text-[12px] text-muted-foreground">
+                      <div className="flex items-center justify-between border-t border-border/60 bg-card/80 px-3 py-1.5 text-[12px] text-muted-foreground">
                         <span>每页显示 6 条分行数据</span>
                         <div className="flex items-center gap-1.5" aria-label="科技人员数量分页">
                           {Array.from({ length: personnelPageCount }, (_, index) => {
