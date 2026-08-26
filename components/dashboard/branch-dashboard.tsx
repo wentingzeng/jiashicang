@@ -312,7 +312,7 @@ function aggregateBranchData(keys: string[]): BranchData {
   const tableRows = rows.map(toBranchRow)
   return {
     ...base,
-    label: keys.length === 1 ? base.label : "筛选结�����汇总",
+    label: keys.length === 1 ? base.label : "筛选结������汇总",
     quickStats: base.quickStats.map((stat, index) => ({ ...stat, value: sumBy(rows, (row) => row.quickStats[index]?.value ?? 0) })),
     operationMetrics,
     innovation: {
@@ -542,13 +542,13 @@ function TechLevelPanel({ rows, selectedKey, onSelect }: { rows: Array<{ key: st
   const radarPoints = vertexCoords.map((point) => `${point.x},${point.y}`).join(" ")
 
   return (
-    <PanelCard title="分���科技分级" icon={<Gauge className="size-4" />}>
-      <div className="grid gap-3">
+<PanelCard title="分行科技分级" icon={<Gauge className="size-4" />}>
+  <div className="grid gap-3">
         <div className="grid grid-cols-3 gap-1.5">
   {[{ label: "3A", count: 1 }, { label: "3B", count: 1 }, { label: "3C", count: 1 }, { label: "2A", count: 1 }, { label: "2B", count: 1 }, { label: "2C", count: 1 }, { label: "1A", count: 1 }, { label: "1B", count: 1 }, { label: "1C", count: 2 }].map(({ label, count }) => (
-            <div key={label} className="rounded-lg border border-border/70 bg-background/40 px-1 py-1.5 text-center">
-              <div className="font-mono text-base font-black leading-none text-primary">{count}</div>
-              <div className="mt-1 text-[10px] text-muted-foreground">{label}</div>
+            <div key={label} className="flex items-center justify-between rounded-lg border border-primary/15 bg-gradient-to-br from-primary/10 to-accent/10 px-2 py-1.5 shadow-sm">
+              <span className="inline-flex size-6 items-center justify-center rounded-md bg-card font-mono text-[11px] font-black text-primary ring-1 ring-primary/20">{label}</span>
+              <span className="font-mono text-base font-black leading-none text-foreground">{count}</span>
             </div>
           ))}
         </div>
@@ -770,7 +770,7 @@ export function BranchDashboard() {
                       <div className="text-center text-[10px] text-muted-foreground">信创部改造前十名完成度</div>
                     </div> : <div className="flex items-center justify-between gap-2.5">
                       <div className="flex flex-1 items-center justify-center">
-                        <RingChart value={current.innovation.done} total={current.innovation.done + current.innovation.remaining} label="计划总数" />
+                        <RingChart value={current.innovation.done + current.innovation.remaining} total={current.innovation.done + current.innovation.remaining} label="计划总数" />
                       </div>
                       <div className="flex-1 space-y-2">
                         <div className="flex items-center justify-between text-[11px] text-slate-600">
