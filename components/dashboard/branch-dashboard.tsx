@@ -944,6 +944,7 @@ export function BranchDashboard() {
     : Array.from(new Map(current.tableRows.map((row) => [row.name, row])).values())
   const detailRows = selectedBranch !== "all" ? scopedRows.slice(0, 1) : scopedRows.slice(0, 10)
   const roomRows = apiScopedRows.length ? apiScopedRows : detailRows.map((row) => ({ branchName: row.name, centerRoomMode: null, centerRoomStartDate: null, hasDisasterRoom: null, cabinetCount: null }))
+  const cabinetCountTotal = roomRows.reduce((sum, row) => sum + toNumber(row.cabinetCount), 0)
   const centralRoomRows = roomRows.filter((row) => row.centerRoomMode === "自建" || row.centerRoomMode === "租赁")
   const centralRoomSelfBuiltCount = roomRows.filter((row) => row.centerRoomMode === "自建").length
   const centralRoomLeasedCount = roomRows.filter((row) => row.centerRoomMode === "租赁").length
@@ -1037,7 +1038,7 @@ export function BranchDashboard() {
                       <div className="grid gap-1.5 text-[12px] text-foreground/75"><div><span className="mr-2 inline-flex size-2 rounded-full bg-[#2456c7]" />自建 <span className="font-mono text-primary">{centralRoomSelfBuiltCount}</span></div><div><span className="mr-2 inline-flex size-2 rounded-full bg-[#2dc2be]" />租赁 <span className="font-mono text-primary">{centralRoomLeasedCount}</span></div></div>
                     </button>}
                     <div className="mt-1 text-center text-[11px] text-muted-foreground">点击查看详情</div>
-                    <div className="mt-auto flex min-h-9 items-center justify-between rounded-[10px] border border-border/70 bg-background/70 px-3 py-1.5"><span className="text-[12px] font-bold text-muted-foreground">机柜数</span><span className="font-mono text-[13px] font-black text-primary">{(current.personnelTotal * 2).toLocaleString()} <small className="text-[12px] font-normal text-muted-foreground">个</small></span></div>
+                    <div className="mt-auto flex min-h-9 items-center justify-between rounded-[10px] border border-border/70 bg-background/70 px-3 py-1.5"><span className="text-[12px] font-bold text-muted-foreground">机柜数</span><span className="font-mono text-[13px] font-black text-primary">{cabinetCountTotal.toLocaleString()} <small className="text-[12px] font-normal text-muted-foreground">个</small></span></div>
                   </div>
 
                   <div onClick={(event) => { if ((event.target as HTMLElement).closest("button")) return; setDisasterDetails((value) => !value) }} className="flex h-[210px] cursor-pointer flex-col gap-1.5 overflow-hidden rounded-[12px] border border-border/80 bg-card/80 px-3 py-2 shadow-[inset_0_1px_0_oklch(0.72_0.15_220/6%)] lg:ml-2">
