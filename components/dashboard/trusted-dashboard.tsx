@@ -66,7 +66,7 @@ function RingStat({ label, ratio, value, sub, color = colors.blue }: { label: st
 function ModificationRing({ title, ratio, done, undone, color }: { title: string; ratio: number; done: string; undone: string; color: string }) {
   const c = 2 * Math.PI * 30
   return (
-    <div className="flex items-center gap-3 rounded-lg bg-secondary/40 px-3 py-2.5">
+    <div className="flex items-center gap-1.5 rounded-lg bg-secondary/40 px-3 py-2.5">
       <div className="flex min-w-20 flex-col items-start gap-1">
         <p className="text-xs font-semibold text-foreground">{title}</p>
         <div className="relative size-14 shrink-0">
