@@ -67,8 +67,8 @@ function ModificationRing({ title, ratio, done, undone, color }: { title: string
   const c = 2 * Math.PI * 30
   return (
     <div className="flex items-center gap-3 rounded-lg bg-secondary/40 px-3 py-2.5">
-      <div className="flex min-w-20 flex-col items-center gap-1">
-        <p className="text-sm font-bold text-foreground">{title}</p>
+      <div className="flex min-w-20 flex-col items-start gap-1">
+        <p className="text-xs font-semibold text-foreground">{title}</p>
         <div className="relative size-14 shrink-0">
           <svg viewBox="0 0 72 72" className="size-full -rotate-90">
             <circle cx="36" cy="36" r="30" fill="none" stroke="currentColor" strokeWidth="8" className="text-secondary" />
