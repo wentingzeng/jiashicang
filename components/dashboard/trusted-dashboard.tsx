@@ -92,20 +92,20 @@ function CoreBars() {
   const rows: Array<[string, number, number]> = [["对公核心", 66, 531], ["零售存款", 663, 1031], ["总账核算", 664, 859]]
   const ACTUAL = "#63b3ed"
   return (
-    <div className="flex flex-col gap-2.5">
-      <div className="flex items-center justify-end text-[11px] text-muted-foreground">
+    <div className="flex flex-col gap-2">
+      <div className="flex items-center justify-end text-[10px] text-muted-foreground">
         <span className="font-medium">实际天数 / 计划天数</span>
       </div>
       {rows.map(([label, actual, plan]) => {
         const ratio = Math.max((actual / plan) * 100, 22)
         return (
           <div key={label}>
-            <div className="mb-1 flex items-center justify-between text-sm font-bold text-foreground">
+            <div className="mb-0.5 flex items-center justify-between text-xs font-bold text-foreground">
               <span>{label}</span>
-              <span className="font-mono text-[11px] font-semibold text-muted-foreground">{actual.toLocaleString()} / {plan.toLocaleString()}</span>
+              <span className="font-mono text-[10px] font-semibold text-muted-foreground">{actual.toLocaleString()} / {plan.toLocaleString()}</span>
             </div>
-            <div className="h-7 w-full overflow-hidden rounded-md bg-secondary/50">
-              <div className="flex h-full items-center rounded-md px-3 font-mono text-xs font-bold text-white" style={{ width: `${ratio}%`, background: ACTUAL }}>
+            <div className="h-5 w-full overflow-hidden rounded-md bg-secondary/50">
+              <div className="flex h-full items-center rounded-md px-2 font-mono text-[11px] font-bold text-white" style={{ width: `${ratio}%`, background: ACTUAL }}>
                 {((actual / plan) * 100).toFixed(1)}%
               </div>
             </div>
