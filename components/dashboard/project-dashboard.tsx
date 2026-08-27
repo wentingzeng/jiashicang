@@ -259,11 +259,11 @@ function GaugeCard({
               y1="100"
               x2="100"
               y2="43"
-              stroke="#0f172a"
-              strokeWidth="3"
+              stroke="#94a3b8"
+              strokeWidth="2"
               strokeLinecap="round"
             />
-            <circle cx="100" cy="100" r="5" fill="#0f172a" />
+            <circle cx="100" cy="100" r="4" fill="#94a3b8" />
           </g>
         </svg>
         <strong className="absolute inset-x-0 bottom-6 z-10 bg-transparent text-center font-mono text-xl font-black leading-none text-[#005486]">
