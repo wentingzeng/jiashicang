@@ -181,17 +181,19 @@ function ProgressBars({
 function GaugeCard({
   label,
   value,
+  progress,
   min,
   max,
 }: {
   label: string;
   value: number;
+  progress: number;
   min: number;
   max: number;
 }) {
   const percent = Math.max(
     0,
-    Math.min(100, ((value - min) / (max - min)) * 100),
+    Math.min(100, ((progress - min) / (max - min)) * 100),
   );
   return (
     <div className="flex min-w-0 flex-col items-center gap-1">
@@ -398,12 +400,18 @@ export function ProjectDashboard() {
     [apiById],
   );
 
-  const totalPlan = valueFor("ID01", 329);
+  const statusCounts = [
+    valueFor("ID03", 221),
+    valueFor("ID02", 78),
+    valueFor("ID04", 9),
+    valueFor("ID05", 21),
+  ];
+  const statusTotal = statusCounts.reduce((sum, value) => sum + value, 0);
   const liveStatusData = [
-    { name: "已启动", value: (valueFor("ID03", 221) / totalPlan) * 100 },
-    { name: "已申请未批复", value: (valueFor("ID02", 78) / totalPlan) * 100 },
-    { name: "已批复超期未启动", value: (valueFor("ID04", 9) / totalPlan) * 100 },
-    { name: "已批复未启动", value: (valueFor("ID05", 21) / totalPlan) * 100 },
+    { name: "已启动", value: statusTotal > 0 ? (statusCounts[0] / statusTotal) * 100 : 0 },
+    { name: "已申请未批复", value: statusTotal > 0 ? (statusCounts[1] / statusTotal) * 100 : 0 },
+    { name: "已批复超期未启动", value: statusTotal > 0 ? (statusCounts[2] / statusTotal) * 100 : 0 },
+    { name: "已批复未启动", value: statusTotal > 0 ? (statusCounts[3] / statusTotal) * 100 : 0 },
   ];
   const liveProgressData = ["业务需求", "总体设计", "商务", "编码测试", "上线准备"].map((name, index) => ({
     name,
@@ -431,20 +439,23 @@ export function ProjectDashboard() {
     {
       label: "顺序项目科技实施阶段时长占比",
       value: valueFor("ID35", 51),
+      progress: targetFor("ID35", 60),
       min: 0,
-      max: targetFor("ID35", 60),
+      max: 100,
     },
     {
       label: "敏捷项目首版本平均交付周期",
       value: valueFor("ID41", 107),
-      min: 0,
-      max: targetFor("ID41", 105),
+      progress: targetFor("ID41", 105),
+      min: 100,
+      max: 107,
     },
     {
       label: "敏捷项目版本平均交付周期",
       value: valueFor("ID43", 23),
-      min: 0,
-      max: targetFor("ID43", 22.5),
+      progress: targetFor("ID43", 22.5),
+      min: 20,
+      max: 23,
     },
   ];
   const livePerformanceData = ["ID19", "ID20", "ID21", "ID22"].map((id, index) => ({
@@ -576,7 +587,7 @@ export function ProjectDashboard() {
                       contentStyle={tooltipStyle}
                       labelFormatter={(label) => String(label)}
                       formatter={(value, name) => {
-                        const label = name === "项目平均交付周期（天）" ? "项目平均交付周期（天）" : "项目个数"
+                        const label = name === "项目平均交付周期��天）" ? "项目平均交付周期（天）" : "项目个数"
                         return [name === "项目平均交付周期（天）" ? `${Number(value)}天` : `${Number(value)}个`, label]
                       }}
                     />
