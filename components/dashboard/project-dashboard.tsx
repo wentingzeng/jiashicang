@@ -265,11 +265,11 @@ function GaugeCard({
   );
 }
 
-function StatusPie() {
+function StatusPie({ data }: { data: readonly { name: string; value: number }[] }) {
   const [selected, setSelected] = useState(0);
   const [selectedName, selectedValue] = [
-    statusData[selected].name,
-    statusData[selected].value,
+    data[selected].name,
+    data[selected].value,
   ];
   return (
     <div className="flex items-center gap-3">
@@ -277,7 +277,7 @@ function StatusPie() {
         <ChartBox height={148}>
           <PieChart margin={{ top: 0, right: 0, bottom: 0, left: 0 }}>
             <Pie
-              data={statusData}
+              data={data}
               dataKey="value"
               nameKey="name"
               innerRadius={46}
@@ -286,7 +286,7 @@ function StatusPie() {
               stroke="none"
               onClick={(_, index) => setSelected(index)}
             >
-              {statusData.map((item, index) => (
+              {data.map((item, index) => (
                 <Cell
                   key={item.name}
                   fill={palette[index]}
