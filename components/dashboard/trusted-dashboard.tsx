@@ -9,6 +9,9 @@ const branchRows: Array<[string, number, number]> = [["南京分行", 9, 5], ["�
 const headRows: Array<[string, number, number]> = [["公司金融部\n数字支撑室", 4, 2], ["绿色金融部\n临客部", 4, 0], ["普惠金融部\n村镇服务", 4, 0], ["机构业务部", 5, 1], ["国际业务部\n贸易行管", 24, 9], ["投资银行部", 2, 1], ["零售金融部\n消费者权益保护办公室", 23, 8]]
 const productRows: Array<[string, number, number]> = [["操作系统", 420, 55.26], ["服务器", 180, 64.59], ["金融机具", 310, 38.64], ["数据库", 260, 73.04], ["网络设备", 225, 67.32], ["A4单色打印机", 198, 38.15], ["终端", 360, 61.2], ["存储", 142, 48.7]]
 const smallMachineRows: Array<[string, number, number]> = [["南京", 328, 86], ["苏州", 286, 74], ["北京", 240, 62], ["上海", 178, 48], ["其他", 120, 36]]
+const headMachineRows: Array<[string, number, number]> = [["科技运维中心", 150, 42], ["银行合作中心", 110, 28], ["信用卡中心", 68, 16]]
+const branchMachineRows: Array<[string, number, number]> = [["华东分行群", 180, 52], ["华南分行群", 145, 38], ["华北分行群", 120, 26], ["西部及其他分行", 92, 20]]
+const machineOverview = { head: { total: 358, done: 30 }, branch: { total: 537, done: 136 } }
 
 function Panel({ title, children, className = "" }: { title: string; children: React.ReactNode; className?: string }) {
   return (
@@ -148,7 +151,7 @@ function ProductBars() {
   )
 }
 
-function SmallMachineChart() {
+function SmallMachineChart({ rows }: { rows: Array<[string, number, number]> }) {
   const UNDONE = "#63b3ed"
   const DONE = "#38b2ac"
   const max = Math.max(...smallMachineRows.map(([, total]) => total))
@@ -215,6 +218,19 @@ function SmallMachineChart() {
   )
 }
 
+function MachineOverview({ onSelect }: { onSelect: (view: "head" | "branch") => void }) {
+  return (
+    <div className="grid gap-2 md:grid-cols-2">
+      <button type="button" onClick={() => onSelect("head")} className="text-left transition hover:opacity-90">
+        <RingStat label="总行小型机下线进展" ratio={(machineOverview.head.done / machineOverview.head.total) * 100} value={`${machineOverview.head.done}`} sub={`已下线 · 未下线 ${machineOverview.head.total - machineOverview.head.done}`} color={colors.blue} />
+      </button>
+      <button type="button" onClick={() => onSelect("branch")} className="text-left transition hover:opacity-90">
+        <RingStat label="分行小型机下线进展" ratio={(machineOverview.branch.done / machineOverview.branch.total) * 100} value={`${machineOverview.branch.done}`} sub={`已下线 · 未下线 ${machineOverview.branch.total - machineOverview.branch.done}`} color={colors.teal} />
+      </button>
+    </div>
+  )
+}
+
 function DetailTable({ title, rows, branch, onBack }: { title: string; rows: Array<[string, number, number]>; branch?: boolean; onBack: () => void }) {
   return (
     <div className="flex flex-col gap-2">
@@ -250,6 +266,7 @@ function DetailTable({ title, rows, branch, onBack }: { title: string; rows: Arr
 
 export function TrustedDashboard() {
   const [systemView, setSystemView] = useState<null | "head" | "branch">(null)
+  const [machineView, setMachineView] = useState<null | "head" | "branch">(null)
   return (
     <main className="min-h-screen bg-background text-foreground">
       <div className="mx-auto max-w-[1800px] px-4 pb-5 md:px-6">
@@ -307,7 +324,18 @@ export function TrustedDashboard() {
                   </div>
                 </Panel>
                 <Panel title="小型机下线进展">
-                  <SmallMachineChart />
+                  {machineView ? (
+                    <div className="flex flex-col gap-2">
+                      <button type="button" onClick={() => setMachineView(null)} className="flex w-fit items-center gap-1 rounded-md border border-border/70 bg-secondary/40 px-2 py-1 text-[11px] font-semibold text-muted-foreground hover:bg-secondary/70">
+                        <ChevronUp className="size-3.5 -rotate-90" />
+                        返回小型机下线进展
+                      </button>
+                      <p className="text-xs font-semibold text-foreground">{machineView === "head" ? "总行各部门下线进展" : "分行各部门下线进展"}</p>
+                      <SmallMachineChart rows={machineView === "head" ? headMachineRows : branchMachineRows} />
+                    </div>
+                  ) : (
+                    <MachineOverview onSelect={setMachineView} />
+                  )}
                 </Panel>
                 <Panel title="其他关键品类产品存量替代进度">
                   <p className="mb-1.5 text-xs font-semibold">各品类进度</p>
