@@ -195,6 +195,11 @@ function GaugeCard({
     0,
     Math.min(100, ((progress - min) / (max - min)) * 100),
   );
+  const currentPercent = Math.max(
+    0,
+    Math.min(100, ((value - min) / (max - min)) * 100),
+  );
+  const pointerAngle = 180 - (currentPercent / 100) * 180;
   return (
     <div className="flex min-w-0 flex-col items-center gap-1">
       <div className="relative h-28 w-full max-w-[190px]">
@@ -247,6 +252,18 @@ function GaugeCard({
             stroke="#64748b"
             strokeWidth="3"
           />
+          <g transform={`rotate(${pointerAngle} 100 100)`}>
+            <line
+              x1="100"
+              y1="100"
+              x2="100"
+              y2="43"
+              stroke="#0f172a"
+              strokeWidth="3"
+              strokeLinecap="round"
+            />
+            <circle cx="100" cy="100" r="5" fill="#0f172a" />
+          </g>
         </svg>
         <strong className="absolute inset-x-0 bottom-6 z-10 bg-transparent text-center font-mono text-xl font-black leading-none text-[#005486]">
           {value}
