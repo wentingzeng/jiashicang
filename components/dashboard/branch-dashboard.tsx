@@ -624,7 +624,7 @@ function RoleBar({ label, value, tone, maxValue }: { label: string; value: numbe
   const dot = tone === "accent" ? "bg-accent" : tone === "chart-4" ? "bg-chart-4" : "bg-primary"
 
   return (
-  <div className="flex items-center justify-between gap-3 rounded-lg bg-muted/35 px-3 py-2 text-[12px]">
+  <div className="flex items-center justify-between gap-3 rounded-lg bg-muted/35 px-3 py-3 text-[12px]">
   <div className="flex min-w-0 items-center gap-2">
   <span className={cn("size-2 shrink-0 rounded-full", dot)} aria-hidden="true" />
   <span className="truncate text-foreground">{label}</span>
@@ -1111,9 +1111,9 @@ export function BranchDashboard() {
 
               <PanelCard className="order-1 col-start-1 row-start-1 row-span-2 h-[512px] min-w-0 cursor-pointer" bodyClassName="min-w-0 p-1.5" title="科技人员数量" icon={<UsersRound className="size-4" />} onClick={() => setPersonnelDetails((value) => !value)}>
                   <div className="grid min-w-0 gap-2">
-                    {!personnelDetails && <div className="grid gap-2 rounded-[10px] border border-border/80 bg-card/80 px-3 py-2.5 shadow-[inset_0_1px_0_oklch(0.72_0.15_220/6%)]">
+                    {!personnelDetails && <div className="grid gap-2 rounded-[10px] border border-border/80 bg-card/80 px-3 py-3 shadow-[inset_0_1px_0_oklch(0.72_0.15_220/6%)]">
   <PersonnelRing total={current.personnelTotal} roles={completePersonnelRoles(current)} />
-  <div className="grid grid-cols-1 gap-1.5 sm:grid-cols-2">
+  <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
   {completePersonnelRoles(current).map((role) => (
   <RoleBar
   key={role.label}
