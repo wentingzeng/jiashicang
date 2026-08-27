@@ -170,7 +170,7 @@ function ProgressBars({
               />
             </div>
             <strong className="whitespace-nowrap text-right font-mono text-xs text-primary">
-              target: {item.target}
+              {item.value}%
             </strong>
           </div>
         ))}
@@ -438,7 +438,7 @@ export function ProjectDashboard() {
   ];
   const liveGauges = [
     {
-      label: "顺序项目科技实施阶段时长占比",
+      label: "顺序项目科���实施阶段时长占比",
       value: valueFor("ID35", 51),
       progress: targetFor("ID35", 60),
       min: 0,
