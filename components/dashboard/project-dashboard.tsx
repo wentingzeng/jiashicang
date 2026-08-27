@@ -199,7 +199,8 @@ function GaugeCard({
     0,
     Math.min(100, ((value - min) / (max - min)) * 100),
   );
-  const pointerAngle = 180 - (currentPercent / 100) * 180;
+  // The pointer starts pointing up (0°) and sweeps left-to-right across the semicircle.
+  const pointerAngle = (currentPercent / 100) * 180 - 90;
   return (
     <div className="flex min-w-0 flex-col items-center gap-1">
       <div className="relative h-28 w-full max-w-[190px]">
