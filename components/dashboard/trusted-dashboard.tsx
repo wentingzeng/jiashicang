@@ -66,23 +66,23 @@ function RingStat({ label, ratio, value, sub, color = colors.blue }: { label: st
 function ModificationRing({ title, ratio, done, undone, color }: { title: string; ratio: number; done: string; undone: string; color: string }) {
   const c = 2 * Math.PI * 30
   return (
-    <div className="flex items-center gap-0 rounded-lg bg-secondary/40 px-3 py-2.5">
+    <div className="flex items-center gap-2.5 rounded-lg bg-secondary/40 px-2.5 py-2">
       <div className="flex min-w-16 flex-col items-start gap-1">
         <p className="text-xs font-semibold text-foreground">{title}</p>
-        <div className="relative size-14 shrink-0">
+        <div className="relative size-12 shrink-0">
           <svg viewBox="0 0 72 72" className="size-full -rotate-90">
             <circle cx="36" cy="36" r="30" fill="none" stroke="currentColor" strokeWidth="8" className="text-secondary" />
             <circle cx="36" cy="36" r="30" fill="none" stroke={color} strokeWidth="8" strokeLinecap="round" strokeDasharray={c} strokeDashoffset={c * (1 - ratio / 100)} />
           </svg>
-          <strong className="absolute inset-0 flex items-center justify-center font-mono text-[11px]" style={{ color }}>
+          <strong className="absolute inset-0 flex items-center justify-center font-mono text-[10px]" style={{ color }}>
             {ratio.toFixed(0)}%
           </strong>
         </div>
       </div>
       <div className="min-w-0">
-        <p className="text-xs font-semibold text-muted-foreground">已改造</p>
-        <p className="font-mono text-lg font-black" style={{ color }}>{done}</p>
-        <p className="mt-1 text-xs text-muted-foreground">未改造 {undone}</p>
+        <p className="text-xs font-semibold text-foreground">已改造</p>
+        <p className="font-mono text-base font-black" style={{ color }}>{done}</p>
+        <p className="text-[11px] text-muted-foreground">未改造 {undone}</p>
       </div>
     </div>
   )
