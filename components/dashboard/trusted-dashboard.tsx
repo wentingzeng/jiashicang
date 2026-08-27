@@ -7,7 +7,7 @@ import { HeroBanner } from "@/components/dashboard/hero-banner"
 const colors = { blue: "#4ba8d8", violet: "#8494d8", teal: "#42bdb7", amber: "#e5b45c" }
 const branchRows: Array<[string, number, number]> = [["南京分行", 9, 5], ["苏州分行", 6, 3], ["北京分行", 6, 4], ["上海分行", 5, 3], ["青岛分行", 5, 2], ["福州分行", 9, 6], ["深圳分行", 4, 2], ["西安分行", 6, 4]]
 const headRows: Array<[string, number, number]> = [["公司金融部\n数字支撑室", 4, 2], ["绿色金融部\n临客部", 4, 0], ["普惠金融部\n村镇服务", 4, 0], ["机构业务部", 5, 1], ["国际业务部\n贸易行管", 24, 9], ["投资银行部", 2, 1], ["零售金融部\n消费者权益保护办公室", 23, 8]]
-const productRows: Array<[string, number, number]> = [["操作系统", 420, 55.26], ["服务器", 180, 64.59], ["金融机具", 310, 38.64], ["数据库", 260, 73.04], ["网络设备", 225, 67.32], ["A4单色打印机", 198, 38.15], ["终端", 360, 61.2], ["存储", 142, 48.7]]
+const productRows: Array<[string, number, number]> = [["操作系统", 420, 55.26], ["服务器", 180, 64.59], ["金融机具", 310, 38.64], ["数据库", 260, 73.04], ["中间件", 238, 58.4], ["网络设备", 225, 67.32], ["A4单色打印机", 198, 38.15], ["终端", 360, 61.2], ["存储", 142, 48.7]]
 const smallMachineRows: Array<[string, number, number]> = [["南京", 328, 86], ["苏州", 286, 74], ["北京", 240, 62], ["上海", 178, 48], ["其他", 120, 36]]
 const headMachineRows: Array<[string, number, number]> = [["科技运维中心", 150, 42], ["银行合作中心", 110, 28], ["信用卡中心", 68, 16]]
 const branchMachineRows: Array<[string, number, number]> = [["华东分行群", 180, 52], ["华南分行群", 145, 38], ["华北分行群", 120, 26], ["西部及其他分行", 92, 20]]
@@ -121,7 +121,7 @@ function ProductBars() {
             {ticks.map((t) => (
               <div key={t} className="absolute left-0 right-0 border-t border-dashed border-border/50" style={{ bottom: `${(t / niceMax) * 100}%` }} />
             ))}
-            <div className="absolute inset-x-0 bottom-0 top-0 grid grid-cols-8 items-end gap-1 px-2">
+            <div className="absolute inset-x-0 bottom-0 top-0 grid grid-cols-9 items-end gap-1 px-2">
               {productRows.map(([name, amount, ratio]) => {
                 const replaced = Math.round((amount * ratio) / 100)
                 const barHeight = Math.max(10, (amount / niceMax) * chartHeight)
@@ -140,7 +140,7 @@ function ProductBars() {
               })}
             </div>
           </div>
-          <div className="grid grid-cols-8 gap-1 px-2 pt-1">
+          <div className="grid grid-cols-9 gap-1 px-2 pt-1">
             {productRows.map(([name]) => (
               <span key={name} className="min-w-0 truncate text-center text-[10px] font-medium text-muted-foreground">{name}</span>
             ))}
@@ -154,7 +154,7 @@ function ProductBars() {
 function SmallMachineChart({ rows }: { rows: Array<[string, number, number]> }) {
   const UNDONE = "#63b3ed"
   const DONE = "#38b2ac"
-  const max = Math.max(...smallMachineRows.map(([, total]) => total))
+  const max = Math.max(...rows.map(([, total]) => total))
   const niceMax = Math.ceil(max / 180) * 180
   const chartHeight = 140
   const ticks = [0, niceMax / 2, niceMax]
@@ -182,7 +182,7 @@ function SmallMachineChart({ rows }: { rows: Array<[string, number, number]> }) 
               <div key={t} className="absolute left-0 right-0 border-t border-dashed border-border/50" style={{ bottom: `${(t / niceMax) * 100}%` }} />
             ))}
             <div className="absolute inset-0 flex items-end justify-around px-3">
-              {smallMachineRows.map(([name, total, done]) => {
+              {rows.map(([name, total, done]) => {
                 const barHeight = Math.max(8, (total / niceMax) * chartHeight)
                 const doneHeight = (done / total) * barHeight
                 return (
@@ -206,7 +206,7 @@ function SmallMachineChart({ rows }: { rows: Array<[string, number, number]> }) 
             </div>
           </div>
           <div className="flex justify-around px-3 pt-1">
-            {smallMachineRows.map(([name]) => (
+            {rows.map(([name]) => (
               <span key={name} className="text-[10px] font-semibold text-muted-foreground">
                 {name}
               </span>
@@ -289,7 +289,7 @@ export function TrustedDashboard() {
                 <DetailTable title={systemView === "head" ? "总行系统改造进展明细" : "分行系统改造进展明细"} rows={systemView === "head" ? headRows : branchRows} branch={systemView === "branch"} onBack={() => setSystemView(null)} />
               ) : (
                 <div className="flex flex-col gap-2">
-                  <Panel title="一般系统���创进度">
+                  <Panel title="一般系统信创进度">
                     <div className="grid gap-2 md:grid-cols-2">
                       <RingStat label="已单轨" ratio={(412 / (412 + 214)) * 100} value="412" sub="未单轨 214" />
                       <RingStat label="年度已完成" ratio={(58 / (58 + 177)) * 100} value="58" sub="未完成 177" color={colors.violet} />
