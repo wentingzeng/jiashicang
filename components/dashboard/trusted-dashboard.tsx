@@ -247,10 +247,10 @@ function MachineOverview({ onSelect }: { onSelect: (view: "head" | "branch") => 
   return (
     <div className="grid gap-2 md:grid-cols-2">
       <button type="button" onClick={() => onSelect("head")} className="text-left transition hover:opacity-90">
-        <RingStat label="总行小型机下线进展" ratio={(machineOverview.head.done / machineOverview.head.total) * 100} value={`${machineOverview.head.done}`} sub={`已下线 · 未下线 ${machineOverview.head.total - machineOverview.head.done}`} color={colors.blue} />
+        <RingStat label="总行小型机下线进展" ratio={(machineOverview.head.done / machineOverview.head.total) * 100} value={`${machineOverview.head.done}`} sub={`未下线 ${machineOverview.head.total - machineOverview.head.done}`} color={colors.blue} />
       </button>
       <button type="button" onClick={() => onSelect("branch")} className="text-left transition hover:opacity-90">
-        <RingStat label="分行小型机下线进展" ratio={(machineOverview.branch.done / machineOverview.branch.total) * 100} value={`${machineOverview.branch.done}`} sub={`已下线 · 未下线 ${machineOverview.branch.total - machineOverview.branch.done}`} color={colors.teal} />
+        <RingStat label="分行小型机下线进展" ratio={(machineOverview.branch.done / machineOverview.branch.total) * 100} value={`${machineOverview.branch.done}`} sub={`未下线 ${machineOverview.branch.total - machineOverview.branch.done}`} color={colors.teal} />
       </button>
     </div>
   )
