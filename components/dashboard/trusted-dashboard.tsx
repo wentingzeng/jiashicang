@@ -334,14 +334,16 @@ export function TrustedDashboard() {
                 <h1 className="text-base font-black text-primary">系统改造</h1>
               </div>
               {systemView ? (
-                <DetailTable
+                <div key={systemView}>
+                  <DetailTable
                   title={systemView === "head" ? "总行系统改造进展明细" : systemView === "branch" ? "分行系统改造进展明细" : systemView === "annual-head" ? "总行年度完成明细" : "分行年度完成明细"}
                   rows={systemView === "head" ? headRows : systemView === "branch" ? branchRows : systemView === "annual-head" ? annualHeadRows : annualBranchRows}
                   branch={systemView === "branch" || systemView === "annual-branch"}
-                  onBack={() => setSystemView(null)}
-                />
+                    onBack={() => setSystemView(null)}
+                  />
+                </div>
               ) : (
-                <div className="flex flex-col gap-2">
+                <div key="system-overview" className="flex flex-col gap-2">
                   <Panel title="一般系统信创进度">
                     <div className="grid gap-2 md:grid-cols-2">
                       <div className="rounded-lg border border-border/70 bg-card p-2">
