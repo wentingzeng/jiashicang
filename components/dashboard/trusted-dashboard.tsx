@@ -63,6 +63,31 @@ function RingStat({ label, ratio, value, sub, color = colors.blue }: { label: st
   )
 }
 
+function ModificationRing({ title, ratio, done, undone, color }: { title: string; ratio: number; done: string; undone: string; color: string }) {
+  const c = 2 * Math.PI * 30
+  return (
+    <div className="flex items-center gap-3 rounded-lg bg-secondary/40 px-3 py-2.5">
+      <div className="flex min-w-20 flex-col items-center gap-1">
+        <p className="text-sm font-bold text-foreground">{title}</p>
+        <div className="relative size-14 shrink-0">
+          <svg viewBox="0 0 72 72" className="size-full -rotate-90">
+            <circle cx="36" cy="36" r="30" fill="none" stroke="currentColor" strokeWidth="8" className="text-secondary" />
+            <circle cx="36" cy="36" r="30" fill="none" stroke={color} strokeWidth="8" strokeLinecap="round" strokeDasharray={c} strokeDashoffset={c * (1 - ratio / 100)} />
+          </svg>
+          <strong className="absolute inset-0 flex items-center justify-center font-mono text-[11px]" style={{ color }}>
+            {ratio.toFixed(0)}%
+          </strong>
+        </div>
+      </div>
+      <div className="min-w-0">
+        <p className="text-xs font-semibold text-muted-foreground">已改造</p>
+        <p className="font-mono text-lg font-black" style={{ color }}>{done}</p>
+        <p className="mt-1 text-xs text-muted-foreground">未改造 {undone}</p>
+      </div>
+    </div>
+  )
+}
+
 function CoreBars() {
   const rows: Array<[string, number, number]> = [["对公核心", 66, 531], ["零售存款", 663, 1031], ["总账核算", 664, 859]]
   const ACTUAL = "#63b3ed"
@@ -306,8 +331,8 @@ export function TrustedDashboard() {
                 <h2 className="text-base font-black text-primary">国密改造和密评进度</h2>
               </div>
               <div className="grid gap-2 md:grid-cols-2">
-                <RingStat label="密评工作" ratio={30} value="30" sub="已改造 · 未改造 70" color={colors.amber} />
-                <RingStat label="国密改造" ratio={31.25} value="25" sub="已改造 · 未改造 55" color={colors.teal} />
+<ModificationRing title="密评工作" ratio={30} done="30" undone="70" color={colors.amber} />
+  <ModificationRing title="国密改造" ratio={31.25} done="25" undone="55" color={colors.teal} />
               </div>
             </div>
           </div>
