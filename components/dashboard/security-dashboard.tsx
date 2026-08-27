@@ -113,23 +113,25 @@ function StatCard({
   unit,
   icon: Icon,
   color = "var(--primary)",
+  compact = false,
 }: {
   label: string
   value: string | number
   unit: string
   icon: typeof ShieldCheck
   color?: string
+  compact?: boolean
 }) {
   return (
-    <div className="rounded-xl border border-border/60 bg-gradient-to-br from-background/60 via-card/80 to-background/45 px-4 py-3 shadow-[0_8px_20px_rgba(16,30,46,0.16)]">
-      <div className="mb-2 flex items-center gap-2 text-xs text-muted-foreground">
-        <Icon className="size-4" style={{ color }} />
+    <div className={["rounded-xl border border-border/60 bg-gradient-to-br from-background/60 via-card/80 to-background/45 shadow-[0_8px_20px_rgba(16,30,46,0.16)]", compact ? "px-3 py-2" : "px-4 py-3"].join(" ")}>
+      <div className={["flex items-center gap-2 text-muted-foreground", compact ? "mb-1 text-[11px]" : "mb-2 text-xs"].join(" ")}>
+        <Icon className={compact ? "size-3.5" : "size-4"} style={{ color }} />
         <span>{label}</span>
       </div>
 
       <div className="flex items-baseline gap-1.5">
         <strong
-          className="font-mono text-2xl font-semibold tracking-tight tabular-nums"
+          className={compact ? "font-mono text-xl font-semibold tracking-tight tabular-nums" : "font-mono text-2xl font-semibold tracking-tight tabular-nums"}
           style={{ color }}
         >
           {value}
@@ -462,19 +464,20 @@ export function SecurityDashboard() {
 
         <div className="mt-5 grid items-stretch gap-5 xl:min-h-[900px] xl:grid-cols-3 xl:grid-rows-[minmax(0,1fr)]">
           <section className="flex h-full min-h-0 min-w-0 flex-col gap-4">
-              <Panel title="网络安全综合能力" tone="primary">
+              <Panel title="网络安全综合能力" tone="primary" bodyClassName="p-3">
                 <CapabilityBars data={filteredCapability} label="各分行综合能力评分" selectedInstitution={selectedInstitution} />
               </Panel>
 
-              <Panel title="员工安全画像" tone="primary" bodyClassName="p-3" className="flex-1">
-                <div className="flex flex-col gap-[38px]">
-                  <div className="grid grid-cols-2 gap-2.5">
+              <Panel title="员工安全画像" tone="primary" bodyClassName="p-2.5" className="flex-1">
+                <div className="flex flex-col gap-6">
+                  <div className="grid grid-cols-2 gap-2">
                     <StatCard
                       label="安全培训人次"
                       value={securityOverview.trainingPeople}
                       unit="人次"
                       icon={Users}
                       color="var(--primary)"
+                      compact
                     />
                     <StatCard
                       label="违规记分人次"
@@ -482,6 +485,7 @@ export function SecurityDashboard() {
                       unit="人次"
                       icon={AlertTriangle}
                       color="#e9ad43"
+                      compact
                     />
                   </div>
 
