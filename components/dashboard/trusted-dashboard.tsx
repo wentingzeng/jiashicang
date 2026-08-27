@@ -181,7 +181,7 @@ function SmallMachineChart({ rows }: { rows: Array<[string, number, number]> }) 
   const DONE = "#38b2ac"
   const max = Math.max(...rows.map(([, total]) => total))
   const niceMax = Math.ceil(max / 180) * 180
-  const chartHeight = 140
+  const chartHeight = 96
   const ticks = [0, niceMax / 2, niceMax]
   return (
     <div>
