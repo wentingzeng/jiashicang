@@ -462,8 +462,8 @@ export function SecurityDashboard() {
           </div>
         </Panel>
 
-        <div className="mt-5 grid gap-5 xl:grid-cols-3">
-          <section className="flex min-w-0 flex-col gap-4">
+        <div className="mt-5 grid items-stretch gap-5 xl:grid-cols-3">
+          <section className="flex h-full min-w-0 flex-col gap-4">
               <Panel title="网络安全综合能力" tone="primary" bodyClassName="p-2">
                 <CapabilityBars data={filteredCapability} label="各分行综合能力评分" selectedInstitution={selectedInstitution} />
               </Panel>
