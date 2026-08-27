@@ -266,10 +266,12 @@ function GaugeCard({
 }
 
 function StatusPie({ data }: { data: readonly { name: string; value: number }[] }) {
+  const safeData = data.length > 0 ? data : [{ name: "暂无数据", value: 0 }];
   const [selected, setSelected] = useState(0);
+  const safeSelected = Math.min(selected, safeData.length - 1);
   const [selectedName, selectedValue] = [
-    data[selected].name,
-    data[selected].value,
+  safeData[safeSelected].name,
+  safeData[safeSelected].value,
   ];
   return (
     <div className="flex items-center gap-3">
@@ -277,7 +279,7 @@ function StatusPie({ data }: { data: readonly { name: string; value: number }[] 
         <ChartBox height={148}>
           <PieChart margin={{ top: 0, right: 0, bottom: 0, left: 0 }}>
             <Pie
-              data={data}
+              data={safeData}
               dataKey="value"
               nameKey="name"
               innerRadius={46}
@@ -315,7 +317,7 @@ function StatusPie({ data }: { data: readonly { name: string; value: number }[] 
         </div>
       </div>
       <ul className="flex min-w-0 flex-1 flex-col gap-1">
-        {statusData.map((item, index) => {
+        {safeData.map((item, index) => {
           const isSelected = selected === index;
           return (
             <li key={item.name}>
@@ -426,7 +428,7 @@ export function ProjectDashboard() {
         </div>
         <div className="grid gap-2 lg:grid-cols-3">
           <Panel title="年度需求计划状态分布">
-            <StatusPie />
+            <StatusPie data={statusData} />
           </Panel>
           <Panel title="在建项目进展情况">
             <ProgressBars data={progressData} />
