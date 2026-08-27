@@ -376,17 +376,22 @@ export function ProjectDashboard() {
     return () => controller.abort();
   }, []);
 
-  const indicatorByName = useMemo(
-    () => new Map(apiRows.map((row) => [row.metricName, row])),
-    [apiRows],
-  );
   const displayKpis = useMemo(
     () => kpis.map((item) => {
-      const row = indicatorByName.get(item.label);
+      // 后端指标名称可能带有年份、总数等业务限定词，不能只做完全相等匹配。
+      const row = apiRows.find((candidate) => {
+        const metricName = candidate.metricName.trim();
+        const label = item.label.trim();
+        return metricName === label || metricName.includes(label) || label.includes(metricName);
+      });
       if (!row) return item;
-      return { ...item, value: String(toMetricNumber(row.currentValue, Number(item.value))), unit: row.currentUnit ?? item.unit };
+      return {
+        ...item,
+        value: String(toMetricNumber(row.currentValue, Number(item.value))),
+        unit: row.currentUnit ?? item.unit,
+      };
     }),
-    [indicatorByName],
+    [apiRows],
   );
 
   return (
