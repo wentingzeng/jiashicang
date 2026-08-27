@@ -80,17 +80,13 @@ function CoreBars() {
         const ratio = Math.max((actual / plan) * 100, 22)
         return (
           <div key={label}>
-            <p className="mb-1 text-sm font-bold text-foreground">{label}</p>
-            <div className="flex flex-col gap-0.5">
-              <div className="h-6 overflow-hidden rounded-md bg-secondary/50" style={{ width: `${ratio}%` }}>
-                <div className="flex h-full items-center rounded-md px-3 font-mono text-xs font-bold text-white" style={{ background: ACTUAL }}>
-                  {actual.toLocaleString()}
-                </div>
-              </div>
-              <div className="h-6 w-full overflow-hidden rounded-md">
-                <div className="flex h-full items-center rounded-md px-3 font-mono text-xs font-bold text-white" style={{ background: PLAN }}>
-                  {plan.toLocaleString()}
-                </div>
+            <div className="mb-1 flex items-center justify-between text-sm font-bold text-foreground">
+              <span>{label}</span>
+              <span className="font-mono text-[11px] font-semibold text-muted-foreground">{actual.toLocaleString()} / {plan.toLocaleString()}</span>
+            </div>
+            <div className="h-7 w-full overflow-hidden rounded-md bg-secondary/50">
+              <div className="flex h-full items-center rounded-md px-3 font-mono text-xs font-bold text-white" style={{ width: `${ratio}%`, background: ACTUAL }}>
+                实际天数 / 计划天数
               </div>
             </div>
           </div>
@@ -284,7 +280,7 @@ export function TrustedDashboard() {
                 <DetailTable title={systemView === "head" ? "总行系统改造进展明细" : "分行系统改造进展明细"} rows={systemView === "head" ? headRows : branchRows} branch={systemView === "branch"} onBack={() => setSystemView(null)} />
               ) : (
                 <div className="flex flex-col gap-2">
-                  <Panel title="一般系统信创进度">
+                  <Panel title="一般系统���创进度">
                     <div className="grid gap-2 md:grid-cols-2">
                       <RingStat label="已单轨" ratio={(412 / (412 + 214)) * 100} value="412" sub="未单轨 214" />
                       <RingStat label="年度已完成" ratio={(58 / (58 + 177)) * 100} value="58" sub="未完成 177" color={colors.violet} />
@@ -301,8 +297,8 @@ export function TrustedDashboard() {
                 <h2 className="text-base font-black text-primary">国密改造和密评进度</h2>
               </div>
               <div className="grid gap-2 md:grid-cols-2">
-                <StatCard label="密评工作" value="100" sub="总数 · 已改造 30" color={colors.amber} />
-                <StatCard label="国密改造" value="80" sub="总数 · 已改造 25" color={colors.teal} />
+                <RingStat label="密评工作" ratio={30} value="30" sub="已改造 · 未改造 70" color={colors.amber} />
+                <RingStat label="国密改造" ratio={31.25} value="25" sub="已改造 · 未改造 55" color={colors.teal} />
               </div>
             </div>
           </div>
