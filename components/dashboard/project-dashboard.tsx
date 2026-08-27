@@ -66,9 +66,7 @@ const keyProgressData = [
   { name: "在建项目", count: 188 },
   { name: "延期项目", count: 5 },
 ];
-const taskTotal = taskData.reduce((total, item) => total + item.value, 0);
-const keyProgressTotal = keyProgressData.reduce((total, item) => total + item.count, 0);
-const overdueTotal = overdueData.reduce((total, item) => total + item.count, 0);
+
 const deliveryData = [
   { name: "2026投产项目", count: 145, days: 176 },
   { name: "投产顺序项目", count: 40, days: 23 },
@@ -300,9 +298,9 @@ function StatusPie({ data }: { data: readonly { name: string; value: number }[] 
             <Tooltip
               cursor={false}
               contentStyle={tooltipStyle}
-              formatter={(value: number, name: string) => [
+              formatter={(value, name) => [
                 `${Number(value).toFixed(2)}%`,
-                name,
+                String(name),
               ]}
             />
           </PieChart>
@@ -373,10 +371,20 @@ export function ProjectDashboard() {
     return () => controller.abort();
   }, []);
 
+  const apiById = useMemo(() => {
+    const result = new Map<string, ProjectIndicatorApiRow>();
+    apiRows.forEach((row) => {
+      if (row.indicatorId) result.set(row.indicatorId, row);
+    });
+    return result;
+  }, [apiRows]);
+
+  const valueFor = (indicatorId: string, fallback: number) =>
+    toMetricNumber(apiById.get(indicatorId)?.currentValue, fallback);
+
   const displayKpis = useMemo(
     () => kpis.map((item) => {
-      // 后端指标名称可能带有年份、总数等业务限定词，不能只做完全相等匹配。
-      const row = apiRows.find((candidate) => candidate.indicatorId === item.indicatorId);
+      const row = apiById.get(item.indicatorId);
       if (!row) return item;
       return {
         ...item,
@@ -384,8 +392,50 @@ export function ProjectDashboard() {
         unit: row.currentUnit ?? item.unit,
       };
     }),
-    [apiRows],
+    [apiById],
   );
+
+  const totalPlan = valueFor("ID01", 329);
+  const liveStatusData = [
+    { name: "已启动", value: (valueFor("ID03", 221) / totalPlan) * 100 },
+    { name: "已申请未批复", value: (valueFor("ID02", 78) / totalPlan) * 100 },
+    { name: "已批复超期未启动", value: (valueFor("ID04", 9) / totalPlan) * 100 },
+    { name: "已批复未启动", value: (valueFor("ID05", 21) / totalPlan) * 100 },
+  ];
+  const liveProgressData = ["业务需求", "总体设计", "商务", "编码测试", "上线准备"].map((name, index) => ({
+    name,
+    value: valueFor(`ID0${7 + index}`, progressData[index].value),
+  }));
+  const liveOverdueData = ["轻度延期项目", "中度延期项目", "重度延期项目"].map((name, index) => ({
+    name,
+    count: valueFor(`ID${16 + index}`, overdueData[index].count),
+    value: valueFor(`ID${16 + index}`, overdueData[index].value),
+  }));
+  const liveTaskData = ["待执行的任务数", "进行中的任务数", "延期的任务数", "已完成的任务数"].map((name, index) => ({
+    name,
+    value: valueFor(`ID${23 + index}`, taskData[index].value),
+  }));
+  const liveKeyProgressData = ["待启动项目", "已投产项目", "在建项目", "延期项目"].map((name, index) => ({
+    name,
+    count: valueFor(`ID${[27, 29, 28, 30][index]}`, keyProgressData[index].count),
+  }));
+  const liveDeliveryData = [
+    { name: "2026投产项目", count: valueFor("ID45", 145), days: valueFor("ID46", 176) },
+    { name: "投产顺序项目", count: valueFor("ID47", 40), days: valueFor("ID48", 315) },
+    { name: "投产敏捷项目", count: valueFor("ID49", 105), days: valueFor("ID50", 126) },
+  ];
+  const liveGauges = [
+    { label: "顺序项目科技实施阶段时长占比", value: valueFor("ID35", 51), min: 0, max: 100 },
+    { label: "敏捷项目首版本平均交付周期", value: valueFor("ID41", 107), min: 100, max: 110 },
+    { label: "敏捷项目版本平均交付周期", value: valueFor("ID43", 23), min: 20, max: 25 },
+  ];
+  const livePerformanceData = ["ID19", "ID20", "ID21", "ID22"].map((id, index) => ({
+    name: ["[0,0.5)", "[0.5,1)", "[1,1.5)", "≥1.5"][index],
+    value: valueFor(id, [35, 144, 46, 4][index]),
+  }));
+  const liveTaskTotal = liveTaskData.reduce((total, item) => total + item.value, 0);
+  const liveKeyProgressTotal = liveKeyProgressData.reduce((total, item) => total + item.count, 0);
+  const liveOverdueTotal = liveOverdueData.reduce((total, item) => total + item.count, 0);
 
   return (
     <main className="min-h-screen bg-background px-4 pb-4 text-foreground md:px-6">
@@ -428,20 +478,15 @@ export function ProjectDashboard() {
         </div>
         <div className="grid gap-2 lg:grid-cols-3">
           <Panel title="年度需求计划状态分布">
-            <StatusPie data={statusData} />
+            <StatusPie data={liveStatusData} />
           </Panel>
           <Panel title="在建项目进展情况">
-            <ProgressBars data={progressData} />
+            <ProgressBars data={liveProgressData} />
           </Panel>
           <Panel title="项目进度绩效表">
             <ChartBox>
               <BarChart
-                data={[
-                  { name: "[0,0.5]", value: 35 },
-                  { name: "[0.5,1]", value: 144 },
-                  { name: "[1,1.5]", value: 46 },
-                  { name: ">1.5", value: 4 },
-                ]}
+                data={livePerformanceData}
                 margin={{ top: 18, right: 10, bottom: 12, left: 0 }}
               >
                 <CartesianGrid vertical={false} strokeDasharray="3 3" />
@@ -449,41 +494,41 @@ export function ProjectDashboard() {
                 <YAxis tick={{ fontSize: 10 }} />
                 <Tooltip formatter={(value) => [`${Number(value)}个`, "项目个数"]} cursor={false} contentStyle={tooltipStyle} />
                 <Bar dataKey="value" fill="#3157d5" radius={[6, 6, 0, 0]}>
-                  {[35, 144, 46, 4].map((_, index) => <Cell key={index} fill={palette[index]} />)}
-                  <LabelList dataKey="value" position="top" formatter={(value: number) => `${value}个`} fill="var(--foreground)" fontSize={10} />
+                  {livePerformanceData.map((_, index) => <Cell key={index} fill={palette[index]} />)}
+                  <LabelList dataKey="value" position="top" formatter={(value) => `${Number(value)}个`} fill="var(--foreground)" fontSize={10} />
                 </Bar>
               </BarChart>
             </ChartBox>
           </Panel>
           <Panel title="分布式核心任务进展">
             <div className="grid grid-cols-2 gap-2 p-3">
-              {taskData.map((item, index) => (
+              {liveTaskData.map((item, index) => (
                 <div key={item.name} className="flex min-h-28 flex-col rounded-lg border border-border/60 bg-card p-3 shadow-sm">
                   <div className="flex items-start justify-between gap-2"><span className="text-xs leading-5 text-muted-foreground">{item.name}</span><span className="size-2 shrink-0 rounded-full" style={{ backgroundColor: palette[index] }} /></div>
                   <p className="mt-2 font-mono text-2xl font-bold text-foreground">{item.value}<span className="ml-1 text-sm font-medium">项</span></p>
-                  <div className="mt-auto pt-4"><div className="mb-2 flex justify-between text-[10px] text-muted-foreground"><span>任务占比</span><span>{((item.value / taskTotal) * 100).toFixed(2)}%</span></div><div className="h-2 rounded-full bg-muted"><div className="h-full rounded-full" style={{ width: `${(item.value / taskTotal) * 100}%`, backgroundColor: palette[index] }} /></div></div>
+                  <div className="mt-auto pt-4"><div className="mb-2 flex justify-between text-[10px] text-muted-foreground"><span>任务占比</span><span>{((item.value / liveTaskTotal) * 100).toFixed(2)}%</span></div><div className="h-2 rounded-full bg-muted"><div className="h-full rounded-full" style={{ width: `${(item.value / liveTaskTotal) * 100}%`, backgroundColor: palette[index] }} /></div></div>
                 </div>
               ))}
             </div>
           </Panel>
           <Panel title="全行重点项目进展情况">
             <div className="grid grid-cols-2 gap-2 p-3">
-              {keyProgressData.map((item, index) => (
+              {liveKeyProgressData.map((item, index) => (
 <div key={item.name} className="flex min-h-28 flex-col rounded-lg border border-border/60 bg-card p-3 shadow-sm">
   <div className="flex items-center justify-between gap-2"><span className="text-xs font-medium text-muted-foreground">{item.name}</span><span className="size-2 rounded-full" style={{ backgroundColor: palette[index] }} /></div>
   <p className="mt-2 font-mono text-2xl font-bold tracking-tight" style={{ color: palette[index] }}>{item.count}<span className="ml-1 text-sm font-medium">项</span></p>
-  <div className="mt-auto pt-4"><div className="mb-2 flex justify-between text-[10px] text-muted-foreground"><span>项目占比</span><span>{((item.count / keyProgressTotal) * 100).toFixed(2)}%</span></div><div className="h-2 rounded-full bg-muted"><div className="h-full rounded-full" style={{ width: `${(item.count / keyProgressTotal) * 100}%`, backgroundColor: palette[index] }} /></div></div>
+  <div className="mt-auto pt-4"><div className="mb-2 flex justify-between text-[10px] text-muted-foreground"><span>项目占比</span><span>{((item.count / liveKeyProgressTotal) * 100).toFixed(2)}%</span></div><div className="h-2 rounded-full bg-muted"><div className="h-full rounded-full" style={{ width: `${(item.count / liveKeyProgressTotal) * 100}%`, backgroundColor: palette[index] }} /></div></div>
 </div>
               ))}
             </div>
           </Panel>
           <Panel title="延期项目情况">
             <div className="grid grid-cols-2 gap-2 p-3">
-              {overdueData.map((item, index) => (
+              {liveOverdueData.map((item, index) => (
                 <div key={item.name} className="flex min-h-28 flex-col rounded-lg border border-border/60 bg-card p-3 shadow-sm">
                   <div className="flex items-center justify-between gap-2"><p className="text-xs font-medium text-muted-foreground">{item.name.replace("项目", "")}</p><span className="size-2 rounded-full" style={{ backgroundColor: palette[index + 1] }} /></div>
                   <p className="mt-2 font-mono text-2xl font-bold tracking-tight" style={{ color: palette[index + 1] }}>{item.count}<span className="ml-1 text-sm font-medium">项</span></p>
-                  <div className="mt-auto pt-4"><div className="mb-2 flex justify-between text-[10px] text-muted-foreground"><span>延期占比</span><span>{((item.count / overdueTotal) * 100).toFixed(2)}%</span></div><div className="h-2 rounded-full bg-muted"><div className="h-full rounded-full" style={{ width: `${(item.count / overdueTotal) * 100}%`, backgroundColor: palette[index + 1] }} /></div></div>
+                  <div className="mt-auto pt-4"><div className="mb-2 flex justify-between text-[10px] text-muted-foreground"><span>延期占比</span><span>{((item.count / liveOverdueTotal) * 100).toFixed(2)}%</span></div><div className="h-2 rounded-full bg-muted"><div className="h-full rounded-full" style={{ width: `${(item.count / liveOverdueTotal) * 100}%`, backgroundColor: palette[index + 1] }} /></div></div>
                 </div>
               ))}
             </div>
@@ -495,7 +540,7 @@ export function ProjectDashboard() {
               <div className="lg:col-span-1">
                 <ChartBox height={190}>
                   <ComposedChart
-                    data={deliveryData}
+                    data={liveDeliveryData}
                     margin={{ top: 12, right: 12, bottom: 20, left: 0 }}
                   >
                     <CartesianGrid vertical={false} strokeDasharray="3 3" />
@@ -528,7 +573,7 @@ export function ProjectDashboard() {
                       name="项目个数"
                       fill="#6366f1"
                       radius={[6, 6, 0, 0]}
-                    ><LabelList dataKey="count" position="insideBottom" offset={8} formatter={(value: number) => `${value}个`} fill="#ffffff" fontSize={10} fontWeight={700} /></Bar>
+                    ><LabelList dataKey="count" position="insideBottom" offset={8} formatter={(value) => `${Number(value)}个`} fill="#ffffff" fontSize={10} fontWeight={700} /></Bar>
                     <Line
                       yAxisId="days"
                       type="monotone"
@@ -537,12 +582,12 @@ export function ProjectDashboard() {
                       stroke="#0d9488"
                       strokeWidth={3}
                       dot={{ r: 4, fill: "#0d9488" }}
-                    ><LabelList dataKey="days" position="top" offset={12} formatter={(value: number) => `${value}天`} fill="#0f766e" fontSize={10} fontWeight={700} /></Line>
+                    ><LabelList dataKey="days" position="top" offset={12} formatter={(value) => `${Number(value)}天`} fill="#0f766e" fontSize={10} fontWeight={700} /></Line>
                   </ComposedChart>
                 </ChartBox>
               </div>
               <div className="grid gap-2 sm:grid-cols-3 lg:col-span-3">
-                {gauges.map((gauge) => (
+                {liveGauges.map((gauge) => (
                   <GaugeCard key={gauge.label} {...gauge} />
                 ))}
               </div>
