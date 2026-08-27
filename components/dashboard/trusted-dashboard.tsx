@@ -251,9 +251,11 @@ function MachineOverview({ onSelect }: { onSelect: (view: "head" | "branch") => 
     <div className="grid gap-2 md:grid-cols-2">
       <button type="button" onClick={() => onSelect("head")} className="text-left transition hover:opacity-90">
         <RingStat label="总行小型机下线进展" ratio={(machineOverview.head.done / machineOverview.head.total) * 100} value={`${machineOverview.head.done}`} sub={`未下线 ${machineOverview.head.total - machineOverview.head.done}`} color={colors.blue} />
+        <p className="mt-1 text-[11px] text-muted-foreground">点击查看详情</p>
       </button>
       <button type="button" onClick={() => onSelect("branch")} className="text-left transition hover:opacity-90">
         <RingStat label="分行小型机下线进展" ratio={(machineOverview.branch.done / machineOverview.branch.total) * 100} value={`${machineOverview.branch.done}`} sub={`未下线 ${machineOverview.branch.total - machineOverview.branch.done}`} color={colors.teal} />
+        <p className="mt-1 text-[11px] text-muted-foreground">点击查看详情</p>
       </button>
     </div>
   )
@@ -365,7 +367,7 @@ export function TrustedDashboard() {
                       </div>
                       <div className="rounded-lg border border-border/70 bg-card p-2">
                         <RingStat
-                          label="年度已完成"
+                          label="2026年任务进度"
                           ratio={((annualOverview.head.done + annualOverview.branch.done) / (annualOverview.head.total + annualOverview.branch.total)) * 100}
                           value={`${annualOverview.head.done + annualOverview.branch.done}`}
                           sub={`总计 ${annualOverview.head.total + annualOverview.branch.total} 个系统`}
@@ -375,8 +377,8 @@ export function TrustedDashboard() {
                           <ProgressPair
                             onSelect={setSystemView}
                             items={[
-                              { label: "总行年度进展", done: annualOverview.head.done, total: annualOverview.head.total, color: colors.violet, view: "annual-head" },
-                              { label: "分行年度进展", done: annualOverview.branch.done, total: annualOverview.branch.total, color: colors.amber, view: "annual-branch" },
+                              { label: "总行任务进度", done: annualOverview.head.done, total: annualOverview.head.total, color: colors.violet, view: "annual-head" },
+                              { label: "分行任务进度", done: annualOverview.branch.done, total: annualOverview.branch.total, color: colors.amber, view: "annual-branch" },
                             ]}
                           />
                         </div>
@@ -404,11 +406,11 @@ export function TrustedDashboard() {
               <div className="mb-2 border-b border-border pb-1.5">
                 <h2 className="text-base font-black text-primary">产品替代</h2>
               </div>
-              <div className="flex flex-col gap-2">
+              <div className="flex flex-col gap-4">
                 <Panel title="麒麟界面推广进度">
                   <div className="grid gap-2 md:grid-cols-2">
-                    <RingStat label="已推广" ratio={(16.68 / (16.68 + 68.58)) * 100} value="16.68K" sub="未推广 68.58K" color={colors.violet} />
-                    <RingStat label="年度已推广" ratio={(16.68 / (16.68 + 37.24)) * 100} value="16.68K" sub="年度未推广 37.24K" color={colors.violet} />
+                    <RingStat label="已推广" ratio={(16.68 / (16.68 + 68.58)) * 100} value="16,680" sub="未推广 68,580" color={colors.violet} />
+                    <RingStat label="年度已推广" ratio={(16.68 / (16.68 + 37.24)) * 100} value="16,680" sub="年度未推广 37,240" color={colors.violet} />
                   </div>
                 </Panel>
                 <Panel title="小型机下线进展">
