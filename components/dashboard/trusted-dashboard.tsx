@@ -12,6 +12,9 @@ const smallMachineRows: Array<[string, number, number]> = [["南京", 328, 86], 
 const headMachineRows: Array<[string, number, number]> = [["科技运维中心", 150, 42], ["银行合作中心", 110, 28], ["信用卡中心", 68, 16]]
 const branchMachineRows: Array<[string, number, number]> = [["南京分行", 86, 22], ["苏州分行", 72, 18], ["北京分行", 104, 26], ["上海分行", 88, 24], ["深圳分行", 76, 19], ["广州分行", 54, 13], ["成都分行", 31, 8], ["西安分行", 26, 6]]
 const machineOverview = { head: { total: 358, done: 30 }, branch: { total: 537, done: 136 } }
+const annualHeadRows: Array<[string, number, number]> = [["公司金融部", 18, 5], ["运营管理部", 14, 3], ["科技运维中心", 22, 6], ["风险管理部", 12, 2]]
+const annualBranchRows: Array<[string, number, number]> = [["南京分行", 24, 7], ["苏州分行", 21, 5], ["北京分行", 18, 4], ["上海分行", 16, 3], ["深圳分行", 14, 2]]
+const annualOverview = { head: { done: 66, total: 120 }, branch: { done: 93, total: 180 } }
 
 function Panel({ title, children, className = "" }: { title: string; children: React.ReactNode; className?: string }) {
   return (
@@ -256,6 +259,34 @@ function MachineOverview({ onSelect }: { onSelect: (view: "head" | "branch") => 
   )
 }
 
+function ProgressPair({
+  items,
+  onSelect,
+}: {
+  items: Array<{ label: string; done: number; total: number; color: string; view: "head" | "branch" | "annual-head" | "annual-branch" }>
+  onSelect: (view: "head" | "branch" | "annual-head" | "annual-branch") => void
+}) {
+  return (
+    <div className="grid gap-2 md:grid-cols-2">
+      {items.map((item) => {
+        const ratio = (item.done / item.total) * 100
+        return (
+          <button key={item.label} type="button" onClick={() => onSelect(item.view)} className="rounded-lg bg-secondary/40 px-2.5 py-2 text-left transition hover:bg-secondary/60">
+            <div className="mb-1 flex items-center justify-between gap-2">
+              <span className="truncate text-xs font-semibold text-foreground">{item.label}</span>
+              <span className="shrink-0 font-mono text-xs font-bold" style={{ color: item.color }}>{ratio.toFixed(0)}%</span>
+            </div>
+            <div className="h-2.5 overflow-hidden rounded-full bg-secondary">
+              <div className="h-full rounded-full" style={{ width: `${ratio}%`, background: item.color }} />
+            </div>
+            <p className="mt-1 text-[11px] text-muted-foreground">已完成 {item.done} / {item.total}</p>
+          </button>
+        )
+      })}
+    </div>
+  )
+}
+
 function DetailTable({ title, rows, branch, onBack }: { title: string; rows: Array<[string, number, number]>; branch?: boolean; onBack: () => void }) {
   return (
     <div className="flex flex-col gap-2">
@@ -290,7 +321,7 @@ function DetailTable({ title, rows, branch, onBack }: { title: string; rows: Arr
 }
 
 export function TrustedDashboard() {
-  const [systemView, setSystemView] = useState<null | "head" | "branch">(null)
+  const [systemView, setSystemView] = useState<null | "head" | "branch" | "annual-head" | "annual-branch">(null)
   const [machineView, setMachineView] = useState<null | "head" | "branch">(null)
   return (
     <main className="min-h-screen bg-background text-foreground">
@@ -311,13 +342,36 @@ export function TrustedDashboard() {
                 </button>
               </div>
               {systemView ? (
-                <DetailTable title={systemView === "head" ? "总行系统改造进展明细" : "分行系统改造进展明细"} rows={systemView === "head" ? headRows : branchRows} branch={systemView === "branch"} onBack={() => setSystemView(null)} />
+                <DetailTable
+                  title={systemView === "head" ? "总行系统改造进展明细" : systemView === "branch" ? "分行系统改造进展明细" : systemView === "annual-head" ? "总行年度完成明细" : "分行年度完成明细"}
+                  rows={systemView === "head" ? headRows : systemView === "branch" ? branchRows : systemView === "annual-head" ? annualHeadRows : annualBranchRows}
+                  branch={systemView === "branch" || systemView === "annual-branch"}
+                  onBack={() => setSystemView(null)}
+                />
               ) : (
                 <div className="flex flex-col gap-2">
                   <Panel title="一般系统信创进度">
-                    <div className="grid gap-2 md:grid-cols-2">
-                      <RingStat label="已单轨" ratio={(412 / (412 + 214)) * 100} value="412" sub="未单轨 214" />
-                      <RingStat label="年度已完成" ratio={(58 / (58 + 177)) * 100} value="58" sub="未完成 177" color={colors.violet} />
+                    <div className="flex flex-col gap-3">
+                      <div>
+                        <p className="mb-1.5 text-xs font-semibold text-foreground">已单轨</p>
+                        <ProgressPair
+                          onSelect={setSystemView}
+                          items={[
+                            { label: "总行系统进展", done: 412, total: 626, color: colors.blue, view: "head" },
+                            { label: "分行系统进展", done: 214, total: 380, color: colors.teal, view: "branch" },
+                          ]}
+                        />
+                      </div>
+                      <div>
+                        <p className="mb-1.5 text-xs font-semibold text-foreground">年度已完成</p>
+                        <ProgressPair
+                          onSelect={setSystemView}
+                          items={[
+                            { label: "总行年度进展", done: annualOverview.head.done, total: annualOverview.head.total, color: colors.violet, view: "annual-head" },
+                            { label: "分行年度进展", done: annualOverview.branch.done, total: annualOverview.branch.total, color: colors.amber, view: "annual-branch" },
+                          ]}
+                        />
+                      </div>
                     </div>
                   </Panel>
                   <Panel title="核心系统信创进度">
