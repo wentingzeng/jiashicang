@@ -934,10 +934,12 @@ export function BranchDashboard() {
     personnelRoles: completePersonnelRoles(dashboardApiData ? applyDashboardApiData(currentBase, dashboardApiData) : currentBase),
   }
   const personnelPageCount = Math.max(1, Math.ceil(current.tableRows.length / personnelPageSize))
-  const personnelRows = current.tableRows.slice(
-    (personnelPage - 1) * personnelPageSize,
-    personnelPage * personnelPageSize,
-  )
+  const personnelRows = [...current.tableRows]
+    .sort((a, b) => toNumber(b.total) - toNumber(a.total))
+    .slice(
+      (personnelPage - 1) * personnelPageSize,
+      personnelPage * personnelPageSize,
+    )
   const liveTime = now ? now.toTimeString().slice(0, 8) : "--:--:--"
   const scopedRows = selectedBranch !== "all"
     ? current.tableRows.filter((row) => row.name === current.label || row.name.endsWith(current.label.replace("分行", "")))
@@ -1041,12 +1043,12 @@ export function BranchDashboard() {
                     <div className="mt-auto flex min-h-9 items-center justify-between rounded-[10px] border border-border/70 bg-background/70 px-3 py-1.5"><span className="text-[12px] font-bold text-muted-foreground">机柜数</span><span className="font-mono text-[13px] font-black text-primary">{cabinetCountTotal.toLocaleString()} <small className="text-[12px] font-normal text-muted-foreground">个</small></span></div>
                   </div>
 
-                  <div onClick={(event) => { if ((event.target as HTMLElement).closest("button")) return; setDisasterDetails((value) => !value) }} className="flex h-[210px] cursor-pointer flex-col gap-1.5 overflow-hidden rounded-[12px] border border-border/80 bg-card/80 px-3 py-2 shadow-[inset_0_1px_0_oklch(0.72_0.15_220/6%)] lg:ml-2">
+                  <div onClick={() => setDisasterDetails(true)} className="flex h-[210px] cursor-pointer flex-col gap-1.5 overflow-hidden rounded-[12px] border border-border/80 bg-card/80 px-3 py-2 shadow-[inset_0_1px_0_oklch(0.72_0.15_220/6%)] lg:ml-2">
                     <div className="mb-1 flex items-center justify-between"><span className="text-[14px] font-bold text-foreground">灾备机房</span><span className="text-[10px] text-muted-foreground">配套情况</span></div>
-                    <button type="button" onClick={() => setDisasterDetails(!disasterDetails)} className="mb-1.5 min-h-7 w-full text-left text-[12px] font-semibold leading-4 text-slate-700 transition-colors hover:text-primary">
-                      <span className="mr-2 inline-flex size-2 rounded-full bg-[#2dc2be]" />其中{disasterRows.length}家分行配备灾备机房
+                    <button type="button" onClick={(event) => { event.stopPropagation(); setDisasterDetails(true) }} className="mb-1.5 flex min-h-7 w-full items-center gap-2 text-left text-[12px] font-semibold leading-4 text-slate-700 transition-colors hover:text-primary">
+                      <span className="inline-flex size-2 shrink-0 rounded-full bg-[#2dc2be]" />工{disasterRows.length}家分行配备灾备机房
                     </button>
-                    {disasterDetails ? <div className="max-h-[150px] overflow-y-auto overscroll-contain grid gap-2 py-1 text-[12px] text-foreground/80 [WebkitOverflowScrolling:touch]"><div className="font-semibold text-primary">配备灾备机房的分行</div>{disasterRows.map((row, index) => <div key={row.branchName ?? index} className="flex items-center justify-between border-t border-border/50 py-1.5"><span>{row.branchName}</span><span className="text-muted-foreground">已配备</span></div>)}</div> : <button type="button" onClick={() => setRoomMode(roomMode === "central" ? "disaster" : "central")} className="mt-3 flex items-center justify-center" aria-label="查看灾备机房配套率"><GaugeMeter roomMode={roomMode} percentage={disasterCoveragePercentage} /></button>}
+                    {disasterDetails ? <div className="max-h-[150px] overflow-y-auto overscroll-contain grid gap-2 py-1 text-[12px] text-foreground/80 [WebkitOverflowScrolling:touch]"><div className="font-semibold text-primary">配备灾备机房的分行</div>{disasterRows.map((row, index) => <div key={row.branchName ?? index} className="border-t border-border/50 py-1.5"><span>{row.branchName}</span></div>)}</div> : <button type="button" onClick={(event) => { event.stopPropagation(); setDisasterDetails(true) }} className="mt-3 flex items-center justify-center" aria-label="查看灾备机房配套率"><GaugeMeter roomMode={roomMode} percentage={disasterCoveragePercentage} /></button>}
                   </div>
                 </div>
               </PanelCard>
