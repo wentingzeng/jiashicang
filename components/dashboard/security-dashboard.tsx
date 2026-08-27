@@ -462,13 +462,13 @@ export function SecurityDashboard() {
           </div>
         </Panel>
 
-        <div className="mt-5 grid items-stretch gap-5 xl:min-h-[900px] xl:grid-cols-3 xl:grid-rows-[minmax(0,1fr)]">
-          <section className="flex h-full min-h-0 min-w-0 flex-col gap-4">
+        <div className="mt-5 grid gap-5 xl:grid-cols-3">
+          <section className="flex min-w-0 flex-col gap-4">
               <Panel title="网络安全综合能力" tone="primary" bodyClassName="p-2">
                 <CapabilityBars data={filteredCapability} label="各分行综合能力评分" selectedInstitution={selectedInstitution} />
               </Panel>
 
-              <Panel title="员工安全画像" tone="primary" bodyClassName="p-2.5" className="flex-1">
+              <Panel title="员工安全画像" tone="primary" bodyClassName="p-2.5">
 <div className="flex flex-col gap-3">
   <div className="grid grid-cols-2 gap-1.5">
                     <StatCard
