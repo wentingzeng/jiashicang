@@ -494,13 +494,13 @@ export function SecurityDashboard() {
                       data={filteredTraining}
                       color="#25a8d2"
                       label="安全培训人次"
-                      height={125}
+                      height={96}
                     />
                     <ChartBox
                       data={filteredViolations}
                       color="#d9953f"
                       label="违规记分人次"
-                      height={125}
+                      height={96}
                     />
                   </div>
                 </div>
