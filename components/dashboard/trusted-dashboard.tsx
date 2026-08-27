@@ -351,26 +351,42 @@ export function TrustedDashboard() {
               ) : (
                 <div className="flex flex-col gap-2">
                   <Panel title="一般系统信创进度">
-                    <div className="flex flex-col gap-3">
-                      <div>
-                        <p className="mb-1.5 text-xs font-semibold text-foreground">已单轨</p>
-                        <ProgressPair
-                          onSelect={setSystemView}
-                          items={[
-                            { label: "总行系统进展", done: 412, total: 626, color: colors.blue, view: "head" },
-                            { label: "分行系统进展", done: 214, total: 380, color: colors.teal, view: "branch" },
-                          ]}
+                    <div className="grid gap-2 md:grid-cols-2">
+                      <div className="rounded-lg border border-border/70 bg-card p-2">
+                        <RingStat
+                          label="已单轨"
+                          ratio={((412 + 214) / (626 + 380)) * 100}
+                          value={`${412 + 214}`}
+                          sub={`总计 ${626 + 380} 个系统`}
+                          color={colors.blue}
                         />
+                        <div className="mt-2 border-t border-border/60 pt-2">
+                          <ProgressPair
+                            onSelect={setSystemView}
+                            items={[
+                              { label: "总行系统进展", done: 412, total: 626, color: colors.blue, view: "head" },
+                              { label: "分行系统进展", done: 214, total: 380, color: colors.teal, view: "branch" },
+                            ]}
+                          />
+                        </div>
                       </div>
-                      <div>
-                        <p className="mb-1.5 text-xs font-semibold text-foreground">年度已完成</p>
-                        <ProgressPair
-                          onSelect={setSystemView}
-                          items={[
-                            { label: "总行年度进展", done: annualOverview.head.done, total: annualOverview.head.total, color: colors.violet, view: "annual-head" },
-                            { label: "分行年度进展", done: annualOverview.branch.done, total: annualOverview.branch.total, color: colors.amber, view: "annual-branch" },
-                          ]}
+                      <div className="rounded-lg border border-border/70 bg-card p-2">
+                        <RingStat
+                          label="年度已完成"
+                          ratio={((annualOverview.head.done + annualOverview.branch.done) / (annualOverview.head.total + annualOverview.branch.total)) * 100}
+                          value={`${annualOverview.head.done + annualOverview.branch.done}`}
+                          sub={`总计 ${annualOverview.head.total + annualOverview.branch.total} 个系统`}
+                          color={colors.violet}
                         />
+                        <div className="mt-2 border-t border-border/60 pt-2">
+                          <ProgressPair
+                            onSelect={setSystemView}
+                            items={[
+                              { label: "总行年度进展", done: annualOverview.head.done, total: annualOverview.head.total, color: colors.violet, view: "annual-head" },
+                              { label: "分行年度进展", done: annualOverview.branch.done, total: annualOverview.branch.total, color: colors.amber, view: "annual-branch" },
+                            ]}
+                          />
+                        </div>
                       </div>
                     </div>
                   </Panel>
