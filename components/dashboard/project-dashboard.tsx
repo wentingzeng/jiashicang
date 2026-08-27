@@ -80,22 +80,17 @@ const gauges = [
   { label: "敏捷项目版本平均交付周期", value: 23, min: 20, max: 25 },
 ];
 const kpis = [
-  { label: "年度需求计划", value: "329", unit: "个", icon: CalendarDays },
-  { label: "总行在建项目数", value: "321", unit: "个", icon: Layers3 },
-  { label: "总行投产项目数", value: "145", unit: "个", icon: ClipboardList },
-  {
-    label: "延期项目数",
-    value: "29",
-    unit: "个",
-    icon: CircleAlert,
-    danger: true,
-  },
-  { label: "本月计划投产项目数", value: "30", unit: "个", icon: Gauge },
-  { label: "投产项目平均交付周期", value: "176", unit: "天", icon: Timer },
+  { indicatorId: "ID01", label: "年度需求计划", value: "329", unit: "个", icon: CalendarDays },
+  { indicatorId: "ID06", label: "总行在建项目数", value: "321", unit: "个", icon: Layers3 },
+  { indicatorId: "ID12", label: "总行投产项目数", value: "145", unit: "个", icon: ClipboardList },
+  { indicatorId: "ID13", label: "延期项目数", value: "29", unit: "个", icon: CircleAlert, danger: true },
+  { indicatorId: "ID14", label: "本月计划投产项目数", value: "30", unit: "个", icon: Gauge },
+  { indicatorId: "ID44", label: "投产项目平均交付周期", value: "176", unit: "天", icon: Timer },
 ];
 
 type ProjectIndicatorApiRow = {
   indicatorId?: string;
+  dimension?: string;
   metricName: string;
   currentValue?: number | string | null;
   currentUnit?: string | null;
@@ -379,11 +374,7 @@ export function ProjectDashboard() {
   const displayKpis = useMemo(
     () => kpis.map((item) => {
       // 后端指标名称可能带有年份、总数等业务限定词，不能只做完全相等匹配。
-      const row = apiRows.find((candidate) => {
-        const metricName = candidate.metricName.trim();
-        const label = item.label.trim();
-        return metricName === label || metricName.includes(label) || label.includes(metricName);
-      });
+      const row = apiRows.find((candidate) => candidate.indicatorId === item.indicatorId);
       if (!row) return item;
       return {
         ...item,
