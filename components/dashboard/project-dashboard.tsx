@@ -257,6 +257,9 @@ function GaugeCard({
         <span className="absolute bottom-1 right-1 text-[10px] font-semibold text-slate-500">
           最大 {max}
         </span>
+        <span className="absolute left-1/2 top-0 -translate-x-1/2 text-[10px] font-semibold text-slate-500">
+          target: {progress}
+        </span>
       </div>
       <span className="text-center text-xs leading-4 text-muted-foreground">
         {label}
