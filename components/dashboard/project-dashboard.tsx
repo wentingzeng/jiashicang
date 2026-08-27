@@ -150,7 +150,7 @@ function ChartBox({
 function ProgressBars({
   data,
 }: {
-  data: readonly { name: string; value: number }[];
+  data: readonly { name: string; value: number; target: number }[];
 }) {
   return (
     <div className="grid gap-3 px-3 py-3">
@@ -158,7 +158,7 @@ function ProgressBars({
         {data.map((item) => (
           <div
             key={item.name}
-            className="grid grid-cols-[88px_minmax(0,1fr)_38px] items-center gap-3"
+            className="grid grid-cols-[88px_minmax(0,1fr)_auto] items-center gap-3"
           >
             <span className="truncate text-xs text-muted-foreground">
               {item.name}
@@ -169,8 +169,8 @@ function ProgressBars({
                 style={{ width: `${Math.min(item.value, 100)}%` }}
               />
             </div>
-            <strong className="text-right font-mono text-xs text-primary">
-              {item.value}
+            <strong className="whitespace-nowrap text-right font-mono text-xs text-primary">
+              target: {item.target}
             </strong>
           </div>
         ))}
@@ -416,6 +416,7 @@ export function ProjectDashboard() {
   const liveProgressData = ["业务需求", "总体设计", "商务", "编码测试", "上线准备"].map((name, index) => ({
     name,
     value: valueFor(`ID0${7 + index}`, progressData[index].value),
+    target: targetFor(`ID0${7 + index}`, 100),
   }));
   const liveOverdueData = ["轻度延期项目", "中度延期项目", "重度延期项目"].map((name, index) => ({
     name,
