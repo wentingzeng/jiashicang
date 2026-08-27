@@ -382,6 +382,9 @@ export function ProjectDashboard() {
   const valueFor = (indicatorId: string, fallback: number) =>
     toMetricNumber(apiById.get(indicatorId)?.currentValue, fallback);
 
+  const targetFor = (indicatorId: string, fallback: number) =>
+    toMetricNumber(apiById.get(indicatorId)?.targetValue, fallback);
+
   const displayKpis = useMemo(
     () => kpis.map((item) => {
       const row = apiById.get(item.indicatorId);
@@ -425,9 +428,24 @@ export function ProjectDashboard() {
     { name: "投产敏捷项目", count: valueFor("ID49", 105), days: valueFor("ID50", 126) },
   ];
   const liveGauges = [
-    { label: "顺序项目科技实施阶段时长占比", value: valueFor("ID35", 51), min: 0, max: 100 },
-    { label: "敏捷项目首版本平均交付周期", value: valueFor("ID41", 107), min: 100, max: 110 },
-    { label: "敏捷项目版本平均交付周期", value: valueFor("ID43", 23), min: 20, max: 25 },
+    {
+      label: "顺序项目科技实施阶段时长占比",
+      value: valueFor("ID35", 51),
+      min: 0,
+      max: targetFor("ID35", 60),
+    },
+    {
+      label: "敏捷项目首版本平均交付周期",
+      value: valueFor("ID41", 107),
+      min: 0,
+      max: targetFor("ID41", 105),
+    },
+    {
+      label: "敏捷项目版本平均交付周期",
+      value: valueFor("ID43", 23),
+      min: 0,
+      max: targetFor("ID43", 22.5),
+    },
   ];
   const livePerformanceData = ["ID19", "ID20", "ID21", "ID22"].map((id, index) => ({
     name: ["[0,0.5)", "[0.5,1)", "[1,1.5)", "≥1.5"][index],
