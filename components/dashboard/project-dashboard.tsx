@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import {
   Bar,
   BarChart,
@@ -93,6 +93,21 @@ const kpis = [
   { label: "本月计划投产项目数", value: "30", unit: "个", icon: Gauge },
   { label: "投产项目平均交付周期", value: "176", unit: "天", icon: Timer },
 ];
+
+type ProjectIndicatorApiRow = {
+  indicatorId?: string;
+  metricName: string;
+  currentValue?: number | string | null;
+  currentUnit?: string | null;
+  targetValue?: number | string | null;
+};
+
+const PROJECT_API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL ?? "http://localhost:8080";
+
+function toMetricNumber(value: number | string | null | undefined, fallback: number) {
+  const parsed = typeof value === "number" ? value : Number(value);
+  return Number.isFinite(parsed) ? parsed : fallback;
+}
 
 function Panel({
   title,
@@ -339,6 +354,41 @@ function StatusPie() {
 }
 
 export function ProjectDashboard() {
+  const [apiRows, setApiRows] = useState<ProjectIndicatorApiRow[]>([]);
+  const [apiState, setApiState] = useState<"loading" | "ready" | "error">("loading");
+
+  useEffect(() => {
+    const controller = new AbortController();
+    fetch(`${PROJECT_API_BASE_URL}/api/project/indicators?year=2026`, { signal: controller.signal })
+      .then((response) => {
+        if (!response.ok) throw new Error(`Project indicators API ${response.status}`);
+        return response.json() as Promise<{ code?: number; data?: ProjectIndicatorApiRow[] } | ProjectIndicatorApiRow[]>;
+      })
+      .then((payload) => {
+        const rows = Array.isArray(payload) ? payload : payload.data;
+        setApiRows(Array.isArray(rows) ? rows : []);
+        setApiState("ready");
+      })
+      .catch((error: unknown) => {
+        if (error instanceof DOMException && error.name === "AbortError") return;
+        setApiState("error");
+      });
+    return () => controller.abort();
+  }, []);
+
+  const indicatorByName = useMemo(
+    () => new Map(apiRows.map((row) => [row.metricName, row])),
+    [apiRows],
+  );
+  const displayKpis = useMemo(
+    () => kpis.map((item) => {
+      const row = indicatorByName.get(item.label);
+      if (!row) return item;
+      return { ...item, value: String(toMetricNumber(row.currentValue, Number(item.value))), unit: row.currentUnit ?? item.unit };
+    }),
+    [indicatorByName],
+  );
+
   return (
     <main className="min-h-screen bg-background px-4 pb-4 text-foreground md:px-6">
       <div className="mx-auto max-w-[1800px]">
@@ -346,8 +396,13 @@ export function ProjectDashboard() {
           title="项目管理驾驶舱"
           subtitle="目标牵引 · 任务推进 · 协同督办 · 成果沉淀"
         />
+        {apiState === "error" && (
+          <p className="px-1 py-1 text-xs text-muted-foreground">
+            项目指标接口暂不可用，当前显示页面默认数据。
+          </p>
+        )}
         <div className="grid grid-cols-2 gap-3 py-2 md:grid-cols-3 xl:grid-cols-6">
-          {kpis.map(({ label, value, unit, icon: Icon, danger }) => (
+          {displayKpis.map(({ label, value, unit, icon: Icon, danger }) => (
             <div
               key={label}
               className={`flex items-center gap-3 rounded-2xl border bg-card/90 px-4 py-3 shadow-sm ${danger ? "border-red-200" : "border-primary/15"}`}
