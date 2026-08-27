@@ -63,18 +63,10 @@ function RingStat({ label, ratio, value, sub, color = colors.blue }: { label: st
 function CoreBars() {
   const rows: Array<[string, number, number]> = [["对公核心", 66, 531], ["零售存款", 663, 1031], ["总账核算", 664, 859]]
   const ACTUAL = "#63b3ed"
-  const PLAN = "#4fc3ab"
   return (
     <div className="flex flex-col gap-2.5">
-      <div className="flex items-center justify-end gap-4 text-[11px] text-muted-foreground">
-        <span className="flex items-center gap-1.5">
-          <i className="inline-block size-2.5 rounded-full" style={{ background: ACTUAL }} />
-          实际天数
-        </span>
-        <span className="flex items-center gap-1.5">
-          <i className="inline-block size-2.5 rounded-full" style={{ background: PLAN }} />
-          计划天数
-        </span>
+      <div className="flex items-center justify-end text-[11px] text-muted-foreground">
+        <span className="font-medium">实际天数 / 计划天数</span>
       </div>
       {rows.map(([label, actual, plan]) => {
         const ratio = Math.max((actual / plan) * 100, 22)
@@ -86,7 +78,7 @@ function CoreBars() {
             </div>
             <div className="h-7 w-full overflow-hidden rounded-md bg-secondary/50">
               <div className="flex h-full items-center rounded-md px-3 font-mono text-xs font-bold text-white" style={{ width: `${ratio}%`, background: ACTUAL }}>
-                实际天数 / 计划天数
+                {((actual / plan) * 100).toFixed(1)}%
               </div>
             </div>
           </div>
