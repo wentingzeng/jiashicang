@@ -74,7 +74,7 @@ function ModificationRing({ title, ratio, done, undone, color }: { title: string
             <circle cx="36" cy="36" r="30" fill="none" stroke="currentColor" strokeWidth="8" className="text-secondary" />
             <circle cx="36" cy="36" r="30" fill="none" stroke={color} strokeWidth="8" strokeLinecap="round" strokeDasharray={c} strokeDashoffset={c * (1 - ratio / 100)} />
           </svg>
-          <strong className="absolute inset-0 flex items-center justify-center font-mono text-[10px]" style={{ color }}>
+          <strong className="absolute inset-0 flex items-center justify-center font-mono text-sm font-bold" style={{ color }}>
             {ratio.toFixed(0)}%
           </strong>
         </div>
