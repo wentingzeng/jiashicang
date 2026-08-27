@@ -10,7 +10,7 @@ const headRows: Array<[string, number, number]> = [["公司金融部\n数字支�
 const productRows: Array<[string, number, number]> = [["操作系统", 420, 55.26], ["服务器", 180, 64.59], ["金融机具", 310, 38.64], ["数据库", 260, 73.04], ["中间件", 238, 58.4], ["网络设备", 225, 67.32], ["A4单色打印机", 198, 38.15], ["终端", 360, 61.2], ["存储", 142, 48.7]]
 const smallMachineRows: Array<[string, number, number]> = [["南京", 328, 86], ["苏州", 286, 74], ["北京", 240, 62], ["上海", 178, 48], ["其他", 120, 36]]
 const headMachineRows: Array<[string, number, number]> = [["科技运维中心", 150, 42], ["银行合作中心", 110, 28], ["信用卡中心", 68, 16]]
-const branchMachineRows: Array<[string, number, number]> = [["华东分行群", 180, 52], ["华南分行群", 145, 38], ["华北分行群", 120, 26], ["西部及其他分行", 92, 20]]
+const branchMachineRows: Array<[string, number, number]> = [["南京分行", 86, 22], ["苏州分行", 72, 18], ["北京分行", 104, 26], ["上海分行", 88, 24], ["深圳分行", 76, 19], ["广州分行", 54, 13], ["成都分行", 31, 8], ["西安分行", 26, 6]]
 const machineOverview = { head: { total: 358, done: 30 }, branch: { total: 537, done: 136 } }
 
 function Panel({ title, children, className = "" }: { title: string; children: React.ReactNode; className?: string }) {
