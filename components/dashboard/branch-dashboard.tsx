@@ -621,21 +621,37 @@ function GaugeMeter({ roomMode, percentage = 22.22 }: { roomMode: "central" | "d
 
 function RoleBar({ label, value, tone, maxValue }: { label: string; value: number; tone: MetricTone; maxValue: number }) {
   const width = maxValue > 0 ? Math.min((value / maxValue) * 100, 100) : 0
-  const fill =
-    tone === "accent"
-      ? "bg-gradient-to-r from-accent to-accent/80"
-      : tone === "chart-4"
-        ? "bg-gradient-to-r from-chart-4 to-chart-4/80"
-        : "bg-gradient-to-r from-primary to-primary/80"
+  const dot = tone === "accent" ? "bg-accent" : tone === "chart-4" ? "bg-chart-4" : "bg-primary"
 
   return (
-  <div className="space-y-1 text-[12px]">
-  <div className="flex items-center justify-between gap-2">
-  <span className="truncate text-slate-700">{label}</span>
-  <span className="shrink-0 font-mono font-bold text-primary">{value}</span>
+  <div className="flex items-center justify-between gap-3 rounded-lg bg-muted/35 px-3 py-2 text-[12px]">
+  <div className="flex min-w-0 items-center gap-2">
+  <span className={cn("size-2 shrink-0 rounded-full", dot)} aria-hidden="true" />
+  <span className="truncate text-foreground">{label}</span>
   </div>
-  <div className="h-2 overflow-hidden rounded-full bg-[#e7edf8]">
-  <div className={cn("h-full rounded-full", fill)} style={{ width: `${width}%` }} />
+  <div className="flex shrink-0 items-baseline gap-1.5">
+  <span className="font-mono font-bold text-primary">{value}</span>
+  <span className="text-[10px] text-muted-foreground">{maxValue > 0 ? `${Math.round((value / maxValue) * 100)}%` : "0%"}</span>
+  </div>
+  </div>
+  )
+}
+
+function PersonnelRing({ total, roles }: { total: number; roles: Array<{ label: string; value: number; tone: MetricTone }> }) {
+  const complete = roles.reduce((sum, role) => sum + role.value, 0)
+  const ratio = total > 0 ? Math.min(100, (complete / total) * 100) : 0
+  return (
+  <div className="flex items-center justify-center gap-5 rounded-xl border border-primary/10 bg-primary/5 px-4 py-3">
+  <div className="relative size-24 shrink-0 rounded-full" style={{ background: `conic-gradient(var(--primary) ${ratio}%, hsl(var(--muted)) ${ratio}% 100%)` }} aria-label={`人员构成 ${Math.round(ratio)}%`}>
+  <div className="absolute inset-2 flex flex-col items-center justify-center rounded-full bg-card">
+  <span className="font-mono text-2xl font-black text-primary">{total}</span>
+  <span className="text-[11px] text-muted-foreground">科技人员</span>
+  </div>
+  </div>
+  <div className="grid min-w-0 gap-1 text-[11px]">
+  <span className="font-semibold text-foreground">人员结构</span>
+  <span className="text-muted-foreground">已归类 {complete} 人 · {Math.round(ratio)}%</span>
+  <span className="text-muted-foreground">点击卡片查看分行明细</span>
   </div>
   </div>
   )
@@ -961,7 +977,7 @@ export function BranchDashboard() {
   const selectedScopeLabel = selectedBranch !== "all"
     ? branchOptions.find((option) => option.key === selectedBranch)?.label ?? current.label
     : selectedGrade !== "all"
-      ? gradeOptions.find((option) => option.key === selectedGrade)?.label ?? "筛选范围"
+      ? gradeOptions.find((option) => option.key === selectedGrade)?.label ?? "筛选范��"
       : "全部分行"
   // 左侧分行科技分级是独立总览，始终展示全部分行，不受等级或分行筛选影响。
   const techRows = Object.keys(branchData).map((key) => ({ key, data: branchData[key] }))
@@ -1096,33 +1112,19 @@ export function BranchDashboard() {
               <PanelCard className="order-1 col-start-1 row-start-1 row-span-2 h-[512px] min-w-0 cursor-pointer" bodyClassName="min-w-0 p-1.5" title="科技人员数量" icon={<UsersRound className="size-4" />} onClick={() => setPersonnelDetails((value) => !value)}>
                   <div className="grid min-w-0 gap-2">
                     {!personnelDetails && <div className="grid gap-2 rounded-[10px] border border-border/80 bg-card/80 px-3 py-2.5 shadow-[inset_0_1px_0_oklch(0.72_0.15_220/6%)]">
-                      <div className="relative overflow-hidden rounded-[10px] border border-primary/20 bg-gradient-to-br from-primary/10 via-card to-accent/10 px-4 py-3">
-                        <div className="flex items-start justify-between gap-4">
-                          <div>
-                            <div className="text-[12px] font-medium tracking-wide text-muted-foreground">当前筛选科技人员</div>
-                            <div className="mt-1 flex items-baseline gap-1.5">
-                              <span className="font-mono text-[32px] font-black leading-none tracking-tight text-primary">{current.personnelTotal}</span>
-                              <span className="text-[14px] font-semibold text-primary/80">人</span>
-                            </div>
-                          </div>
-                          <div className="mt-1 rounded-full bg-primary/10 px-2 py-1 text-[11px] font-semibold text-primary">人员总览</div>
-                        </div>
-                        <div className="mt-2 h-1.5 overflow-hidden rounded-full bg-primary/10">
-                          <div className="h-full rounded-full bg-gradient-to-r from-primary to-accent" style={{ width: `${Math.min(100, Math.max(12, Number(current.personnelTotal) / Math.max(...personnelRows.map((row) => row.total), 1) * 100))}%` }} />
-                        </div>
-                      </div>
-                      <div className="grid gap-1.5">
-                        {current.personnelRoles.map((role) => (
-                          <RoleBar
-                            key={role.label}
-                            label={role.label}
-                            value={role.value}
-                            tone={role.tone}
-                            maxValue={personnelRoleMax}
-                          />
-                        ))}
-                      </div>
-                      <div className="pt-1 text-center text-[11px] text-muted-foreground">点击查看详情</div>
+  <PersonnelRing total={current.personnelTotal} roles={completePersonnelRoles(current)} />
+  <div className="grid grid-cols-1 gap-1.5 sm:grid-cols-2">
+  {completePersonnelRoles(current).map((role) => (
+  <RoleBar
+  key={role.label}
+  label={role.label}
+  value={role.value}
+  tone={role.tone}
+  maxValue={current.personnelTotal}
+  />
+  ))}
+  </div>
+  <div className="pt-0.5 text-center text-[11px] text-muted-foreground">点击查看详情</div>
                     </div>}
 
 {personnelDetails && <div className="min-w-0 overflow-hidden rounded-[12px] border border-border/80 bg-card/80 shadow-[inset_0_1px_0_oklch(0.72_0.15_220/6%)]">
