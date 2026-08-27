@@ -333,14 +333,6 @@ export function TrustedDashboard() {
               <div className="mb-2 border-b border-border pb-1.5">
                 <h1 className="text-base font-black text-primary">系统改造</h1>
               </div>
-              <div className="mb-2 grid gap-2 md:grid-cols-2">
-                <button type="button" onClick={() => setSystemView("head")} className="rounded-md border border-primary/30 bg-primary/5 px-3 py-1.5 text-left text-xs font-semibold text-primary hover:bg-primary/10">
-                  点击查看总行系统改造明细
-                </button>
-                <button type="button" onClick={() => setSystemView("branch")} className="rounded-md border border-primary/30 bg-primary/5 px-3 py-1.5 text-left text-xs font-semibold text-primary hover:bg-primary/10">
-                  点击查看分行系统改造明细
-                </button>
-              </div>
               {systemView ? (
                 <DetailTable
                   title={systemView === "head" ? "总行系统改造进展明细" : systemView === "branch" ? "分行系统改造进展明细" : systemView === "annual-head" ? "总行年度完成明细" : "分行年度完成明细"}
