@@ -192,18 +192,20 @@ function ProductBars({ rows }: { rows: ProductProgressRow[] }) {
                 <rect x={x - width / 2} y={baseY - replacedHeight} width={width} height={replacedHeight} rx="5" fill={DONE} />
                 {(() => {
                   const unreplacedHeight = barHeight - replacedHeight
-                  const replacedLabelY = baseY - replacedHeight - 4
-                  const unreplacedLabelY = baseY - barHeight - 4
-                  const labelsAreClose = Math.abs(replacedLabelY - unreplacedLabelY) < 16
-                  const replacedY = labelsAreClose ? replacedLabelY - 16 : replacedLabelY
-                  const unreplacedY = unreplacedLabelY
+                  const isPriorityCategory = /数据库|存储设备|存储/.test(name)
+                  const replacedLabelY = isPriorityCategory
+                    ? baseY - replacedHeight / 2 + 4
+                    : baseY - replacedHeight - 4
+                  const unreplacedLabelY = isPriorityCategory
+                    ? baseY - replacedHeight - unreplacedHeight / 2 + 4
+                    : baseY - barHeight - 4
                   return (
                     <>
-                      {replacedHeight >= 10 && (
-                        <text x={x} y={Math.max(top + 10, replacedY)} textAnchor="middle" className="fill-slate-700 text-[10px] font-semibold">{format(safeReplaced)}</text>
+                      {(replacedHeight >= 10 || (isPriorityCategory && safeReplaced > 0)) && (
+                        <text x={x} y={isPriorityCategory ? replacedLabelY : Math.max(top + 10, replacedLabelY)} textAnchor="middle" className={isPriorityCategory ? "fill-white text-[9px] font-semibold" : "fill-slate-700 text-[10px] font-semibold"}>{format(safeReplaced)}</text>
                       )}
-                      {unreplacedHeight >= 10 && (
-                        <text x={x} y={Math.max(top + 10, unreplacedY)} textAnchor="middle" className="fill-slate-700 text-[10px] font-semibold">{format(safeUnreplaced)}</text>
+                      {(unreplacedHeight >= 10 || (isPriorityCategory && safeUnreplaced > 0)) && (
+                        <text x={x} y={isPriorityCategory ? unreplacedLabelY : Math.max(top + 10, unreplacedLabelY)} textAnchor="middle" className={isPriorityCategory ? "fill-slate-700 text-[9px] font-semibold" : "fill-slate-700 text-[10px] font-semibold"}>{format(safeUnreplaced)}</text>
                       )}
                     </>
                   )
