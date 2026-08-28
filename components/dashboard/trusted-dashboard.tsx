@@ -242,7 +242,8 @@ function ProductBars({ rows }: { rows: ProductProgressRow[] }) {
             const x = left + ((hoveredIndex + 0.5) / Math.max(rows.length, 1)) * innerWidth
             const barHeight = (total / maxTotal) * innerHeight
             const tooltipX = Math.max(100, Math.min(plotWidth - 100, x))
-            const tooltipY = Math.max(18, top + innerHeight - barHeight - 8)
+            const needsRaisedTooltip = name === "数据库" || name === "存储设备" || name === "存储"
+            const tooltipY = Math.max(18, top + innerHeight - barHeight - (needsRaisedTooltip ? 72 : 8))
             return (
               <g transform={`translate(${tooltipX} ${tooltipY})`} pointerEvents="none">
                 <rect x="-94" y="-4" width="188" height="86" rx="6" fill="white" stroke="#d7e2ea" strokeWidth="1" />
