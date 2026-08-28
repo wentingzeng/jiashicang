@@ -255,6 +255,16 @@ function GaugeCard({
             strokeWidth="3"
             strokeLinecap="round"
           />
+          <text
+            x={100 + Math.cos(targetAngle) * 100}
+            y={100 - Math.sin(targetAngle) * 100 - 3}
+            textAnchor={targetPercent < 18 ? "start" : targetPercent > 82 ? "end" : "middle"}
+            fill="#d97706"
+            fontSize="10"
+            fontWeight="700"
+          >
+            目标 {progress}
+          </text>
           <line
             x1="24"
             y1="100"
@@ -284,9 +294,12 @@ function GaugeCard({
             <circle cx="100" cy="100" r="4" fill="#94a3b8" />
           </g>
         </svg>
-        <strong className="absolute inset-x-0 bottom-6 z-10 bg-transparent text-center font-mono text-xl font-black leading-none text-[#005486]">
-          {value}
-        </strong>
+        <div className="pointer-events-none absolute inset-x-0 bottom-5 z-10 flex flex-col items-center gap-0.5">
+          <span className="text-[10px] font-semibold leading-none text-slate-500">当前值</span>
+          <strong className="bg-transparent text-center font-mono text-xl font-black leading-none text-[#005486]">
+            {value}
+          </strong>
+        </div>
         <span className="absolute bottom-1 left-1 text-[10px] font-semibold text-slate-500">
           最小 {min}
         </span>
