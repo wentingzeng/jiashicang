@@ -503,14 +503,14 @@ export function ProjectDashboard() {
       value: valueFor("ID41", 107),
       progress: targetFor("ID41", 105),
       min: 100,
-      max: 107,
+      max: 110,
     },
     {
       label: "敏捷项目版本平均交付周期",
       value: valueFor("ID43", 23),
       progress: targetFor("ID43", 22.5),
       min: 20,
-      max: 23,
+      max: 30,
     },
   ];
   const livePerformanceData = ["ID19", "ID20", "ID21", "ID22"].map((id, index) => ({
