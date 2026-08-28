@@ -20,8 +20,12 @@ function numberOrZero(value: number | null | undefined) {
   return typeof value === "number" && Number.isFinite(value) ? value : 0
 }
 
+function sortProgressRows(rows: ProgressRow[]): ProgressRow[] {
+  return [...rows].sort((a, b) => b[1] - a[1] || b[2] - a[2])
+}
+
 function toProgressRows<T extends { remainingCount: number; includedSystemCount: number }>(rows: T[], name: (row: T) => string): ProgressRow[] {
-  return rows.map((row) => [name(row), numberOrZero(row.includedSystemCount), numberOrZero(row.remainingCount)])
+  return sortProgressRows(rows.map((row) => [name(row), numberOrZero(row.includedSystemCount), numberOrZero(row.remainingCount)]))
 }
 const branchRows: Array<[string, number, number]> = [["南京分行", 9, 5], ["苏州分行", 6, 3], ["北京分行", 6, 4], ["上海分行", 5, 3], ["青岛分行", 5, 2], ["福州分行", 9, 6], ["深圳分行", 4, 2], ["西安分行", 6, 4]]
 const headRows: Array<[string, number, number]> = [["公司金融部\n数字支撑室", 4, 2], ["绿色金融部\n临客部", 4, 0], ["普惠金融部\n村镇服务", 4, 0], ["机构业务部", 5, 1], ["国际业务部\n贸易行管", 24, 9], ["投资银行部", 2, 1], ["零售金融部\n消费者权益保护办公室", 23, 8]]
@@ -401,8 +405,8 @@ export function TrustedDashboard() {
   const productRowsFromApi = useMemo(() => api.products.map((row) => [row.categoryName, numberOrZero(row.totalCount), numberOrZero(row.replacedCount), numberOrZero(row.unreplacedCount)] as ProductProgressRow), [api.products])
 
   const useApiData = api.source === "api"
-  const systemHeadRows = useApiData ? headquartersRowsFromApi : headRows
-  const systemBranchRows = useApiData ? branchRowsFromApi : branchRows
+  const systemHeadRows = sortProgressRows(useApiData ? headquartersRowsFromApi : headRows)
+  const systemBranchRows = sortProgressRows(useApiData ? branchRowsFromApi : branchRows)
   const machineHeadRows = useApiData ? headquartersMainframeRows : headMachineRows
   const machineBranchRows = useApiData ? branchMainframeRows : branchMachineRows
   const productDisplayRows = useApiData ? productRowsFromApi : productRows
