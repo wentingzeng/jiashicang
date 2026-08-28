@@ -504,9 +504,9 @@ export function TrustedDashboard() {
                     <div className="flex flex-col gap-2">
                       <button type="button" onClick={() => setMachineView(null)} className="flex w-fit items-center gap-1 rounded-md border border-border/70 bg-secondary/40 px-2 py-1 text-[11px] font-semibold text-muted-foreground hover:bg-secondary/70">
                         <ChevronUp className="size-3.5 -rotate-90" />
-                        返回小型机下线进��
+                        返回小型机下线进展
                       </button>
-                      <p className="text-xs font-semibold text-foreground">{machineView === "head" ? "总行各部门��线进展" : "���行各部门下线进展"}</p>
+                      <p className="text-xs font-semibold text-foreground">{machineView === "head" ? "总行各部门下线进展" : "分行各部门下线进展"}</p>
                       <SmallMachineChart rows={machineView === "head" ? machineHeadRows : machineBranchRows} />
                     </div>
                   ) : (
