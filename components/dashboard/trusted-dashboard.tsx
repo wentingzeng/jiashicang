@@ -331,6 +331,7 @@ function ProgressPair({
               <div className="h-full rounded-full" style={{ width: `${ratio}%`, background: item.color }} />
             </div>
             <p className="mt-1 text-[11px] text-muted-foreground">已完成 {item.done} / {item.total}</p>
+            <p className="mt-1 text-[11px] font-semibold text-primary/75">点击查看详情</p>
           </button>
         )
       })}
