@@ -192,12 +192,6 @@ function ProductBars({ rows }: { rows: ProductProgressRow[] }) {
                 {barHeight - replacedHeight >= 18 && (
                   <text x={x} y={baseY - replacedHeight - (barHeight - replacedHeight) / 2 + 3} textAnchor="middle" className="fill-slate-700 text-[9px] font-semibold">{format(safeUnreplaced)}</text>
                 )}
-                {replacedHeight < 18 && safeReplaced > 0 && (
-                  <text x={x - width / 2 - 4} y={baseY - replacedHeight / 2 + 3} textAnchor="end" className="fill-sky-950 text-[9px] font-semibold">{format(safeReplaced)}</text>
-                )}
-                {barHeight - replacedHeight < 18 && safeUnreplaced > 0 && (
-                  <text x={x + width / 2 + 4} y={baseY - replacedHeight - Math.max(8, (barHeight - replacedHeight) / 2) + 3} textAnchor="start" className="fill-slate-700 text-[9px] font-semibold">{format(safeUnreplaced)}</text>
-                )}
                 <text x={x} y={plotHeight - 16} textAnchor="middle" className="fill-muted-foreground text-[10px]">{name}</text>
                 <foreignObject x={Math.max(4, Math.min(plotWidth - 188, x - 94))} y={Math.max(4, baseY - barHeight - 88)} width="184" height="80" className="pointer-events-none overflow-visible opacity-0 transition-opacity group-hover:opacity-100">
                   <div className="w-[176px] whitespace-nowrap rounded-md border border-border bg-card p-2 text-left text-[10px] leading-4 text-foreground shadow-lg">
@@ -486,7 +480,7 @@ export function TrustedDashboard() {
             </div>
             <div className="rounded-xl border-2 border-primary/70 bg-card p-2.5">
               <div className="mb-2 border-b border-border pb-1.5">
-                <h2 className="text-base font-black text-primary">国密改造和密评进度</h2>
+                <h2 className="text-base font-black text-primary">国密改造���密评进度</h2>
               </div>
               <div className="grid gap-2 md:grid-cols-2">
 <ModificationRing title="密评工作" ratio={30} done="30" undone="70" color={colors.amber} />
