@@ -333,7 +333,7 @@ function DetailTable({ title, rows, branch, onBack }: { title: string; rows: Arr
         <ChevronUp className="size-3.5 -rotate-90" />
         返回{title}
       </button>
-      <div className="max-h-[420px] max-w-[560px] overflow-y-auto rounded-md border border-border/60">
+      <div className="mx-auto max-h-[420px] max-w-[560px] overflow-y-auto rounded-md border border-border/60">
         <table className="w-full table-fixed text-left text-[11px]">
           <thead className="sticky top-0 border-b border-border bg-card text-muted-foreground">
             <tr>
