@@ -191,16 +191,25 @@ function GaugeCard({
   min: number;
   max: number;
 }) {
-  const percent = Math.max(
-    0,
-    Math.min(100, ((progress - min) / (max - min)) * 100),
-  );
   const currentPercent = Math.max(
     0,
     Math.min(100, ((value - min) / (max - min)) * 100),
   );
+  const targetPercent = Math.max(
+    0,
+    Math.min(100, ((progress - min) / (max - min)) * 100),
+  );
   // The pointer starts pointing up (0°) and sweeps left-to-right across the semicircle.
   const pointerAngle = (currentPercent / 100) * 180 - 90;
+  const targetAngle = Math.PI - (targetPercent / 100) * Math.PI;
+  const targetInnerRadius = 66;
+  const targetOuterRadius = 87;
+  const targetMarker = {
+    x1: 100 + Math.cos(targetAngle) * targetInnerRadius,
+    y1: 100 - Math.sin(targetAngle) * targetInnerRadius,
+    x2: 100 + Math.cos(targetAngle) * targetOuterRadius,
+    y2: 100 - Math.sin(targetAngle) * targetOuterRadius,
+  };
   return (
     <div className="flex min-w-0 flex-col items-center gap-1">
       <div className="relative h-28 w-full max-w-[190px]">
@@ -235,7 +244,16 @@ function GaugeCard({
             strokeWidth="16"
             strokeLinecap="round"
             pathLength="100"
-            strokeDasharray={`${percent} 100`}
+            strokeDasharray={`${currentPercent} 100`}
+          />
+          <line
+            x1={targetMarker.x1}
+            y1={targetMarker.y1}
+            x2={targetMarker.x2}
+            y2={targetMarker.y2}
+            stroke="#f0a33a"
+            strokeWidth="3"
+            strokeLinecap="round"
           />
           <line
             x1="24"
