@@ -182,8 +182,17 @@ function ProductBars({ rows }: { rows: ProductProgressRow[] }) {
             const baseY = top + innerHeight
             const ratio = total > 0 ? (safeReplaced / total) * 100 : 0
             return (
-              <g key={name}>
+              <g key={name} className="group">
                 <title>{`${name}：总计 ${format(total)}，已替代 ${format(safeReplaced)}，未替代 ${format(safeUnreplaced)}，替代率 ${ratio.toFixed(1)}%`}</title>
+                <foreignObject x={Math.max(4, Math.min(plotWidth - 148, x - 74))} y={Math.max(4, baseY - barHeight - 88)} width="144" height="80" className="pointer-events-none opacity-0 transition-opacity group-hover:opacity-100">
+                  <div className="rounded-md border border-border bg-card/95 p-2 text-left text-[10px] leading-4 text-foreground shadow-lg">
+                    <div className="font-semibold">{name}</div>
+                    <div>已替代：{format(safeReplaced)}</div>
+                    <div>未替代：{format(safeUnreplaced)}</div>
+                    <div>替代率：{ratio.toFixed(1)}%</div>
+                    <div>总数量：{format(total)}</div>
+                  </div>
+                </foreignObject>
                 <rect x={x - width / 2} y={baseY - barHeight} width={width} height={barHeight} rx="5" fill={UNDONE} />
                 <rect x={x - width / 2} y={baseY - replacedHeight} width={width} height={replacedHeight} rx="5" fill={DONE} />
                 {replacedHeight >= 18 && (
