@@ -410,12 +410,6 @@ export function TrustedDashboard() {
     <main className="min-h-screen bg-background text-foreground">
       <div className="mx-auto max-w-[1800px] px-4 pb-5 md:px-6">
         <HeroBanner title="信创管理驾驶舱" subtitle="信创改造 · 国产替代 · 系统适配 · 平稳迁移" />
-        <div className="mb-2 flex items-center justify-end gap-2 text-[11px]">
-          <span className={`rounded-full px-2 py-0.5 font-semibold ${useApiData ? "bg-emerald-100 text-emerald-700" : "bg-amber-100 text-amber-700"}`}>
-            {useApiData ? "真实接口数据" : "Mock 演示数据"}
-          </span>
-          {api.error && <span className="text-muted-foreground">{api.error}</span>}
-        </div>
         <div className="grid items-stretch gap-3 lg:grid-cols-2">
           <div className="flex min-w-0 flex-col gap-3">
             <div className="flex h-full flex-col rounded-xl border-2 border-primary/70 bg-card p-2.5">
