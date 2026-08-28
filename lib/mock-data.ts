@@ -10,7 +10,6 @@ export type NavItem = {
 export const navItems: NavItem[] = [
   { key: "ai-plus", label: "人工智能+" },
   { key: "project", label: "项目管理" },
-  { key: "rd", label: "研发管理" },
   { key: "resource", label: "资源管理" },
   { key: "branch", label: "分行管理" },
   { key: "security", label: "网络安全" },

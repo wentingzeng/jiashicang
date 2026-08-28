@@ -5,6 +5,7 @@ import { RdOverviewSummaryRow, DurationTrendPanel, MonthlyTaskTrendPanel } from 
 import { KeyProjectsTable, KeySpecialsTable } from "@/components/dashboard/rd-tables"
 import { hrPersonnelTotal } from "@/lib/mock-data"
 import { cn } from "@/lib/utils"
+import { redirect } from "next/navigation"
 
 function SectionRail({ label, tone }: { label: string; tone: "primary" | "accent" | "chart-4" }) {
   const isPrimary = tone === "primary"
@@ -39,6 +40,8 @@ function SectionRail({ label, tone }: { label: string; tone: "primary" | "accent
 }
 
 export default function ResearchManagementPage() {
+  redirect("/")
+
   return (
     <main className="min-h-screen bg-background text-foreground selection:bg-primary/30">
       <div
