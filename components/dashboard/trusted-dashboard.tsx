@@ -537,6 +537,10 @@ export function TrustedDashboard() {
                 <h2 className="text-base font-black text-primary">产品替代</h2>
               </div>
               <div className="flex flex-col gap-4">
+                <Panel title="产品替代进度">
+                  <p className="mb-1.5 text-xs font-semibold">各品类进度</p>
+                  <ProductBars rows={productDisplayRows} />
+                </Panel>
                 <Panel title="麒麟界面推广进度">
                   <div className="grid gap-2 md:grid-cols-2">
                     <RingStat label="已推广" ratio={(16.68 / (16.68 + 68.58)) * 100} value="16,680" sub="未推广 68,580" color={colors.violet} />
@@ -556,10 +560,6 @@ export function TrustedDashboard() {
                   ) : (
                     <MachineOverview onSelect={setMachineView} head={mainframeHeadTotals} branch={mainframeBranchTotals} />
                   )}
-                </Panel>
-                <Panel title="关键品类产品替代进度">
-                  <p className="mb-1.5 text-xs font-semibold">各品类进度</p>
-                  <ProductBars rows={productDisplayRows} />
                 </Panel>
               </div>
             </div>
