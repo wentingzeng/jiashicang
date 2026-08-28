@@ -430,7 +430,7 @@ export function TrustedDashboard() {
                   onBack={() => setSystemView(null)}
                 />
               ) : (
-                <div className="flex flex-col gap-2">
+                <div className="flex flex-col gap-6">
                   <Panel title="一般系统信创进度">
                     <div className="grid gap-2 md:grid-cols-2">
                       <div className="rounded-lg border border-border/70 bg-card p-2">
