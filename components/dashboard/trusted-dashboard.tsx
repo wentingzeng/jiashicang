@@ -474,7 +474,7 @@ export function TrustedDashboard() {
             </div>
             <div className="rounded-xl border-2 border-primary/70 bg-card p-2.5">
               <div className="mb-2 border-b border-border pb-1.5">
-                <h2 className="text-base font-black text-primary">国密改造���密评进度</h2>
+                <h2 className="text-base font-black text-primary">国密改造和密评进度</h2>
               </div>
               <div className="grid gap-2 md:grid-cols-2">
 <ModificationRing title="密评工作" ratio={30} done="30" undone="70" color={colors.amber} />
