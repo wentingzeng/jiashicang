@@ -10,9 +10,11 @@ const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL ?? "http://localhost:8
 type BranchProgress = { id: number; statYear: number; branchName: string; includedSystemCount: number; singleTrackCount: number; remainingCount: number; singleTrackRate: number | null }
 type HeadquartersProgress = { id: number; statYear: number; departmentName: string; includedSystemCount: number; singleTrackCount: number; remainingCount: number; singleTrackRate: number | null }
 type MainframeProgress = { id: number; statYear: number; organizationName: string; notOfflineCount: number; offlineCount: number; offlineRate: number | null }
-type ApiState = { branch: BranchProgress[]; headquarters: HeadquartersProgress[]; mainframe: MainframeProgress[]; loading: boolean; error: string | null }
+type ProductReplacementProgress = { id: number; categoryName: string; replacedCount: number; unreplacedCount: number; totalCount: number; statYear: number }
+type ApiState = { branch: BranchProgress[]; headquarters: HeadquartersProgress[]; mainframe: MainframeProgress[]; products: ProductReplacementProgress[]; loading: boolean; error: string | null }
 
 type ProgressRow = [string, number, number]
+type ProductProgressRow = [string, number, number, number]
 
 function numberOrZero(value: number | null | undefined) {
   return typeof value === "number" && Number.isFinite(value) ? value : 0
@@ -135,7 +137,7 @@ function CoreBars() {
   )
 }
 
-function ProductBars() {
+function ProductBars({ rows }: { rows: ProductProgressRow[] }) {
   const DONE = "#7dd3fc"
   const UNDONE = "#e8f4fd"
   const max = Math.max(...productRows.map(([, n]) => n))
@@ -166,14 +168,14 @@ function ProductBars() {
               <div key={t} className="absolute left-0 right-0 border-t border-dashed border-border/50" style={{ bottom: `${(t / niceMax) * 100}%` }} />
             ))}
             <div className="absolute inset-x-0 bottom-0 top-0 grid grid-cols-9 items-end gap-1 px-2">
-              {productRows.map(([name, amount, ratio]) => {
-                const replaced = Math.round((amount * ratio) / 100)
+              {rows.map(([name, amount, replaced, unreplaced]) => {
+                const ratio = amount > 0 ? (replaced / amount) * 100 : 0
                 const barHeight = Math.max(10, (amount / niceMax) * chartHeight)
                 return (
                   <div key={name} className="group relative flex h-full min-w-0 items-end justify-center">
                     <div className="pointer-events-none absolute bottom-full left-1/2 z-10 mb-2 hidden w-28 -translate-x-1/2 rounded border border-border bg-card p-1 text-[10px] shadow-lg group-hover:block">
                       {name}
-                      <br />总量 {amount}，已替代 {replaced}，未替代 {amount - replaced}
+                      <br />总量 {amount}，已替代 {replaced}，未替代 {unreplaced}
                     </div>
                     <div className="flex w-8 flex-col justify-end overflow-hidden rounded-t-md" style={{ height: `${barHeight}px` }}>
                       <div className="flex items-center justify-center overflow-hidden text-[9px] font-bold text-slate-700" style={{ height: `${ratio}%`, background: DONE }}>{replaced}</div>
@@ -341,22 +343,23 @@ function DetailTable({ title, rows, branch, onBack }: { title: string; rows: Arr
 export function TrustedDashboard() {
   const [systemView, setSystemView] = useState<null | "head" | "branch" | "annual-head" | "annual-branch">(null)
   const [machineView, setMachineView] = useState<null | "head" | "branch">(null)
-  const [api, setApi] = useState<ApiState>({ branch: [], headquarters: [], mainframe: [], loading: true, error: null })
+  const [api, setApi] = useState<ApiState>({ branch: [], headquarters: [], mainframe: [], products: [], loading: true, error: null })
 
   useEffect(() => {
     const controller = new AbortController()
     const fetchData = async () => {
       try {
-        const [branchResponse, headquartersResponse, mainframeResponse] = await Promise.all([
+        const [branchResponse, headquartersResponse, mainframeResponse, productsResponse] = await Promise.all([
           fetch(`${API_BASE_URL}/api/trusted/branch-system-progress?statYear=2026`, { signal: controller.signal }),
           fetch(`${API_BASE_URL}/api/trusted/headquarters-system-progress?statYear=2026`, { signal: controller.signal }),
           fetch(`${API_BASE_URL}/api/trusted/mainframe-offline-progress?statYear=2026`, { signal: controller.signal }),
+          fetch(`${API_BASE_URL}/api/trusted/product-replacement-progress?statYear=2026`, { signal: controller.signal }),
         ])
-        if (!branchResponse.ok || !headquartersResponse.ok || !mainframeResponse.ok) throw new Error("信创接口请求失败")
-        const [branchJson, headquartersJson, mainframeJson] = await Promise.all([
-          branchResponse.json(), headquartersResponse.json(), mainframeResponse.json(),
+        if (!branchResponse.ok || !headquartersResponse.ok || !mainframeResponse.ok || !productsResponse.ok) throw new Error("信创接口请求失败")
+        const [branchJson, headquartersJson, mainframeJson, productsJson] = await Promise.all([
+          branchResponse.json(), headquartersResponse.json(), mainframeResponse.json(), productsResponse.json(),
         ])
-        setApi({ branch: branchJson.data ?? [], headquarters: headquartersJson.data ?? [], mainframe: mainframeJson.data ?? [], loading: false, error: null })
+        setApi({ branch: branchJson.data ?? [], headquarters: headquartersJson.data ?? [], mainframe: mainframeJson.data ?? [], products: productsJson.data ?? [], loading: false, error: null })
       } catch (error) {
         if (error instanceof DOMException && error.name === "AbortError") return
         setApi((current) => ({ ...current, loading: false, error: "信创数据暂时无法加载，当前显示页面默认数据" }))
@@ -376,6 +379,7 @@ export function TrustedDashboard() {
   const mainframeHead = api.mainframe.find((row) => row.organizationName === "总行")
   const mainframeBranchTotals = api.mainframe.filter((row) => row.organizationName !== "总行").reduce((sum, row) => ({ done: sum.done + numberOrZero(row.offlineCount), total: sum.total + numberOrZero(row.offlineCount) + numberOrZero(row.notOfflineCount) }), { done: 0, total: 0 })
   const mainframeHeadTotals = mainframeHead ? { done: numberOrZero(mainframeHead.offlineCount), total: numberOrZero(mainframeHead.offlineCount) + numberOrZero(mainframeHead.notOfflineCount) } : { done: 0, total: 0 }
+  const productRowsFromApi = useMemo(() => api.products.map((row) => [row.categoryName, numberOrZero(row.totalCount), numberOrZero(row.replacedCount), numberOrZero(row.unreplacedCount)] as ProductProgressRow), [api.products])
 
   const systemHeadRows = headquartersRowsFromApi.length ? headquartersRowsFromApi : headRows
   const systemBranchRows = branchRowsFromApi.length ? branchRowsFromApi : branchRows
@@ -485,7 +489,7 @@ export function TrustedDashboard() {
                 </Panel>
                 <Panel title="其他关键品类产品存量替代进度">
                   <p className="mb-1.5 text-xs font-semibold">各品类进度</p>
-                  <ProductBars />
+                  <ProductBars rows={productRowsFromApi.length ? productRowsFromApi : productRows} />
                 </Panel>
               </div>
             </div>
