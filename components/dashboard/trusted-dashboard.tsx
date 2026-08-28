@@ -196,7 +196,7 @@ function ProductBars({ rows }: { rows: ProductProgressRow[] }) {
                 {barHeight - replacedHeight >= 22 && (
                   <text x={x} y={baseY - replacedHeight - (barHeight - replacedHeight) / 2 + 4} textAnchor="middle" className="fill-slate-700 text-[10px] font-semibold">{format(safeUnreplaced)}</text>
                 )}
-                <text x={x} y={plotHeight - 24} textAnchor="middle" className="fill-muted-foreground text-[10px]">{name}</text>
+                <text x={x} y={baseY + 20} textAnchor="middle" className="fill-muted-foreground text-[10px]">{name}</text>
                 <foreignObject x={Math.max(4, Math.min(plotWidth - 188, x - 94))} y={Math.max(4, baseY - barHeight - 88)} width="184" height="80" className="pointer-events-none overflow-visible opacity-0 transition-opacity group-hover:opacity-100">
                   <div className="w-[176px] whitespace-nowrap rounded-md border border-border bg-card p-2 text-left text-[10px] leading-4 text-foreground shadow-lg">
                     <div className="font-semibold">{name}</div>
@@ -254,7 +254,7 @@ function SmallMachineChart({ rows }: { rows: Array<[string, number, number]> }) 
                     <div className="pointer-events-none absolute bottom-full z-20 mb-2 hidden w-28 -translate-x-1/2 rounded-md border border-border bg-card p-2 text-[10px] leading-4 text-foreground shadow-lg group-hover:block">
                       <p className="font-semibold">{name}</p>
                       <p>总数：{total}</p>
-                      <p>已下线：{done}</p>
+                      <p>已���线：{done}</p>
                       <p>未下线：{total - done}</p>
                     </div>
                     <span className="mb-1 font-mono text-[11px] font-bold text-foreground">{total}</span>
