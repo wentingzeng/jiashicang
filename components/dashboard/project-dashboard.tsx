@@ -663,10 +663,10 @@ export function ProjectDashboard() {
                       type="monotone"
                       dataKey="days"
                       name="项目平均交付周期（天）"
-                      stroke="#0d9488"
-                      strokeWidth={3}
-                      dot={{ r: 4, fill: "#0d9488" }}
-                    ><LabelList dataKey="days" position="top" offset={12} formatter={(value) => `${Number(value)}天`} fill="#0f766e" fontSize={10} fontWeight={700} /></Line>
+  stroke="#3157d5"
+  strokeWidth={3}
+  dot={{ r: 4, fill: "#3157d5", stroke: "#ffffff", strokeWidth: 1.5 }}
+  ><LabelList dataKey="days" position="top" offset={12} formatter={(value) => `${Number(value)}天`} fill="#1e3a8a" fontSize={10} fontWeight={700} /></Line>
                   </ComposedChart>
                 </ChartBox>
               </div>
