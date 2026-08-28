@@ -164,7 +164,7 @@ function ProductBars({ rows }: { rows: ProductProgressRow[] }) {
         <span className="flex items-center gap-1.5"><i className="inline-block size-2.5 rounded-full" style={{ background: UNDONE }} />未替代</span>
       </div>
       <div className="overflow-x-auto">
-        <svg viewBox={`0 0 ${plotWidth} ${plotHeight}`} className="h-auto min-h-[240px] w-full min-w-[680px]" role="img" aria-label="关键品类产品替代进度">
+        <svg viewBox={`0 0 ${plotWidth} ${plotHeight}`} className="h-auto min-h-[240px] w-full min-w-[680px]" role="img" aria-label="产品替代进度">
           {ticks.map((tick) => {
             const y = top + innerHeight - (tick / maxTotal) * innerHeight
             return (
@@ -190,12 +190,24 @@ function ProductBars({ rows }: { rows: ProductProgressRow[] }) {
               <g key={name} onMouseEnter={() => setHoveredIndex(index)} onMouseLeave={() => setHoveredIndex(null)}>
                 <rect x={x - width / 2} y={baseY - barHeight} width={width} height={barHeight} rx="5" fill={UNDONE} />
                 <rect x={x - width / 2} y={baseY - replacedHeight} width={width} height={replacedHeight} rx="5" fill={DONE} />
-                {replacedHeight >= 22 && (
-                  <text x={x} y={baseY - replacedHeight / 2 + 4} textAnchor="middle" className="fill-slate-700 text-[10px] font-semibold">{format(safeReplaced)}</text>
-                )}
-                {barHeight - replacedHeight >= 22 && (
-                  <text x={x} y={baseY - replacedHeight - (barHeight - replacedHeight) / 2 + 4} textAnchor="middle" className="fill-slate-700 text-[10px] font-semibold">{format(safeUnreplaced)}</text>
-                )}
+                {(() => {
+                  const unreplacedHeight = barHeight - replacedHeight
+                  const replacedLabelY = baseY - replacedHeight - 4
+                  const unreplacedLabelY = baseY - barHeight - 4
+                  const labelsAreClose = Math.abs(replacedLabelY - unreplacedLabelY) < 16
+                  const replacedY = labelsAreClose ? replacedLabelY - 16 : replacedLabelY
+                  const unreplacedY = unreplacedLabelY
+                  return (
+                    <>
+                      {replacedHeight >= 10 && (
+                        <text x={x} y={Math.max(top + 10, replacedY)} textAnchor="middle" className="fill-slate-700 text-[10px] font-semibold">{format(safeReplaced)}</text>
+                      )}
+                      {unreplacedHeight >= 10 && (
+                        <text x={x} y={Math.max(top + 10, unreplacedY)} textAnchor="middle" className="fill-slate-700 text-[10px] font-semibold">{format(safeUnreplaced)}</text>
+                      )}
+                    </>
+                  )
+                })()}
                 <text x={x} y={baseY + 20} textAnchor="middle" className="fill-muted-foreground text-[10px]">{name}</text>
               </g>
             )
