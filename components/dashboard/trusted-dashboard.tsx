@@ -345,23 +345,23 @@ function DetailTable({ title, rows, branch, onBack }: { title: string; rows: Arr
         <ChevronUp className="size-3.5 -rotate-90" />
         返回{title}
       </button>
-      <div className="mx-auto max-h-[420px] max-w-[560px] overflow-y-auto rounded-md border border-border/60">
+      <div className="mx-auto max-h-[420px] w-full max-w-[620px] overflow-y-auto rounded-xl border border-primary/20 bg-background/70 shadow-sm">
         <table className="w-full table-fixed text-left text-[11px]">
-          <thead className="sticky top-0 border-b border-border bg-card text-muted-foreground">
+          <thead className="sticky top-0 z-10 border-b border-primary/15 bg-primary/5 text-primary">
             <tr>
-              <th className="px-1.5 py-1.5">序号</th>
-              <th className="px-1.5 py-1.5">{branch ? "分行名称" : "所属部门"}</th>
-              <th className="px-1.5 py-1.5 text-right">总数</th>
-              <th className="px-1.5 py-1.5 text-right">剩余</th>
+              <th className="w-12 px-2 py-2 font-bold">序号</th>
+              <th className="px-2 py-2 font-bold">{branch ? "分行名称" : "所属部门"}</th>
+              <th className="w-20 px-2 py-2 text-right font-bold">总数</th>
+              <th className="w-20 px-2 py-2 text-right font-bold">剩余</th>
             </tr>
           </thead>
-          <tbody className="divide-y divide-border/60">
+          <tbody className="divide-y divide-border/40">
             {rows.map(([name, total, remaining], i) => (
-              <tr key={name}>
-                <td className="px-1 py-1.5 text-muted-foreground">{i + 1}</td>
-                <td className="whitespace-pre-line px-1 py-1.5 font-medium">{name}</td>
-                <td className="px-1 py-1.5 text-right font-mono">{total}</td>
-                <td className="px-1 py-1.5 text-right font-mono text-muted-foreground">{remaining}</td>
+              <tr key={name} className="transition-colors odd:bg-card/60 hover:bg-primary/5">
+                <td className="px-2 py-2 align-middle font-mono text-muted-foreground">{String(i + 1).padStart(2, "0")}</td>
+                <td className="whitespace-pre-line px-2 py-2 align-middle font-semibold text-foreground">{name}</td>
+                <td className="px-2 py-2 text-right align-middle font-mono font-semibold text-foreground">{total.toLocaleString()}</td>
+                <td className="px-2 py-2 text-right align-middle font-mono font-semibold text-muted-foreground">{remaining.toLocaleString()}</td>
               </tr>
             ))}
           </tbody>
