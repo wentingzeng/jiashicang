@@ -175,8 +175,8 @@ function ProductBars({ rows }: { rows: ProductProgressRow[] }) {
         <span className="flex items-center gap-1.5"><i className="inline-block size-2.5 rounded-full" style={{ background: DONE }} />已替代</span>
         <span className="flex items-center gap-1.5"><i className="inline-block size-2.5 rounded-full" style={{ background: UNDONE }} />未替代</span>
       </div>
-      <div className="overflow-x-auto">
-        <svg viewBox={`0 0 ${plotWidth} ${plotHeight}`} className="h-auto min-h-[240px] w-full min-w-[680px]" role="img" aria-label="产品替代进度">
+      <div className="relative overflow-visible">
+        <svg viewBox={`0 0 ${plotWidth} ${plotHeight}`} className="h-auto min-h-[240px] w-full min-w-[680px] overflow-visible" role="img" aria-label="产品替代进度">
           {ticks.map((tick) => {
             const y = top + innerHeight - (tick / maxTotal) * innerHeight
             return (
