@@ -190,8 +190,12 @@ function ProductBars({ rows }: { rows: ProductProgressRow[] }) {
                 <title>{`${name}：总�� ${format(total)}，已替代 ${format(safeReplaced)}，未替代 ${format(safeUnreplaced)}，替代率 ${ratio.toFixed(1)}%`}</title>
                 <rect x={x - width / 2} y={baseY - barHeight} width={width} height={barHeight} rx="5" fill={UNDONE} />
                 <rect x={x - width / 2} y={baseY - replacedHeight} width={width} height={replacedHeight} rx="5" fill={DONE} />
-                <text x={x} y={plotHeight - 62} textAnchor="middle" className="fill-sky-600 text-[10px] font-semibold">已替代 {format(safeReplaced)}</text>
-                <text x={x} y={plotHeight - 46} textAnchor="middle" className="fill-muted-foreground text-[10px] font-semibold">未替代 {format(safeUnreplaced)}</text>
+                {replacedHeight >= 22 && (
+                  <text x={x} y={baseY - replacedHeight / 2 + 4} textAnchor="middle" className="fill-slate-700 text-[10px] font-semibold">{format(safeReplaced)}</text>
+                )}
+                {barHeight - replacedHeight >= 22 && (
+                  <text x={x} y={baseY - replacedHeight - (barHeight - replacedHeight) / 2 + 4} textAnchor="middle" className="fill-slate-700 text-[10px] font-semibold">{format(safeUnreplaced)}</text>
+                )}
                 <text x={x} y={plotHeight - 24} textAnchor="middle" className="fill-muted-foreground text-[10px]">{name}</text>
                 <foreignObject x={Math.max(4, Math.min(plotWidth - 188, x - 94))} y={Math.max(4, baseY - barHeight - 88)} width="184" height="80" className="pointer-events-none overflow-visible opacity-0 transition-opacity group-hover:opacity-100">
                   <div className="w-[176px] whitespace-nowrap rounded-md border border-border bg-card p-2 text-left text-[10px] leading-4 text-foreground shadow-lg">
@@ -501,7 +505,7 @@ export function TrustedDashboard() {
                         <ChevronUp className="size-3.5 -rotate-90" />
                         返回小型机下线进展
                       </button>
-                      <p className="text-xs font-semibold text-foreground">{machineView === "head" ? "总行各部门��线进展" : "分行各部门下线进展"}</p>
+                      <p className="text-xs font-semibold text-foreground">{machineView === "head" ? "总行各部门��线进展" : "���行各部门下线进展"}</p>
                       <SmallMachineChart rows={machineView === "head" ? machineHeadRows : machineBranchRows} />
                     </div>
                   ) : (
