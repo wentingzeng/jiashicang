@@ -197,12 +197,17 @@ function ProductBars({ rows }: { rows: ProductProgressRow[] }) {
                     ? baseY - replacedHeight / 2 + 4
                     : baseY - replacedHeight - 4
                   const unreplacedLabelY = isPriorityCategory
-                    ? baseY - replacedHeight - unreplacedHeight / 2 + 4
+                    ? baseY - replacedHeight - unreplacedHeight / 2 + (isPriorityCategory && /存储设备|存储/.test(name) ? -2 : 4)
                     : baseY - barHeight - 4
+                  const replacedLabelClass = /数据库/.test(name)
+                    ? "fill-slate-900 text-[9px] font-semibold"
+                    : isPriorityCategory
+                      ? "fill-white text-[9px] font-semibold"
+                      : "fill-slate-700 text-[10px] font-semibold"
                   return (
                     <>
                       {(replacedHeight >= 10 || (isPriorityCategory && safeReplaced > 0)) && (
-                        <text x={x} y={isPriorityCategory ? replacedLabelY : Math.max(top + 10, replacedLabelY)} textAnchor="middle" className={isPriorityCategory ? "fill-white text-[9px] font-semibold" : "fill-slate-700 text-[10px] font-semibold"}>{format(safeReplaced)}</text>
+                        <text x={x} y={isPriorityCategory ? replacedLabelY : Math.max(top + 10, replacedLabelY)} textAnchor="middle" className={replacedLabelClass}>{format(safeReplaced)}</text>
                       )}
                       {(unreplacedHeight >= 10 || (isPriorityCategory && safeUnreplaced > 0)) && (
                         <text x={x} y={isPriorityCategory ? unreplacedLabelY : Math.max(top + 10, unreplacedLabelY)} textAnchor="middle" className={isPriorityCategory ? "fill-slate-700 text-[9px] font-semibold" : "fill-slate-700 text-[10px] font-semibold"}>{format(safeUnreplaced)}</text>
