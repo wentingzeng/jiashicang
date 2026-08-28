@@ -140,14 +140,17 @@ function CoreBars() {
 function ProductBars({ rows }: { rows: ProductProgressRow[] }) {
   const DONE = "#7dd3fc"
   const UNDONE = "#e8f4fd"
-  const maxTotal = Math.max(...rows.map(([, amount, replaced, unreplaced]) => {
-    const safeAmount = Number(amount ?? 0)
-    const safeReplaced = Number(replaced ?? 0)
-    const safeUnreplaced = Number(unreplaced ?? 0)
-    return Math.max(safeAmount, safeReplaced + safeUnreplaced, 0)
-  }), 1)
-  const chartHeight = 240
-  const ticks = [maxTotal, Math.round(maxTotal / 2), 0]
+  const plotWidth = 760
+  const plotHeight = 220
+  const left = 58
+  const right = 12
+  const top = 12
+  const bottom = 42
+  const innerWidth = plotWidth - left - right
+  const innerHeight = plotHeight - top - bottom
+  const maxTotal = Math.max(...rows.map(([, amount, replaced, unreplaced]) => Math.max(numberOrZero(amount), numberOrZero(replaced) + numberOrZero(unreplaced))), 1)
+  const ticks = [maxTotal, maxTotal / 2, 0]
+  const format = (value: number) => Math.round(value).toLocaleString()
 
   return (
     <div className="space-y-3">
@@ -155,46 +158,40 @@ function ProductBars({ rows }: { rows: ProductProgressRow[] }) {
         <span className="flex items-center gap-1.5"><i className="inline-block size-2.5 rounded-full" style={{ background: DONE }} />已替代</span>
         <span className="flex items-center gap-1.5"><i className="inline-block size-2.5 rounded-full" style={{ background: UNDONE }} />未替代</span>
       </div>
-      <div className="flex gap-2">
-        <div className="flex flex-col justify-between pb-7 text-right text-[9px] text-muted-foreground" style={{ height: chartHeight }}>
-          {ticks.map((tick) => <span key={tick}>{tick.toLocaleString()}</span>)}
-        </div>
-        <div className="relative min-w-0 flex-1 border-b border-l border-border" style={{ height: chartHeight }}>
-          {ticks.map((tick) => (
-            <div key={tick} className="pointer-events-none absolute left-0 right-0 border-t border-dashed border-border/50" style={{ top: `${(1 - tick / maxTotal) * (chartHeight - 28)}px` }} />
-          ))}
-          <div className="absolute inset-x-0 bottom-0 flex h-[calc(100%-28px)] items-end justify-around gap-1 px-2">
-            {rows.map(([name, amount, replaced, unreplaced]) => {
-              const safeAmount = Number(amount ?? 0)
-              const safeReplaced = Number(replaced ?? 0)
-              const safeUnreplaced = Number(unreplaced ?? 0)
-              const total = Math.max(safeAmount, safeReplaced + safeUnreplaced, 0)
-              const totalHeight = total > 0 ? Math.max(8, (total / maxTotal) * (chartHeight - 28)) : 0
-              const replacedHeight = total > 0 ? (safeReplaced / total) * totalHeight : 0
-              const unreplacedHeight = Math.max(0, totalHeight - replacedHeight)
-              const ratio = total > 0 ? (safeReplaced / total) * 100 : 0
-              return (
-                <div key={name} className="group relative flex h-full min-w-0 flex-1 flex-col items-center justify-end">
-                  <div className="pointer-events-none absolute bottom-full z-20 mb-2 hidden w-32 -translate-x-1/2 rounded-md border border-border bg-card p-2 text-[10px] leading-4 text-foreground shadow-lg group-hover:block">
-                    <p className="font-semibold">{name}</p>
-                    <p>总计：{total.toLocaleString()}</p>
-                    <p>已替代：{replaced.toLocaleString()}</p>
-                    <p>未替代：{safeUnreplaced.toLocaleString()}</p>
-                    <p>替代率：{ratio.toFixed(1)}%</p>
-                  </div>
-                  <span className="mb-1 font-mono text-[9px] font-bold text-foreground">{total.toLocaleString()}</span>
-                  <div className="flex w-7 flex-col overflow-hidden rounded-t-md" style={{ height: `${totalHeight}px` }} aria-label={`${name}替代进度`}>
-                    <div style={{ height: `${unreplacedHeight}px`, background: UNDONE }} />
-                    <div className="flex items-center justify-center overflow-hidden" style={{ height: `${replacedHeight}px`, background: DONE }}>
-                      {replacedHeight > 18 && <span className="font-mono text-[9px] font-bold text-slate-700">{replaced.toLocaleString()}</span>}
-                    </div>
-                  </div>
-                  <span className="mt-2 w-full truncate text-center text-[9px] text-muted-foreground" title={name}>{name}</span>
-                </div>
-              )
-            })}
-          </div>
-        </div>
+      <div className="overflow-x-auto">
+        <svg viewBox={`0 0 ${plotWidth} ${plotHeight}`} className="h-auto min-h-[240px] w-full min-w-[680px]" role="img" aria-label="其他关键品类产品存量替代进度">
+          {ticks.map((tick) => {
+            const y = top + innerHeight - (tick / maxTotal) * innerHeight
+            return (
+              <g key={tick}>
+                <line x1={left} x2={plotWidth - right} y1={y} y2={y} stroke="currentColor" strokeDasharray="3 3" className="text-border" />
+                <text x={left - 8} y={y + 3} textAnchor="end" className="fill-muted-foreground text-[10px]">{format(tick)}</text>
+              </g>
+            )
+          })}
+          <line x1={left} x2={plotWidth - right} y1={top + innerHeight} y2={top + innerHeight} stroke="currentColor" className="text-border" />
+          {rows.map(([name, amount, replaced, unreplaced], index) => {
+            const safeAmount = numberOrZero(amount)
+            const safeReplaced = numberOrZero(replaced)
+            const safeUnreplaced = numberOrZero(unreplaced)
+            const total = Math.max(safeAmount, safeReplaced + safeUnreplaced)
+            const barHeight = (total / maxTotal) * innerHeight
+            const replacedHeight = (safeReplaced / maxTotal) * innerHeight
+            const x = left + ((index + 0.5) / Math.max(rows.length, 1)) * innerWidth
+            const width = Math.min(40, innerWidth / Math.max(rows.length, 1) * 0.55)
+            const baseY = top + innerHeight
+            const ratio = total > 0 ? (safeReplaced / total) * 100 : 0
+            return (
+              <g key={name}>
+                <title>{`${name}：总计 ${format(total)}，已替代 ${format(safeReplaced)}，未替代 ${format(safeUnreplaced)}，替代率 ${ratio.toFixed(1)}%`}</title>
+                <rect x={x - width / 2} y={baseY - barHeight} width={width} height={barHeight} rx="5" fill={UNDONE} />
+                <rect x={x - width / 2} y={baseY - replacedHeight} width={width} height={replacedHeight} rx="5" fill={DONE} />
+                <text x={x} y={Math.max(top + 10, baseY - barHeight - 6)} textAnchor="middle" className="fill-foreground text-[10px] font-semibold">{format(total)}</text>
+                <text x={x} y={plotHeight - 16} textAnchor="middle" className="fill-muted-foreground text-[10px]">{name}</text>
+              </g>
+            )
+          })}
+        </svg>
       </div>
     </div>
   )
