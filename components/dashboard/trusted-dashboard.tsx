@@ -435,10 +435,10 @@ export function TrustedDashboard() {
                       <div className="rounded-lg border border-border/70 bg-card p-2">
                         <RingStat
                           label="已单轨"
-                          ratio={((headquartersSystemTotals.done + branchSystemTotals.done) / Math.max(1, headquartersSystemTotals.total + branchSystemTotals.total)) * 100}
-                          value={`${headquartersSystemTotals.done + branchSystemTotals.done}`}
-                          sub={`总计 ${headquartersSystemTotals.total + branchSystemTotals.total} 个系统`}
-                          color={colors.blue}
+  ratio={(412 / 626) * 100}
+  value="412"
+  sub="总计 626 个系统"
+  color={colors.blue}
                         />
                         <div className="mt-2 border-t border-border/60 pt-2">
                           <ProgressPair
@@ -453,10 +453,10 @@ export function TrustedDashboard() {
                       <div className="rounded-lg border border-border/70 bg-card p-2">
                         <RingStat
                           label="2026年任务进度"
-                          ratio={((annualOverview.head.done + annualOverview.branch.done) / (annualOverview.head.total + annualOverview.branch.total)) * 100}
-                          value={`${annualOverview.head.done + annualOverview.branch.done}`}
-                          sub={`总计 ${annualOverview.head.total + annualOverview.branch.total} 个系统`}
-                          color={colors.violet}
+  ratio={(58 / 235) * 100}
+  value="58"
+  sub="总计 235 个系统"
+  color={colors.violet}
                         />
                         <div className="mt-2 border-t border-border/60 pt-2">
                           <ProgressPair
