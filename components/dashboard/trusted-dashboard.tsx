@@ -140,60 +140,35 @@ function CoreBars() {
 function ProductBars({ rows }: { rows: ProductProgressRow[] }) {
   const DONE = "#7dd3fc"
   const UNDONE = "#e8f4fd"
-  const max = Math.max(...productRows.map(([, n]) => n))
-  const niceMax = Math.ceil(max / 100) * 100
-  const chartHeight = 140
-  const ticks = [0, 0.25, 0.5, 0.75, 1].map((f) => Math.round(niceMax * f))
   return (
-    <div>
-      <div className="mb-1.5 flex items-center justify-end gap-3 text-[10px] text-muted-foreground">
-        <span className="flex items-center gap-1.5">
-          <i className="inline-block size-2.5 rounded-full" style={{ background: DONE }} />
-          已替代
-        </span>
-        <span className="flex items-center gap-1.5">
-          <i className="inline-block size-2.5 rounded-full" style={{ background: UNDONE }} />
-          未替代
-        </span>
+    <div className="space-y-2.5">
+      <div className="flex items-center justify-end gap-3 text-[10px] text-muted-foreground">
+        <span className="flex items-center gap-1.5"><i className="inline-block size-2.5 rounded-full" style={{ background: DONE }} />已替代</span>
+        <span className="flex items-center gap-1.5"><i className="inline-block size-2.5 rounded-full" style={{ background: UNDONE }} />未替代</span>
       </div>
-      <div className="flex gap-2">
-        <div className="flex flex-col justify-between text-right text-[9px] text-muted-foreground" style={{ height: chartHeight }}>
-          {ticks.slice().reverse().map((t) => (
-            <span key={t}>{t}</span>
-          ))}
-        </div>
-        <div className="min-w-0 flex-1">
-          <div className="relative border-l border-b border-border" style={{ height: chartHeight }}>
-            {ticks.map((t) => (
-              <div key={t} className="absolute left-0 right-0 border-t border-dashed border-border/50" style={{ bottom: `${(t / niceMax) * 100}%` }} />
-            ))}
-            <div className="absolute inset-x-0 bottom-0 top-0 grid grid-cols-9 items-end gap-1 px-2">
-              {rows.map(([name, amount, replaced, unreplaced]) => {
-                const ratio = amount > 0 ? (replaced / amount) * 100 : 0
-                const barHeight = Math.max(10, (amount / niceMax) * chartHeight)
-                return (
-                  <div key={name} className="group relative flex h-full min-w-0 items-end justify-center">
-                    <div className="pointer-events-none absolute bottom-full left-1/2 z-10 mb-2 hidden w-28 -translate-x-1/2 rounded border border-border bg-card p-1 text-[10px] shadow-lg group-hover:block">
-                      {name}
-                      <br />总量 {amount}，已替代 {replaced}，未替代 {unreplaced}
-                    </div>
-                    <div className="flex w-8 flex-col justify-end overflow-hidden rounded-t-md" style={{ height: `${barHeight}px` }}>
-                      <div className="flex items-center justify-center overflow-hidden text-[9px] font-bold text-slate-700" style={{ height: `${ratio}%`, background: DONE }}>{replaced}</div>
-                      <div className="flex items-center justify-center overflow-hidden text-[9px] font-bold text-slate-600" style={{ height: `${100 - ratio}%`, background: UNDONE }}>{amount - replaced}</div>
-                    </div>
-                  </div>
-                )
-              })}
+      {rows.map(([name, amount, replaced, unreplaced]) => {
+        const total = Math.max(amount, replaced + unreplaced, 0)
+        const ratio = total > 0 ? (replaced / total) * 100 : 0
+        return (
+          <div key={name} className="space-y-1">
+            <div className="flex items-center justify-between gap-3 text-xs">
+              <span className="min-w-0 truncate font-semibold text-foreground">{name}</span>
+              <span className="shrink-0 font-mono text-[10px] text-muted-foreground">
+                已替代 {replaced.toLocaleString()} / 总计 {total.toLocaleString()}（{ratio.toFixed(1)}%）
+              </span>
+            </div>
+            <div className="flex h-5 w-full overflow-hidden rounded-md bg-secondary/40" aria-label={`${name}替代进度`}>
+              <div className="flex items-center justify-center overflow-hidden text-[10px] font-bold text-slate-700" style={{ width: `${ratio}%`, background: DONE }}>
+                {replaced > 0 ? replaced.toLocaleString() : ""}
+              </div>
+              <div className="flex items-center justify-center overflow-hidden text-[10px] font-bold text-slate-600" style={{ width: `${Math.max(0, 100 - ratio)}%`, background: UNDONE }}>
+                {unreplaced > 0 ? unreplaced.toLocaleString() : ""}
+              </div>
             </div>
           </div>
-          <div className="grid grid-cols-9 gap-1 px-2 pt-1">
-            {productRows.map(([name]) => (
-              <span key={name} className="min-w-0 truncate text-center text-[10px] font-medium text-muted-foreground">{name}</span>
-            ))}
-          </div>
-          </div>
-        </div>
-      </div>
+        )
+      })}
+    </div>
   )
 }
 
