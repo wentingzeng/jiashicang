@@ -622,10 +622,10 @@ export function ProjectDashboard() {
           <Panel title="2026投产项目交付周期">
             <div className="grid items-center gap-3 lg:grid-cols-4">
               <div className="lg:col-span-1">
-                <ChartBox height={190}>
+                <ChartBox height={205}>
                   <ComposedChart
                     data={liveDeliveryData}
-                    margin={{ top: 12, right: 12, bottom: 20, left: 0 }}
+                    margin={{ top: 28, right: 12, bottom: 20, left: 0 }}
                   >
                     <CartesianGrid vertical={false} strokeDasharray="3 3" />
                     <XAxis dataKey="name" tick={{ fontSize: 9 }} />
