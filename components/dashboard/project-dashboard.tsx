@@ -256,9 +256,16 @@ function GaugeCard({
             strokeLinecap="round"
           />
           <text
-            x={100 + Math.cos(targetAngle) * 100}
-            y={100 - Math.sin(targetAngle) * 100 - 3}
-            textAnchor={targetPercent < 18 ? "start" : targetPercent > 82 ? "end" : "middle"}
+            x={100 + Math.cos(targetAngle) * (targetOuterRadius + 16)}
+            y={100 - Math.sin(targetAngle) * (targetOuterRadius + 16)}
+            textAnchor={
+              Math.cos(targetAngle) < -0.22
+                ? "end"
+                : Math.cos(targetAngle) > 0.22
+                  ? "start"
+                  : "middle"
+            }
+            dominantBaseline="middle"
             fill="#1e3a5f"
             fontSize="13"
             fontWeight="700"
