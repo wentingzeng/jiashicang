@@ -1,10 +1,26 @@
 "use client"
 
-import { useState } from "react"
+import { useEffect, useMemo, useState } from "react"
 import { BarChart3, ChevronUp } from "lucide-react"
 import { HeroBanner } from "@/components/dashboard/hero-banner"
 
 const colors = { blue: "#4ba8d8", violet: "#8494d8", teal: "#42bdb7", amber: "#e5b45c" }
+const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL ?? "http://localhost:8080"
+
+type BranchProgress = { id: number; statYear: number; branchName: string; includedSystemCount: number; singleTrackCount: number; remainingCount: number; singleTrackRate: number | null }
+type HeadquartersProgress = { id: number; statYear: number; departmentName: string; includedSystemCount: number; singleTrackCount: number; remainingCount: number; singleTrackRate: number | null }
+type MainframeProgress = { id: number; statYear: number; organizationName: string; notOfflineCount: number; offlineCount: number; offlineRate: number | null }
+type ApiState = { branch: BranchProgress[]; headquarters: HeadquartersProgress[]; mainframe: MainframeProgress[]; loading: boolean; error: string | null }
+
+type ProgressRow = [string, number, number]
+
+function numberOrZero(value: number | null | undefined) {
+  return typeof value === "number" && Number.isFinite(value) ? value : 0
+}
+
+function toProgressRows<T extends { remainingCount: number; includedSystemCount: number }>(rows: T[], name: (row: T) => string): ProgressRow[] {
+  return rows.map((row) => [name(row), numberOrZero(row.includedSystemCount), numberOrZero(row.remainingCount)])
+}
 const branchRows: Array<[string, number, number]> = [["南京分行", 9, 5], ["苏州分行", 6, 3], ["北京分行", 6, 4], ["上海分行", 5, 3], ["青岛分行", 5, 2], ["福州分行", 9, 6], ["深圳分行", 4, 2], ["西安分行", 6, 4]]
 const headRows: Array<[string, number, number]> = [["公司金融部\n数字支撑室", 4, 2], ["绿色金融部\n临客部", 4, 0], ["普惠金融部\n村镇服务", 4, 0], ["机构业务部", 5, 1], ["国际业务部\n贸易行管", 24, 9], ["投资银行部", 2, 1], ["零售金融部\n消费者权益保护办公室", 23, 8]]
 const productRows: Array<[string, number, number]> = [["操作系统", 420, 55.26], ["服务器", 180, 64.59], ["金融机具", 310, 38.64], ["数据库", 260, 73.04], ["中间件", 238, 58.4], ["网络设备", 225, 67.32], ["A4单色打印机", 198, 38.15], ["终端", 360, 61.2], ["存储", 142, 48.7]]
@@ -246,15 +262,15 @@ function SmallMachineChart({ rows }: { rows: Array<[string, number, number]> }) 
   )
 }
 
-function MachineOverview({ onSelect }: { onSelect: (view: "head" | "branch") => void }) {
+function MachineOverview({ onSelect, head, branch }: { onSelect: (view: "head" | "branch") => void; head: { done: number; total: number }; branch: { done: number; total: number } }) {
   return (
     <div className="grid gap-2 md:grid-cols-2">
       <button type="button" onClick={() => onSelect("head")} className="text-left transition hover:opacity-90">
-        <RingStat label="总行小型机下线进展" ratio={(machineOverview.head.done / machineOverview.head.total) * 100} value={`${machineOverview.head.done}`} sub={`未下线 ${machineOverview.head.total - machineOverview.head.done}`} color={colors.blue} />
+        <RingStat label="总行小型机下线进展" ratio={(head.done / Math.max(1, head.total)) * 100} value={`${head.done}`} sub={`未下线 ${head.total - head.done}`} color={colors.blue} />
         <p className="mt-1 text-[11px] text-muted-foreground">点击查看详情</p>
       </button>
       <button type="button" onClick={() => onSelect("branch")} className="text-left transition hover:opacity-90">
-        <RingStat label="分行小型机下线进展" ratio={(machineOverview.branch.done / machineOverview.branch.total) * 100} value={`${machineOverview.branch.done}`} sub={`未下线 ${machineOverview.branch.total - machineOverview.branch.done}`} color={colors.teal} />
+        <RingStat label="分行小型机下线进展" ratio={(branch.done / Math.max(1, branch.total)) * 100} value={`${branch.done}`} sub={`未下线 ${branch.total - branch.done}`} color={colors.teal} />
         <p className="mt-1 text-[11px] text-muted-foreground">点击查看详情</p>
       </button>
     </div>
@@ -271,7 +287,7 @@ function ProgressPair({
   return (
     <div className="grid gap-2 md:grid-cols-2">
       {items.map((item) => {
-        const ratio = (item.done / item.total) * 100
+        const ratio = item.total > 0 ? (item.done / item.total) * 100 : 0
         return (
           <button key={item.label} type="button" onClick={() => onSelect(item.view)} className="rounded-lg bg-secondary/40 px-2.5 py-2 text-left transition hover:bg-secondary/60">
             <div className="mb-1 flex items-center justify-between gap-2">
@@ -325,6 +341,46 @@ function DetailTable({ title, rows, branch, onBack }: { title: string; rows: Arr
 export function TrustedDashboard() {
   const [systemView, setSystemView] = useState<null | "head" | "branch" | "annual-head" | "annual-branch">(null)
   const [machineView, setMachineView] = useState<null | "head" | "branch">(null)
+  const [api, setApi] = useState<ApiState>({ branch: [], headquarters: [], mainframe: [], loading: true, error: null })
+
+  useEffect(() => {
+    const controller = new AbortController()
+    const fetchData = async () => {
+      try {
+        const [branchResponse, headquartersResponse, mainframeResponse] = await Promise.all([
+          fetch(`${API_BASE_URL}/api/trusted/branch-system-progress?statYear=2026`, { signal: controller.signal }),
+          fetch(`${API_BASE_URL}/api/trusted/headquarters-system-progress?statYear=2026`, { signal: controller.signal }),
+          fetch(`${API_BASE_URL}/api/trusted/mainframe-offline-progress?statYear=2026`, { signal: controller.signal }),
+        ])
+        if (!branchResponse.ok || !headquartersResponse.ok || !mainframeResponse.ok) throw new Error("信创接口请求失败")
+        const [branchJson, headquartersJson, mainframeJson] = await Promise.all([
+          branchResponse.json(), headquartersResponse.json(), mainframeResponse.json(),
+        ])
+        setApi({ branch: branchJson.data ?? [], headquarters: headquartersJson.data ?? [], mainframe: mainframeJson.data ?? [], loading: false, error: null })
+      } catch (error) {
+        if (error instanceof DOMException && error.name === "AbortError") return
+        setApi((current) => ({ ...current, loading: false, error: "信创数据暂时无法加载，当前显示页面默认数据" }))
+      }
+    }
+    void fetchData()
+    return () => controller.abort()
+  }, [])
+
+  const branchRowsFromApi = useMemo(() => toProgressRows(api.branch, (row) => row.branchName), [api.branch])
+  const headquartersRowsFromApi = useMemo(() => toProgressRows(api.headquarters, (row) => row.departmentName), [api.headquarters])
+  const mainframeRowsFromApi = useMemo(() => api.mainframe.map((row) => [row.organizationName, numberOrZero(row.notOfflineCount) + numberOrZero(row.offlineCount), numberOrZero(row.notOfflineCount)] as ProgressRow), [api.mainframe])
+  const branchMainframeRows = useMemo(() => mainframeRowsFromApi.filter(([name]) => name !== "总行"), [mainframeRowsFromApi])
+  const headquartersMainframeRows = useMemo(() => mainframeRowsFromApi.filter(([name]) => name === "总行"), [mainframeRowsFromApi])
+  const branchSystemTotals = useMemo(() => api.branch.reduce((sum, row) => ({ done: sum.done + numberOrZero(row.singleTrackCount), total: sum.total + numberOrZero(row.includedSystemCount) }), { done: 0, total: 0 }), [api.branch])
+  const headquartersSystemTotals = useMemo(() => api.headquarters.reduce((sum, row) => ({ done: sum.done + numberOrZero(row.singleTrackCount), total: sum.total + numberOrZero(row.includedSystemCount) }), { done: 0, total: 0 }), [api.headquarters])
+  const mainframeHead = api.mainframe.find((row) => row.organizationName === "总行")
+  const mainframeBranchTotals = api.mainframe.filter((row) => row.organizationName !== "总行").reduce((sum, row) => ({ done: sum.done + numberOrZero(row.offlineCount), total: sum.total + numberOrZero(row.offlineCount) + numberOrZero(row.notOfflineCount) }), { done: 0, total: 0 })
+  const mainframeHeadTotals = mainframeHead ? { done: numberOrZero(mainframeHead.offlineCount), total: numberOrZero(mainframeHead.offlineCount) + numberOrZero(mainframeHead.notOfflineCount) } : { done: 0, total: 0 }
+
+  const systemHeadRows = headquartersRowsFromApi.length ? headquartersRowsFromApi : headRows
+  const systemBranchRows = branchRowsFromApi.length ? branchRowsFromApi : branchRows
+  const machineHeadRows = headquartersMainframeRows.length ? headquartersMainframeRows : headMachineRows
+  const machineBranchRows = branchMainframeRows.length ? branchMainframeRows : branchMachineRows
   return (
     <main className="min-h-screen bg-background text-foreground">
       <div className="mx-auto max-w-[1800px] px-4 pb-5 md:px-6">
@@ -339,7 +395,7 @@ export function TrustedDashboard() {
                 <DetailTable
                   key={`system-detail-${systemView}`}
                   title={systemView === "head" ? "总行系统改造进展明细" : systemView === "branch" ? "分行系统改造进展明细" : systemView === "annual-head" ? "总行年度完成明细" : "分行年度完成明细"}
-                  rows={systemView === "head" ? headRows : systemView === "branch" ? branchRows : systemView === "annual-head" ? annualHeadRows : annualBranchRows}
+                  rows={systemView === "head" ? systemHeadRows : systemView === "branch" ? systemBranchRows : systemView === "annual-head" ? annualHeadRows : annualBranchRows}
                   branch={systemView === "branch" || systemView === "annual-branch"}
                   onBack={() => setSystemView(null)}
                 />
@@ -350,17 +406,17 @@ export function TrustedDashboard() {
                       <div className="rounded-lg border border-border/70 bg-card p-2">
                         <RingStat
                           label="已单轨"
-                          ratio={((412 + 214) / (626 + 380)) * 100}
-                          value={`${412 + 214}`}
-                          sub={`总计 ${626 + 380} 个系统`}
+                          ratio={((headquartersSystemTotals.done + branchSystemTotals.done) / Math.max(1, headquartersSystemTotals.total + branchSystemTotals.total)) * 100}
+                          value={`${headquartersSystemTotals.done + branchSystemTotals.done}`}
+                          sub={`总计 ${headquartersSystemTotals.total + branchSystemTotals.total} 个系统`}
                           color={colors.blue}
                         />
                         <div className="mt-2 border-t border-border/60 pt-2">
                           <ProgressPair
                             onSelect={setSystemView}
                             items={[
-                              { label: "总行系统进展", done: 412, total: 626, color: colors.blue, view: "head" },
-                              { label: "分行系统进展", done: 214, total: 380, color: colors.teal, view: "branch" },
+                              { label: "总行系统进展", done: headquartersSystemTotals.done, total: headquartersSystemTotals.total, color: colors.blue, view: "head" },
+                              { label: "分行系统进展", done: branchSystemTotals.done, total: branchSystemTotals.total, color: colors.teal, view: "branch" },
                             ]}
                           />
                         </div>
@@ -421,10 +477,10 @@ export function TrustedDashboard() {
                         返回小型机下线进展
                       </button>
                       <p className="text-xs font-semibold text-foreground">{machineView === "head" ? "总行各部门下线进展" : "分行各部门下线进展"}</p>
-                      <SmallMachineChart rows={machineView === "head" ? headMachineRows : branchMachineRows} />
+                      <SmallMachineChart rows={machineView === "head" ? machineHeadRows : machineBranchRows} />
                     </div>
                   ) : (
-                    <MachineOverview onSelect={setMachineView} />
+                    <MachineOverview onSelect={setMachineView} head={mainframeHeadTotals} branch={mainframeBranchTotals} />
                   )}
                 </Panel>
                 <Panel title="其他关键品类产品存量替代进度">
