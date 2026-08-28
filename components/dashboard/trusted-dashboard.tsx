@@ -347,7 +347,7 @@ function DetailTable({ title, rows, branch, onBack }: { title: string; rows: Arr
       </button>
       <div className="mx-auto max-h-[420px] w-full max-w-[620px] overflow-y-auto rounded-xl border border-primary/20 bg-background/70 shadow-sm">
         <table className="w-full table-fixed text-left text-[11px]">
-          <thead className="sticky top-0 z-10 border-b border-primary/15 bg-primary/5 text-primary">
+          <thead className="sticky top-0 z-20 border-b border-primary/15 bg-background text-primary shadow-[0_2px_4px_rgba(15,23,42,0.06)]">
             <tr>
               <th className="w-12 px-2 py-2 font-bold">序号</th>
               <th className="px-2 py-2 font-bold">{branch ? "分行名称" : "所属部门"}</th>
