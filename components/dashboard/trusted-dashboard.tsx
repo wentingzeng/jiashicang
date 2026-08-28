@@ -140,34 +140,62 @@ function CoreBars() {
 function ProductBars({ rows }: { rows: ProductProgressRow[] }) {
   const DONE = "#7dd3fc"
   const UNDONE = "#e8f4fd"
+  const maxTotal = Math.max(...rows.map(([, amount, replaced, unreplaced]) => {
+    const safeAmount = Number(amount ?? 0)
+    const safeReplaced = Number(replaced ?? 0)
+    const safeUnreplaced = Number(unreplaced ?? 0)
+    return Math.max(safeAmount, safeReplaced + safeUnreplaced, 0)
+  }), 1)
+  const chartHeight = 240
+  const ticks = [maxTotal, Math.round(maxTotal / 2), 0]
+
   return (
-    <div className="space-y-2.5">
+    <div className="space-y-3">
       <div className="flex items-center justify-end gap-3 text-[10px] text-muted-foreground">
         <span className="flex items-center gap-1.5"><i className="inline-block size-2.5 rounded-full" style={{ background: DONE }} />已替代</span>
         <span className="flex items-center gap-1.5"><i className="inline-block size-2.5 rounded-full" style={{ background: UNDONE }} />未替代</span>
       </div>
-      {rows.map(([name, amount, replaced, unreplaced]) => {
-        const total = Math.max(amount, replaced + unreplaced, 0)
-        const ratio = total > 0 ? (replaced / total) * 100 : 0
-        return (
-          <div key={name} className="space-y-1">
-            <div className="flex items-center justify-between gap-3 text-xs">
-              <span className="min-w-0 truncate font-semibold text-foreground">{name}</span>
-              <span className="shrink-0 font-mono text-[10px] text-muted-foreground">
-                已替代 {replaced.toLocaleString()} / 总计 {total.toLocaleString()}（{ratio.toFixed(1)}%）
-              </span>
-            </div>
-            <div className="flex h-5 w-full overflow-hidden rounded-md bg-secondary/40" aria-label={`${name}替代进度`}>
-              <div className="flex items-center justify-center overflow-hidden text-[10px] font-bold text-slate-700" style={{ width: `${ratio}%`, background: DONE }}>
-                {replaced > 0 ? replaced.toLocaleString() : ""}
-              </div>
-              <div className="flex items-center justify-center overflow-hidden text-[10px] font-bold text-slate-600" style={{ width: `${Math.max(0, 100 - ratio)}%`, background: UNDONE }}>
-                {unreplaced > 0 ? unreplaced.toLocaleString() : ""}
-              </div>
-            </div>
+      <div className="flex gap-2">
+        <div className="flex flex-col justify-between pb-7 text-right text-[9px] text-muted-foreground" style={{ height: chartHeight }}>
+          {ticks.map((tick) => <span key={tick}>{tick.toLocaleString()}</span>)}
+        </div>
+        <div className="relative min-w-0 flex-1 border-b border-l border-border" style={{ height: chartHeight }}>
+          {ticks.map((tick) => (
+            <div key={tick} className="pointer-events-none absolute left-0 right-0 border-t border-dashed border-border/50" style={{ top: `${(1 - tick / maxTotal) * (chartHeight - 28)}px` }} />
+          ))}
+          <div className="absolute inset-x-0 bottom-0 flex h-[calc(100%-28px)] items-end justify-around gap-1 px-2">
+            {rows.map(([name, amount, replaced, unreplaced]) => {
+              const safeAmount = Number(amount ?? 0)
+              const safeReplaced = Number(replaced ?? 0)
+              const safeUnreplaced = Number(unreplaced ?? 0)
+              const total = Math.max(safeAmount, safeReplaced + safeUnreplaced, 0)
+              const totalHeight = total > 0 ? Math.max(8, (total / maxTotal) * (chartHeight - 28)) : 0
+              const replacedHeight = total > 0 ? (safeReplaced / total) * totalHeight : 0
+              const unreplacedHeight = Math.max(0, totalHeight - replacedHeight)
+              const ratio = total > 0 ? (safeReplaced / total) * 100 : 0
+              return (
+                <div key={name} className="group relative flex h-full min-w-0 flex-1 flex-col items-center justify-end">
+                  <div className="pointer-events-none absolute bottom-full z-20 mb-2 hidden w-32 -translate-x-1/2 rounded-md border border-border bg-card p-2 text-[10px] leading-4 text-foreground shadow-lg group-hover:block">
+                    <p className="font-semibold">{name}</p>
+                    <p>总计：{total.toLocaleString()}</p>
+                    <p>已替代：{replaced.toLocaleString()}</p>
+                    <p>未替代：{safeUnreplaced.toLocaleString()}</p>
+                    <p>替代率：{ratio.toFixed(1)}%</p>
+                  </div>
+                  <span className="mb-1 font-mono text-[9px] font-bold text-foreground">{total.toLocaleString()}</span>
+                  <div className="flex w-7 flex-col overflow-hidden rounded-t-md" style={{ height: `${totalHeight}px` }} aria-label={`${name}替代进度`}>
+                    <div style={{ height: `${unreplacedHeight}px`, background: UNDONE }} />
+                    <div className="flex items-center justify-center overflow-hidden" style={{ height: `${replacedHeight}px`, background: DONE }}>
+                      {replacedHeight > 18 && <span className="font-mono text-[9px] font-bold text-slate-700">{replaced.toLocaleString()}</span>}
+                    </div>
+                  </div>
+                  <span className="mt-2 w-full truncate text-center text-[9px] text-muted-foreground" title={name}>{name}</span>
+                </div>
+              )
+            })}
           </div>
-        )
-      })}
+        </div>
+      </div>
     </div>
   )
 }
@@ -175,8 +203,8 @@ function ProductBars({ rows }: { rows: ProductProgressRow[] }) {
 function SmallMachineChart({ rows }: { rows: Array<[string, number, number]> }) {
   const UNDONE = "#63b3ed"
   const DONE = "#38b2ac"
-  const max = Math.max(...rows.map(([, total]) => total))
-  const niceMax = Math.ceil(max / 180) * 180
+  const max = Math.max(...rows.map(([, total]) => numberOrZero(total)), 0)
+  const niceMax = Math.max(180, Math.ceil(max / 180) * 180)
   const chartHeight = 96
   const ticks = [0, niceMax / 2, niceMax]
   return (
