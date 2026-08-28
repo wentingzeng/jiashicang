@@ -11,7 +11,7 @@ type BranchProgress = { id: number; statYear: number; branchName: string; includ
 type HeadquartersProgress = { id: number; statYear: number; departmentName: string; includedSystemCount: number; singleTrackCount: number; remainingCount: number; singleTrackRate: number | null }
 type MainframeProgress = { id: number; statYear: number; organizationName: string; notOfflineCount: number; offlineCount: number; offlineRate: number | null }
 type ProductReplacementProgress = { id: number; categoryName: string; replacedCount: number; unreplacedCount: number; totalCount: number; statYear: number }
-type ApiState = { branch: BranchProgress[]; headquarters: HeadquartersProgress[]; mainframe: MainframeProgress[]; products: ProductReplacementProgress[]; loading: boolean; error: string | null }
+type ApiState = { branch: BranchProgress[]; headquarters: HeadquartersProgress[]; mainframe: MainframeProgress[]; products: ProductReplacementProgress[]; loading: boolean; error: string | null; source: "mock" | "api" }
 
 type ProgressRow = [string, number, number]
 type ProductProgressRow = [string, number, number, number]
@@ -343,7 +343,7 @@ function DetailTable({ title, rows, branch, onBack }: { title: string; rows: Arr
 export function TrustedDashboard() {
   const [systemView, setSystemView] = useState<null | "head" | "branch" | "annual-head" | "annual-branch">(null)
   const [machineView, setMachineView] = useState<null | "head" | "branch">(null)
-  const [api, setApi] = useState<ApiState>({ branch: [], headquarters: [], mainframe: [], products: [], loading: true, error: null })
+  const [api, setApi] = useState<ApiState>({ branch: [], headquarters: [], mainframe: [], products: [], loading: true, error: null, source: "mock" })
 
   useEffect(() => {
     const controller = new AbortController()
@@ -359,10 +359,15 @@ export function TrustedDashboard() {
         const [branchJson, headquartersJson, mainframeJson, productsJson] = await Promise.all([
           branchResponse.json(), headquartersResponse.json(), mainframeResponse.json(), productsResponse.json(),
         ])
-        setApi({ branch: branchJson.data ?? [], headquarters: headquartersJson.data ?? [], mainframe: mainframeJson.data ?? [], products: productsJson.data ?? [], loading: false, error: null })
+        const branch = branchJson.data ?? []
+        const headquarters = headquartersJson.data ?? []
+        const mainframe = mainframeJson.data ?? []
+        const products = productsJson.data ?? []
+        const hasApiData = branch.length > 0 || headquarters.length > 0 || mainframe.length > 0 || products.length > 0
+        setApi({ branch, headquarters, mainframe, products, loading: false, error: hasApiData ? null : "接口返回为空，当前显示页面默认数据", source: hasApiData ? "api" : "mock" })
       } catch (error) {
         if (error instanceof DOMException && error.name === "AbortError") return
-        setApi((current) => ({ ...current, loading: false, error: "信创数据暂时无法加载，当前显示页面默认数据" }))
+        setApi((current) => ({ ...current, loading: false, source: "mock", error: "信创接口未连接，当前显示 Mock 数据" }))
       }
     }
     void fetchData()
@@ -374,21 +379,29 @@ export function TrustedDashboard() {
   const mainframeRowsFromApi = useMemo(() => api.mainframe.map((row) => [row.organizationName, numberOrZero(row.notOfflineCount) + numberOrZero(row.offlineCount), numberOrZero(row.notOfflineCount)] as ProgressRow), [api.mainframe])
   const branchMainframeRows = useMemo(() => mainframeRowsFromApi.filter(([name]) => name !== "总行"), [mainframeRowsFromApi])
   const headquartersMainframeRows = useMemo(() => mainframeRowsFromApi.filter(([name]) => name === "总行"), [mainframeRowsFromApi])
-  const branchSystemTotals = useMemo(() => api.branch.reduce((sum, row) => ({ done: sum.done + numberOrZero(row.singleTrackCount), total: sum.total + numberOrZero(row.includedSystemCount) }), { done: 0, total: 0 }), [api.branch])
-  const headquartersSystemTotals = useMemo(() => api.headquarters.reduce((sum, row) => ({ done: sum.done + numberOrZero(row.singleTrackCount), total: sum.total + numberOrZero(row.includedSystemCount) }), { done: 0, total: 0 }), [api.headquarters])
+  const branchSystemTotals = useMemo(() => api.source === "api" ? api.branch.reduce((sum, row) => ({ done: sum.done + numberOrZero(row.singleTrackCount), total: sum.total + numberOrZero(row.includedSystemCount) }), { done: 0, total: 0 }) : { done: 35, total: 50 }, [api.branch, api.source])
+  const headquartersSystemTotals = useMemo(() => api.source === "api" ? api.headquarters.reduce((sum, row) => ({ done: sum.done + numberOrZero(row.singleTrackCount), total: sum.total + numberOrZero(row.includedSystemCount) }), { done: 0, total: 0 }) : { done: 38, total: 68 }, [api.headquarters, api.source])
   const mainframeHead = api.mainframe.find((row) => row.organizationName === "总行")
   const mainframeBranchTotals = api.mainframe.filter((row) => row.organizationName !== "总行").reduce((sum, row) => ({ done: sum.done + numberOrZero(row.offlineCount), total: sum.total + numberOrZero(row.offlineCount) + numberOrZero(row.notOfflineCount) }), { done: 0, total: 0 })
   const mainframeHeadTotals = mainframeHead ? { done: numberOrZero(mainframeHead.offlineCount), total: numberOrZero(mainframeHead.offlineCount) + numberOrZero(mainframeHead.notOfflineCount) } : { done: 0, total: 0 }
   const productRowsFromApi = useMemo(() => api.products.map((row) => [row.categoryName, numberOrZero(row.totalCount), numberOrZero(row.replacedCount), numberOrZero(row.unreplacedCount)] as ProductProgressRow), [api.products])
 
-  const systemHeadRows = headquartersRowsFromApi.length ? headquartersRowsFromApi : headRows
-  const systemBranchRows = branchRowsFromApi.length ? branchRowsFromApi : branchRows
-  const machineHeadRows = headquartersMainframeRows.length ? headquartersMainframeRows : headMachineRows
-  const machineBranchRows = branchMainframeRows.length ? branchMainframeRows : branchMachineRows
+  const useApiData = api.source === "api"
+  const systemHeadRows = useApiData ? headquartersRowsFromApi : headRows
+  const systemBranchRows = useApiData ? branchRowsFromApi : branchRows
+  const machineHeadRows = useApiData ? headquartersMainframeRows : headMachineRows
+  const machineBranchRows = useApiData ? branchMainframeRows : branchMachineRows
+  const productDisplayRows = useApiData ? productRowsFromApi : productRows
   return (
     <main className="min-h-screen bg-background text-foreground">
       <div className="mx-auto max-w-[1800px] px-4 pb-5 md:px-6">
         <HeroBanner title="信创管理驾驶舱" subtitle="信创改造 · 国产替代 · 系统适配 · 平稳迁移" />
+        <div className="mb-2 flex items-center justify-end gap-2 text-[11px]">
+          <span className={`rounded-full px-2 py-0.5 font-semibold ${useApiData ? "bg-emerald-100 text-emerald-700" : "bg-amber-100 text-amber-700"}`}>
+            {useApiData ? "真实接口数据" : "Mock 演示数据"}
+          </span>
+          {api.error && <span className="text-muted-foreground">{api.error}</span>}
+        </div>
         <div className="grid items-stretch gap-3 lg:grid-cols-2">
           <div className="flex min-w-0 flex-col gap-3">
             <div className="flex h-full flex-col rounded-xl border-2 border-primary/70 bg-card p-2.5">
@@ -489,7 +502,7 @@ export function TrustedDashboard() {
                 </Panel>
                 <Panel title="其他关键品类产品存量替代进度">
                   <p className="mb-1.5 text-xs font-semibold">各品类进度</p>
-                  <ProductBars rows={productRowsFromApi.length ? productRowsFromApi : productRows} />
+                  <ProductBars rows={productDisplayRows} />
                 </Panel>
               </div>
             </div>
