@@ -240,16 +240,17 @@ function ProductBars({ rows }: { rows: ProductProgressRow[] }) {
             const ratio = total > 0 ? (safeReplaced / total) * 100 : 0
             const x = left + ((hoveredIndex + 0.5) / Math.max(rows.length, 1)) * innerWidth
             const barHeight = (total / maxTotal) * innerHeight
+            const tooltipX = Math.max(100, Math.min(plotWidth - 100, x))
+            const tooltipY = Math.max(18, top + innerHeight - barHeight - 8)
             return (
-              <foreignObject x={Math.max(4, Math.min(plotWidth - 192, x - 96))} y={Math.max(4, top + innerHeight - barHeight - 92)} width="188" height="86" className="pointer-events-none overflow-visible">
-                <div className="w-[184px] whitespace-nowrap rounded-md border border-border bg-card p-2 text-left text-[10px] leading-4 text-foreground shadow-lg">
-                  <div className="font-semibold">{name}</div>
-                  <div>已替代：{format(safeReplaced)}</div>
-                  <div>未替代：{format(safeUnreplaced)}</div>
-                  <div>替代率：{ratio.toFixed(1)}%</div>
-                  <div>总数量：{format(total)}</div>
-                </div>
-              </foreignObject>
+              <g transform={`translate(${tooltipX} ${tooltipY})`} pointerEvents="none">
+                <rect x="-94" y="-4" width="188" height="86" rx="6" fill="white" stroke="#d7e2ea" strokeWidth="1" />
+                <text x="-82" y="12" className="fill-foreground text-[10px] font-semibold">{name}</text>
+                <text x="-82" y="28" className="fill-foreground text-[10px]">已替代：{format(safeReplaced)}</text>
+                <text x="-82" y="44" className="fill-foreground text-[10px]">未替代：{format(safeUnreplaced)}</text>
+                <text x="-82" y="60" className="fill-foreground text-[10px]">替代率：{ratio.toFixed(1)}%</text>
+                <text x="-82" y="76" className="fill-foreground text-[10px]">总数量：{format(total)}</text>
+              </g>
             )
           })()}
         </svg>
