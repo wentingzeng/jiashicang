@@ -538,7 +538,6 @@ export function TrustedDashboard() {
               </div>
               <div className="flex flex-col gap-4">
                 <Panel title="产品替代进度">
-                  <p className="mb-1.5 text-xs font-semibold">各品类进度</p>
                   <ProductBars rows={productDisplayRows} />
                 </Panel>
                 <Panel title="麒麟界面推广进度">
