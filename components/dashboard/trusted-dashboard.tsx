@@ -219,7 +219,8 @@ function SmallMachineChart({ rows }: { rows: Array<[string, number, number]> }) 
   const UNDONE = "#63b3ed"
   const DONE = "#38b2ac"
   const max = Math.max(...rows.map(([, total]) => numberOrZero(total)), 0)
-  const niceMax = Math.max(180, Math.ceil(max / 180) * 180)
+  const tickStep = max <= 10 ? 2 : max <= 50 ? 10 : max <= 200 ? 50 : 100
+  const niceMax = Math.max(tickStep, Math.ceil(max / tickStep) * tickStep)
   const chartHeight = 96
   const ticks = [0, niceMax / 2, niceMax]
   return (
@@ -254,7 +255,7 @@ function SmallMachineChart({ rows }: { rows: Array<[string, number, number]> }) 
                     <div className="pointer-events-none absolute bottom-full z-20 mb-2 hidden w-28 -translate-x-1/2 rounded-md border border-border bg-card p-2 text-[10px] leading-4 text-foreground shadow-lg group-hover:block">
                       <p className="font-semibold">{name}</p>
                       <p>总数：{total}</p>
-                      <p>已���线：{done}</p>
+                      <p>已�����线：{done}</p>
                       <p>未下线：{total - done}</p>
                     </div>
                     <span className="mb-1 font-mono text-[11px] font-bold text-foreground">{total}</span>
