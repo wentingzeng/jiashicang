@@ -163,7 +163,7 @@ function ProductBars({ rows }: { rows: ProductProgressRow[] }) {
         <span className="flex items-center gap-1.5"><i className="inline-block size-2.5 rounded-full" style={{ background: UNDONE }} />未替代</span>
       </div>
       <div className="overflow-x-auto">
-        <svg viewBox={`0 0 ${plotWidth} ${plotHeight}`} className="h-auto min-h-[240px] w-full min-w-[680px]" role="img" aria-label="其他关键品类产品存量替代进度">
+        <svg viewBox={`0 0 ${plotWidth} ${plotHeight}`} className="h-auto min-h-[240px] w-full min-w-[680px]" role="img" aria-label="关键品类产品替代进度">
           {ticks.map((tick) => {
             const y = top + innerHeight - (tick / maxTotal) * innerHeight
             return (
@@ -190,11 +190,11 @@ function ProductBars({ rows }: { rows: ProductProgressRow[] }) {
                 <title>{`${name}：总计 ${format(total)}，已替代 ${format(safeReplaced)}，未替代 ${format(safeUnreplaced)}，替代率 ${ratio.toFixed(1)}%`}</title>
                 <rect x={x - width / 2} y={baseY - barHeight} width={width} height={barHeight} rx="5" fill={UNDONE} />
                 <rect x={x - width / 2} y={baseY - replacedHeight} width={width} height={replacedHeight} rx="5" fill={DONE} />
-                {replacedHeight >= 18 && (
+                {replacedHeight >= 18 && barHeight >= 36 && (
                   <text x={x} y={baseY - replacedHeight / 2 + 3} textAnchor="middle" className="fill-sky-950 text-[9px] font-semibold">{format(safeReplaced)}</text>
                 )}
-                {barHeight - replacedHeight >= 18 && (
-                  <text x={x} y={baseY - replacedHeight - (barHeight - replacedHeight) / 2 + 3} textAnchor="middle" className="fill-slate-700 text-[9px] font-semibold">{format(safeUnreplaced)}</text>
+                {(barHeight - replacedHeight >= 18 || (barHeight < 36 && safeUnreplaced > 0)) && (
+                  <text x={x} y={baseY - (barHeight - replacedHeight) / 2 + 3} textAnchor="middle" className="fill-slate-700 text-[9px] font-semibold">{format(safeUnreplaced)}</text>
                 )}
                 <text x={x} y={plotHeight - 16} textAnchor="middle" className="fill-muted-foreground text-[10px]">{name}</text>
                 <foreignObject x={Math.max(4, Math.min(plotWidth - 188, x - 94))} y={Math.max(4, baseY - barHeight - 88)} width="184" height="80" className="pointer-events-none overflow-visible opacity-0 transition-opacity group-hover:opacity-100">
@@ -336,10 +336,10 @@ function DetailTable({ title, rows, branch, onBack }: { title: string; rows: Arr
         <table className="w-full text-left text-xs">
           <thead className="sticky top-0 border-b border-border bg-card text-muted-foreground">
             <tr>
-              <th className="px-2 py-1.5">序号</th>
-              <th className="px-2 py-1.5">{branch ? "分行名称" : "所属部门"}</th>
-              <th className="px-2 py-1.5 text-right">总数</th>
-              <th className="px-2 py-1.5 text-right">剩余</th>
+              <th className="px-1.5 py-1.5">序号</th>
+              <th className="px-1.5 py-1.5">{branch ? "分行名称" : "所属部门"}</th>
+              <th className="px-1.5 py-1.5 text-right">总数</th>
+              <th className="px-1.5 py-1.5 text-right">剩余</th>
             </tr>
           </thead>
           <tbody className="divide-y divide-border/60">
@@ -512,7 +512,7 @@ export function TrustedDashboard() {
                     <MachineOverview onSelect={setMachineView} head={mainframeHeadTotals} branch={mainframeBranchTotals} />
                   )}
                 </Panel>
-                <Panel title="其他关键品类产品存量替代进度">
+                <Panel title="关键品类产品替代进度">
                   <p className="mb-1.5 text-xs font-semibold">各品类进度</p>
                   <ProductBars rows={productDisplayRows} />
                 </Panel>
