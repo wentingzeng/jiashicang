@@ -260,7 +260,7 @@ function GaugeCard({
             y={100 - Math.sin(targetAngle) * 100 - 3}
             textAnchor={targetPercent < 18 ? "start" : targetPercent > 82 ? "end" : "middle"}
             fill="#1e3a5f"
-            fontSize="10"
+            fontSize="13"
             fontWeight="700"
           >
             {progress}
