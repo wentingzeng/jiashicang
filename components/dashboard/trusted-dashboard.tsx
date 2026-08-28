@@ -145,11 +145,11 @@ function ProductBars({ rows }: { rows: ProductProgressRow[] }) {
   const DONE = "#7dd3fc"
   const UNDONE = "#e8f4fd"
   const plotWidth = 760
-  const plotHeight = 300
+  const plotHeight = 260
   const left = 58
   const right = 12
   const top = 12
-  const bottom = 104
+  const bottom = 48
   const innerWidth = plotWidth - left - right
   const innerHeight = plotHeight - top - bottom
   const maxTotal = Math.max(...rows.map(([, amount, replaced, unreplaced]) => Math.max(numberOrZero(amount), numberOrZero(replaced) + numberOrZero(unreplaced))), 1)
@@ -503,7 +503,7 @@ export function TrustedDashboard() {
                     <div className="flex flex-col gap-2">
                       <button type="button" onClick={() => setMachineView(null)} className="flex w-fit items-center gap-1 rounded-md border border-border/70 bg-secondary/40 px-2 py-1 text-[11px] font-semibold text-muted-foreground hover:bg-secondary/70">
                         <ChevronUp className="size-3.5 -rotate-90" />
-                        返回小型机下线进展
+                        返回小型机下线进��
                       </button>
                       <p className="text-xs font-semibold text-foreground">{machineView === "head" ? "总行各部门��线进展" : "���行各部门下线进展"}</p>
                       <SmallMachineChart rows={machineView === "head" ? machineHeadRows : machineBranchRows} />
