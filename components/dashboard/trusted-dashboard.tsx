@@ -190,17 +190,11 @@ function ProductBars({ rows }: { rows: ProductProgressRow[] }) {
                 <title>{`${name}：总�� ${format(total)}，已替代 ${format(safeReplaced)}，未替代 ${format(safeUnreplaced)}，替代率 ${ratio.toFixed(1)}%`}</title>
                 <rect x={x - width / 2} y={baseY - barHeight} width={width} height={barHeight} rx="5" fill={UNDONE} />
                 <rect x={x - width / 2} y={baseY - replacedHeight} width={width} height={replacedHeight} rx="5" fill={DONE} />
-                {replacedHeight >= 24 && barHeight - replacedHeight >= 24 && (
+                {replacedHeight >= 24 && safeReplaced > 0 && (
                   <text x={x} y={baseY - replacedHeight / 2 + 3} textAnchor="middle" className="fill-sky-950 text-[8px] font-semibold">{format(safeReplaced)}</text>
                 )}
-                {barHeight - replacedHeight >= 24 && (
-                  <text x={x} y={baseY - (barHeight - replacedHeight) / 2 + 3} textAnchor="middle" className="fill-slate-700 text-[8px] font-semibold">{format(safeUnreplaced)}</text>
-                )}
-                {barHeight - replacedHeight < 24 && replacedHeight >= 24 && (
-                  <text x={x} y={baseY - replacedHeight / 2 + 3} textAnchor="middle" className="fill-sky-950 text-[8px] font-semibold">{format(safeReplaced)}</text>
-                )}
-                {barHeight - replacedHeight < 24 && replacedHeight < 24 && safeUnreplaced > 0 && (
-                  <text x={x} y={baseY - (barHeight - replacedHeight) / 2 + 3} textAnchor="middle" className="fill-slate-700 text-[8px] font-semibold">{format(safeUnreplaced)}</text>
+                {barHeight - replacedHeight >= 24 && safeUnreplaced > 0 && (
+                  <text x={x} y={baseY - replacedHeight - (barHeight - replacedHeight) / 2 + 3} textAnchor="middle" className="fill-slate-700 text-[8px] font-semibold">{format(safeUnreplaced)}</text>
                 )}
                 <text x={x} y={plotHeight - 16} textAnchor="middle" className="fill-muted-foreground text-[10px]">{name}</text>
                 <foreignObject x={Math.max(4, Math.min(plotWidth - 188, x - 94))} y={Math.max(4, baseY - barHeight - 88)} width="184" height="80" className="pointer-events-none overflow-visible opacity-0 transition-opacity group-hover:opacity-100">
