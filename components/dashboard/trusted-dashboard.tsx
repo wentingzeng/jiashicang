@@ -456,7 +456,7 @@ export function TrustedDashboard() {
   const systemHeadRows = sortProgressRows(useApiData ? headquartersRowsFromApi : headRows)
   const systemBranchRows = sortProgressRows(useApiData ? branchRowsFromApi : branchRows)
   const machineHeadRows = useApiData ? headquartersMainframeRows : headMachineRows
-  const machineBranchRows = useApiData ? branchMainframeRows : branchMachineRows
+  const machineBranchRows = [...(useApiData ? branchMainframeRows : branchMachineRows)].sort((a, b) => numberOrZero(b[1]) - numberOrZero(a[1]))
   const productDisplayRows = sortProductRows(useApiData ? productRowsFromApi : productRows.map(([name, total, replacedRate]) => [name, total, Math.round(total * replacedRate / 100), total - Math.round(total * replacedRate / 100)] as ProductProgressRow))
   return (
     <main className="min-h-screen bg-background text-foreground">
