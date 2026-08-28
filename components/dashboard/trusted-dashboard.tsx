@@ -301,7 +301,7 @@ function SmallMachineChart({ rows }: { rows: Array<[string, number, number]> }) 
                     <div className="pointer-events-none absolute bottom-full z-20 mb-2 hidden w-28 -translate-x-1/2 rounded-md border border-border bg-card p-2 text-[10px] leading-4 text-foreground shadow-lg group-hover:block">
                       <p className="font-semibold">{name}</p>
                       <p>总数：{total}</p>
-                      <p>已�����线：{done}</p>
+                      <p>已下线：{done}</p>
                       <p>未下线：{total - done}</p>
                     </div>
                     <span className="mb-1 font-mono text-[11px] font-bold text-foreground">{total}</span>
