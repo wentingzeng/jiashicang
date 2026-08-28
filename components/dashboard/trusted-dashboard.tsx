@@ -199,7 +199,7 @@ function ProductBars({ rows }: { rows: ProductProgressRow[] }) {
                   const unreplacedLabelY = isPriorityCategory
                     ? baseY - replacedHeight - unreplacedHeight / 2 + (isPriorityCategory && /存储设备|存储/.test(name) ? -2 : 4)
                     : baseY - barHeight - 4
-                  const replacedLabelClass = /数据库/.test(name)
+                  const replacedLabelClass = /数据库|存储设备|存储/.test(name)
                     ? "fill-slate-900 text-[9px] font-semibold"
                     : isPriorityCategory
                       ? "fill-white text-[9px] font-semibold"
