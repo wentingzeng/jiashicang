@@ -186,7 +186,19 @@ function ProductBars({ rows }: { rows: ProductProgressRow[] }) {
                 <title>{`${name}：总计 ${format(total)}，已替代 ${format(safeReplaced)}，未替代 ${format(safeUnreplaced)}，替代率 ${ratio.toFixed(1)}%`}</title>
                 <rect x={x - width / 2} y={baseY - barHeight} width={width} height={barHeight} rx="5" fill={UNDONE} />
                 <rect x={x - width / 2} y={baseY - replacedHeight} width={width} height={replacedHeight} rx="5" fill={DONE} />
-                <text x={x} y={Math.max(top + 10, baseY - barHeight - 6)} textAnchor="middle" className="fill-foreground text-[10px] font-semibold">{format(total)}</text>
+                {replacedHeight >= 18 && (
+                  <text x={x} y={baseY - replacedHeight / 2 + 3} textAnchor="middle" className="fill-sky-950 text-[9px] font-semibold">{format(safeReplaced)}</text>
+                )}
+                {barHeight - replacedHeight >= 18 && (
+                  <text x={x} y={baseY - replacedHeight - (barHeight - replacedHeight) / 2 + 3} textAnchor="middle" className="fill-slate-700 text-[9px] font-semibold">{format(safeUnreplaced)}</text>
+                )}
+                {replacedHeight < 18 && safeReplaced > 0 && (
+                  <text x={x - width / 2 - 4} y={baseY - replacedHeight / 2 + 3} textAnchor="end" className="fill-sky-950 text-[9px] font-semibold">{format(safeReplaced)}</text>
+                )}
+                {barHeight - replacedHeight < 18 && safeUnreplaced > 0 && (
+                  <text x={x + width / 2 + 4} y={baseY - replacedHeight - Math.max(8, (barHeight - replacedHeight) / 2) + 3} textAnchor="start" className="fill-slate-700 text-[9px] font-semibold">{format(safeUnreplaced)}</text>
+                )}
+                <text x={x} y={Math.max(top + 10, baseY - barHeight - 6)} textAnchor="middle" className="fill-foreground text-[10px] font-semibold">总计 {format(total)}</text>
                 <text x={x} y={plotHeight - 16} textAnchor="middle" className="fill-muted-foreground text-[10px]">{name}</text>
               </g>
             )
