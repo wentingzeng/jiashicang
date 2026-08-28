@@ -199,8 +199,8 @@ function ProductBars({ rows }: { rows: ProductProgressRow[] }) {
                   <text x={x + width / 2 + 4} y={baseY - replacedHeight - Math.max(8, (barHeight - replacedHeight) / 2) + 3} textAnchor="start" className="fill-slate-700 text-[9px] font-semibold">{format(safeUnreplaced)}</text>
                 )}
                 <text x={x} y={plotHeight - 16} textAnchor="middle" className="fill-muted-foreground text-[10px]">{name}</text>
-                <foreignObject x={Math.max(4, Math.min(plotWidth - 148, x - 74))} y={Math.max(4, baseY - barHeight - 88)} width="144" height="80" className="pointer-events-none opacity-0 transition-opacity group-hover:opacity-100">
-                  <div className="rounded-md border border-border bg-card p-2 text-left text-[10px] leading-4 text-foreground shadow-lg">
+                <foreignObject x={Math.max(4, Math.min(plotWidth - 188, x - 94))} y={Math.max(4, baseY - barHeight - 88)} width="184" height="80" className="pointer-events-none overflow-visible opacity-0 transition-opacity group-hover:opacity-100">
+                  <div className="w-[176px] whitespace-nowrap rounded-md border border-border bg-card p-2 text-left text-[10px] leading-4 text-foreground shadow-lg">
                     <div className="font-semibold">{name}</div>
                     <div>已替代：{format(safeReplaced)}</div>
                     <div>未替代：{format(safeUnreplaced)}</div>
