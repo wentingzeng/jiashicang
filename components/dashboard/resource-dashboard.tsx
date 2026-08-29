@@ -30,17 +30,17 @@ const researchServiceRows = [["研发现场技术服务（B类）", "科技运�
 function Panel({ title, children, className = "" }: { title: string; children: React.ReactNode; className?: string }) { return <section className={`overflow-hidden rounded-xl border border-border/80 bg-card shadow-[0_8px_24px_oklch(0.35_0.06_240/8%)] ${className}`}><header className="flex items-center gap-2 border-b border-border/70 bg-gradient-to-r from-secondary/70 to-card px-3 py-2.5"><span className="flex size-7 items-center justify-center rounded-md bg-primary/10 text-primary"><BarChart3 className="size-4" /></span><h2 className="text-sm font-bold text-foreground">{title}</h2></header><div className="flex min-h-0 flex-1 flex-col p-3">{children}</div></section> }
 const tooltipStyle = { backgroundColor: "#ffffff", color: "#0f172a", border: "1px solid #cbd5e1", borderRadius: 8, fontSize: 11, boxShadow: "0 6px 18px rgba(15, 23, 42, 0.14)" }
 function ChartFrame({ children, height = 230 }: { children: React.ReactElement; height?: number }) { return <div style={{ height }} className="w-full"><ResponsiveContainer width="100%" height="100%" minWidth={1} minHeight={1}>{children}</ResponsiveContainer></div> }
-function BudgetExecution({ data, useApiData }: { data: OverallApi[]; useApiData: boolean }) { const rows = useApiData ? data.map((row) => ({ month: monthLabel(row.statDate), overall: nullableRatioPercent(row.overallExecutionRate), previous: nullableRatioPercent(row.previousYearExecutionRate), trend: nullableRatioPercent(row.executionRateTrend) })) : executionData; return <div><ChartFrame><ComposedChart data={rows} margin={{ top: 12, right: 10, bottom: 4, left: 0 }}><CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" /><XAxis dataKey="month" tick={{ fontSize: 11 }} /><YAxis domain={[0, 80]} tick={{ fontSize: 10 }} unit="%" /><Tooltip cursor={false} contentStyle={tooltipStyle} formatter={(value, name) => [`${Number(value)}%`, name]} /><Legend verticalAlign="bottom" height={24} wrapperStyle={{ fontSize: 11 }} /><Bar isAnimationActive={false} dataKey="overall" name="整体预算执行率" fill="#356be4" radius={[3, 3, 0, 0]} /><Bar isAnimationActive={false} dataKey="previous" name="上年执行率" fill="#8b8bea" radius={[3, 3, 0, 0]} /><Line isAnimationActive={false} type="monotone" dataKey="trend" name="执行率趋势" stroke="#f3ae32" strokeWidth={2} dot={{ r: 2 }} /></ComposedChart></ChartFrame></div> }
+function BudgetExecution({ data, useApiData }: { data: OverallApi[]; useApiData: boolean }) { const rows = useApiData ? data.map((row) => ({ month: monthLabel(row.statDate), overall: nullableRatioPercent(row.overallExecutionRate), previous: nullableRatioPercent(row.previousYearExecutionRate), trend: nullableRatioPercent(row.executionRateTrend) })) : executionData; return <div><ChartFrame><ComposedChart data={rows} margin={{ top: 12, right: 10, bottom: 4, left: 0 }}><CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" /><XAxis dataKey="month" tick={{ fontSize: 11 }} /><YAxis domain={[0, 80]} tick={{ fontSize: 10 }} unit="%" /><Tooltip cursor={false} contentStyle={tooltipStyle} formatter={(value, name) => [`${Number(value)}%`, name]} /><Legend verticalAlign="bottom" height={24} wrapperStyle={{ fontSize: 11 }} /><Bar isAnimationActive={false} dataKey="overall" name="整���预算执行率" fill="#356be4" radius={[3, 3, 0, 0]} /><Bar isAnimationActive={false} dataKey="previous" name="上年执行率" fill="#8b8bea" radius={[3, 3, 0, 0]} /><Line isAnimationActive={false} type="monotone" dataKey="trend" name="执行率趋势" stroke="#f3ae32" strokeWidth={2} dot={{ r: 2 }} /></ComposedChart></ChartFrame></div> }
 function renderBudgetLabel(text: string, color: string, dy: number) {
   return function BudgetLineLabel(props: any) {
     const viewBox = props?.viewBox ?? {}
-    const x = (viewBox.x ?? 0) + 8
+    const x = (viewBox.x ?? 0) + 6
     const y = (viewBox.y ?? 0) + dy
-    const width = text.length * 10.5 + 18
+    const width = text.length * 6.4 + 10
     return (
       <g>
-        <rect x={x} y={y - 9} width={width} height={18} rx={9} fill={color} fillOpacity={0.14} stroke={color} strokeOpacity={0.5} strokeWidth={1} />
-        <text x={x + 9} y={y + 4} fontSize={10} fontWeight={700} fill={color}>
+        <rect x={x} y={y - 6.5} width={width} height={13} rx={6.5} fill={color} fillOpacity={0.14} stroke={color} strokeOpacity={0.5} strokeWidth={0.75} />
+        <text x={x + 5} y={y + 2.8} fontSize={7} fontWeight={600} fill={color}>
           {text}
         </text>
       </g>
