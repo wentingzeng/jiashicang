@@ -390,7 +390,18 @@ function ChinaSecurityMap({ data, selectedInstitution }: { data: { name: string;
           [108.8, 19.0],
           [110.5, 20.3],
         ]
-        const linePath = nineDashLine.map((pt, i) => `${i === 0 ? "M" : "L"}${p(pt[0], pt[1]).join(",")}`).join(" ")
+        // 传统"九段线"画法：由若干条互不相连的独立短斜线段组成，而非一条连续曲线加统一虚线样式
+        const dashSegments = nineDashLine.slice(0, -1).map((pt, i) => {
+          const [x1, y1] = p(pt[0], pt[1])
+          const [x2, y2] = p(nineDashLine[i + 1][0], nineDashLine[i + 1][1])
+          // 每段向内收缩，两端留出间隙，形成独立笔画的断续感
+          const gap = 0.22
+          const sx = x1 + (x2 - x1) * gap
+          const sy = y1 + (y2 - y1) * gap
+          const ex = x1 + (x2 - x1) * (1 - gap)
+          const ey = y1 + (y2 - y1) * (1 - gap)
+          return { sx, sy, ex, ey }
+        })
         const islandGroups: [number, number][] = [
           // 东沙群岛
           [116.72, 20.7],
@@ -418,7 +429,9 @@ function ChinaSecurityMap({ data, selectedInstitution }: { data: { name: string;
         ]
         return (
           <svg viewBox="0 0 800 900" className="pointer-events-none absolute inset-0 h-full w-full" preserveAspectRatio="xMidYMid meet" aria-hidden="true">
-            <path d={linePath} fill="none" stroke="#64748b" strokeWidth={1.2} strokeDasharray="6,4" strokeLinecap="round" />
+            {dashSegments.map((seg, i) => (
+              <line key={i} x1={seg.sx} y1={seg.sy} x2={seg.ex} y2={seg.ey} stroke="#64748b" strokeWidth={1.4} strokeLinecap="round" />
+            ))}
             {islandGroups.map((pt, i) => {
               const [x, y] = p(pt[0], pt[1])
               return <circle key={i} cx={x} cy={y} r={1.6} fill="#64748b" />
