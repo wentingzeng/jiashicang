@@ -516,6 +516,9 @@ export function SecurityDashboard() {
           </section>
 
           <section className="flex h-full min-h-0 min-w-0 flex-col gap-4">
+              <Panel title="网络安全考评" tone="accent" bodyClassName="p-2">
+                <AssessmentBars data={filteredCapability} />
+              </Panel>
               <Panel title="检查发现问题" tone="accent" className="flex flex-1 flex-col" bodyClassName="flex min-h-0 flex-1 flex-col gap-7 p-3">
                 <div className="grid grid-cols-2 gap-3">
                   <StatCard
