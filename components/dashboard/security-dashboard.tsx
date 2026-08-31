@@ -225,10 +225,10 @@ function CompactDetailTable({ rows, headers, className = "", height = 204 }: { r
 
 function CapabilityBars({ data, label, selectedInstitution }: { data: { name: string; value: number }[]; label: string; selectedInstitution: string }) {
   const [selectedBranch, setSelectedBranch] = useState<string | null>(selectedInstitution === "全部机构" ? null : selectedInstitution)
-  const [showAll, setShowAll] = useState(false)
+  const [showAll, setShowAll] = useState(true)
   useEffect(() => {
-    setSelectedBranch(selectedInstitution === "全部机构" ? null : selectedInstitution)
-    setShowAll(false)
+  setSelectedBranch(selectedInstitution === "全部机构" ? null : selectedInstitution)
+  setShowAll(selectedInstitution === "全部机构")
   }, [selectedInstitution, data])
   const metrics = data.map((item, index) => ({
     ...item,
