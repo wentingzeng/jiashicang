@@ -583,9 +583,14 @@ export function SecurityDashboard() {
         </Panel>
 
         <div className="mt-5 grid items-stretch gap-5 lg:grid-cols-3 lg:auto-rows-max">
-          <Panel title="网络安全综合能力视图" tone="accent" className="order-1 flex flex-1 flex-col lg:row-start-1 lg:col-start-1" bodyClassName="flex min-h-0 flex-1 flex-col p-4">
-            <ChinaSecurityMap data={filteredBranches} selectedInstitution={selectedInstitution} />
-          </Panel>
+          <section className="order-1 flex min-w-0 flex-col gap-4 lg:row-start-1 lg:col-start-1">
+            <Panel title="网络安全综合能力视图" tone="accent" className="flex flex-col" bodyClassName="flex min-h-0 flex-col p-4">
+              <ChinaSecurityMap data={filteredBranches} selectedInstitution={selectedInstitution} />
+            </Panel>
+            <Panel title="网络安全综合能力" tone="primary" bodyClassName="p-2">
+              <CapabilityBars data={filteredCapability} label="各分行综合能力得分" selectedInstitution={selectedInstitution} />
+            </Panel>
+          </section>
 
           <Panel title="员工安全画像" tone="primary" className="order-2 flex flex-1 flex-col lg:row-start-1 lg:col-start-2" bodyClassName="p-2.5">
             <div className="flex flex-col gap-3">
