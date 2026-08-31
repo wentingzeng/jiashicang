@@ -661,7 +661,7 @@ export function SecurityDashboard() {
           </section>
 
           <section className="order-2 flex min-w-0 flex-col self-start lg:row-start-1 lg:col-start-2">
-          <Panel title="员工安全画像" tone="primary" className="flex w-full flex-col" bodyClassName="p-2.5">
+          <Panel title="员工安全画像" tone="primary" className="flex h-[400px] w-full flex-col" bodyClassName="flex min-h-0 flex-1 flex-col p-2.5">
             <div className="flex flex-col gap-3">
               <div className="grid grid-cols-2 gap-1.5">
                 <StatCard
@@ -681,7 +681,7 @@ export function SecurityDashboard() {
                   compact
                 />
               </div>
-              <div className="grid grid-cols-1 gap-2">
+              <div className="grid min-h-0 flex-1 grid-cols-1 gap-2">
                 <div className="flex min-w-0 h-[150px] flex-col rounded-lg border border-border/50 bg-background/20 px-2 pb-1 pt-2"><div className="mb-1 flex h-5 shrink-0 items-center justify-between text-xs text-muted-foreground"><span>安全培训覆盖率</span><span className="font-mono text-[10px]">单位：%</span></div><div className="min-h-0 flex-1 w-full"><ResponsiveContainer width="100%" height="100%"><LineChart data={[{ name: "北京", value: 88.4 }, { name: "上海", value: 92.1 }, { name: "广州", value: 86.7 }, { name: "深圳", value: 94.3 }, { name: "杭州", value: 91.6 }, { name: "成都", value: 83.9 }, { name: "南京", value: 89.8 }, { name: "武汉", value: 85.5 }, { name: "西安", value: 81.7 }]} margin={{ top: 12, right: 10, bottom: 0, left: -18 }}><CartesianGrid vertical={false} strokeDasharray="3 3" stroke="hsl(var(--border))" /><XAxis dataKey="name" tick={{ fontSize: 10, dy: 3 }} tickLine={false} axisLine={false} /><YAxis domain={[70, 100]} ticks={[70, 80, 90, 100]} tick={{ fontSize: 10 }} tickLine={false} axisLine={false} tickFormatter={(value) => `${value}%`} /><Tooltip formatter={(value) => [`${value}%`, "覆盖率"]} /><Line type="monotone" dataKey="value" stroke="#25a8d2" strokeWidth={2.5} dot={{ r: 3, fill: "#25a8d2", strokeWidth: 1, stroke: "hsl(var(--background))" }} activeDot={{ r: 5 }} /></LineChart></ResponsiveContainer></div></div>
                 <div className="min-w-0"><ChartBox
                   data={filteredViolations}
@@ -695,7 +695,7 @@ export function SecurityDashboard() {
 
           </section>
 
-          <Panel title="网络安全考评" tone="accent" className="flex h-full w-full flex-col lg:row-start-1 lg:col-start-3" bodyClassName="flex min-h-0 flex-1 flex-col p-2">
+          <Panel title="网络安全考评" tone="accent" className="flex h-[400px] w-full flex-col lg:row-start-1 lg:col-start-3" bodyClassName="flex min-h-0 flex-1 flex-col p-2">
             <AssessmentBars data={filteredCapability} />
           </Panel>
 
