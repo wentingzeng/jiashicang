@@ -321,7 +321,16 @@ function ChinaSecurityMap({ data, selectedInstitution }: { data: { name: string;
                 <Geography
                   key={`${geo.rsmKey}-${index}`}
                   geography={geo}
-                  onClick={() => isFujianDetail ? setSelectedProvince(province) : province.includes("福建") ? (setIsFujianDetail(true), setSelectedProvince("福建省")) : setSelectedProvince(province)}
+                  onClick={() => {
+                    if (isFujianDetail) {
+                      setSelectedProvince(province)
+                    } else if (province.includes("福建")) {
+                      setIsFujianDetail(true)
+                      setSelectedProvince("福建省")
+                    } else {
+                      setSelectedProvince(province)
+                    }
+                  }}
                   fill={selected ? "#0f8f9b" : (() => { const score = provinceItem?.value; return score !== undefined && score <= scoreThreshold ? scoreColor(score) : "#d8e0e7" })()}
                   fillOpacity={selected ? 1 : 0.9}
                   stroke="#ffffff"
