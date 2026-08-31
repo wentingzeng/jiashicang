@@ -41,8 +41,11 @@ import {
 } from "@/lib/security-data"
 
 // 省级 GeoJSON：包含 34 个省级行政区，确保每个省份都有独立边界和点击区域。托管在本地以避免外部请求被拦截。
-const chinaMapUrl = "/maps/china-provinces.json"
-const fujianMapUrl = "https://geo.datav.aliyun.com/areas_v3/bound/geojson?code=350000"
+// 注意：不要切换为"_full"版本的数据源——它在每个省份要素中都内嵌了一份用于南海诸岛示意框的固定像素坐标，
+// 这些坐标不是真实经纬度，一旦参与地理投影会导致全部省份坐标计算错乱、整张地图不可见。
+// 南海诸岛改为下方的装饰性小图（SouthSeaIslandsInset）单独绘制，不再依赖地图数据源本身。
+ const chinaMapUrl = "/maps/china-provinces.json"
+ const fujianMapUrl = "/maps/fujian-cities.json"
 const fujianCityScores = [{ name: "福州市", value: 91.6 }, { name: "厦门市", value: 94.2 }, { name: "泉州市", value: 89.8 }, { name: "漳州市", value: 87.4 }, { name: "莆田市", value: 86.9 }, { name: "三明市", value: 84.7 }, { name: "南平市", value: 82.6 }, { name: "龙岩市", value: 85.3 }, { name: "宁德市", value: 83.8 }]
 
 const chartGrid = "rgba(79, 112, 145, 0.18)"
@@ -202,7 +205,7 @@ function RankedBars({
         <span>单位：分</span>
       </div>
       <div className="flex flex-col gap-2.5" style={{ minHeight: height }}>
-        {visibleMetrics.map((item, index) => (
+        {data.map((item, index) => (
           <div key={item.name} className="grid grid-cols-[20px_72px_1fr_42px] items-center gap-2 text-[11px]">
             <span className="font-mono text-muted-foreground">{String(index + 1).padStart(2, "0")}</span>
             <span className="truncate text-foreground/80">{item.name.replace("分行", "")}</span>
@@ -308,6 +311,7 @@ function ChinaSecurityMap({ data, selectedInstitution }: { data: { name: string;
           {({ geographies }) =>
             geographies.map((geo, index) => {
               const province = geo.properties?.name || geo.properties?.NAME || geo.properties?.省份 || geo.properties?.市 || `区域${index + 1}`
+
               const regionItem = isFujianDetail ? fujianCityScores.find((item) => normalizeRegion(item.name) === normalizeRegion(province)) : data.find((item) => normalizeRegion(provinceForBranch(item.name)) === normalizeRegion(province))
 
               const provinceItem = regionItem
@@ -344,7 +348,6 @@ function ChinaSecurityMap({ data, selectedInstitution }: { data: { name: string;
           }
         </Geographies>
       </ComposableMap>
-      {!isFujianDetail && <div className="pointer-events-none absolute bottom-24 left-4 z-10 rounded-md border border-border/60 bg-card/90 px-2 py-1 text-[9px] text-muted-foreground shadow-sm">南沙群岛</div>}
 
       <div className="absolute right-3 top-3 z-20 w-48 rounded-lg border border-border/60 bg-card/95 px-2.5 py-2 shadow-sm">
         <div className="mb-1.5 flex items-center justify-between text-[10px] font-medium text-foreground"><span>全年合计得分</span><span className="font-mono text-primary">≤ {scoreThreshold.toFixed(1)}</span></div>
@@ -356,8 +359,30 @@ function ChinaSecurityMap({ data, selectedInstitution }: { data: { name: string;
       </div>
 
       <div className="pointer-events-none absolute bottom-8 right-2 min-w-56 rounded-lg border border-primary/20 bg-card/95 px-2.5 py-2 text-[11px] shadow-md">
-        {selectedProvince && selectedItem ? (() => { const rankingData = isFujianDetail ? fujianCityScores : data; const rank = [...rankingData].sort((a, b) => b.value - a.value).findIndex((item) => item.name === selectedItem.name) + 1; const category = selectedItem.value >= 90 ? "一等" : selectedItem.value >= 82 ? "二等" : "三等"; const categoryRank = [...rankingData].filter((item) => category === "一等" ? item.value >= 90 : category === "二等" ? item.value >= 82 && item.value < 90 : item.value < 82).sort((a, b) => b.value - a.value).findIndex((item) => item.name === selectedItem.name) + 1; return <div className="grid gap-1.5"><div className="mb-1 border-b border-border/60 pb-1.5 text-xs font-semibold text-foreground">{selectedProvince}</div><div className="grid grid-cols-[1fr_auto] gap-x-5 gap-y-1 text-muted-foreground"><span>网络安全全年合计得分</span><strong className="font-mono text-[11px] font-semibold text-primary">{selectedItem.value.toFixed(2)}</strong><span>2025年排名（按全行）</span><strong className="font-mono text-foreground">{rank}</strong><span>类别</span><strong className="text-foreground">{category}</strong><span>2025年排名（按等级行）</span><strong className="font-mono text-foreground">{categoryRank}</strong></div></div> })() : <span className="text-muted-foreground">点击省份查看安全能力得分</span>}
+        {selectedProvince && selectedItem ? (() => { const rankingData = isFujianDetail ? fujianCityScores : data; const rank = [...rankingData].sort((a, b) => b.value - a.value).findIndex((item) => item.name === selectedItem.name) + 1; const category = selectedItem.value >= 90 ? "一等" : selectedItem.value >= 82 ? "二等" : "三等"; const categoryRank = [...rankingData].filter((item) => category === "一等" ? item.value >= 90 : category === "二等" ? item.value >= 82 && item.value < 90 : item.value < 82).sort((a, b) => b.value - a.value).findIndex((item) => item.name === selectedItem.name) + 1; return <div className="grid gap-1.5"><div className="mb-1 border-b border-border/60 pb-1.5 text-xs font-semibold text-foreground">{selectedProvince}</div><div className="grid grid-cols-[1fr_auto] gap-x-5 gap-y-1 text-muted-foreground"><span>网络安全全年合计得分</span><strong className="font-mono text-[11px] font-semibold text-primary">{selectedItem.value.toFixed(2)}</strong><span>2025年排名（按全行）</span><strong className="font-mono text-foreground">{rank}</strong><span>类别</span><strong className="text-foreground">{category}</strong><span>2025年排名（按等级行）</span><strong className="font-mono text-foreground">{categoryRank}</strong></div></div> })() : <span className="text-muted-foreground">{isFujianDetail ? "点击地市查看安全能力得分" : "点击省份查看安全能力得分"}</span>}
       </div>
+
+      {!isFujianDetail && (
+        <div className="pointer-events-none absolute bottom-3 left-3 z-20 w-[72px] rounded-sm border border-dashed border-muted-foreground/50 bg-card/85 px-1.5 py-1.5 shadow-sm">
+          <div className="mb-1 text-center text-[8px] leading-none text-muted-foreground">南海诸岛</div>
+          <svg viewBox="0 0 60 74" className="h-[62px] w-full" aria-hidden="true">
+            <g fill="none" stroke="#94a3b8" strokeWidth={1}>
+              <circle cx={18} cy={10} r={0.9} fill="#94a3b8" stroke="none" />
+              <circle cx={30} cy={16} r={0.9} fill="#94a3b8" stroke="none" />
+              <circle cx={14} cy={24} r={0.9} fill="#94a3b8" stroke="none" />
+              <line x1={22} y1={30} x2={30} y2={26} strokeDasharray="2,1.4" />
+              <circle cx={36} cy={40} r={0.9} fill="#94a3b8" stroke="none" />
+              <circle cx={20} cy={46} r={0.9} fill="#94a3b8" stroke="none" />
+              <circle cx={28} cy={52} r={0.9} fill="#94a3b8" stroke="none" />
+              <line x1={18} y1={56} x2={32} y2={50} strokeDasharray="2,1.4" />
+              <circle cx={22} cy={62} r={0.9} fill="#94a3b8" stroke="none" />
+              <circle cx={34} cy={66} r={0.9} fill="#94a3b8" stroke="none" />
+              <circle cx={16} cy={70} r={0.9} fill="#94a3b8" stroke="none" />
+              <line x1={14} y1={72} x2={40} y2={64} strokeDasharray="2,1.4" />
+            </g>
+          </svg>
+        </div>
+      )}
 
     </div>
   )
