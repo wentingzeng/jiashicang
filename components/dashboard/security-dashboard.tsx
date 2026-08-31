@@ -264,7 +264,7 @@ function AssessmentBars({ data }: { data: { name: string; value: number }[] }) {
   const [details, setDetails] = useState(false)
   const max = Math.max(...sorted.map((item) => item.value), 1)
   return (
-    <div className="flex h-[164px] min-h-0 flex-col rounded-xl border border-border/50 bg-card/30 p-2">
+    <div className="flex h-full min-h-0 flex-1 flex-col rounded-xl border border-border/50 bg-card/30 p-2">
       <div className="mb-1 flex shrink-0 items-center justify-end">
         <button type="button" onClick={() => setDetails(!details)} className="text-[11px] text-muted-foreground transition-colors hover:text-primary">
           {details ? "返回总览" : "点击查看详情"}
@@ -662,7 +662,7 @@ export function SecurityDashboard() {
             </Panel>
           </section>
 
-          <section className="order-2 flex min-w-0 flex-col gap-2 self-start lg:row-start-1 lg:col-start-2 lg:col-span-2">
+          <section className="order-2 flex min-w-0 flex-col self-start lg:row-start-1 lg:col-start-2">
           <Panel title="员工安全画像" tone="primary" className="flex w-full flex-col" bodyClassName="p-2.5">
             <div className="flex flex-col gap-3">
               <div className="grid grid-cols-2 gap-1.5">
@@ -695,10 +695,11 @@ export function SecurityDashboard() {
             </div>
           </Panel>
 
-          <Panel title="网络安全考评" tone="accent" className="flex h-fit w-full self-start flex-col" bodyClassName="flex h-fit flex-col p-2">
+          </section>
+
+          <Panel title="网络安全考评" tone="accent" className="flex h-full w-full flex-col lg:row-start-1 lg:col-start-3" bodyClassName="flex min-h-0 flex-1 flex-col p-2">
             <AssessmentBars data={filteredCapability} />
           </Panel>
-          </section>
 
           <Panel title="检查发现问题" tone="accent" className="order-4 flex flex-col self-start lg:row-start-2 lg:col-start-2 lg:col-span-2" bodyClassName="flex flex-col gap-4 p-3">
                 <div className="grid gap-3">
