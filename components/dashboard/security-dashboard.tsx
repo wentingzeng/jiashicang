@@ -376,20 +376,19 @@ function ChinaSecurityMap({ data, selectedInstitution }: { data: { name: string;
         const projection = geoMercator().center([104.3, 35.9]).scale(750).translate([400, 450])
         const p = (lon: number, lat: number) => projection([lon, lat]) ?? [0, 0]
         const nineDashLine: [number, number][] = [
-          [122.0, 21.8],
-          [120.7, 19.5],
-          [119.2, 16.8],
-          [118.6, 14.0],
-          [117.3, 11.0],
-          [115.5, 7.5],
-          [113.2, 4.6],
-          [111.0, 4.2],
-          [109.2, 6.3],
-          [107.7, 9.3],
-          [105.9, 13.0],
-          [105.6, 16.5],
-          [107.2, 19.0],
-          [108.6, 20.6],
+          [121.0, 21.0],
+          [119.5, 18.5],
+          [118.8, 15.8],
+          [117.0, 12.5],
+          [115.0, 9.0],
+          [112.5, 6.0],
+          [110.5, 3.5],
+          [108.5, 6.0],
+          [107.0, 9.5],
+          [106.8, 13.0],
+          [107.3, 16.5],
+          [108.8, 19.0],
+          [110.5, 20.3],
         ]
         const linePath = nineDashLine.map((pt, i) => `${i === 0 ? "M" : "L"}${p(pt[0], pt[1]).join(",")}`).join(" ")
         const islandGroups: [number, number][] = [
@@ -403,19 +402,19 @@ function ChinaSecurityMap({ data, selectedInstitution }: { data: { name: string;
           // 中沙群岛（含黄岩岛）
           [114.0, 15.5],
           [113.6, 15.0],
-          [117.85, 15.12],
+          [117.8, 15.4],
           // 南沙群岛
-          [114.37, 10.38],
-          [112.97, 9.62],
-          [115.53, 9.9],
-          [114.55, 10.9],
-          [111.92, 8.65],
-          [116.0, 8.0],
-          [113.6, 6.9],
-          [109.9, 8.0],
-          [112.17, 3.97],
-          [110.2, 6.2],
-          [116.7, 11.4],
+          [113.5, 10.0],
+          [112.5, 9.0],
+          [114.5, 9.5],
+          [113.8, 10.5],
+          [111.5, 8.0],
+          [113.0, 7.5],
+          [112.5, 6.5],
+          [109.8, 7.5],
+          [111.5, 4.3],
+          [110.5, 5.8],
+          [114.5, 11.0],
         ]
         return (
           <svg viewBox="0 0 800 900" className="pointer-events-none absolute inset-0 h-full w-full" preserveAspectRatio="xMidYMid meet" aria-hidden="true">
