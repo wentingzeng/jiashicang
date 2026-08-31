@@ -42,6 +42,8 @@ import {
 
 // 省级 GeoJSON：包含 34 个省级行政区，确保每个省份都有独立边界和点击区域。托管在本地以避免外部请求被拦截。
 const chinaMapUrl = "/maps/china-provinces.json"
+const fujianMapUrl = "https://geo.datav.aliyun.com/areas_v3/bound/geojson?code=350000_full"
+const fujianCityScores = [{ name: "福州市", value: 91.6 }, { name: "厦门市", value: 94.2 }, { name: "泉州市", value: 89.8 }, { name: "漳州市", value: 87.4 }, { name: "莆田市", value: 86.9 }, { name: "三明市", value: 84.7 }, { name: "南平市", value: 82.6 }, { name: "龙岩市", value: 85.3 }, { name: "宁德市", value: 83.8 }]
 
 const chartGrid = "rgba(79, 112, 145, 0.18)"
 const chartText = "#60758b"
@@ -275,13 +277,14 @@ const branchProvinceMap: Record<string, string> = {
 function ChinaSecurityMap({ data, selectedInstitution }: { data: { name: string; value: number }[]; selectedInstitution: string }) {
   const provinceForBranch = (name: string) => branchProvinceMap[name] ?? name.replace("分行", "")
   const [selectedProvince, setSelectedProvince] = useState(selectedInstitution === "全部机构" ? "" : provinceForBranch(selectedInstitution))
+  const [isFujianDetail, setIsFujianDetail] = useState(false)
   const [scoreThreshold, setScoreThreshold] = useState(() => Math.max(...data.map((item) => item.value)))
   useEffect(() => {
     setSelectedProvince(selectedInstitution === "全部机构" ? "" : provinceForBranch(selectedInstitution))
     setScoreThreshold(Math.max(...data.map((item) => item.value), 0))
   }, [selectedInstitution, data])
   const normalizeRegion = (name: string) => name.replace(/(省|市|自治区|特别行政区)$/u, "").replace(/(壮族|回族|维吾尔)$/u, "")
-  const selectedItem = data.find((item) => normalizeRegion(selectedProvince).includes(normalizeRegion(provinceForBranch(item.name))) || normalizeRegion(provinceForBranch(item.name)).includes(normalizeRegion(selectedProvince)))
+  const selectedItem = isFujianDetail ? fujianCityScores.find((item) => normalizeRegion(item.name) === normalizeRegion(selectedProvince)) : data.find((item) => normalizeRegion(selectedProvince).includes(normalizeRegion(provinceForBranch(item.name))) || normalizeRegion(provinceForBranch(item.name)).includes(normalizeRegion(selectedProvince)))
   const scores = data.map((item) => item.value)
   const minScore = Math.min(...scores)
   const maxScore = Math.max(...scores)
@@ -293,33 +296,28 @@ function ChinaSecurityMap({ data, selectedInstitution }: { data: { name: string;
 
   return (
     <div className="relative h-[700px] overflow-hidden rounded-xl border border-border/60 bg-gradient-to-br from-background/45 via-background/20 to-card/90">
+      {isFujianDetail && <button type="button" onClick={() => { setIsFujianDetail(false); setSelectedProvince("") }} className="absolute left-3 top-3 z-20 rounded-md border border-border/70 bg-card/95 px-3 py-1.5 text-xs font-medium text-foreground shadow-sm transition-colors hover:border-primary/50 hover:text-primary">返回全国地图</button>}
       <ComposableMap
         width={800}
         height={900}
         projection="geoMercator"
-        projectionConfig={{
-          center: [104.3, 35.9],
-          scale: 750,
-        }}
+        projectionConfig={isFujianDetail ? { center: [118.3, 26.0], scale: 4200 } : { center: [104.3, 35.9], scale: 750 }}
         className="h-full w-full"
       >
-        <Geographies geography={chinaMapUrl}>
+        <Geographies geography={isFujianDetail ? fujianMapUrl : chinaMapUrl}>
           {({ geographies }) =>
             geographies.map((geo, index) => {
-              const province =
-                geo.properties?.name ||
-                geo.properties?.NAME ||
-                geo.properties?.省份 ||
-                `区域${index + 1}`
+              const province = geo.properties?.name || geo.properties?.NAME || geo.properties?.省份 || `区域${index + 1}`
+              const regionItem = isFujianDetail ? fujianCityScores.find((item) => normalizeRegion(item.name) === normalizeRegion(province)) : data.find((item) => normalizeRegion(provinceForBranch(item.name)) === normalizeRegion(province))
 
-              const provinceItem = data.find((item) => normalizeRegion(provinceForBranch(item.name)) === normalizeRegion(province))
+              const provinceItem = regionItem
               const selected = selectedProvince === province || (selectedInstitution !== "全部机构" && normalizeRegion(province) === normalizeRegion(provinceForBranch(selectedInstitution)))
 
               return (
                 <Geography
                   key={`${geo.rsmKey}-${index}`}
                   geography={geo}
-                  onClick={() => setSelectedProvince(province)}
+                  onClick={() => isFujianDetail ? setSelectedProvince(province) : province.includes("福建") ? (setIsFujianDetail(true), setSelectedProvince("福建省")) : setSelectedProvince(province)}
                   fill={selected ? "#0f8f9b" : (() => { const score = provinceItem?.value; return score !== undefined && score <= scoreThreshold ? scoreColor(score) : "#d8e0e7" })()}
                   fillOpacity={selected ? 1 : 0.9}
                   stroke="#ffffff"
@@ -353,7 +351,7 @@ function ChinaSecurityMap({ data, selectedInstitution }: { data: { name: string;
           <div className="absolute inset-x-0 top-1.5 h-2 rounded-full bg-gradient-to-r from-[hsl(204_58%_77%)] via-[hsl(204_58%_58%)] to-[hsl(204_58%_32%)]" aria-hidden="true" />
           <input aria-label="调整地图显示的最高分数" type="range" min={minScore} max={maxScore} step="0.1" value={scoreThreshold} onChange={(event) => setScoreThreshold(Number(event.target.value))} className="absolute inset-0 h-4 w-full cursor-pointer appearance-none bg-transparent accent-primary" />
         </div>
-        <div className="mt-1 flex items-center justify-between font-mono text-[9px] text-muted-foreground"><span>最低�� {minScore.toFixed(1)}</span><span>最高分 {maxScore.toFixed(1)}</span></div>
+        <div className="mt-1 flex items-center justify-between font-mono text-[9px] text-muted-foreground"><span>最低��� {minScore.toFixed(1)}</span><span>最高分 {maxScore.toFixed(1)}</span></div>
       </div>
 
       <div className="pointer-events-none absolute bottom-8 right-2 min-w-56 rounded-lg border border-primary/20 bg-card/95 px-2.5 py-2 text-[11px] shadow-md">
