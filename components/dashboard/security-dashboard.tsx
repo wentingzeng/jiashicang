@@ -430,8 +430,14 @@ function ChinaSecurityMap({ data, selectedInstitution }: { data: { name: string;
             [119.17823197590195, 16.265658015720753],
           ],
         ]
-        // 每一段本身即为互不相连的独立笔画，直接按真实坐标连线绘制
-        const dashSegments = nineDashSegments.map((seg) => seg.map(([lon, lat]) => p(lon, lat)))
+        // 每一段本身即为互不相连的独立短笔画（刻度线），仅取首尾两点绘制一条直线
+        const dashSegments = nineDashSegments.map((seg) => {
+          const [sLon, sLat] = seg[0]
+          const [eLon, eLat] = seg[seg.length - 1]
+          const [sx, sy] = p(sLon, sLat)
+          const [ex, ey] = p(eLon, eLat)
+          return { sx, sy, ex, ey }
+        })
         const islandGroups: [number, number][] = [
           // 东沙群岛
           [116.72, 20.7],
