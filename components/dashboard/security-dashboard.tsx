@@ -132,8 +132,8 @@ function StatCard({
   compact?: boolean
 }) {
   return (
-  <div className={["rounded-xl border border-border/60 bg-gradient-to-br from-background/60 via-card/80 to-background/45 shadow-[0_8px_20px_rgba(16,30,46,0.16)]", compact ? "px-2 py-1.5" : "px-4 py-3"].join(" ")}>
-      <div className={["flex items-center gap-1.5 text-muted-foreground", compact ? "mb-0.5 text-[10px]" : "mb-2 text-xs"].join(" ")}>
+  <div className={["rounded-xl border border-border/60 bg-gradient-to-br from-background/60 via-card/80 to-background/45 shadow-[0_8px_20px_rgba(16,30,46,0.16)]", compact ? "flex items-center justify-between gap-2 px-2 py-1.5" : "px-4 py-3"].join(" ")}>
+      <div className={["flex items-center gap-1.5 text-muted-foreground", compact ? "mb-0 text-[10px]" : "mb-2 text-xs"].join(" ")}>
         <Icon className={compact ? "size-3" : "size-4"} style={{ color }} />
         <span>{label}</span>
       </div>
@@ -256,7 +256,7 @@ function CapabilityBars({ data, label, selectedInstitution }: { data: { name: st
 function CategoryBars({ data, label, color = "#42bdb7" }: { data: { name: string; value: number }[]; label: string; color?: string }) {
   const total = data.reduce((sum, item) => sum + item.value, 0)
   const [details, setDetails] = useState(false)
-  return <div className="rounded-lg border border-border/50 bg-background/20 p-3"><button type="button" onClick={() => setDetails(!details)} className="mb-3 flex w-full items-center justify-between text-left text-xs text-muted-foreground hover:text-primary"><span>{label}</span><span>{details ? "返回概览" : `共 ${total} 项 · 点击查看详情`}</span></button>{details ? <CompactDetailTable headers={["问题分类", "数量"]} rows={data.map((item) => [item.name, String(item.value)])} /> : <div className="grid grid-cols-4 gap-2">{data.map((item, index) => <div key={item.name} className="rounded-md border border-border/40 bg-card/50 p-2.5"><div className="flex items-center justify-between gap-2"><span className="truncate text-[11px] text-foreground/80">{item.name}</span><span className="size-2 shrink-0 rounded-full" style={{ backgroundColor: index % 2 ? color : "#4ba8d8" }} /></div><div className="mt-1 font-mono text-xl font-bold text-foreground">{item.value}</div></div>)}</div>}</div>
+  return <div className="rounded-lg border border-border/50 bg-background/20 p-3"><button type="button" onClick={() => setDetails(!details)} className="mb-3 flex w-full items-center justify-between text-left text-xs text-muted-foreground hover:text-primary"><span>{label}</span><span>{details ? "返回概览" : `共 ${total} 项 · 点击查看详情`}</span></button>{details ? <CompactDetailTable headers={["问题分类", "数量"]} rows={data.map((item) => [item.name, String(item.value)])} /> : <div className="grid grid-cols-4 gap-2">{data.map((item, index) => <div key={item.name} className="flex items-center justify-between gap-2 rounded-md border border-border/40 bg-card/50 px-2.5 py-1.5"><div className="flex min-w-0 items-center gap-2"><span className="size-2 shrink-0 rounded-full" style={{ backgroundColor: index % 2 ? color : "#4ba8d8" }} /><span className="truncate text-[11px] text-foreground/80">{item.name}</span></div><div className="font-mono text-xl font-bold leading-none text-foreground">{item.value}</div></div>)}</div>}</div>
 }
 
 function AssessmentBars({ data }: { data: { name: string; value: number }[] }) {
@@ -672,7 +672,7 @@ export function SecurityDashboard() {
                     color="var(--accent)"
                   />
                   </div>
-                  <div className="grid gap-2">
+                  <div className="grid grid-cols-2 gap-2">
                     <BranchList title="表现突出的三家分行" data={outstandingBranches} color="var(--accent)" compact />
                     <BranchList title="表现较差的三家分行" data={weakBranches} color="#e9ad43" compact />
                   </div>
