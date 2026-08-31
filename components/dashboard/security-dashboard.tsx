@@ -27,6 +27,7 @@ import {
   Geographies,
   Geography,
 } from "react-simple-maps"
+import { geoMercator } from "d3-geo"
 
 import {
   branchSecurityData,
@@ -371,27 +372,54 @@ function ChinaSecurityMap({ data, selectedInstitution }: { data: { name: string;
         {selectedProvince && selectedItem ? (() => { const rankingData = isFujianDetail ? fujianCityScores : data; const rank = [...rankingData].sort((a, b) => b.value - a.value).findIndex((item) => item.name === selectedItem.name) + 1; const category = selectedItem.value >= 90 ? "一等" : selectedItem.value >= 82 ? "二等" : "三等"; const categoryRank = [...rankingData].filter((item) => category === "一等" ? item.value >= 90 : category === "二等" ? item.value >= 82 && item.value < 90 : item.value < 82).sort((a, b) => b.value - a.value).findIndex((item) => item.name === selectedItem.name) + 1; return <div className="grid gap-1.5"><div className="mb-1 border-b border-border/60 pb-1.5 text-xs font-semibold text-foreground">{selectedProvince}</div><div className="grid grid-cols-[1fr_auto] gap-x-5 gap-y-1 text-muted-foreground"><span>网络安全全年合计得分</span><strong className="font-mono text-[11px] font-semibold text-primary">{selectedItem.value.toFixed(2)}</strong><span>2025年排名（按全行）</span><strong className="font-mono text-foreground">{rank}</strong><span>类别</span><strong className="text-foreground">{category}</strong><span>2025年排名（按等级行）</span><strong className="font-mono text-foreground">{categoryRank}</strong></div></div> })() : <span className="text-muted-foreground">{isFujianDetail ? "点击地市查看安全能力得分" : "点击省份查看安全能力得分"}</span>}
       </div>
 
-      {!isFujianDetail && (
-        <div className="pointer-events-none absolute bottom-3 left-3 z-20 w-[72px] rounded-sm border border-dashed border-muted-foreground/50 bg-card/85 px-1.5 py-1.5 shadow-sm">
-          <div className="mb-1 text-center text-[8px] leading-none text-muted-foreground">南海诸岛</div>
-          <svg viewBox="0 0 60 74" className="h-[62px] w-full" aria-hidden="true">
-            <g fill="none" stroke="#94a3b8" strokeWidth={1}>
-              <circle cx={18} cy={10} r={0.9} fill="#94a3b8" stroke="none" />
-              <circle cx={30} cy={16} r={0.9} fill="#94a3b8" stroke="none" />
-              <circle cx={14} cy={24} r={0.9} fill="#94a3b8" stroke="none" />
-              <line x1={22} y1={30} x2={30} y2={26} strokeDasharray="2,1.4" />
-              <circle cx={36} cy={40} r={0.9} fill="#94a3b8" stroke="none" />
-              <circle cx={20} cy={46} r={0.9} fill="#94a3b8" stroke="none" />
-              <circle cx={28} cy={52} r={0.9} fill="#94a3b8" stroke="none" />
-              <line x1={18} y1={56} x2={32} y2={50} strokeDasharray="2,1.4" />
-              <circle cx={22} cy={62} r={0.9} fill="#94a3b8" stroke="none" />
-              <circle cx={34} cy={66} r={0.9} fill="#94a3b8" stroke="none" />
-              <circle cx={16} cy={70} r={0.9} fill="#94a3b8" stroke="none" />
-              <line x1={14} y1={72} x2={40} y2={64} strokeDasharray="2,1.4" />
-            </g>
+      {!isFujianDetail && (() => {
+        const projection = geoMercator().center([104.3, 35.9]).scale(750).translate([400, 450])
+        const p = (lon: number, lat: number) => projection([lon, lat]) ?? [0, 0]
+        const nineDashLine: [number, number][] = [
+          [121.3, 22.2],
+          [119.8, 19.0],
+          [117.8, 15.3],
+          [115.2, 12.2],
+          [112.6, 9.2],
+          [110.8, 6.8],
+          [108.9, 6.0],
+          [107.0, 7.6],
+          [105.8, 10.3],
+          [105.3, 14.2],
+          [107.0, 18.1],
+          [108.7, 20.3],
+        ]
+        const linePath = nineDashLine.map((pt, i) => `${i === 0 ? "M" : "L"}${p(pt[0], pt[1]).join(",")}`).join(" ")
+        const islandGroups: [number, number][] = [
+          // 西沙群岛
+          [112.3, 16.5],
+          [111.6, 16.8],
+          [112.0, 16.0],
+          // 中沙群岛
+          [114.0, 15.5],
+          [113.7, 14.9],
+          // 南沙群岛
+          [113.6, 10.4],
+          [115.4, 9.6],
+          [111.8, 8.6],
+          [114.4, 7.5],
+          [117.0, 8.8],
+          [112.6, 6.5],
+          [115.8, 6.9],
+          [109.5, 7.9],
+          [114.2, 4.8],
+          [111.3, 5.4],
+        ]
+        return (
+          <svg viewBox="0 0 800 900" className="pointer-events-none absolute inset-0 h-full w-full" preserveAspectRatio="xMidYMid meet" aria-hidden="true">
+            <path d={linePath} fill="none" stroke="#64748b" strokeWidth={1.2} strokeDasharray="6,4" strokeLinecap="round" />
+            {islandGroups.map((pt, i) => {
+              const [x, y] = p(pt[0], pt[1])
+              return <circle key={i} cx={x} cy={y} r={1.6} fill="#64748b" />
+            })}
           </svg>
-        </div>
-      )}
+        )
+      })()}
 
     </div>
   )
