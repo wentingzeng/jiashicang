@@ -631,7 +631,7 @@ export function SecurityDashboard() {
           </div>
         </Panel>
 
-        <div className="mt-5 grid items-stretch gap-2 lg:grid-cols-3 lg:auto-rows-max">
+        <div className="mt-5 grid items-start gap-2 lg:grid-cols-3 lg:grid-rows-[500px_auto]">
           <section className="order-1 flex min-h-full min-w-0 flex-col gap-4 lg:row-start-1 lg:row-span-2 lg:col-start-1">
             <Panel title={isCapabilityDrilled ? "网络安全综合能力" : "网络安全综合能力视图"} tone="accent" className="flex h-full min-h-0 flex-col" bodyClassName="flex min-h-0 flex-1 flex-col p-4">
               {isCapabilityDrilled ? (
@@ -661,7 +661,7 @@ export function SecurityDashboard() {
           </section>
 
           <section className="order-2 flex min-w-0 flex-col self-start lg:row-start-1 lg:col-start-2">
-          <Panel title="员工安全画像" tone="primary" className="flex h-[400px] w-full flex-col" bodyClassName="flex min-h-0 flex-1 flex-col p-2.5">
+          <Panel title="员工安全画像" tone="primary" className="flex h-full w-full flex-col" bodyClassName="flex min-h-0 flex-1 flex-col p-2.5">
             <div className="flex flex-col gap-3">
               <div className="grid grid-cols-2 gap-1.5">
                 <StatCard
@@ -699,7 +699,7 @@ export function SecurityDashboard() {
             <AssessmentBars data={filteredCapability} />
           </Panel>
 
-          <Panel title="检查发现问题" tone="accent" className="order-4 flex flex-col self-start lg:row-start-2 lg:col-start-2 lg:col-span-2" bodyClassName="flex flex-col gap-4 p-3">
+          <Panel title="检查发现问题" tone="accent" className="order-4 flex min-h-[320px] flex-col self-start lg:row-start-2 lg:col-start-2 lg:col-span-2" bodyClassName="flex flex-col gap-4 p-3">
                 <div className="grid gap-3">
                   <div className="grid grid-cols-2 gap-2">
                     <StatCard
