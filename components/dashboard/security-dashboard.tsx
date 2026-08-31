@@ -642,7 +642,7 @@ export function SecurityDashboard() {
                   data={filteredViolations}
                   color="#d9953f"
                   label="违规记分人次"
-                  height={72}
+                  height={104}
                 /></div>
               </div>
             </div>
