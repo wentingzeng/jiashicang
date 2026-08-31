@@ -165,14 +165,14 @@ function ChartBox({
   const maxValue = Math.max(...data.map((item) => item.value), 1)
 
   return (
-    <div className="flex flex-col rounded-lg border border-border/50 bg-background/20 px-2 pb-2 pt-2" style={{ height: `${height + 34}px` }}>
+    <div className="flex flex-col rounded-lg border border-border/50 bg-background/20 px-2 pb-2 pt-2" style={{ height: `${height}px` }}>
       <div className="mb-1 flex h-5 shrink-0 items-center justify-between text-xs text-muted-foreground">
         <span>{label}</span>
         <span className="font-mono text-[10px]">单位：人次</span>
       </div>
       <div className="flex min-h-0 flex-1 items-end gap-1.5 overflow-x-auto pb-1">
         {data.map((item) => {
-          const barHeight = Math.max((item.value / maxValue) * (height - 46), 8)
+          const barHeight = Math.max((item.value / maxValue) * (height - 80), 8)
           return (
             <div key={item.name} className="group flex min-w-[2.6rem] flex-1 flex-col items-center justify-end gap-1" title={`${item.name}：${item.value.toLocaleString()}人次`}>
               <span className="whitespace-nowrap font-mono text-[9px] text-muted-foreground opacity-100">{item.value.toLocaleString()}</span>
@@ -262,7 +262,58 @@ function CategoryBars({ data, label, color = "#42bdb7" }: { data: { name: string
 function AssessmentBars({ data }: { data: { name: string; value: number }[] }) {
   const sorted = [...data].sort((a, b) => b.value - a.value).slice(0, 12).map((item) => ({ ...item, shortName: item.name.replace("分行", "") }))
   const [details, setDetails] = useState(false)
-  return <div className="flex h-[164px] flex-col rounded-xl border border-border/50 bg-card/30 p-2"><div className="mb-1 flex shrink-0 items-center justify-end"><button type="button" onClick={() => setDetails(!details)} className="text-[11px] text-muted-foreground transition-colors hover:text-primary">{details ? "返回总览" : "点击查看详情"}</button></div>{details ? <div className="min-h-0 flex-1 overflow-y-auto overscroll-contain rounded-xl border border-border/50 bg-card shadow-md"><table className="w-full border-separate border-spacing-0 text-left text-[11px]"><thead className="sticky top-0 z-30 bg-primary text-primary-foreground"><tr><th className="w-16 px-3 py-2 font-semibold">排名</th><th className="px-3 py-2 font-semibold">分行</th><th className="w-24 px-3 py-2 text-right font-semibold">考评得分</th></tr></thead><tbody className="divide-y divide-border/30">{sorted.map((item, index) => <tr key={item.name} className={index % 2 ? "bg-muted/20" : "bg-card/40"}><td className="px-3 py-2 font-mono text-muted-foreground">{String(index + 1).padStart(2, "0")}</td><td className="px-3 py-2 text-foreground">{item.name}</td><td className="px-3 py-2 text-right font-mono text-[11px] font-normal text-primary">{item.value}</td></tr>)}</tbody></table></div> : <div className="min-h-0 flex-1 overflow-x-auto overflow-y-hidden overscroll-contain pr-1"><div className="h-full w-[620px] px-1"><ResponsiveContainer width="100%" height="100%"><BarChart data={sorted} margin={{ top: 20, right: 16, bottom: 34, left: 8 }} barCategoryGap="4%" barGap={0}><CartesianGrid vertical={false} strokeDasharray="4 4" stroke="hsl(var(--border) / 0.55)" /><XAxis dataKey="shortName" interval={0} tick={{ fontSize: 10 }} tickLine={false} axisLine={{ stroke: "hsl(var(--foreground))", strokeWidth: 1.2 }} /><YAxis domain={[0, 100]} ticks={[0, 20, 40, 60, 80, 100]} tick={{ fontSize: 10 }} tickLine={false} axisLine={{ stroke: "hsl(var(--foreground))", strokeWidth: 1.2 }} label={{ value: "考评分", angle: -90, position: "insideLeft", style: { fontSize: 10 } }} /><Tooltip formatter={(value) => [`${value}分`, "考评得分"]} labelFormatter={(label) => `${label}`} /><Bar dataKey="value" fill="#4ba8d8" radius={[3, 3, 0, 0]} barSize={16}><LabelList dataKey="value" position="top" formatter={(value: unknown) => `${value}分`} style={{ fontSize: 10, fill: "hsl(var(--foreground))" }} /></Bar></BarChart></ResponsiveContainer></div></div>}</div>
+  const max = Math.max(...sorted.map((item) => item.value), 1)
+  return (
+    <div className="flex h-[164px] flex-col rounded-xl border border-border/50 bg-card/30 p-2">
+      <div className="mb-1 flex shrink-0 items-center justify-end">
+        <button type="button" onClick={() => setDetails(!details)} className="text-[11px] text-muted-foreground transition-colors hover:text-primary">
+          {details ? "返回总览" : "点击查看详情"}
+        </button>
+      </div>
+      {details ? (
+        <div className="min-h-0 flex-1 overflow-y-auto overscroll-contain rounded-xl border border-border/50 bg-card shadow-md">
+          <table className="w-full border-separate border-spacing-0 text-left text-[11px]">
+            <thead className="sticky top-0 z-30 bg-primary text-primary-foreground">
+              <tr>
+                <th className="w-16 px-3 py-2 font-semibold">排名</th>
+                <th className="px-3 py-2 font-semibold">分行</th>
+                <th className="w-24 px-3 py-2 text-right font-semibold">考评得分</th>
+              </tr>
+            </thead>
+            <tbody className="divide-y divide-border/30">
+              {sorted.map((item, index) => (
+                <tr key={item.name} className={index % 2 ? "bg-muted/20" : "bg-card/40"}>
+                  <td className="px-3 py-2 font-mono text-muted-foreground">{String(index + 1).padStart(2, "0")}</td>
+                  <td className="px-3 py-2 text-foreground">{item.name}</td>
+                  <td className="px-3 py-2 text-right font-mono text-[11px] font-normal text-primary">{item.value}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      ) : (
+        <div className="min-h-0 flex-1 overflow-x-auto overflow-y-hidden overscroll-contain pr-1">
+          <div className="flex h-full min-w-[720px] items-end gap-3 px-1 pb-5 pt-1">
+            {sorted.map((item) => {
+              const barHeight = Math.max((item.value / max) * 100, 6)
+              return (
+                <div key={item.name} className="group flex h-full min-w-0 flex-1 flex-col items-center justify-end gap-1">
+                  <span className="whitespace-nowrap font-mono text-[10px] font-semibold text-foreground">{item.value}</span>
+                  <div className="flex w-full flex-1 items-end">
+                    <div
+                      className="w-full rounded-t-md bg-gradient-to-t from-[#4ba8d8] to-[#6fc7c1] transition-all group-hover:brightness-110"
+                      style={{ height: `${barHeight}%`, minHeight: 6 }}
+                    />
+                  </div>
+                  <span className="max-w-[4.5rem] truncate text-[10px] text-muted-foreground">{item.shortName}</span>
+                </div>
+              )
+            })}
+          </div>
+        </div>
+      )}
+    </div>
+  )
 }
 
 const branchProvinceMap: Record<string, string> = {
