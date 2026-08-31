@@ -293,22 +293,18 @@ function AssessmentBars({ data }: { data: { name: string; value: number }[] }) {
         </div>
       ) : (
         <div className="min-h-0 flex-1 overflow-x-auto overflow-y-hidden overscroll-contain pr-1">
-          <div className="flex h-full min-w-[720px] items-end gap-3 px-1 pb-5 pt-1">
-            {sorted.map((item) => {
-              const barHeight = Math.max((item.value / max) * 100, 6)
-              return (
-                <div key={item.name} className="group flex h-full min-w-0 flex-1 flex-col items-center justify-end gap-1">
-                  <span className="whitespace-nowrap font-mono text-[10px] font-semibold text-foreground">{item.value}</span>
-                  <div className="flex w-full flex-1 items-end">
-                    <div
-                      className="w-full rounded-t-md bg-gradient-to-t from-[#4ba8d8] to-[#6fc7c1] transition-all group-hover:brightness-110"
-                      style={{ height: `${barHeight}%`, minHeight: 6 }}
-                    />
-                  </div>
-                  <span className="max-w-[4.5rem] truncate text-[10px] text-muted-foreground">{item.shortName}</span>
-                </div>
-              )
-            })}
+          <div className="h-full min-w-[720px]">
+            <ResponsiveContainer width="100%" height="100%">
+              <BarChart data={sorted} margin={{ top: 18, right: 18, left: 8, bottom: 26 }} barCategoryGap="18%">
+                <CartesianGrid vertical={false} strokeDasharray="3 3" stroke="hsl(var(--border) / 0.65)" />
+                <XAxis dataKey="shortName" interval={0} tick={{ fontSize: 10 }} tickLine={false} axisLine={{ stroke: "hsl(var(--foreground) / 0.65)" }} />
+                <YAxis domain={[0, 100]} ticks={[0, 20, 40, 60, 80, 100]} tick={{ fontSize: 10 }} tickLine={false} axisLine={{ stroke: "hsl(var(--foreground) / 0.65)" }} label={{ value: "考评分", angle: -90, position: "insideLeft", style: { fontSize: 10, fill: "hsl(var(--muted-foreground))" } }} />
+                <Tooltip formatter={(value) => [`${value}分`, "考评得分"]} />
+                <Bar dataKey="value" fill="#4ba8d8" radius={[4, 4, 0, 0]} barSize={24}>
+                  <LabelList dataKey="value" position="top" formatter={(value: unknown) => `${value}分`} style={{ fontSize: 10, fill: "hsl(var(--foreground))" }} />
+                </Bar>
+              </BarChart>
+            </ResponsiveContainer>
           </div>
         </div>
       )}
@@ -415,7 +411,7 @@ function ChinaSecurityMap({ data, selectedInstitution, onDrillChange }: { data: 
         <div className="mb-1.5 flex items-center justify-between text-[10px] font-medium text-foreground"><span>全年合计得分</span><span className="font-mono text-primary">≤ {scoreThreshold.toFixed(1)}</span></div>
         <div className="relative h-4">
           <div className="absolute inset-x-0 top-1.5 h-2 rounded-full bg-gradient-to-r from-[hsl(204_58%_77%)] via-[hsl(204_58%_58%)] to-[hsl(204_58%_32%)]" aria-hidden="true" />
-          <input aria-label="调整地图显示的最高分数" type="range" min={minScore} max={maxScore} step="0.1" value={scoreThreshold} onChange={(event) => setScoreThreshold(Number(event.target.value))} className="absolute inset-0 h-4 w-full cursor-pointer appearance-none bg-transparent accent-primary" />
+          <input aria-label="调整地图显示��最高分数" type="range" min={minScore} max={maxScore} step="0.1" value={scoreThreshold} onChange={(event) => setScoreThreshold(Number(event.target.value))} className="absolute inset-0 h-4 w-full cursor-pointer appearance-none bg-transparent accent-primary" />
         </div>
         <div className="mt-1 flex items-center justify-between font-mono text-[9px] text-muted-foreground"><span>最低��� {minScore.toFixed(1)}</span><span>最高分 {maxScore.toFixed(1)}</span></div>
       </div>
@@ -688,7 +684,7 @@ export function SecurityDashboard() {
                 />
               </div>
               <div className="grid grid-cols-2 gap-2">
-                <div className="flex min-w-0 h-[150px] flex-col rounded-lg border border-border/50 bg-background/20 px-2 pb-2 pt-2"><div className="mb-1 flex h-5 shrink-0 items-center justify-between text-xs text-muted-foreground"><span>安全培训覆盖率</span><span className="font-mono text-[10px]">单位：%</span></div><div className="min-h-0 flex-1 w-full"><ResponsiveContainer width="100%" height="100%"><LineChart data={[{ name: "北京", value: 88.4 }, { name: "上海", value: 92.1 }, { name: "广州", value: 86.7 }, { name: "深圳", value: 94.3 }, { name: "杭州", value: 91.6 }, { name: "成都", value: 83.9 }, { name: "南京", value: 89.8 }, { name: "武汉", value: 85.5 }, { name: "西安", value: 81.7 }]} margin={{ top: 12, right: 10, bottom: 8, left: -18 }}><CartesianGrid vertical={false} strokeDasharray="3 3" stroke="hsl(var(--border))" /><XAxis dataKey="name" tick={{ fontSize: 10 }} tickLine={false} axisLine={false} /><YAxis domain={[70, 100]} ticks={[70, 80, 90, 100]} tick={{ fontSize: 10 }} tickLine={false} axisLine={false} tickFormatter={(value) => `${value}%`} /><Tooltip formatter={(value) => [`${value}%`, "覆盖率"]} /><Line type="monotone" dataKey="value" stroke="#25a8d2" strokeWidth={2.5} dot={{ r: 3, fill: "#25a8d2", strokeWidth: 1, stroke: "hsl(var(--background))" }} activeDot={{ r: 5 }} /></LineChart></ResponsiveContainer></div></div>
+                <div className="flex min-w-0 h-[150px] flex-col rounded-lg border border-border/50 bg-background/20 px-2 pb-2 pt-2"><div className="mb-1 flex h-5 shrink-0 items-center justify-between text-xs text-muted-foreground"><span>安全培训覆盖率</span><span className="font-mono text-[10px]">单位：%</span></div><div className="min-h-0 flex-1 w-full"><ResponsiveContainer width="100%" height="100%"><LineChart data={[{ name: "北京", value: 88.4 }, { name: "上海", value: 92.1 }, { name: "广州", value: 86.7 }, { name: "深圳", value: 94.3 }, { name: "杭州", value: 91.6 }, { name: "成都", value: 83.9 }, { name: "南京", value: 89.8 }, { name: "武汉", value: 85.5 }, { name: "西安", value: 81.7 }]} margin={{ top: 12, right: 10, bottom: 0, left: -18 }}><CartesianGrid vertical={false} strokeDasharray="3 3" stroke="hsl(var(--border))" /><XAxis dataKey="name" tick={{ fontSize: 10 }} tickLine={false} axisLine={false} /><YAxis domain={[70, 100]} ticks={[70, 80, 90, 100]} tick={{ fontSize: 10 }} tickLine={false} axisLine={false} tickFormatter={(value) => `${value}%`} /><Tooltip formatter={(value) => [`${value}%`, "覆盖率"]} /><Line type="monotone" dataKey="value" stroke="#25a8d2" strokeWidth={2.5} dot={{ r: 3, fill: "#25a8d2", strokeWidth: 1, stroke: "hsl(var(--background))" }} activeDot={{ r: 5 }} /></LineChart></ResponsiveContainer></div></div>
                 <div className="min-w-0"><ChartBox
                   data={filteredViolations}
                   color="#d9953f"
