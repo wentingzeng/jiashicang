@@ -165,8 +165,8 @@ function ChartBox({
   const maxValue = Math.max(...data.map((item) => item.value), 1)
 
   return (
-    <div className="rounded-lg border border-border/50 bg-background/20 px-3 pb-[13px] pt-[18px]">
-      <div className="mb-3 flex items-center justify-between text-xs text-muted-foreground">
+    <div className="rounded-lg border border-border/50 bg-background/20 px-2 pb-2 pt-2">
+      <div className="mb-1 flex h-5 items-center justify-between text-xs text-muted-foreground">
         <span>{label}</span>
         <span className="font-mono text-[10px]">单位：人次</span>
       </div>
@@ -637,12 +637,12 @@ export function SecurityDashboard() {
                 />
               </div>
               <div className="grid grid-cols-2 gap-2">
-                <div className="min-w-0 rounded-lg border border-border/50 bg-background/20 px-2 pb-1 pt-2"><div className="mb-1 flex items-center justify-between text-xs text-muted-foreground"><span>安全培训覆盖率</span><span className="font-mono text-[10px]">单位：%</span></div><div className="h-[132px] w-full"><ResponsiveContainer width="100%" height="100%"><LineChart data={[{ name: "北京", value: 88.4 }, { name: "上海", value: 92.1 }, { name: "广州", value: 86.7 }, { name: "深圳", value: 94.3 }, { name: "杭州", value: 91.6 }, { name: "成都", value: 83.9 }, { name: "南京", value: 89.8 }, { name: "武汉", value: 85.5 }, { name: "西安", value: 81.7 }]} margin={{ top: 12, right: 10, bottom: 4, left: -18 }}><CartesianGrid vertical={false} strokeDasharray="3 3" stroke="hsl(var(--border))" /><XAxis dataKey="name" tick={{ fontSize: 9 }} tickLine={false} axisLine={false} /><YAxis domain={[70, 100]} ticks={[70, 80, 90, 100]} tick={{ fontSize: 9 }} tickLine={false} axisLine={false} tickFormatter={(value) => `${value}%`} /><Tooltip formatter={(value) => [`${value}%`, "覆盖率"]} /><Line type="monotone" dataKey="value" stroke="#25a8d2" strokeWidth={2.5} dot={{ r: 3, fill: "#25a8d2", strokeWidth: 1, stroke: "hsl(var(--background))" }} activeDot={{ r: 5 }} /></LineChart></ResponsiveContainer></div></div>
+                <div className="min-w-0 rounded-lg border border-border/50 bg-background/20 px-2 pb-1 pt-2"><div className="mb-1 flex h-5 items-center justify-between text-xs text-muted-foreground"><span>安全培训覆盖率</span><span className="font-mono text-[10px]">单位：%</span></div><div className="h-[104px] w-full"><ResponsiveContainer width="100%" height="100%"><LineChart data={[{ name: "北京", value: 88.4 }, { name: "上海", value: 92.1 }, { name: "广州", value: 86.7 }, { name: "深圳", value: 94.3 }, { name: "杭州", value: 91.6 }, { name: "成都", value: 83.9 }, { name: "南京", value: 89.8 }, { name: "武汉", value: 85.5 }, { name: "西安", value: 81.7 }]} margin={{ top: 12, right: 10, bottom: 4, left: -18 }}><CartesianGrid vertical={false} strokeDasharray="3 3" stroke="hsl(var(--border))" /><XAxis dataKey="name" tick={{ fontSize: 9 }} tickLine={false} axisLine={false} /><YAxis domain={[70, 100]} ticks={[70, 80, 90, 100]} tick={{ fontSize: 9 }} tickLine={false} axisLine={false} tickFormatter={(value) => `${value}%`} /><Tooltip formatter={(value) => [`${value}%`, "覆盖率"]} /><Line type="monotone" dataKey="value" stroke="#25a8d2" strokeWidth={2.5} dot={{ r: 3, fill: "#25a8d2", strokeWidth: 1, stroke: "hsl(var(--background))" }} activeDot={{ r: 5 }} /></LineChart></ResponsiveContainer></div></div>
                 <div className="min-w-0"><ChartBox
                   data={filteredViolations}
                   color="#d9953f"
                   label="违规记分人次"
-                  height={96}
+                  height={72}
                 /></div>
               </div>
             </div>
