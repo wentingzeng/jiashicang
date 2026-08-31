@@ -278,7 +278,7 @@ const branchProvinceMap: Record<string, string> = {
   重庆分行: "重庆",
 }
 
-function ChinaSecurityMap({ data, selectedInstitution }: { data: { name: string; value: number }[]; selectedInstitution: string }) {
+function ChinaSecurityMap({ data, selectedInstitution, onDrillChange }: { data: { name: string; value: number }[]; selectedInstitution: string; onDrillChange?: (drilled: boolean) => void }) {
   const provinceForBranch = (name: string) => branchProvinceMap[name] ?? name.replace("分行", "")
   const [selectedProvince, setSelectedProvince] = useState(selectedInstitution === "全部机构" ? "" : provinceForBranch(selectedInstitution))
   const [isFujianDetail, setIsFujianDetail] = useState(false)
@@ -300,7 +300,7 @@ function ChinaSecurityMap({ data, selectedInstitution }: { data: { name: string;
 
   return (
     <div className="relative h-[700px] overflow-hidden rounded-xl border border-border/60 bg-gradient-to-br from-background/45 via-background/20 to-card/90">
-      {isFujianDetail && <button type="button" onClick={() => { setIsFujianDetail(false); setSelectedProvince("") }} className="absolute left-3 top-3 z-20 rounded-md border border-border/70 bg-card/95 px-3 py-1.5 text-xs font-medium text-foreground shadow-sm transition-colors hover:border-primary/50 hover:text-primary">返回全国地图</button>}
+      {isFujianDetail && <button type="button" onClick={() => { setIsFujianDetail(false); setSelectedProvince(""); onDrillChange?.(false) }} className="absolute left-3 top-3 z-20 rounded-md border border-border/70 bg-card/95 px-3 py-1.5 text-xs font-medium text-foreground shadow-sm transition-colors hover:border-primary/50 hover:text-primary">返回全国地图</button>}
       <ComposableMap
         width={800}
         height={900}
@@ -328,6 +328,7 @@ function ChinaSecurityMap({ data, selectedInstitution }: { data: { name: string;
                     } else if (province.includes("福建")) {
                       setIsFujianDetail(true)
                       setSelectedProvince("福建省")
+                      onDrillChange?.(true)
                     } else {
                       setSelectedProvince(province)
                     }
@@ -509,6 +510,7 @@ function BranchList({
 export function SecurityDashboard() {
   const [selectedYear, setSelectedYear] = useState("2025")
   const [selectedInstitution, setSelectedInstitution] = useState("全部机构")
+  const [isCapabilityDrilled, setIsCapabilityDrilled] = useState(false)
   const filteredCapability = selectedInstitution === "全部机构"
     ? capabilityData
     : capabilityData.filter((item) => item.name === selectedInstitution)
@@ -584,11 +586,12 @@ export function SecurityDashboard() {
 
         <div className="mt-5 grid items-stretch gap-5 lg:grid-cols-3 lg:auto-rows-max">
           <section className="order-1 flex min-w-0 flex-col gap-4 lg:row-start-1 lg:col-start-1">
-            <Panel title="网络安全综合能力视图" tone="accent" className="flex flex-col" bodyClassName="flex min-h-0 flex-col p-4">
-              <ChinaSecurityMap data={filteredBranches} selectedInstitution={selectedInstitution} />
-            </Panel>
-            <Panel title="网络安全综合能力" tone="primary" bodyClassName="p-2">
-              <CapabilityBars data={filteredCapability} label="各分行综合能力得分" selectedInstitution={selectedInstitution} />
+            <Panel title={isCapabilityDrilled ? "网络安全综合能力" : "网络安全综合能力视图"} tone="accent" className="flex flex-col" bodyClassName="flex min-h-0 flex-col p-4">
+              {isCapabilityDrilled ? (
+                <CapabilityBars data={filteredCapability} label="各分行综合能力得分" selectedInstitution={selectedInstitution} />
+              ) : (
+                <ChinaSecurityMap data={filteredBranches} selectedInstitution={selectedInstitution} onDrillChange={setIsCapabilityDrilled} />
+              )}
             </Panel>
           </section>
 
@@ -613,7 +616,7 @@ export function SecurityDashboard() {
                 />
               </div>
               <div className="flex flex-col gap-2">
-                <div className="rounded-lg border border-border/50 bg-background/20 px-2 pb-1 pt-2"><div className="mb-1 flex items-center justify-between text-xs text-muted-foreground"><span>安全培训覆盖率</span><span className="font-mono text-[10px]">单位：%</span></div><div className="h-[132px] w-full"><ResponsiveContainer width="100%" height="100%"><LineChart data={[{ name: "北京", value: 88.4 }, { name: "上海", value: 92.1 }, { name: "广州", value: 86.7 }, { name: "深圳", value: 94.3 }, { name: "杭州", value: 91.6 }, { name: "成都", value: 83.9 }, { name: "南京", value: 89.8 }, { name: "武汉", value: 85.5 }, { name: "西安", value: 81.7 }]} margin={{ top: 12, right: 10, bottom: 4, left: -18 }}><CartesianGrid vertical={false} strokeDasharray="3 3" stroke="hsl(var(--border))" /><XAxis dataKey="name" tick={{ fontSize: 9 }} tickLine={false} axisLine={false} /><YAxis domain={[70, 100]} ticks={[70, 80, 90, 100]} tick={{ fontSize: 9 }} tickLine={false} axisLine={false} tickFormatter={(value) => `${value}%`} /><Tooltip formatter={(value) => [`${value}%`, "覆盖率"]} /><Line type="monotone" dataKey="value" stroke="#25a8d2" strokeWidth={2.5} dot={{ r: 3, fill: "#25a8d2", strokeWidth: 1, stroke: "hsl(var(--background))" }} activeDot={{ r: 5 }} /></LineChart></ResponsiveContainer></div></div>
+                <div className="rounded-lg border border-border/50 bg-background/20 px-2 pb-1 pt-2"><div className="mb-1 flex items-center justify-between text-xs text-muted-foreground"><span>安全培训覆盖率</span><span className="font-mono text-[10px]">单位：%</span></div><div className="h-[132px] w-full"><ResponsiveContainer width="100%" height="100%"><LineChart data={[{ name: "北京", value: 88.4 }, { name: "上海", value: 92.1 }, { name: "广州", value: 86.7 }, { name: "深圳", value: 94.3 }, { name: "杭州", value: 91.6 }, { name: "成都", value: 83.9 }, { name: "南京", value: 89.8 }, { name: "武汉", value: 85.5 }, { name: "西安", value: 81.7 }]} margin={{ top: 12, right: 10, bottom: 4, left: -18 }}><CartesianGrid vertical={false} strokeDasharray="3 3" stroke="hsl(var(--border))" /><XAxis dataKey="name" tick={{ fontSize: 9 }} tickLine={false} axisLine={false} /><YAxis domain={[70, 100]} ticks={[70, 80, 90, 100]} tick={{ fontSize: 9 }} tickLine={false} axisLine={false} tickFormatter={(value) => `${value}%`} /><Tooltip formatter={(value) => [`${value}%`, "覆盖���"]} /><Line type="monotone" dataKey="value" stroke="#25a8d2" strokeWidth={2.5} dot={{ r: 3, fill: "#25a8d2", strokeWidth: 1, stroke: "hsl(var(--background))" }} activeDot={{ r: 5 }} /></LineChart></ResponsiveContainer></div></div>
                 <ChartBox
                   data={filteredViolations}
                   color="#d9953f"
