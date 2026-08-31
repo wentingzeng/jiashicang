@@ -587,8 +587,8 @@ export function SecurityDashboard() {
         </Panel>
 
         <div className="mt-5 grid items-stretch gap-2 lg:grid-cols-3 lg:auto-rows-max">
-          <section className="order-1 flex min-w-0 flex-col gap-4 lg:row-start-1 lg:row-span-2 lg:col-start-1">
-            <Panel title={isCapabilityDrilled ? "网络安全综合能力" : "网络安全综合能力视图"} tone="accent" className="flex flex-col" bodyClassName="flex min-h-0 flex-col p-4">
+          <section className="order-1 flex min-h-full min-w-0 flex-col gap-4 lg:row-start-1 lg:row-span-2 lg:col-start-1">
+            <Panel title={isCapabilityDrilled ? "网络安全综合能力" : "网络安全综合能力视图"} tone="accent" className="flex h-full min-h-0 flex-col" bodyClassName="flex min-h-0 flex-1 flex-col p-4">
               {isCapabilityDrilled ? (
                 <div className="flex h-[700px] flex-col">
                   <CapabilityBars data={filteredCapability} label="各分行综合能力得分" selectedInstitution={selectedInstitution} />
@@ -601,7 +601,7 @@ export function SecurityDashboard() {
                   </button>
                 </div>
               ) : (
-                <ChinaSecurityMap data={filteredBranches} selectedInstitution={selectedInstitution} onDrillChange={setIsCapabilityDrilled} />
+                <div className="min-h-0 flex-1"><ChinaSecurityMap data={filteredBranches} selectedInstitution={selectedInstitution} onDrillChange={setIsCapabilityDrilled} /></div>
               )}
               {!isCapabilityDrilled && (
                 <button
