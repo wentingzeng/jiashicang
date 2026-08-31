@@ -613,7 +613,8 @@ export function SecurityDashboard() {
             </Panel>
           </section>
 
-          <Panel title="员工安全画像" tone="primary" className="order-2 flex flex-1 flex-col lg:row-start-1 lg:col-start-2" bodyClassName="p-2.5">
+          <section className="order-2 flex min-w-0 flex-col gap-5 lg:row-start-1 lg:col-start-2">
+          <Panel title="员工安全画像" tone="primary" className="flex flex-1 flex-col" bodyClassName="p-2.5">
             <div className="flex flex-col gap-3">
               <div className="grid grid-cols-2 gap-1.5">
                 <StatCard
@@ -633,21 +634,22 @@ export function SecurityDashboard() {
                   compact
                 />
               </div>
-              <div className="flex flex-col gap-2">
-                <div className="rounded-lg border border-border/50 bg-background/20 px-2 pb-1 pt-2"><div className="mb-1 flex items-center justify-between text-xs text-muted-foreground"><span>安全培训覆盖率</span><span className="font-mono text-[10px]">单位：%</span></div><div className="h-[132px] w-full"><ResponsiveContainer width="100%" height="100%"><LineChart data={[{ name: "北京", value: 88.4 }, { name: "上海", value: 92.1 }, { name: "广州", value: 86.7 }, { name: "深圳", value: 94.3 }, { name: "杭州", value: 91.6 }, { name: "成都", value: 83.9 }, { name: "南京", value: 89.8 }, { name: "武汉", value: 85.5 }, { name: "西安", value: 81.7 }]} margin={{ top: 12, right: 10, bottom: 4, left: -18 }}><CartesianGrid vertical={false} strokeDasharray="3 3" stroke="hsl(var(--border))" /><XAxis dataKey="name" tick={{ fontSize: 9 }} tickLine={false} axisLine={false} /><YAxis domain={[70, 100]} ticks={[70, 80, 90, 100]} tick={{ fontSize: 9 }} tickLine={false} axisLine={false} tickFormatter={(value) => `${value}%`} /><Tooltip formatter={(value) => [`${value}%`, "覆盖���"]} /><Line type="monotone" dataKey="value" stroke="#25a8d2" strokeWidth={2.5} dot={{ r: 3, fill: "#25a8d2", strokeWidth: 1, stroke: "hsl(var(--background))" }} activeDot={{ r: 5 }} /></LineChart></ResponsiveContainer></div></div>
-                <ChartBox
+              <div className="grid grid-cols-2 gap-2">
+                <div className="min-w-0 rounded-lg border border-border/50 bg-background/20 px-2 pb-1 pt-2"><div className="mb-1 flex items-center justify-between text-xs text-muted-foreground"><span>安全培训覆盖率</span><span className="font-mono text-[10px]">单位：%</span></div><div className="h-[132px] w-full"><ResponsiveContainer width="100%" height="100%"><LineChart data={[{ name: "北京", value: 88.4 }, { name: "上海", value: 92.1 }, { name: "广州", value: 86.7 }, { name: "深圳", value: 94.3 }, { name: "杭州", value: 91.6 }, { name: "成都", value: 83.9 }, { name: "南京", value: 89.8 }, { name: "武汉", value: 85.5 }, { name: "西安", value: 81.7 }]} margin={{ top: 12, right: 10, bottom: 4, left: -18 }}><CartesianGrid vertical={false} strokeDasharray="3 3" stroke="hsl(var(--border))" /><XAxis dataKey="name" tick={{ fontSize: 9 }} tickLine={false} axisLine={false} /><YAxis domain={[70, 100]} ticks={[70, 80, 90, 100]} tick={{ fontSize: 9 }} tickLine={false} axisLine={false} tickFormatter={(value) => `${value}%`} /><Tooltip formatter={(value) => [`${value}%`, "覆盖率"]} /><Line type="monotone" dataKey="value" stroke="#25a8d2" strokeWidth={2.5} dot={{ r: 3, fill: "#25a8d2", strokeWidth: 1, stroke: "hsl(var(--background))" }} activeDot={{ r: 5 }} /></LineChart></ResponsiveContainer></div></div>
+                <div className="min-w-0"><ChartBox
                   data={filteredViolations}
                   color="#d9953f"
                   label="违规记分人次"
                   height={96}
-                />
+                /></div>
               </div>
             </div>
           </Panel>
 
-          <Panel title="网络安全考评" tone="accent" className="order-3 flex flex-1 flex-col lg:row-start-1 lg:col-start-3" bodyClassName="p-2">
+          <Panel title="网络安全考评" tone="accent" className="flex flex-1 flex-col" bodyClassName="p-2">
             <AssessmentBars data={filteredCapability} />
           </Panel>
+          </section>
 
           <Panel title="检查发现问题" tone="accent" className="order-4 flex flex-1 flex-col lg:row-start-2 lg:col-start-2 lg:col-span-2" bodyClassName="flex min-h-0 flex-1 flex-col gap-7 p-3">
                 <div className="grid grid-cols-2 gap-3">
