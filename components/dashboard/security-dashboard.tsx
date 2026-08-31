@@ -293,9 +293,9 @@ function AssessmentBars({ data }: { data: { name: string; value: number }[] }) {
         </div>
       ) : (
         <div className="min-h-0 flex-1 overflow-x-auto overflow-y-hidden overscroll-contain pr-1">
-          <div className="h-full min-w-[720px]">
+          <div className="h-full min-h-0 min-w-[720px]">
             <ResponsiveContainer width="100%" height="100%">
-              <BarChart data={sorted} margin={{ top: 18, right: 18, left: 8, bottom: 26 }} barCategoryGap="18%">
+              <BarChart data={sorted} margin={{ top: 18, right: 18, left: 8, bottom: 0 }} barCategoryGap="18%">
                 <CartesianGrid vertical={false} strokeDasharray="3 3" stroke="hsl(var(--border) / 0.65)" />
                 <XAxis dataKey="shortName" interval={0} tick={{ fontSize: 10 }} tickLine={false} axisLine={{ stroke: "hsl(var(--foreground) / 0.65)" }} />
                 <YAxis domain={[0, 100]} ticks={[0, 20, 40, 60, 80, 100]} tick={{ fontSize: 10 }} tickLine={false} axisLine={{ stroke: "hsl(var(--foreground) / 0.65)" }} label={{ value: "考评分", angle: -90, position: "insideLeft", style: { fontSize: 10, fill: "hsl(var(--muted-foreground))" } }} />
@@ -494,7 +494,7 @@ function ChinaSecurityMap({ data, selectedInstitution, onDrillChange }: { data: 
           [111.6, 16.5],
           [112.0, 16.05],
           [111.2, 17.1],
-          // 中沙群岛���含黄岩岛）
+          // 中��群岛���含黄岩岛）
           [114.0, 15.5],
           [113.6, 15.0],
           [117.8, 15.4],
