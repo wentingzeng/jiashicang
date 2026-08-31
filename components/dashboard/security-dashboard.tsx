@@ -42,7 +42,7 @@ import {
 
 // 省级 GeoJSON：包含 34 个省级行政区，确保每个省份都有独立边界和点击区域。托管在本地以避免外部请求被拦截。
 const chinaMapUrl = "/maps/china-provinces.json"
-const fujianMapUrl = "https://geo.datav.aliyun.com/areas_v3/bound/geojson?code=350000_full"
+const fujianMapUrl = "https://geo.datav.aliyun.com/areas_v3/bound/geojson?code=350000"
 const fujianCityScores = [{ name: "福州市", value: 91.6 }, { name: "厦门市", value: 94.2 }, { name: "泉州市", value: 89.8 }, { name: "漳州市", value: 87.4 }, { name: "莆田市", value: 86.9 }, { name: "三明市", value: 84.7 }, { name: "南平市", value: 82.6 }, { name: "龙岩市", value: 85.3 }, { name: "宁德市", value: 83.8 }]
 
 const chartGrid = "rgba(79, 112, 145, 0.18)"
@@ -307,7 +307,7 @@ function ChinaSecurityMap({ data, selectedInstitution }: { data: { name: string;
         <Geographies geography={isFujianDetail ? fujianMapUrl : chinaMapUrl}>
           {({ geographies }) =>
             geographies.map((geo, index) => {
-              const province = geo.properties?.name || geo.properties?.NAME || geo.properties?.省份 || `区域${index + 1}`
+              const province = geo.properties?.name || geo.properties?.NAME || geo.properties?.省份 || geo.properties?.市 || `区域${index + 1}`
               const regionItem = isFujianDetail ? fujianCityScores.find((item) => normalizeRegion(item.name) === normalizeRegion(province)) : data.find((item) => normalizeRegion(provinceForBranch(item.name)) === normalizeRegion(province))
 
               const provinceItem = regionItem
@@ -344,6 +344,7 @@ function ChinaSecurityMap({ data, selectedInstitution }: { data: { name: string;
           }
         </Geographies>
       </ComposableMap>
+      {!isFujianDetail && <div className="pointer-events-none absolute bottom-24 left-4 z-10 rounded-md border border-border/60 bg-card/90 px-2 py-1 text-[9px] text-muted-foreground shadow-sm">南沙群岛</div>}
 
       <div className="absolute right-3 top-3 z-20 w-48 rounded-lg border border-border/60 bg-card/95 px-2.5 py-2 shadow-sm">
         <div className="mb-1.5 flex items-center justify-between text-[10px] font-medium text-foreground"><span>全年合计得分</span><span className="font-mono text-primary">≤ {scoreThreshold.toFixed(1)}</span></div>
@@ -355,7 +356,7 @@ function ChinaSecurityMap({ data, selectedInstitution }: { data: { name: string;
       </div>
 
       <div className="pointer-events-none absolute bottom-8 right-2 min-w-56 rounded-lg border border-primary/20 bg-card/95 px-2.5 py-2 text-[11px] shadow-md">
-        {selectedProvince && selectedItem ? (() => { const rank = [...data].sort((a, b) => b.value - a.value).findIndex((item) => item.name === selectedItem.name) + 1; const category = selectedItem.value >= 90 ? "一等行" : selectedItem.value >= 82 ? "二等行" : "三等行"; const categoryRank = [...data].filter((item) => category === "一等行" ? item.value >= 90 : category === "二等行" ? item.value >= 82 && item.value < 90 : item.value < 82).sort((a, b) => b.value - a.value).findIndex((item) => item.name === selectedItem.name) + 1; return <div className="grid gap-1.5"><div className="mb-1 border-b border-border/60 pb-1.5 text-xs font-semibold text-foreground">{selectedProvince}</div><div className="grid grid-cols-[1fr_auto] gap-x-5 gap-y-1 text-muted-foreground"><span>网络安全全年合计得分</span><strong className="font-mono text-[11px] font-semibold text-primary">{selectedItem.value.toFixed(2)}</strong><span>2025年排名（按全行）</span><strong className="font-mono text-foreground">{rank}</strong><span>类别</span><strong className="text-foreground">{category}</strong><span>2025年排名（按等级行）</span><strong className="font-mono text-foreground">{categoryRank}</strong></div></div> })() : <span className="text-muted-foreground">点击省份查看安全能力得分</span>}
+        {selectedProvince && selectedItem ? (() => { const rankingData = isFujianDetail ? fujianCityScores : data; const rank = [...rankingData].sort((a, b) => b.value - a.value).findIndex((item) => item.name === selectedItem.name) + 1; const category = selectedItem.value >= 90 ? "一等" : selectedItem.value >= 82 ? "二等" : "三等"; const categoryRank = [...rankingData].filter((item) => category === "一等" ? item.value >= 90 : category === "二等" ? item.value >= 82 && item.value < 90 : item.value < 82).sort((a, b) => b.value - a.value).findIndex((item) => item.name === selectedItem.name) + 1; return <div className="grid gap-1.5"><div className="mb-1 border-b border-border/60 pb-1.5 text-xs font-semibold text-foreground">{selectedProvince}</div><div className="grid grid-cols-[1fr_auto] gap-x-5 gap-y-1 text-muted-foreground"><span>网络安全全年合计得分</span><strong className="font-mono text-[11px] font-semibold text-primary">{selectedItem.value.toFixed(2)}</strong><span>2025年排名（按全行）</span><strong className="font-mono text-foreground">{rank}</strong><span>类别</span><strong className="text-foreground">{category}</strong><span>2025年排名（按等级行）</span><strong className="font-mono text-foreground">{categoryRank}</strong></div></div> })() : <span className="text-muted-foreground">点击省份查看安全能力得分</span>}
       </div>
 
     </div>
