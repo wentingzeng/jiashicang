@@ -614,7 +614,7 @@ export function SecurityDashboard() {
           </section>
 
           <section className="order-2 flex min-w-0 flex-col gap-5 lg:row-start-1 lg:col-start-2 lg:col-span-2">
-          <Panel title="员工安全画像" tone="primary" className="flex flex-1 flex-col" bodyClassName="p-2.5">
+          <Panel title="员工安全画像" tone="primary" className="flex flex-col self-start" bodyClassName="p-2.5">
             <div className="flex flex-col gap-3">
               <div className="grid grid-cols-2 gap-1.5">
                 <StatCard
@@ -646,7 +646,7 @@ export function SecurityDashboard() {
             </div>
           </Panel>
 
-          <Panel title="网络安全考评" tone="accent" className="flex flex-1 flex-col" bodyClassName="p-2">
+          <Panel title="网络安全考评" tone="accent" className="flex flex-col self-start" bodyClassName="p-2">
             <AssessmentBars data={filteredCapability} />
           </Panel>
           </section>
