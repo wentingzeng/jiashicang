@@ -588,9 +588,27 @@ export function SecurityDashboard() {
           <section className="order-1 flex min-w-0 flex-col gap-4 lg:row-start-1 lg:col-start-1">
             <Panel title={isCapabilityDrilled ? "网络安全综合能力" : "网络安全综合能力视图"} tone="accent" className="flex flex-col" bodyClassName="flex min-h-0 flex-col p-4">
               {isCapabilityDrilled ? (
-                <CapabilityBars data={filteredCapability} label="各分行综合能力得分" selectedInstitution={selectedInstitution} />
+                <>
+                  <CapabilityBars data={filteredCapability} label="各分行综合能力得分" selectedInstitution={selectedInstitution} />
+                  <button
+                    type="button"
+                    onClick={() => setIsCapabilityDrilled(false)}
+                    className="mt-3 w-full rounded-md border border-border/60 bg-muted/30 px-3 py-2 text-center text-xs font-medium text-muted-foreground transition-colors hover:bg-muted/50 hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/50"
+                  >
+                    返回综合能力视图
+                  </button>
+                </>
               ) : (
                 <ChinaSecurityMap data={filteredBranches} selectedInstitution={selectedInstitution} onDrillChange={setIsCapabilityDrilled} />
+              )}
+              {!isCapabilityDrilled && (
+                <button
+                  type="button"
+                  onClick={() => setIsCapabilityDrilled(true)}
+                  className="mt-3 w-full rounded-md border border-primary/25 bg-primary/5 px-3 py-2 text-center text-xs font-semibold text-primary transition-colors hover:bg-primary/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/50"
+                >
+                  点击查看详情
+                </button>
               )}
             </Panel>
           </section>
