@@ -654,23 +654,24 @@ export function SecurityDashboard() {
           </section>
 
           <Panel title="检查发现问题" tone="accent" className="order-4 flex flex-col self-start lg:row-start-2 lg:col-start-2 lg:col-span-2" bodyClassName="flex flex-col gap-4 p-3">
-                <div className="grid grid-cols-2 items-start gap-3">
-                  <div className="grid gap-2">
-                  <StatCard
-                    compact
-                    label="发现问题"
-                    value={securityOverview.inspectionIssues}
-                    unit="项"
-                    icon={AlertTriangle}
-                    color="#e9ad43"
-                  />
-                  <StatCard
-                    label="问题整改率"
-                    value={securityOverview.repairRate}
-                    unit="%"
-                    icon={CheckCircle2}
-                    color="var(--accent)"
-                  />
+                <div className="grid gap-3">
+                  <div className="grid grid-cols-2 gap-2">
+                    <StatCard
+                      compact
+                      label="发现问题"
+                      value={securityOverview.inspectionIssues}
+                      unit="项"
+                      icon={AlertTriangle}
+                      color="#e9ad43"
+                    />
+                    <StatCard
+                      compact
+                      label="问题整改率"
+                      value={securityOverview.repairRate}
+                      unit="%"
+                      icon={CheckCircle2}
+                      color="var(--accent)"
+                    />
                   </div>
                   <div className="grid grid-cols-2 gap-2">
                     <BranchList title="表现突出的三家分行" data={outstandingBranches} color="var(--accent)" compact />
