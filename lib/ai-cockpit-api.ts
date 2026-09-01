@@ -13,7 +13,7 @@ export type AiCockpitRow = {
   dataTime: string
 }
 
-const API_BASE = process.env.NEXT_PUBLIC_API_BASE_URL ?? "http://localhost:8080"
+const API_BASE = process.env.NEXT_PUBLIC_SECURITY_API_BASE_URL ?? process.env.NEXT_PUBLIC_API_BASE_URL ?? "http://localhost:8080"
 
 async function request(path: string): Promise<AiCockpitRow[]> {
   const response = await fetch(`${API_BASE}${path}`, { cache: "no-store" })
