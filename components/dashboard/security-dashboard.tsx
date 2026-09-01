@@ -370,7 +370,7 @@ function ChinaSecurityMap({ data, selectedInstitution, onDrillChange }: { data: 
                   onClick={() => {
                     if (isFujianDetail) {
                       setSelectedProvince(province)
-                    } else if (province.includes("福建")) {
+                    } else if (normalizeRegion(province) === "福建") {
                       setIsFujianDetail(true)
                       setSelectedProvince("福建省")
                       onDrillChange?.(true)
