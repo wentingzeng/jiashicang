@@ -240,14 +240,13 @@ function CapabilityBars({ data, label, selectedInstitutionType }: { data: { name
   }, [selectedInstitutionType, data])
   const metrics = data.map((item) => ({
     ...item,
-    responsibility: Number(item.responsibility ?? item.networkSecurityResponsibility ?? item.network_security_responsibility ?? 0),
-    notification: Number(item.notification ?? item.notificationDeployment ?? item.notification_deployment ?? 0),
-    privacy: Number(item.privacyProtection ?? item.privacy_protection ?? 0),
-    risk: Number(item.riskRectification ?? item.risk_rectification ?? 0),
-    research: Number(item.researchSecurity ?? item.research_security ?? 0),
-    integrated: Number(item.integratedSecurity ?? item.integrated_security ?? 0),
-    highlights: Number(item.branchContribution ?? item.branch_contribution ?? 0),
-    deductions: Number(item.otherDeduction ?? item.other_deduction ?? 0),
+    responsibility: Number(item.network_security_responsibility ?? item.networkSecurityResponsibility ?? 0),
+    notification: Number(item.notification_and_personal_info ?? item.notificationAndPersonalInfo ?? 0),
+    risk: Number(item.risk_discovery_and_rectification ?? item.riskDiscoveryAndRectification ?? 0),
+    research: Number(item.development_security ?? item.developmentSecurity ?? 0),
+    integrated: Number(item.integrated_security_operations ?? item.integratedSecurityOperations ?? 0),
+    highlights: Number(item.branch_highlights_and_contribution ?? item.branchHighlightsAndContribution ?? 0),
+    deductions: Number(item.other_deductions ?? item.otherDeductions ?? 0),
   }))
   const rankedMetrics = [...metrics].sort((a, b) => b.value - a.value)
   const visibleMetrics = selectedBranch || showAll ? rankedMetrics : [...rankedMetrics.slice(0, 3), ...rankedMetrics.slice(-3)]
