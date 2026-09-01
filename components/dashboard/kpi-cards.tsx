@@ -29,7 +29,17 @@ function KpiCardItem({ row, index }: { row: AiCockpitRow; index: number }) {
 export function KpiCards() {
   const { data: rows = [] } = useSWR("ai-cockpit-overview", aiCockpitApi.overview)
   const coreRows = rowsBySection(rows, "核心概览", "核心概览")
-  const orderedRows = coreRows.slice(0, 6)
+  const metricCodes = [
+    "special_group_count",
+    "overview_annual_task_total",
+    "overview_task_completion_rate",
+    "overview_core_overview_delayed_task_count",
+    "overview_benchmark_project_count",
+    "overview_ai_common_capability_scene_reuse_count",
+  ]
+  const orderedRows = metricCodes
+    .map((metricCode) => coreRows.find((row) => row.metricCode === metricCode))
+    .filter((row): row is AiCockpitRow => Boolean(row))
   const overviewRows = orderedRows.slice(0, 3)
   const teamRows = orderedRows.slice(3, 6)
 
