@@ -28,7 +28,7 @@ export const aiCockpitApi = {
 
 export function formatAiValue(value: number | string, unit?: string | null) {
   const text = String(value)
-  return unit ? `${text} ${unit}` : text
+  return unit ? `${text}${unit}` : text
 }
 
 export function latestRowsBySubSection(rows: AiCockpitRow[]) {

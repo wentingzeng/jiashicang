@@ -23,7 +23,9 @@ export function ProgressSummaryPanel() {
     { label: milestoneRateRow?.dataName ?? "关键里程碑达成率", value: milestoneRateRow ? formatAiValue(milestoneRateRow.data, milestoneRateRow.unit) : "-", icon: Milestone },
     {
       label: milestoneDoneRow?.dataName ?? "关键里程碑已达成",
-      value: milestoneDoneRow && milestoneTotalRow ? `${milestoneDoneRow.data}/${milestoneTotalRow.data}` : "-",
+      value: milestoneDoneRow && milestoneTotalRow
+        ? `${milestoneDoneRow.data}/${milestoneTotalRow.data}${milestoneTotalRow.unit ? ` ${milestoneTotalRow.unit}` : ""}`
+        : "-",
       icon: CheckCircle2,
     },
   ]

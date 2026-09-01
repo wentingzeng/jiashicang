@@ -3,7 +3,7 @@
 import { Server, Zap, Boxes, Database, type LucideIcon } from "lucide-react"
 import useSWR from "swr"
 import { Card } from "@/components/ui/card"
-import { aiCockpitApi, rowsBySection, type AiCockpitRow } from "@/lib/ai-cockpit-api"
+import { aiCockpitApi, type AiCockpitRow } from "@/lib/ai-cockpit-api"
 
 type TechGroupDef = { key: string; title: string; icon: LucideIcon }
 
@@ -47,12 +47,23 @@ function GroupPanel({ group, rows }: { group: TechGroupDef; rows: AiCockpitRow[]
 
 export function TechFoundationStrip() {
   const { data: rows = [] } = useSWR("ai-cockpit-overview", aiCockpitApi.overview)
+  const foundationRows = rows.filter((row) => row.section === "技术底座")
+  const groupedRows = foundationRows.reduce<Record<string, AiCockpitRow[]>>((groups, row) => {
+    const key = row.subSection || "技术底座"
+    ;(groups[key] ??= []).push(row)
+    return groups
+  }, {})
+  const groups = Object.entries(groupedRows).slice(0, 4).map(([title, groupRows], index) => ({
+    ...(techGroupDefs[index] ?? { key: `foundation-${index}`, icon: Database }),
+    title,
+    rows: groupRows,
+  }))
 
   return (
     <Card className="gap-4 p-5">
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
-        {techGroupDefs.map((group) => (
-          <GroupPanel key={group.key} group={group} rows={rowsBySection(rows, "技术底座", group.title)} />
+        {groups.map((group) => (
+          <GroupPanel key={group.key} group={group} rows={group.rows} />
         ))}
       </div>
     </Card>
