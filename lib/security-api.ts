@@ -68,7 +68,14 @@ export function normalizeRatio(value: number) {
 }
 
 export function toCapabilityData(rows: BranchScore[]) {
-  return rows.map((row) => ({ name: row.branchName, value: Number(row.annualTotalScore ?? 0), rankByAllBranches: row.rankByAllBranches, rankByBranchLevel: row.rankByBranchLevel, branchLevel: row.branchLevel }))
+  return rows.map((row) => ({
+    ...row,
+    name: row.branchName,
+    value: Number(row.annualTotalScore ?? 0),
+    rankByAllBranches: row.rankByAllBranches,
+    rankByBranchLevel: row.rankByBranchLevel,
+    branchLevel: row.branchLevel,
+  }))
 }
 
 const INDICATOR_ORDER = [
