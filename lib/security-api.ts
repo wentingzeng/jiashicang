@@ -71,8 +71,22 @@ export function toCapabilityData(rows: BranchScore[]) {
   return rows.map((row) => ({ name: row.branchName, value: Number(row.annualTotalScore ?? 0) }))
 }
 
+const INDICATOR_ORDER = [
+  "全行特别重大、重大网络安全事件数",
+  "全行特别重大、重大数据安全事件数",
+  "网络安全检查分支机构覆盖面",
+  "安全工单自动化派发率",
+  "安全告警AI研判准确率",
+  "商用密码应用安全性评估通过率",
+]
+
 export function toIndicatorLabels(rows: SecurityIndicator[]) {
-  return rows.map((row) => {
+  const orderedRows = [...rows].sort((a, b) => {
+    const ai = INDICATOR_ORDER.findIndex((name) => a.indicatorName.includes(name))
+    const bi = INDICATOR_ORDER.findIndex((name) => b.indicatorName.includes(name))
+    return (ai < 0 ? INDICATOR_ORDER.length : ai) - (bi < 0 ? INDICATOR_ORDER.length : bi)
+  })
+  return orderedRows.map((row) => {
     const unit = row.valueUnit?.toLowerCase()
     const value = unit === "percent" ? `${normalizeRatio(row.indicatorValue)}%` : unit === "count" ? String(row.indicatorValue) : `${row.indicatorValue}${row.valueUnit ?? ""}`
     return `${row.indicatorName}：${value}`

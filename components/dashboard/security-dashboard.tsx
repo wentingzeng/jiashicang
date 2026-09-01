@@ -182,7 +182,7 @@ function ChartBox({
         {data.map((item) => {
           const barHeight = Math.max((item.value / maxValue) * (height - 80), 8)
           return (
-            <div key={item.name} className="group flex min-w-[2.6rem] flex-1 flex-col items-center justify-end gap-1" title={`${item.name}：${item.value.toLocaleString()}人次`}>
+            <div key={item.name} className="group flex w-10 shrink-0 flex-col items-center justify-end gap-1" title={`${item.name}：${item.value.toLocaleString()}人次`}>
               <span className="whitespace-nowrap font-mono text-[9px] text-muted-foreground opacity-100">{item.value.toLocaleString()}</span>
               <div className="w-full rounded-t-md transition-all group-hover:brightness-110" style={{ height: `${barHeight}px`, minHeight: 8, background: `linear-gradient(180deg, ${color}, ${color}99)` }} />
               <span className="max-w-[3.5rem] truncate text-[10px] text-muted-foreground">{item.name.replace("分行", "")}</span>
@@ -257,7 +257,7 @@ function CapabilityBars({ data, label, selectedInstitutionType }: { data: { name
     return <div className="flex h-full min-h-0 flex-col rounded-lg border border-border/50 bg-background/20 p-3"><div className="mb-3 flex items-center justify-between text-xs text-muted-foreground"><span className="text-sm font-medium text-foreground/80">{label}</span>{selectedBranch ? <span>点击分行查看各项得分</span> : <button type="button" onClick={() => setShowAll(!showAll)} className="text-sm font-medium text-primary transition-colors hover:underline">{showAll ? "返回突出分行" : "点击查看全部分行"}</button>}</div>{selectedBranch ? <div><div className="mb-2 flex items-center justify-between rounded-lg border border-primary/15 bg-primary/5 px-3 py-2"><span className="text-xs font-semibold text-foreground">{selectedBranch} · 各项得分</span><button type="button" onClick={() => setSelectedBranch(null)} className="rounded-md border border-primary/20 bg-card px-2 py-1 text-[10px] font-medium text-primary transition-colors hover:bg-primary/10">返回总览</button></div><CompactDetailTable height={350} className="rounded-xl bg-card/90 text-[11px] shadow-md" headers={["指标", "得分"]} rows={(() => { const item = metrics.find((entry) => entry.name === selectedBranch); return item ? [["全年合计得分", item.value.toFixed(2)], ["压紧压实网络安全责任", item.responsibility.toFixed(1)], ["重要通知和工作部署落实情况及个人信息保护", item.notification.toFixed(1)], ["及时发现及整改网络安全隐患", item.risk.toFixed(1)], ["研发安全", item.research.toFixed(1)], ["总分行一体化安全运行落实情况", item.integrated.toFixed(1)], ["分行网络安全工作亮点及集团贡献情况", item.highlights.toFixed(1)], ["其他扣分项", item.deductions.toFixed(1)]] : []})()} /></div> : <div>{showAll ? <div className="flex h-[650px] flex-col"><div className="mb-1 text-[10px] text-muted-foreground">全部分行综合能力</div><div className="min-h-0 flex-1 overflow-y-auto pr-1">{rankedMetrics.map((item, index) => <button key={item.name} type="button" onClick={() => setSelectedBranch(item.name)} className="grid w-full grid-cols-[20px_72px_1fr_42px] items-center gap-2 py-2.5 text-left text-[11px] hover:bg-primary/5"><span className="font-mono text-muted-foreground">{String(index + 1).padStart(2, "0")}</span><span className="truncate text-foreground/80">{item.name.replace("分行", "")}</span><span className="h-2 overflow-hidden rounded-full bg-primary/10"><span className="block h-full rounded-full bg-gradient-to-r from-[#4ba8d8] to-[#42bdb7]" style={{ width: `${item.value}%` }} /></span><strong className="text-right font-mono tabular-nums text-foreground">{item.value.toFixed(2)}</strong></button>)}</div></div> : <div className="space-y-2">
 <div><div className="mb-1 text-sm font-bold tracking-wide text-primary">前三名：</div><div className="space-y-1.5">{topMetrics.map(renderBar)}</div></div><div><div className="mb-1 text-sm font-bold tracking-wide text-primary">后三名：</div><div className="space-y-1.5">{bottomMetrics.map(renderBar)}</div></div></div>}</div>} </div>
 /* legacy chart body removed */
-/*<span><i className="mr-1 inline-block size-2 rounded-sm bg-[#42bdb7]" />责任落实</span><span><i className="mr-1 inline-block size-2 rounded-sm bg-[#e5b45c]" />通知部署</span><span><i className="mr-1 inline-block size-2 rounded-sm bg-[#8494d8]" />隐患整改</span></div><ResponsiveContainer width="100%" height={230}><BarChart data={metrics} margin={{ top: 8, right: 4, left: -18, bottom: 8 }}><CartesianGrid vertical={false} strokeDasharray="3 3" /><XAxis dataKey="name" tick={{ fontSize: 9 }} tickFormatter={(value) => value.replace("分行", "")} interval={0} /><YAxis domain={[0, 100]} tick={{ fontSize: 9 }} /><Tooltip content={({ active, payload, label }) => active && payload?.length ? <div className="rounded-lg border border-border/50 bg-card/95 px-2 py-1.5 text-[9px] shadow-md"><div className="mb-1 font-medium text-foreground">{label}</div>{payload.map((entry) => <div key={String(entry.dataKey)} className="flex items-center justify-between gap-3 leading-4"><span className="max-w-44 truncate text-muted-foreground">{entry.name}</span><strong className="font-mono text-foreground">{Number(entry.value).toFixed(1)}</strong></div>)}</div> : null} /><Bar dataKey="value" name="全年合计得分" fill="#4ba8d8" radius={[3, 3, 0, 0]} /><Bar dataKey="responsibility" name="压紧压实网络安全责任" fill="#42bdb7" radius={[3, 3, 0, 0]} /><Bar dataKey="notification" name="重要通知和工作部署落实情况及个人信息保护" fill="#e5b45c" radius={[3, 3, 0, 0]} /><Bar dataKey="risk" name="及时发现及整改网络安全风险隐患" fill="#8494d8" radius={[3, 3, 0, 0]} /></BarChart></ResponsiveContainer></>}</div>
+/*<span><i className="mr-1 inline-block size-2 rounded-sm bg-[#42bdb7]" />责任落实</span><span><i className="mr-1 inline-block size-2 rounded-sm bg-[#e5b45c]" />通知部署</span><span><i className="mr-1 inline-block size-2 rounded-sm bg-[#8494d8]" />隐患整改</span></div><ResponsiveContainer width="100%" height={230}><BarChart data={metrics} margin={{ top: 8, right: 4, left: -18, bottom: 8 }}><CartesianGrid vertical={false} strokeDasharray="3 3" /><XAxis dataKey="name" tick={{ fontSize: 9 }} tickFormatter={(value) => value.replace("分行", "")} interval={0} /><YAxis domain={[0, 100]} tick={{ fontSize: 9 }} /><Tooltip content={({ active, payload, label }) => active && payload?.length ? <div className="rounded-lg border border-border/50 bg-card/95 px-2 py-1.5 text-[9px] shadow-md"><div className="mb-1 font-medium text-foreground">{label}</div>{payload.map((entry) => <div key={String(entry.dataKey)} className="flex items-center justify-between gap-3 leading-4"><span className="max-w-44 truncate text-muted-foreground">{entry.name}</span><strong className="font-mono text-foreground">{Number(entry.value).toFixed(1)}</strong></div>)}</div> : null} /><Bar dataKey="value" name="全年合计得分" fill="#4ba8d8" radius={[3, 3, 0, 0]} /><Bar dataKey="responsibility" name="压紧压实网络安全责任" fill="#42bdb7" radius={[3, 3, 0, 0]} /><Bar dataKey="notification" name="重要通知和工作部署落实情况及个人信息保护" fill="#e5b45c" radius={[3, 3, 0, 0]} /><Bar dataKey="risk" name="及���发现及整改网络安全风险隐患" fill="#8494d8" radius={[3, 3, 0, 0]} /></BarChart></ResponsiveContainer></>}</div>
 */
 }
 
@@ -268,7 +268,7 @@ function CategoryBars({ data, label, color = "#42bdb7" }: { data: { name: string
 }
 
 function AssessmentBars({ data }: { data: { name: string; value: number }[] }) {
-  const sorted = [...data].sort((a, b) => b.value - a.value).slice(0, 12).map((item) => ({ ...item, shortName: item.name.replace("分行", "") }))
+  const sorted = [...data].sort((a, b) => b.value - a.value).map((item) => ({ ...item, shortName: item.name.replace("分行", "") }))
   const [details, setDetails] = useState(false)
   const max = Math.max(...sorted.map((item) => item.value), 1)
   return (
@@ -293,7 +293,7 @@ function AssessmentBars({ data }: { data: { name: string; value: number }[] }) {
                 <tr key={item.name} className={index % 2 ? "bg-muted/20" : "bg-card/40"}>
                   <td className="px-3 py-2 font-mono text-muted-foreground">{String(index + 1).padStart(2, "0")}</td>
                   <td className="px-3 py-2 text-foreground">{item.name}</td>
-                  <td className="px-3 py-2 text-right font-mono text-[11px] font-normal text-primary">{item.value}</td>
+                  <td className="px-3 py-2 text-right font-mono text-[11px] font-normal text-primary">{item.value.toFixed(2)}</td>
                 </tr>
               ))}
             </tbody>
@@ -418,9 +418,9 @@ function ChinaSecurityMap({ data, selectedInstitutionType, fujianCityScores, onD
         <div className="mb-1.5 flex items-center justify-between text-[10px] font-medium text-foreground"><span>全年合计得分</span><span className="font-mono text-primary">≤ {scoreThreshold.toFixed(1)}</span></div>
         <div className="relative h-4">
           <div className="absolute inset-x-0 top-1.5 h-2 rounded-full bg-gradient-to-r from-[hsl(204_58%_77%)] via-[hsl(204_58%_58%)] to-[hsl(204_58%_32%)]" aria-hidden="true" />
-          <input aria-label="调整地图显示��最高分数" type="range" min={minScore} max={maxScore} step="0.1" value={scoreThreshold} onChange={(event) => setScoreThreshold(Number(event.target.value))} className="absolute inset-0 h-4 w-full cursor-pointer appearance-none bg-transparent accent-primary" />
+          <input aria-label="调整地图显示的最高分数" type="range" min={minScore} max={maxScore} step="0.1" value={scoreThreshold} onChange={(event) => setScoreThreshold(Number(event.target.value))} className="absolute inset-0 h-4 w-full cursor-pointer appearance-none bg-transparent accent-primary" />
         </div>
-        <div className="mt-1 flex items-center justify-between font-mono text-[9px] text-muted-foreground"><span>最低��� {minScore.toFixed(1)}</span><span>最高分 {maxScore.toFixed(1)}</span></div>
+        <div className="mt-1 flex items-center justify-between font-mono text-[9px] text-muted-foreground"><span>最低分 {minScore.toFixed(2)}</span><span>最高分 {maxScore.toFixed(2)}</span></div>
       </div>
 
       <div className="pointer-events-none absolute bottom-8 right-2 min-w-56 rounded-lg border border-primary/20 bg-card/95 px-2.5 py-2 text-[11px] shadow-md">
@@ -643,7 +643,7 @@ export function SecurityDashboard() {
 
         <div className="mt-5 grid items-start gap-2 lg:grid-cols-3 lg:grid-rows-[460px_auto]">
           <section className="order-1 flex min-h-full min-w-0 flex-col gap-4 lg:row-start-1 lg:row-span-2 lg:col-start-1">
-            <Panel title={isCapabilityDrilled ? "网络安全综合能力" : "网���安全综合能力视图"} tone="accent" className="flex h-full min-h-0 flex-col" bodyClassName="flex min-h-0 flex-1 flex-col p-4">
+            <Panel title={isCapabilityDrilled ? "网络安全综合能力" : "网络安全综合能力视图"} tone="accent" className="flex h-full min-h-0 flex-col" bodyClassName="flex min-h-0 flex-1 flex-col p-4">
               {isCapabilityDrilled ? (
                 <div className="flex min-h-0 flex-1 flex-col">
                   <CapabilityBars data={filteredCapability} label="各分行综合能力得分" selectedInstitutionType="全部机构" />
@@ -675,9 +675,9 @@ export function SecurityDashboard() {
             <div className="flex flex-col gap-3">
               <div className="grid grid-cols-2 gap-1.5">
                 <StatCard
-                  label="安全培训覆盖率"
-                  value={training.length ? Math.round((training[0].safetyTrainingCoverage <= 1 ? training[0].safetyTrainingCoverage * 100 : training[0].safetyTrainingCoverage) * 10) / 10 : 0}
-                  unit="%"
+                  label="安全培训人次"
+                  value={training.reduce((sum, row) => sum + Number(row.safetyTrainingCount || 0), 0).toLocaleString()}
+                  unit="人次"
                   icon={Users}
                   color="var(--primary)"
                   compact
@@ -692,7 +692,7 @@ export function SecurityDashboard() {
                 />
               </div>
               <div className="grid min-h-0 flex-1 grid-cols-1 gap-2">
-                <div className="flex min-w-0 h-[150px] flex-col rounded-lg border border-border/50 bg-background/20 px-2 pb-1 pt-2"><div className="mb-1 flex h-5 shrink-0 items-center justify-between text-xs text-muted-foreground"><span>安全培训覆盖率</span><span className="font-mono text-[10px]">单位：%</span></div><div className="min-h-0 flex-1 w-full"><ResponsiveContainer width="100%" height="100%"><LineChart data={training.map((row) => ({ name: row.unitName.replace("分行", ""), value: normalizeRatio(row.safetyTrainingCoverage) }))} margin={{ top: 12, right: 10, bottom: 0, left: -18 }}><CartesianGrid vertical={false} strokeDasharray="3 3" stroke="hsl(var(--border))" /><XAxis dataKey="name" tick={{ fontSize: 10, dy: 3 }} tickLine={false} axisLine={false} /><YAxis domain={[70, 100]} ticks={[70, 80, 90, 100]} tick={{ fontSize: 10 }} tickLine={false} axisLine={false} tickFormatter={(value) => `${value}%`} /><Tooltip formatter={(value) => [`${value}%`, "覆盖率"]} /><Line type="monotone" dataKey="value" stroke="#25a8d2" strokeWidth={2.5} dot={{ r: 3, fill: "#25a8d2", strokeWidth: 1, stroke: "hsl(var(--background))" }} activeDot={{ r: 5 }} /></LineChart></ResponsiveContainer></div></div>
+                <div className="flex min-w-0 h-[150px] flex-col rounded-lg border border-border/50 bg-background/20 px-2 pb-1 pt-2"><div className="mb-1 flex h-5 shrink-0 items-center justify-between text-xs text-muted-foreground"><span>安全培训覆盖率</span><span className="font-mono text-[10px]">单位：%</span></div><div className="min-h-0 flex-1 w-full overflow-x-auto"><div style={{ minWidth: `${Math.max(training.length * 72, 420)}px`, height: "100%" }}><ResponsiveContainer width="100%" height="100%"><LineChart width={Math.max(training.length * 72, 420)} data={training.map((row) => ({ name: row.unitName.replace("分行", ""), value: normalizeRatio(row.safetyTrainingCoverage) }))} margin={{ top: 12, right: 10, bottom: 0, left: -18 }}><CartesianGrid vertical={false} strokeDasharray="3 3" stroke="hsl(var(--border))" /><XAxis dataKey="name" tick={{ fontSize: 10, dy: 3 }} tickLine={false} axisLine={false} /><YAxis domain={[70, 100]} ticks={[70, 80, 90, 100]} tick={{ fontSize: 10 }} tickLine={false} axisLine={false} tickFormatter={(value) => `${value}%`} /><Tooltip formatter={(value) => [`${value}%`, "覆盖率"]} /><Line type="monotone" dataKey="value" stroke="#25a8d2" strokeWidth={2.5} dot={{ r: 3, fill: "#25a8d2", strokeWidth: 1, stroke: "hsl(var(--background))" }} activeDot={{ r: 5 }} /></LineChart></ResponsiveContainer></div></div></div>
                 <div className="min-w-0"><ChartBox
                   data={filteredViolations}
                   color="#d9953f"
