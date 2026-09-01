@@ -36,7 +36,48 @@ const tooltipStyle = {
   boxShadow: "0 8px 24px rgba(15, 23, 42, 0.16)",
 };
 const palette = ["#3157d5", "#14a89a", "#f0a33a", "#d85d70", "#7468d9"];
-const kpiIcons = [
+const statusData = [
+  { name: "已启动", value: 67.7 },
+  { name: "已申请未批复", value: 23.7 },
+  { name: "已批复超期未启动", value: 2.7 },
+  { name: "已批复未启动", value: 5.9 },
+];
+const progressData = [
+  { name: "业务需求", value: 52 },
+  { name: "总体设计", value: 51 },
+  { name: "商务", value: 65 },
+  { name: "编码测试", value: 83 },
+  { name: "上线准备", value: 11 },
+];
+const overdueData = [
+  { name: "轻度延期项目", count: 23, value: 23 },
+  { name: "中度延期项目", count: 3, value: 3 },
+  { name: "重度延期项目", count: 3, value: 3 },
+];
+const taskData = [
+  { name: "待执行的任务数", value: 331 },
+  { name: "进行中的任务数", value: 64 },
+  { name: "延期的任务数", value: 22 },
+  { name: "已完成的任务数", value: 119 },
+];
+const keyProgressData = [
+  { name: "待启动项目", count: 98 },
+  { name: "已投产项目", count: 133 },
+  { name: "在建项目", count: 188 },
+  { name: "延期项目", count: 5 },
+];
+
+const deliveryData = [
+  { name: "2026投产项目", count: 145, days: 176 },
+  { name: "投产顺序项目", count: 40, days: 23 },
+  { name: "投产敏捷项目", count: 105, days: 107 },
+];
+const gauges = [
+  { label: "顺序项目科技实施阶段时长占比", value: 51, min: 0, max: 100 },
+  { label: "敏捷项目首版本平均交付周期", value: 107, min: 100, max: 110 },
+  { label: "敏捷项目版本平均交付周期", value: 23, min: 20, max: 25 },
+];
+const kpis = [
   { indicatorId: "ID01", label: "年度需求计划", value: "329", unit: "个", icon: CalendarDays },
   { indicatorId: "ID06", label: "总行在建项目数", value: "321", unit: "个", icon: Layers3 },
   { indicatorId: "ID12", label: "总行投产项目数", value: "145", unit: "个", icon: ClipboardList },
@@ -47,23 +88,17 @@ const kpiIcons = [
 
 type ProjectIndicatorApiRow = {
   indicatorId?: string;
-  metricCode?: string;
-  pageType?: string;
-  section?: string;
-  subSection?: string;
   dimension?: string;
   metricName: string;
-  dataName?: string;
-  unit?: string | null;
   currentValue?: number | string | null;
   currentUnit?: string | null;
   targetValue?: number | string | null;
 };
 
-const PROJECT_API_BASE_URL = process.env.NEXT_PUBLIC_SECURITY_API_BASE_URL ?? process.env.NEXT_PUBLIC_API_BASE_URL ?? "http://localhost:8080";
+const PROJECT_API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL ?? "http://localhost:8080";
 
-function toMetricNumber(value: number | string | null | undefined, fallback = 0) {
-  const parsed = typeof value === "number" ? value : Number(String(value ?? "").replace(/[%，,]/g, ""));
+function toMetricNumber(value: number | string | null | undefined, fallback: number) {
+  const parsed = typeof value === "number" ? value : Number(value);
   return Number.isFinite(parsed) ? parsed : fallback;
 }
 
@@ -376,26 +411,14 @@ export function ProjectDashboard() {
 
   useEffect(() => {
     const controller = new AbortController();
-    fetch(`${PROJECT_API_BASE_URL}/api/ai-cockpit/data?pageType=${encodeURIComponent("驾驶舱总览")}`, { signal: controller.signal })
+    fetch(`${PROJECT_API_BASE_URL}/api/project/indicators?year=2026`, { signal: controller.signal })
       .then((response) => {
         if (!response.ok) throw new Error(`Project indicators API ${response.status}`);
         return response.json() as Promise<{ code?: number; data?: ProjectIndicatorApiRow[] } | ProjectIndicatorApiRow[]>;
       })
       .then((payload) => {
         const rows = Array.isArray(payload) ? payload : payload.data;
-        setApiRows(Array.isArray(rows) ? rows.map((row: any) => ({
-          indicatorId: row.indicatorId ?? row.metricCode,
-          metricCode: row.metricCode,
-          pageType: row.pageType,
-          section: row.section,
-          subSection: row.subSection,
-          currentValue: row.currentValue ?? row.data,
-          targetValue: row.targetValue,
-          currentUnit: row.currentUnit ?? row.unit,
-          unit: row.unit,
-          dataName: row.dataName,
-          metricName: row.metricName ?? row.dataName,
-        })) : []);
+        setApiRows(Array.isArray(rows) ? rows : []);
         setApiState("ready");
       })
       .catch((error: unknown) => {
@@ -407,109 +430,92 @@ export function ProjectDashboard() {
 
   const apiById = useMemo(() => {
     const result = new Map<string, ProjectIndicatorApiRow>();
-    apiRows.forEach((row, index) => {
+    apiRows.forEach((row) => {
       if (row.indicatorId) result.set(row.indicatorId, row);
-      if (row.metricCode) result.set(row.metricCode, row);
-      result.set(`ID${String(index + 1).padStart(2, "0")}`, row);
     });
     return result;
   }, [apiRows]);
 
-  const rowFor = (indicatorId: string) => apiById.get(indicatorId);
-  const rowByCode = (prefix: string) => apiRows.find((row) => row.metricCode?.startsWith(prefix));
-  const valueByCode = (prefix: string) => toMetricNumber(rowByCode(prefix)?.currentValue, 0);
-  const nameByCode = (prefix: string, fallback: string) => rowByCode(prefix)?.dataName ?? fallback;
-  const unitByCode = (prefix: string, fallback: string) => rowByCode(prefix)?.unit ?? rowByCode(prefix)?.currentUnit ?? fallback;
-  const valueFor = (indicatorId: string, _fallback = 0) => toMetricNumber(rowFor(indicatorId)?.currentValue, 0);
-  const nameFor = (indicatorId: string, fallback = "暂无数据") => rowFor(indicatorId)?.dataName ?? fallback;
-  const unitFor = (indicatorId: string, fallback = "") => rowFor(indicatorId)?.unit ?? fallback;
+  const valueFor = (indicatorId: string, fallback: number) =>
+    toMetricNumber(apiById.get(indicatorId)?.currentValue, fallback);
 
-  const targetFor = (indicatorId: string, fallback = 0) =>
+  const targetFor = (indicatorId: string, fallback: number) =>
     toMetricNumber(apiById.get(indicatorId)?.targetValue, fallback);
 
-  const displayKpis = useMemo(() => {
-    const coreRows = apiRows.filter((row) => row.section === "核心概览" && row.subSection === "核心概览");
-    return coreRows.slice(0, 6).map((row, index) => ({
-      indicatorId: row.metricCode ?? `core-${index}`,
-      label: row.dataName ?? "暂无数据",
-      value: String(row.currentValue ?? ""),
-      unit: row.unit ?? "",
-      icon: kpiIcons[index]?.icon ?? CalendarDays,
-      danger: kpiIcons[index]?.danger,
-    }));
-  }, [apiRows]);
+  const displayKpis = useMemo(
+    () => kpis.map((item) => {
+      const row = apiById.get(item.indicatorId);
+      if (!row) return item;
+      return {
+        ...item,
+        value: String(toMetricNumber(row.currentValue, Number(item.value))),
+        unit: row.currentUnit ?? item.unit,
+      };
+    }),
+    [apiById],
+  );
 
   const statusCounts = [
-    valueFor("ID03"),
-    valueFor("ID02"),
-    valueFor("ID04"),
-    valueFor("ID05"),
+    valueFor("ID03", 221),
+    valueFor("ID02", 78),
+    valueFor("ID04", 9),
+    valueFor("ID05", 21),
   ];
   const statusTotal = statusCounts.reduce((sum, value) => sum + value, 0);
   const liveStatusData = [
-    { name: nameFor("ID03", "已启动"), value: statusTotal > 0 ? (statusCounts[0] / statusTotal) * 100 : 0 },
-    { name: nameFor("ID02", "已申请未批复"), value: statusTotal > 0 ? (statusCounts[1] / statusTotal) * 100 : 0 },
-    { name: nameFor("ID04", "已批复超期未启动"), value: statusTotal > 0 ? (statusCounts[2] / statusTotal) * 100 : 0 },
-    { name: nameFor("ID05", "已批复未启动"), value: statusTotal > 0 ? (statusCounts[3] / statusTotal) * 100 : 0 },
+    { name: "已启动", value: statusTotal > 0 ? (statusCounts[0] / statusTotal) * 100 : 0 },
+    { name: "已申请未批复", value: statusTotal > 0 ? (statusCounts[1] / statusTotal) * 100 : 0 },
+    { name: "已批复超期未启动", value: statusTotal > 0 ? (statusCounts[2] / statusTotal) * 100 : 0 },
+    { name: "已批复未启动", value: statusTotal > 0 ? (statusCounts[3] / statusTotal) * 100 : 0 },
   ];
   const liveProgressData = ["业务需求", "总体设计", "商务", "编码测试", "上线准备"].map((name, index) => ({
-    name: nameFor(`ID0${7 + index}`, name),
-    value: valueFor(`ID0${7 + index}`),
+    name,
+    value: valueFor(`ID0${7 + index}`, progressData[index].value),
   }));
   const liveOverdueData = ["轻度延期项目", "中度延期项目", "重度延期项目"].map((name, index) => ({
-    name: nameFor(`ID${16 + index}`, name),
-    count: valueFor(`ID${16 + index}`),
-    value: valueFor(`ID${16 + index}`),
+    name,
+    count: valueFor(`ID${16 + index}`, overdueData[index].count),
+    value: valueFor(`ID${16 + index}`, overdueData[index].value),
   }));
-  const liveTaskData = [
-    { prefix: "overview_task_not", fallback: "待执行的任务数" },
-    { prefix: "overview_task_in_p", fallback: "进行中的任务数" },
-    { prefix: "overview_work_over", fallback: "延期的任务数" },
-    { prefix: "overview_task_comp", fallback: "已完成的任务数" },
-  ].map(({ prefix, fallback }) => ({
-    name: nameByCode(prefix, fallback),
-    value: valueByCode(prefix),
+  const liveTaskData = ["待执行的任务数", "进行中的任务数", "延期的任务数", "已完成的任务数"].map((name, index) => ({
+    name,
+    value: valueFor(`ID${23 + index}`, taskData[index].value),
   }));
-  const liveKeyProgressData = [
-    { prefix: "overview_task_not", fallback: "待启动项目" },
-    { prefix: "overview_task_comp", fallback: "已投产项目" },
-    { prefix: "overview_annual_task", fallback: "年度任务总数" },
-    { prefix: "overview_work_over", fallback: "延期项目" },
-  ].map(({ prefix, fallback }) => ({
-    name: nameByCode(prefix, fallback),
-    count: valueByCode(prefix),
+  const liveKeyProgressData = ["待启动项目", "已投产项目", "在建项目", "延期项目"].map((name, index) => ({
+    name,
+    count: valueFor(`ID${[27, 29, 28, 30][index]}`, keyProgressData[index].count),
   }));
   const liveDeliveryData = [
-    { name: nameFor("ID45", "2026投产项目"), count: valueFor("ID45"), days: valueFor("ID46") },
-    { name: nameFor("ID47", "投产顺序项目"), count: valueFor("ID47"), days: valueFor("ID48") },
-    { name: nameFor("ID49", "投产敏捷项目"), count: valueFor("ID49"), days: valueFor("ID50") },
+    { name: "2026投产项目", count: valueFor("ID45", 145), days: valueFor("ID46", 176) },
+    { name: "投产顺序项目", count: valueFor("ID47", 40), days: valueFor("ID48", 315) },
+    { name: "投产敏捷项目", count: valueFor("ID49", 105), days: valueFor("ID50", 126) },
   ];
   const liveGauges = [
     {
-      label: nameFor("ID35", "顺序项目科技实施阶段时长占比"),
-      value: valueFor("ID35"),
-      progress: targetFor("ID35"),
+      label: "顺序项目科技实施阶段时长占比",
+      value: valueFor("ID35", 51),
+      progress: targetFor("ID35", 60),
       min: 0,
       max: 100,
     },
     {
-      label: nameFor("ID41", "敏捷项目首版本平均交付周期"),
-      value: valueFor("ID41"),
-      progress: targetFor("ID41"),
+      label: "敏捷项目首版本平均交付周期",
+      value: valueFor("ID41", 107),
+      progress: targetFor("ID41", 105),
       min: 100,
       max: 110,
     },
     {
-      label: nameFor("ID43", "敏捷项目版本平均交付周期"),
-      value: valueFor("ID43"),
-      progress: targetFor("ID43"),
+      label: "敏捷项目版本平均交付周期",
+      value: valueFor("ID43", 23),
+      progress: targetFor("ID43", 22.5),
       min: 20,
       max: 30,
     },
   ];
   const livePerformanceData = ["ID19", "ID20", "ID21", "ID22"].map((id, index) => ({
     name: ["[0,0.5)", "[0.5,1)", "[1,1.5)", "≥1.5"][index],
-    value: valueFor(id),
+    value: valueFor(id, [35, 144, 46, 4][index]),
   }));
   const liveTaskTotal = liveTaskData.reduce((total, item) => total + item.value, 0);
   const liveKeyProgressTotal = liveKeyProgressData.reduce((total, item) => total + item.count, 0);
@@ -595,7 +601,7 @@ export function ProjectDashboard() {
 <div key={item.name} className="flex h-32 min-h-32 flex-col rounded-lg border border-border/60 bg-card p-3 shadow-sm">
   <div className="flex items-center justify-between gap-2"><span className="text-xs font-medium text-muted-foreground">{item.name}</span><span className="size-2 rounded-full" style={{ backgroundColor: palette[index] }} /></div>
   <p className="mt-2 font-mono text-2xl font-bold tracking-tight" style={{ color: palette[index] }}>{item.count}<span className="ml-1 text-sm font-medium">项</span></p>
-  <div className="mt-auto pt-4"><div className="mb-2 flex justify-between text-[10px] text-muted-foreground"><span>项���占比</span><span>{((item.count / liveKeyProgressTotal) * 100).toFixed(2)}%</span></div><div className="h-2 rounded-full bg-muted"><div className="h-full rounded-full" style={{ width: `${(item.count / liveKeyProgressTotal) * 100}%`, backgroundColor: palette[index] }} /></div></div>
+  <div className="mt-auto pt-4"><div className="mb-2 flex justify-between text-[10px] text-muted-foreground"><span>项目占比</span><span>{((item.count / liveKeyProgressTotal) * 100).toFixed(2)}%</span></div><div className="h-2 rounded-full bg-muted"><div className="h-full rounded-full" style={{ width: `${(item.count / liveKeyProgressTotal) * 100}%`, backgroundColor: palette[index] }} /></div></div>
 </div>
               ))}
             </div>
