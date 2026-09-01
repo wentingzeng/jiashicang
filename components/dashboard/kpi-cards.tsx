@@ -5,22 +5,10 @@ import useSWR from "swr"
 import { Card } from "@/components/ui/card"
 import { aiCockpitApi, rowsBySection, type AiCockpitRow } from "@/lib/ai-cockpit-api"
 
-const iconKeywords: [string, LucideIcon][] = [
-  ["专班数量", Users],
-  ["任务总数", CheckCircle2],
-  ["完成率", Target],
-  ["延期", Clock],
-  ["标杆", Award],
-  ["复用", Layers],
-]
+const cardIcons: LucideIcon[] = [Users, CheckCircle2, Target, Clock, Award, Layers]
 
-function iconForRow(row: AiCockpitRow): LucideIcon {
-  const match = iconKeywords.find(([keyword]) => row.dataName.includes(keyword))
-  return match ? match[1] : Layers
-}
-
-function KpiCardItem({ row }: { row: AiCockpitRow }) {
-  const Icon = iconForRow(row)
+function KpiCardItem({ row, index }: { row: AiCockpitRow; index: number }) {
+  const Icon = cardIcons[index] ?? Layers
 
   return (
     <Card className="flex-row items-center gap-3 p-4 transition-colors hover:border-primary/40">
@@ -41,10 +29,7 @@ function KpiCardItem({ row }: { row: AiCockpitRow }) {
 export function KpiCards() {
   const { data: rows = [] } = useSWR("ai-cockpit-overview", aiCockpitApi.overview)
   const coreRows = rowsBySection(rows, "核心概览", "核心概览")
-  const orderKeywords = ["专班数量", "年度任务总数", "任务完成率", "延期任务数", "示范标杆项目数", "AI共性"]
-  const orderedRows = orderKeywords
-    .map((keyword) => coreRows.find((row) => row.dataName.includes(keyword)))
-    .filter((row): row is AiCockpitRow => Boolean(row))
+  const orderedRows = coreRows.slice(0, 6)
   const overviewRows = orderedRows.slice(0, 3)
   const teamRows = orderedRows.slice(3, 6)
 
@@ -53,15 +38,15 @@ export function KpiCards() {
       <div className="grid grid-cols-1 gap-3 md:grid-cols-2 lg:grid-cols-6">
         <div className="flex flex-col gap-2 lg:col-span-3">
           <div className="grid grid-cols-1 gap-3 sm:grid-cols-3">
-            {overviewRows.map((row) => (
-              <KpiCardItem key={row.metricCode} row={row} />
+            {overviewRows.map((row, index) => (
+              <KpiCardItem key={row.metricCode} row={row} index={index} />
             ))}
           </div>
         </div>
         <div className="flex flex-col gap-2 lg:col-span-3">
           <div className="grid grid-cols-1 gap-3 sm:grid-cols-3">
-            {teamRows.map((row) => (
-              <KpiCardItem key={row.metricCode} row={row} />
+            {teamRows.map((row, index) => (
+              <KpiCardItem key={row.metricCode} row={row} index={index + 3} />
             ))}
           </div>
         </div>

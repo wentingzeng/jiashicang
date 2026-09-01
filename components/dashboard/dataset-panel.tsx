@@ -3,14 +3,14 @@
 import { Database } from "lucide-react"
 import useSWR from "swr"
 import { PanelCard } from "@/components/dashboard/panel-card"
-import { aiCockpitApi, findByName, rowsBySection } from "@/lib/ai-cockpit-api"
+import { aiCockpitApi, rowsBySection } from "@/lib/ai-cockpit-api"
 
 const PANEL_TITLE = "高质量数据集工程"
 
 export function DatasetPanel() {
   const { data: rows = [] } = useSWR("ai-cockpit-overview", aiCockpitApi.overview)
   const panelRows = rowsBySection(rows, "工程建设", PANEL_TITLE)
-  const row = findByName(panelRows, "建设完成度")
+  const row = panelRows[0]
 
   return (
     <PanelCard icon={Database} title={PANEL_TITLE} bodyClassName="flex min-h-[112px] items-center justify-center p-2">
