@@ -41,8 +41,12 @@ function KpiCardItem({ row }: { row: AiCockpitRow }) {
 export function KpiCards() {
   const { data: rows = [] } = useSWR("ai-cockpit-overview", aiCockpitApi.overview)
   const coreRows = rowsBySection(rows, "核心概览", "核心概览")
-  const overviewRows = coreRows.slice(0, 3)
-  const teamRows = coreRows.slice(3, 6)
+  const orderKeywords = ["专班数量", "年度任务总数", "任务完成率", "延期任务数", "示范标杆项目数", "AI共性"]
+  const orderedRows = orderKeywords
+    .map((keyword) => coreRows.find((row) => row.dataName.includes(keyword)))
+    .filter((row): row is AiCockpitRow => Boolean(row))
+  const overviewRows = orderedRows.slice(0, 3)
+  const teamRows = orderedRows.slice(3, 6)
 
   return (
     <section aria-label="核心指标" className="flex flex-col gap-3">
