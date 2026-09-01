@@ -53,21 +53,21 @@ const annualOverview = { head: { done: 66, total: 120 }, branch: { done: 93, tot
 function Panel({ title, children, className = "" }: { title: string; children: React.ReactNode; className?: string }) {
   return (
     <section className={`overflow-visible rounded-lg border border-border/80 bg-card shadow-sm ${className}`}>
-      <header className="flex items-center gap-2 border-b border-border/70 bg-secondary/50 px-3 py-1.5">
+      <header className="flex items-center gap-2 border-b border-border/70 bg-secondary/50 px-4 py-2.5">
         <span className="flex size-5 items-center justify-center rounded-md bg-primary/10 text-primary">
           <BarChart3 className="size-3" />
         </span>
-        <h2 className="text-sm font-bold">{title}</h2>
+        <h2 className="text-base font-bold">{title}</h2>
       </header>
-      <div className="p-2.5">{children}</div>
+      <div className="p-4">{children}</div>
     </section>
   )
 }
 
 function StatCard({ label, value, sub, color = colors.blue }: { label: string; value: string; sub: string; color?: string }) {
   return (
-    <div className="rounded-lg bg-secondary/40 px-3 py-2">
-      <p className="text-xs font-semibold text-foreground">{label}</p>
+    <div className="rounded-lg bg-secondary/40 px-4 py-3">
+      <p className="text-sm font-semibold text-foreground">{label}</p>
       <p className="mt-0.5 truncate font-mono text-lg font-black" style={{ color }}>
         {value}
       </p>
@@ -85,12 +85,12 @@ function RingStat({ label, ratio, value, sub, color = colors.blue }: { label: st
           <circle cx="36" cy="36" r="30" fill="none" stroke="currentColor" strokeWidth="8" className="text-secondary" />
           <circle cx="36" cy="36" r="30" fill="none" stroke={color} strokeWidth="8" strokeLinecap="round" strokeDasharray={c} strokeDashoffset={c * (1 - ratio / 100)} />
         </svg>
-        <strong className="absolute inset-0 flex items-center justify-center font-mono text-sm font-bold" style={{ color }}>
+        <strong className="absolute inset-0 flex items-center justify-center font-mono text-base font-bold" style={{ color }}>
           {ratio.toFixed(0)}%
         </strong>
       </div>
       <div className="min-w-0">
-        <p className="truncate text-xs font-semibold text-foreground">{label}</p>
+        <p className="truncate text-sm font-semibold text-foreground">{label}</p>
         <p className="truncate font-mono text-base font-black" style={{ color }}>
           {value}
         </p>
@@ -105,19 +105,19 @@ function ModificationRing({ title, ratio, done, undone, color }: { title: string
   return (
     <div className="flex items-center gap-2.5 rounded-lg bg-secondary/40 px-2.5 py-2">
       <div className="flex min-w-16 flex-col items-start gap-1">
-        <p className="text-xs font-semibold text-foreground">{title}</p>
+        <p className="text-sm font-semibold text-foreground">{title}</p>
         <div className="relative size-12 shrink-0">
           <svg viewBox="0 0 72 72" className="size-full -rotate-90">
             <circle cx="36" cy="36" r="30" fill="none" stroke="currentColor" strokeWidth="8" className="text-secondary" />
             <circle cx="36" cy="36" r="30" fill="none" stroke={color} strokeWidth="8" strokeLinecap="round" strokeDasharray={c} strokeDashoffset={c * (1 - ratio / 100)} />
           </svg>
-          <strong className="absolute inset-0 flex items-center justify-center font-mono text-sm font-bold" style={{ color }}>
+          <strong className="absolute inset-0 flex items-center justify-center font-mono text-base font-bold" style={{ color }}>
             {ratio.toFixed(0)}%
           </strong>
         </div>
       </div>
       <div className="min-w-0">
-        <p className="text-xs font-semibold text-foreground">已改造</p>
+        <p className="text-sm font-semibold text-foreground">已改造</p>
         <p className="font-mono text-base font-black" style={{ color }}>{done}</p>
         <p className="text-[11px] text-muted-foreground">未改造 {undone}</p>
       </div>
@@ -359,7 +359,7 @@ function ProgressPair({
         return (
           <button key={item.label} type="button" onClick={() => onSelect(item.view)} className="rounded-lg bg-secondary/40 px-2.5 py-2 text-left transition hover:bg-secondary/60">
             <div className="mb-1 flex items-center justify-between gap-2">
-              <span className="truncate text-xs font-semibold text-foreground">{item.label}</span>
+              <span className="truncate text-sm font-semibold text-foreground">{item.label}</span>
               <span className="shrink-0 font-mono text-xs font-bold" style={{ color: item.color }}>{ratio.toFixed(0)}%</span>
             </div>
             <div className="h-2.5 overflow-hidden rounded-full bg-secondary">
@@ -557,7 +557,7 @@ export function TrustedDashboard() {
                         <ChevronUp className="size-3.5 -rotate-90" />
                         返回小型机下线进展
                       </button>
-                      <p className="text-xs font-semibold text-foreground">{machineView === "head" ? "总行各部门下线进展" : "分行各部门下线进展"}</p>
+                      <p className="text-sm font-semibold text-foreground">{machineView === "head" ? "总行各部门下线进展" : "分行各部门下线进展"}</p>
                       <SmallMachineChart rows={machineView === "head" ? machineHeadRows : machineBranchRows} />
                     </div>
                   ) : (
