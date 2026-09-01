@@ -353,7 +353,7 @@ function ChinaSecurityMap({ data, selectedInstitution, onDrillChange }: { data: 
         projectionConfig={isFujianDetail ? { center: [118.3, 26.0], scale: 4200 } : { center: [104.3, 35.9], scale: 750 }}
         className="h-full w-full"
       >
-        <Geographies geography={isFujianDetail ? fujianMapUrl : chinaMapUrl}>
+        <Geographies key={isFujianDetail ? "fujian-cities" : "china-provinces"} geography={isFujianDetail ? fujianMapUrl : chinaMapUrl}>
           {({ geographies }) =>
             geographies.map((geo, index) => {
               const province = geo.properties?.name || geo.properties?.NAME || geo.properties?.省份 || geo.properties?.市 || `区域${index + 1}`
