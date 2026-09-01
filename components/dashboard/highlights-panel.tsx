@@ -3,7 +3,7 @@
 import { AlertTriangle, ArrowUpRight, CircleAlert } from "lucide-react"
 import useSWR from "swr"
 import { PanelCard } from "@/components/dashboard/panel-card"
-import { aiCockpitApi, rowsBySection } from "@/lib/ai-cockpit-api"
+import { aiCockpitApi } from "@/lib/ai-cockpit-api"
 
 export function HighlightsPanel() {
   const { data: rows = [] } = useSWR("ai-cockpit-overview", aiCockpitApi.overview)
@@ -23,7 +23,6 @@ export function HighlightsPanel() {
               <div className="flex min-w-0 flex-1 items-center justify-between gap-3">
                 <div className="flex min-w-0 flex-col gap-0">
                   <span className="truncate text-xs font-medium leading-4 text-foreground">{row.dataName}</span>
-                  <span className="text-[11px] leading-4 text-muted-foreground">{row.dataMeaning ?? String(row.data)}</span>
                 </div>
                 <ArrowUpRight className="size-4 shrink-0 text-muted-foreground/60" aria-hidden="true" />
               </div>
