@@ -613,8 +613,7 @@ function GaugeMeter({ roomMode, percentage = 22.22 }: { roomMode: "central" | "d
   <div className="text-[10px] text-slate-500">点击查看详情</div>
 
       </div>
-      <div className="absolute left-[6px] bottom-2 text-[10px] text-muted-foreground">0</div>
-<div className="absolute right-[6px] bottom-2 text-[10px] text-muted-foreground">40</div>
+
     </div>
   )
 }
