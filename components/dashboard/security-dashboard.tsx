@@ -278,9 +278,7 @@ function CapabilityBars({ data, label, selectedInstitutionType }: { data: { name
 }
 
 function CategoryBars({ data, label, color = "#42bdb7" }: { data: { name: string; value: number }[]; label: string; color?: string }) {
-  const total = data.reduce((sum, item) => sum + item.value, 0)
-  const [details, setDetails] = useState(false)
-  return <div className="rounded-lg border border-border/50 bg-background/20 p-3"><button type="button" onClick={() => setDetails(!details)} className="mb-3 flex w-full items-center justify-between text-left text-sm text-foreground/80 hover:text-primary"><span>{label}</span><span>{details ? "返回概览" : `共 ${total} 项 · 点击查看详情`}</span></button>{details ? <div className="text-sm"><CompactDetailTable headers={["问题分类", "数量"]} rows={data.map((item) => [item.name, String(item.value)])} /></div> : <div className="grid grid-cols-4 gap-2">{data.map((item, index) => <div key={item.name} className="flex items-center justify-between gap-2 rounded-md border border-border/40 bg-card/50 px-2.5 py-1.5"><div className="flex min-w-0 items-center gap-2"><span className="size-2 shrink-0 rounded-full" style={{ backgroundColor: index % 2 ? color : "#4ba8d8" }} /><span className="truncate text-sm text-foreground/80">{item.name}</span></div><div className="font-mono text-xl font-bold leading-none text-foreground">{item.value}</div></div>)}</div>}</div>
+  return <div className="rounded-lg border border-border/50 bg-background/20 p-3"><div className="mb-3 text-sm font-medium text-foreground/80">{label}</div><div className="grid grid-cols-4 gap-2">{data.map((item, index) => <div key={item.name} className="flex items-center justify-between gap-2 rounded-md border border-border/40 bg-card/50 px-2.5 py-1.5"><div className="flex min-w-0 items-center gap-2"><span className="size-2 shrink-0 rounded-full" style={{ backgroundColor: index % 2 ? color : "#4ba8d8" }} /><span className="truncate text-sm text-foreground/80">{item.name}</span></div><div className="font-mono text-xl font-bold leading-none text-foreground">{item.value}</div></div>)}</div></div>
 }
 
 function AssessmentBars({ data }: { data: { name: string; value: number }[] }) {
@@ -571,7 +569,7 @@ function BranchList({
         {data.map((name, index) => (
           <div key={name} className={compact ? "flex min-w-0 items-center gap-1 rounded-lg bg-muted/45 px-1.5 py-1" : "flex items-center gap-2 rounded-lg bg-muted/45 px-2.5 py-2"}>
             <span className="flex size-5 shrink-0 items-center justify-center rounded-full font-mono text-[10px] font-bold text-background" style={{ backgroundColor: color }}>{index + 1}</span>
-            <span className={compact ? "truncate text-[10px] text-foreground" : "truncate text-sm text-foreground"}>{name}</span>
+            <span className={compact ? "truncate text-xs text-foreground" : "truncate text-sm text-foreground"}>{name}</span>
           </div>
         ))}
       </div>
