@@ -423,6 +423,7 @@ export function ProjectDashboard() {
         const rows = Array.isArray(payload) ? payload : payload.data;
         setApiRows(Array.isArray(rows) ? rows.map((row: any) => ({
           indicatorId: row.indicatorId ?? row.metricCode,
+          metricCode: row.metricCode,
           currentValue: row.currentValue ?? row.data,
           targetValue: row.targetValue,
           currentUnit: row.currentUnit ?? row.unit,
@@ -450,7 +451,11 @@ export function ProjectDashboard() {
   }, [apiRows]);
 
   const rowFor = (indicatorId: string) => apiById.get(indicatorId);
-  const valueFor = (indicatorId: string, fallback: number) =>
+  const rowByCode = (prefix: string) => apiRows.find((row) => row.metricCode?.startsWith(prefix));
+  const valueByCode = (prefix: string) => toMetricNumber(rowByCode(prefix)?.currentValue, 0);
+  const nameByCode = (prefix: string, fallback: string) => rowByCode(prefix)?.dataName ?? fallback;
+  const unitByCode = (prefix: string, fallback: string) => rowByCode(prefix)?.unit ?? rowByCode(prefix)?.currentUnit ?? fallback;
+  const valueFor = (indicatorId: string, fallback = 0) =>
     toMetricNumber(rowFor(indicatorId)?.currentValue, fallback);
   const nameFor = (indicatorId: string, fallback: string) => rowFor(indicatorId)?.dataName ?? rowFor(indicatorId)?.metricName ?? fallback;
   const unitFor = (indicatorId: string, fallback: string) => rowFor(indicatorId)?.unit ?? rowFor(indicatorId)?.currentUnit ?? fallback;
@@ -494,13 +499,23 @@ export function ProjectDashboard() {
     count: valueFor(`ID${16 + index}`, overdueData[index].count),
     value: valueFor(`ID${16 + index}`, overdueData[index].value),
   }));
-  const liveTaskData = ["待执行的任务数", "进行中的任务数", "延期的任务数", "已完成的任务数"].map((name, index) => ({
-    name,
-    value: valueFor(`ID${23 + index}`, taskData[index].value),
+  const liveTaskData = [
+    { prefix: "overview_task_not", fallback: "待执行的任务数" },
+    { prefix: "overview_task_in_p", fallback: "进行中的任务数" },
+    { prefix: "overview_work_over", fallback: "延期的任务数" },
+    { prefix: "overview_task_comp", fallback: "已完成的任务数" },
+  ].map(({ prefix, fallback }) => ({
+    name: nameByCode(prefix, fallback),
+    value: valueByCode(prefix),
   }));
-  const liveKeyProgressData = ["待启动项目", "已投产项目", "在建项目", "延期项目"].map((name, index) => ({
-    name,
-    count: valueFor(`ID${[27, 29, 28, 30][index]}`, keyProgressData[index].count),
+  const liveKeyProgressData = [
+    { prefix: "overview_task_not", fallback: "待启动项目" },
+    { prefix: "overview_task_comp", fallback: "已投产项目" },
+    { prefix: "overview_annual_task", fallback: "年度任务总数" },
+    { prefix: "overview_work_over", fallback: "延期项目" },
+  ].map(({ prefix, fallback }) => ({
+    name: nameByCode(prefix, fallback),
+    count: valueByCode(prefix),
   }));
   const liveDeliveryData = [
     { name: "2026投产项目", count: valueFor("ID45", 145), days: valueFor("ID46", 176) },
