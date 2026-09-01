@@ -28,15 +28,15 @@ async function request(path: string): Promise<AiCockpitRow[]> {
         : Array.isArray(payload?.rows)
           ? payload.rows
           : []
-  return rows.map((row) => ({
+  return (rows as Record<string, unknown>[]).map((row) => ({
     ...row,
     section: row.section ?? row.sectionName ?? row.section_name ?? "",
     subSection: row.subSection ?? row.sub_section ?? row.subsection ?? "",
     metricCode: row.metricCode ?? row.metric_code ?? String(row.id ?? ""),
     dataName: row.dataName ?? row.data_name ?? row.name ?? "",
     data: row.data ?? row.value ?? "",
-    unit: row.unit ?? null,
-  }))
+    unit: (row.unit as string | null | undefined) ?? null,
+  })) as AiCockpitRow[]
 }
 
 export const aiCockpitApi = {
@@ -63,7 +63,17 @@ export function rowsByMetricPrefix(rows: AiCockpitRow[], prefix: string) {
 
 /** 按 section + subSection（对应页面上的分区标题 / 卡片标题）筛选数据行。 */
 export function rowsBySection(rows: AiCockpitRow[], section: string, subSection?: string) {
-  return rows.filter((row) => row.section === section && (subSection === undefined || row.subSection === subSection))
+  const normalize = (value: unknown) => String(value ?? "").trim()
+  return rows.filter((row) => {
+    const sectionMatches = normalize(row.section) === normalize(section)
+    const subSectionMatches = subSection === undefined || normalize(row.subSection) === normalize(subSection)
+    return sectionMatches && subSectionMatches
+  })
+}
+
+export function rowsByMetricCodes(rows: AiCockpitRow[], metricCodes: string[]) {
+  const byCode = new Map(rows.map((row) => [row.metricCode, row]))
+  return metricCodes.map((code) => byCode.get(code)).filter((row): row is AiCockpitRow => Boolean(row))
 }
 
 /** 在一组数据行中按 dataName 关键字查找第一条匹配记录。 */

@@ -3,7 +3,7 @@
 import { Users, CheckCircle2, Target, Clock, Award, Layers, type LucideIcon } from "lucide-react"
 import useSWR from "swr"
 import { Card } from "@/components/ui/card"
-import { aiCockpitApi, rowsBySection, type AiCockpitRow } from "@/lib/ai-cockpit-api"
+import { aiCockpitApi, rowsByMetricCodes, rowsBySection, type AiCockpitRow } from "@/lib/ai-cockpit-api"
 
 const cardIcons: LucideIcon[] = [Users, CheckCircle2, Target, Clock, Award, Layers]
 
@@ -37,9 +37,7 @@ export function KpiCards() {
     "overview_benchmark_project_count",
     "overview_ai_common_capability_scene_reuse_count",
   ]
-  const orderedRows = metricCodes
-    .map((metricCode) => coreRows.find((row) => row.metricCode === metricCode))
-    .filter((row): row is AiCockpitRow => Boolean(row))
+  const orderedRows = rowsByMetricCodes(coreRows, metricCodes)
   const overviewRows = orderedRows.slice(0, 3)
   const teamRows = orderedRows.slice(3, 6)
 
