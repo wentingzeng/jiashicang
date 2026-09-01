@@ -437,7 +437,7 @@ function ChinaSecurityMap({ data, selectedInstitutionType, fujianCityScores, ass
         <div className="mt-1 flex items-center justify-between font-mono text-[9px] text-muted-foreground"><span>最低分 {minScore.toFixed(2)}</span><span>最高分 {maxScore.toFixed(2)}</span></div>
       </div>
 
-      <div className="pointer-events-none absolute bottom-8 right-2 min-w-56 rounded-lg border border-primary/20 bg-card/95 px-2.5 py-2 text-[11px] shadow-md">
+      <div className="pointer-events-none absolute bottom-8 right-2 z-30 min-w-56 rounded-lg border border-primary/20 bg-card px-2.5 py-2 text-[11px] shadow-md">
         {selectedProvince && selectedItem ? (() => { const rank = "rankByAllBranches" in selectedItem ? selectedItem.rankByAllBranches : null; const category = "branchLevel" in selectedItem ? selectedItem.branchLevel : ""; const categoryRank = "rankByBranchLevel" in selectedItem ? selectedItem.rankByBranchLevel : null; return <div className="grid gap-1.5"><div className="mb-1 border-b border-border/60 pb-1.5 text-xs font-semibold text-foreground">{selectedProvince}</div><div className="grid grid-cols-[1fr_auto] gap-x-5 gap-y-1 text-muted-foreground"><span>网络安全全年合计得分</span><strong className="font-mono text-[11px] font-semibold text-primary">{selectedItem.value.toFixed(2)}</strong><span>{assessmentYear}年排名（按全行）</span><strong className="font-mono text-foreground">{String(rank ?? "-")}</strong><span>类别</span><strong className="text-foreground">{String(category || "-")}</strong><span>{assessmentYear}年排名（按等级行）</span><strong className="font-mono text-foreground">{String(categoryRank ?? "-")}</strong></div></div> })() : <span className="text-muted-foreground">{isFujianDetail ? "点击地市查看安全能力得分" : "点击省份查看安全能力得分"}</span>}
       </div>
 
