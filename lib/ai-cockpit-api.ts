@@ -19,8 +19,16 @@ async function request(path: string): Promise<AiCockpitRow[]> {
   const response = await fetch(`${API_BASE}${path}`, { cache: "no-store" })
   if (!response.ok) throw new Error(`人工智能数据接口请求失败：${response.status}`)
   const payload = await response.json()
-  const rows = Array.isArray(payload) ? payload : payload.data
-  return (Array.isArray(rows) ? rows : []).map((row) => ({
+  const rows = Array.isArray(payload)
+    ? payload
+    : Array.isArray(payload?.data)
+      ? payload.data
+      : Array.isArray(payload?.data?.rows)
+        ? payload.data.rows
+        : Array.isArray(payload?.rows)
+          ? payload.rows
+          : []
+  return rows.map((row) => ({
     ...row,
     section: row.section ?? row.sectionName ?? row.section_name ?? "",
     subSection: row.subSection ?? row.sub_section ?? row.subsection ?? "",

@@ -8,7 +8,7 @@ import { aiCockpitApi } from "@/lib/ai-cockpit-api"
 export function HighlightsPanel() {
   const { data: rows = [] } = useSWR("ai-cockpit-overview", aiCockpitApi.overview)
   const highlightRows = rows
-    .filter((row) => String(row.section ?? "").trim() === "重点关注")
+    .filter((row) => [row.section, row.subSection].some((value) => String(value ?? "").trim() === "重点关注"))
     .slice(0, 2)
 
   return (
