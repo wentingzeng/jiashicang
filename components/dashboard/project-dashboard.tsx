@@ -89,6 +89,9 @@ const kpis = [
 type ProjectIndicatorApiRow = {
   indicatorId?: string;
   metricCode?: string;
+  pageType?: string;
+  section?: string;
+  subSection?: string;
   dimension?: string;
   metricName: string;
   dataName?: string;
@@ -424,6 +427,9 @@ export function ProjectDashboard() {
         setApiRows(Array.isArray(rows) ? rows.map((row: any) => ({
           indicatorId: row.indicatorId ?? row.metricCode,
           metricCode: row.metricCode,
+          pageType: row.pageType,
+          section: row.section,
+          subSection: row.subSection,
           currentValue: row.currentValue ?? row.data,
           targetValue: row.targetValue,
           currentUnit: row.currentUnit ?? row.unit,
@@ -462,19 +468,17 @@ export function ProjectDashboard() {
   const targetFor = (indicatorId: string, fallback: number) =>
     toMetricNumber(apiById.get(indicatorId)?.targetValue, fallback);
 
-  const displayKpis = useMemo(
-    () => kpis.map((item) => {
-      const row = apiById.get(item.indicatorId);
-      if (!row) return item;
-      return {
-        ...item,
-        label: row.dataName ?? row.metricName ?? item.label,
-        value: String(toMetricNumber(row.currentValue, Number(item.value))),
-        unit: unitFor(item.indicatorId, item.unit),
-      };
-    }),
-    [apiById],
-  );
+  const displayKpis = useMemo(() => {
+    const coreRows = apiRows.filter((row) => row.section === "核心概览" && row.subSection === "核心概览");
+    return coreRows.slice(0, 6).map((row, index) => ({
+      indicatorId: row.metricCode ?? `core-${index}`,
+      label: row.dataName ?? "暂无数据",
+      value: String(row.currentValue ?? ""),
+      unit: row.unit ?? "",
+      icon: kpis[index]?.icon ?? CalendarDays,
+      danger: kpis[index]?.danger,
+    }));
+  }, [apiRows]);
 
   const statusCounts = [
     valueFor("ID03"),
