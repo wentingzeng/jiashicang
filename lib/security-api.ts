@@ -119,5 +119,13 @@ export function toRankingBranches(rows: BranchRanking[], type: BranchRanking["ra
 }
 
 export function toFujianCityData(rows: BranchScore[]) {
-  return rows.filter((row) => row.province.includes("福建") || row.branchName.includes("福建")).map((row) => ({ name: row.city.endsWith("市") ? row.city : `${row.city}市`, value: Number(row.annualTotalScore ?? 0) }))
+  return rows
+    .filter((row) => row.province?.includes("福建") || row.branchName?.includes("福建") || row.city?.includes("福建"))
+    .map((row) => ({
+      name: row.city?.endsWith("市") ? row.city : `${row.city}市`,
+      value: Number(row.annualTotalScore ?? 0),
+      rankByAllBranches: row.rankByAllBranches,
+      rankByBranchLevel: row.rankByBranchLevel,
+      branchLevel: row.branchLevel,
+    }))
 }
