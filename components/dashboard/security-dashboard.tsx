@@ -1,7 +1,8 @@
 "use client"
 
 import type { ReactNode } from "react"
-import { useEffect, useState } from "react"
+import { useEffect, useMemo, useState } from "react"
+import useSWR from "swr"
 import { HeroBanner } from "@/components/dashboard/hero-banner"
 import {
   AlertTriangle,
@@ -30,16 +31,22 @@ import {
 import { geoMercator } from "d3-geo"
 
 import {
-  branchSecurityData,
-  capabilityData,
-  inspectionCategoryData,
-  outstandingBranches,
-  securityManagementIndicators,
-  securityOverview,
-  trainingTrendData,
-  violationTrendData,
-  weakBranches,
-} from "@/lib/security-data"
+  securityApi,
+  toCapabilityData,
+  toIndicatorLabels,
+  toProblemData,
+  toTrainingData,
+  toViolationData,
+  toFujianCityData,
+  toRankingBranches,
+  toRepairRate,
+  toTotalProblems,
+  type BranchScore,
+  type SecurityIndicator,
+  type InspectionProblem,
+  type BranchRanking,
+  type TrainingStat,
+} from "@/lib/security-api"
 
 // 省级 GeoJSON：包含 34 个省级行政区，确保每个省份都有独立边界和点击区域。托管在本地以避免外部请求被拦截。
 // 注意：不要切换为"_full"版本的数据源——它在每个省份要素中都内嵌了一份用于南海诸岛示意框的固定像素坐标，
@@ -47,7 +54,7 @@ import {
 // 南海诸岛改为下方的装饰性小图（SouthSeaIslandsInset）单独绘制，不再依赖地图数据源本身。
  const chinaMapUrl = "/maps/china-provinces.json"
  const fujianMapUrl = "/maps/fujian-cities.json"
-const fujianCityScores = [{ name: "福州市", value: 91.6 }, { name: "厦门市", value: 94.2 }, { name: "泉州市", value: 89.8 }, { name: "漳州市", value: 87.4 }, { name: "莆田市", value: 86.9 }, { name: "三明市", value: 84.7 }, { name: "南平市", value: 82.6 }, { name: "龙岩市", value: 85.3 }, { name: "宁德市", value: 83.8 }]
+
 
 const chartGrid = "rgba(79, 112, 145, 0.18)"
 const chartText = "#60758b"
@@ -223,13 +230,13 @@ function CompactDetailTable({ rows, headers, className = "", height = 204 }: { r
   return <div className={`overflow-hidden rounded-lg border border-border/50 bg-card text-[8px] shadow-sm ${className}`} style={{ height, maxHeight: height }}><div className="h-full min-h-0 overflow-y-auto overflow-x-hidden"><table className="w-full table-fixed border-separate border-spacing-0 text-left"><thead><tr>{headers.map((header, index) => <th key={header} className={`sticky top-0 z-30 border-b border-primary/20 px-2 py-1.5 font-semibold ${index === 0 ? "w-[78%] bg-card text-foreground" : "w-[22%] bg-primary text-primary-foreground text-center"}`}>{header}</th>)}</tr></thead><tbody className="divide-y divide-border/30">{rows.map((row, index) => <tr key={index} className={index % 2 ? "bg-muted/20" : "bg-card/40"}>{row.map((cell, cellIndex) => <td key={cellIndex} className={`${cellIndex === 0 ? "whitespace-normal text-foreground" : "text-center font-mono font-semibold text-primary"} px-2 py-2 leading-4`}>{cell}</td>)}</tr>)}</tbody></table></div></div>
 }
 
-function CapabilityBars({ data, label, selectedInstitution }: { data: { name: string; value: number }[]; label: string; selectedInstitution: string }) {
-  const [selectedBranch, setSelectedBranch] = useState<string | null>(selectedInstitution === "全部机构" ? null : selectedInstitution)
+function CapabilityBars({ data, label, selectedInstitutionType }: { data: { name: string; value: number }[]; label: string; selectedInstitutionType: string }) {
+  const [selectedBranch, setSelectedBranch] = useState<string | null>(selectedInstitutionType === "全部机构" ? null : selectedInstitutionType)
   const [showAll, setShowAll] = useState(true)
   useEffect(() => {
-  setSelectedBranch(selectedInstitution === "全部机构" ? null : selectedInstitution)
-  setShowAll(selectedInstitution === "全部机构")
-  }, [selectedInstitution, data])
+  setSelectedBranch(selectedInstitutionType === "全部机构" ? null : selectedInstitutionType)
+  setShowAll(selectedInstitutionType === "全部机构")
+  }, [selectedInstitutionType, data])
   const metrics = data.map((item, index) => ({
     ...item,
     responsibility: Math.max(70, item.value - index * 1.2),
@@ -323,15 +330,15 @@ const branchProvinceMap: Record<string, string> = {
   重庆分行: "重庆",
 }
 
-function ChinaSecurityMap({ data, selectedInstitution, onDrillChange }: { data: { name: string; value: number }[]; selectedInstitution: string; onDrillChange?: (drilled: boolean) => void }) {
+function ChinaSecurityMap({ data, selectedInstitutionType, fujianCityScores, onDrillChange }: { data: { name: string; value: number }[]; selectedInstitutionType: string; fujianCityScores: { name: string; value: number }[]; onDrillChange?: (drilled: boolean) => void }) {
   const provinceForBranch = (name: string) => branchProvinceMap[name] ?? name.replace("分行", "")
-  const [selectedProvince, setSelectedProvince] = useState(selectedInstitution === "全部机构" ? "" : provinceForBranch(selectedInstitution))
+  const [selectedProvince, setSelectedProvince] = useState(selectedInstitutionType === "全部机构" ? "" : provinceForBranch(selectedInstitutionType))
   const [isFujianDetail, setIsFujianDetail] = useState(false)
   const [scoreThreshold, setScoreThreshold] = useState(() => Math.max(...data.map((item) => item.value)))
   useEffect(() => {
-    setSelectedProvince(selectedInstitution === "全部机构" ? "" : provinceForBranch(selectedInstitution))
+    setSelectedProvince(selectedInstitutionType === "全部机构" ? "" : provinceForBranch(selectedInstitutionType))
     setScoreThreshold(Math.max(...data.map((item) => item.value), 0))
-  }, [selectedInstitution, data])
+  }, [selectedInstitutionType, data])
   const normalizeRegion = (name: string) => name.replace(/(省|市|自治区|特别行政区)$/u, "").replace(/(壮族|回族|维吾尔)$/u, "")
   const selectedItem = isFujianDetail ? fujianCityScores.find((item) => normalizeRegion(item.name) === normalizeRegion(selectedProvince)) : data.find((item) => normalizeRegion(selectedProvince).includes(normalizeRegion(provinceForBranch(item.name))) || normalizeRegion(provinceForBranch(item.name)).includes(normalizeRegion(selectedProvince)))
   const scores = data.map((item) => item.value)
@@ -362,7 +369,7 @@ function ChinaSecurityMap({ data, selectedInstitution, onDrillChange }: { data: 
               const regionItem = isFujianDetail ? fujianCityScores.find((item) => normalizeRegion(item.name) === normalizeRegion(province)) : data.find((item) => normalizeRegion(provinceForBranch(item.name)) === normalizeRegion(province))
 
               const provinceItem = regionItem
-              const selected = selectedProvince === province || (selectedInstitution !== "全部机构" && normalizeRegion(province) === normalizeRegion(provinceForBranch(selectedInstitution)))
+              const selected = selectedProvince === province || (selectedInstitutionType !== "全部机构" && normalizeRegion(province) === normalizeRegion(provinceForBranch(selectedInstitutionType)))
 
               return (
                 <Geography
@@ -557,30 +564,32 @@ function BranchList({
 
 export function SecurityDashboard() {
   const [selectedYear, setSelectedYear] = useState("2025")
-  const [selectedInstitution, setSelectedInstitution] = useState("全部机构")
+  const [selectedInstitutionType, setSelectedInstitutionType] = useState("全部机构")
   const [isCapabilityDrilled, setIsCapabilityDrilled] = useState(false)
-  const filteredCapability = selectedInstitution === "全部机构"
-    ? capabilityData
-    : capabilityData.filter((item) => item.name === selectedInstitution)
-  const selectedScore = filteredCapability.length === 1 ? filteredCapability[0].value : securityOverview.totalScore
-  const filteredTraining = selectedInstitution === "全部机构"
-    ? trainingTrendData
-    : trainingTrendData.filter((item) => item.name === selectedInstitution)
-  const filteredViolations = selectedInstitution === "全部机构"
-    ? violationTrendData
-    : violationTrendData.filter((item) => item.name === selectedInstitution)
-  const filteredBranches = selectedInstitution === "全部机构"
-    ? branchSecurityData
-    : branchSecurityData.filter((item) => item.name.includes(selectedInstitution.replace("分行", "")))
-  const filteredOutstanding = selectedInstitution === "全部机构"
-    ? outstandingBranches
-    : outstandingBranches.filter((name) => name === selectedInstitution)
-  const filteredWeak = selectedInstitution === "全部机构"
-    ? weakBranches
-    : weakBranches.filter((name) => name === selectedInstitution)
-  const filteredOverview = selectedInstitution === "全部机构"
-    ? securityOverview
-    : { ...securityOverview, totalScore: selectedScore, ranking: filteredCapability.length ? 1 : 0, trainingPeople: filteredTraining[0]?.value ?? 0, violationPeople: filteredViolations[0]?.value ?? 0, repairRate: Math.min(100, Math.round(selectedScore + 8)), inspectionIssues: Math.round((securityOverview.inspectionIssues * selectedScore) / 100) }
+  const { data: branches = [], error: branchesError } = useSWR<BranchScore[]>(["security-branches", selectedYear], () => securityApi.branches(selectedYear))
+  const { data: indicators = [], error: indicatorsError } = useSWR<SecurityIndicator[]>(["security-indicators", selectedYear], () => securityApi.indicators(selectedYear))
+  const { data: problems = [], error: problemsError } = useSWR<InspectionProblem[]>(["security-problems", selectedYear], () => securityApi.problems(selectedYear))
+  const { data: rankings = [], error: rankingsError } = useSWR<BranchRanking[]>(["security-rankings", selectedYear], () => securityApi.rankings(selectedYear))
+  const { data: training = [], error: trainingError } = useSWR<TrainingStat[]>(["security-training", selectedYear], () => securityApi.training(selectedYear))
+  const years = useMemo(() => [...new Set(branches.map((row) => String(row.assessmentYear)))].sort().reverse(), [branches])
+  const institutions = useMemo(() => [...new Set(branches.map((row) => row.institutionType))], [branches])
+  const filteredBranches = selectedInstitutionType === "全部机构" ? branches : branches.filter((row) => row.institutionType === selectedInstitutionType)
+  const filteredCapability = toCapabilityData(filteredBranches)
+  const mapData = [...new Map(branches.map((row) => [row.province, { name: row.province, value: Number(row.annualTotalScore ?? 0) }])).values()]
+  const filteredTraining = toTrainingData(training.filter((row) => selectedInstitutionType === "全部机构" || branches.some((branch) => branch.branchName === row.unitName && branch.institutionType === selectedInstitutionType)))
+  const filteredViolations = toViolationData(training.filter((row) => selectedInstitutionType === "全部机构" || branches.some((branch) => branch.branchName === row.unitName && branch.institutionType === selectedInstitutionType)))
+  const filteredOutstanding = toRankingBranches(rankings, "excellent")
+  const filteredWeak = toRankingBranches(rankings, "poor")
+  const selectedScore = filteredCapability.length === 1 ? filteredCapability[0].value : 0
+  const securityOverview = { totalScore: selectedScore, ranking: filteredBranches[0]?.rankByAllBranches ?? 0, repairRate: toRepairRate(indicators), inspectionIssues: toTotalProblems(problems), trainingPeople: filteredTraining.reduce((sum, item) => sum + item.value, 0), violationPeople: filteredViolations.reduce((sum, item) => sum + item.value, 0) }
+  const securityManagementIndicators = toIndicatorLabels(indicators)
+  const inspectionCategoryData = toProblemData(problems)
+  const fujianCityScores = toFujianCityData(branches)
+  const hasError = branchesError || indicatorsError || problemsError || rankingsError || trainingError
+  if (hasError) {
+    return <main className="min-h-screen bg-background p-6 text-foreground"><div className="mx-auto max-w-3xl rounded-xl border border-destructive/30 bg-card p-6 text-sm text-destructive">安全数据接口读取失败，请确认本地后端已启动，并检查 `NEXT_PUBLIC_SECURITY_API_BASE_URL` 配置。</div></main>
+  }
+
   return (
     <main className="min-h-screen bg-background text-foreground selection:bg-primary/30">
       <div className="relative mx-auto max-w-[1800px] px-4 pb-8 md:px-6">
@@ -593,16 +602,15 @@ export function SecurityDashboard() {
           <label className="flex min-w-0 flex-1 items-center gap-3 whitespace-nowrap rounded-md border border-border/60 bg-background/35 px-3 py-2 text-sm">
             <span className="shrink-0 whitespace-nowrap text-muted-foreground">考评年度</span>
             <select value={selectedYear} onChange={(event) => setSelectedYear(event.target.value)} className="min-w-0 w-full bg-transparent text-foreground outline-none">
-              <option>2025</option>
-              <option>2024</option>
+              {years.map((year) => <option key={year}>{year}</option>)}
             </select>
           </label>
 
           <label className="flex min-w-0 flex-1 items-center gap-3 whitespace-nowrap rounded-md border border-border/60 bg-background/35 px-3 py-2 text-sm">
             <span className="shrink-0 whitespace-nowrap font-[100] text-muted-foreground">机构类别</span>
-            <select value={selectedInstitution} onChange={(event) => setSelectedInstitution(event.target.value)} className="min-w-0 w-full bg-transparent text-foreground outline-none">
+            <select value={selectedInstitutionType} onChange={(event) => setSelectedInstitutionType(event.target.value)} className="min-w-0 w-full bg-transparent text-foreground outline-none">
               <option>全部机构</option>
-              {capabilityData.map((item) => <option key={item.name}>{item.name}</option>)}
+              {institutions.map((name) => <option key={name}>{name}</option>)}
             </select>
           </label>
 
@@ -637,7 +645,7 @@ export function SecurityDashboard() {
             <Panel title={isCapabilityDrilled ? "网络安全综合能力" : "网络安全综合能力视图"} tone="accent" className="flex h-full min-h-0 flex-col" bodyClassName="flex min-h-0 flex-1 flex-col p-4">
               {isCapabilityDrilled ? (
                 <div className="flex h-[700px] flex-col">
-                  <CapabilityBars data={filteredCapability} label="各分行综合能力得分" selectedInstitution={selectedInstitution} />
+                  <CapabilityBars data={filteredCapability} label="各分行综合能力得分" selectedInstitutionType="全部机构" />
                   <button
                     type="button"
                     onClick={() => setIsCapabilityDrilled(false)}
@@ -647,7 +655,7 @@ export function SecurityDashboard() {
                   </button>
                 </div>
               ) : (
-                <div className="min-h-0 flex-1"><ChinaSecurityMap data={filteredBranches} selectedInstitution={selectedInstitution} /></div>
+                <div className="min-h-0 flex-1"><ChinaSecurityMap data={mapData} fujianCityScores={fujianCityScores} selectedInstitutionType="全部机构" /></div>
               )}
               {!isCapabilityDrilled && (
                 <button
@@ -667,7 +675,7 @@ export function SecurityDashboard() {
               <div className="grid grid-cols-2 gap-1.5">
                 <StatCard
                   label="安全培训覆盖率"
-                  value={82.6}
+                  value={training.length ? Math.round((training[0].safetyTrainingCoverage <= 1 ? training[0].safetyTrainingCoverage * 100 : training[0].safetyTrainingCoverage) * 10) / 10 : 0}
                   unit="%"
                   icon={Users}
                   color="var(--primary)"
@@ -721,8 +729,8 @@ export function SecurityDashboard() {
                     />
                   </div>
                   <div className="grid grid-cols-2 gap-2">
-                    <BranchList title="表现突出的三家分行" data={outstandingBranches} color="var(--accent)" compact />
-                    <BranchList title="表现较差的三家分行" data={weakBranches} color="#e9ad43" compact />
+                    <BranchList title="表现突出的三家分行" data={filteredOutstanding} color="var(--accent)" compact />
+                    <BranchList title="表现较差的三家分行" data={filteredWeak} color="#e9ad43" compact />
                   </div>
                 </div>
 
