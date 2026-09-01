@@ -4,6 +4,26 @@
 
 @custom-variant dark (&:is(.dark *));
 
+.branch-tech-table-scroll {
+  scrollbar-width: auto;
+  scrollbar-color: var(--primary) var(--secondary);
+}
+
+.branch-tech-table-scroll::-webkit-scrollbar {
+  height: 12px;
+}
+
+.branch-tech-table-scroll::-webkit-scrollbar-track {
+  background: var(--secondary);
+  border-radius: 999px;
+}
+
+.branch-tech-table-scroll::-webkit-scrollbar-thumb {
+  background: var(--primary);
+  border: 3px solid var(--secondary);
+  border-radius: 999px;
+}
+
 @theme inline {
   --font-sans: 'Noto Sans SC', 'Microsoft YaHei', Arial, sans-serif;
   --font-mono: 'Geist Mono', 'SFMono-Regular', Consolas, monospace;
