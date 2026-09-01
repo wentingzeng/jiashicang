@@ -19,7 +19,8 @@ function buildTeams(rows: AiCockpitRow[]): Team[] {
   const groups = new Map<string, AiCockpitRow[]>()
   if (!rows.length) return fallbackTeamNames.map((name, index) => ({ name, icon: teamIcons[index], metrics: [], milestone: "-", task: "-", done: "-", doing: "-", pending: "-" }))
   for (const row of rows) groups.set(row.subSection, [...(groups.get(row.subSection) ?? []), row])
-  return Array.from(groups.entries()).map(([name, items], index) => {
+  const displayOrder = ["企业金融智能化专班", "同业金市智能化专班", "智能平台建设专班", "知识工程专班", "资管财富智能化专班", "集中作业智能化专班", "零售金融智能化专班", "风险管理智能化专班"]
+  return Array.from(groups.entries()).sort(([a], [b]) => displayOrder.indexOf(a) - displayOrder.indexOf(b)).map(([name, items], index) => {
     const find = (code: string) => items.find((row) => row.metricCode.includes(code))
     const metricRows = items.filter((row) => row.metricType === "metric" || row.metricType === "rate").slice(0, 2)
     const total = find("task_total")
