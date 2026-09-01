@@ -21,15 +21,16 @@ function buildTeams(rows: AiCockpitRow[]): Team[] {
   for (const row of rows) groups.set(row.subSection, [...(groups.get(row.subSection) ?? []), row])
   const displayOrder = ["风险管理智能化专班", "资管财富智能化专班", "集中作业智能化专班", "同业金市智能化专班", "零售金融智能化专班", "企业金融智能化专班", "知识工程专班", "智能平台建设专班"]
   return Array.from(groups.entries()).sort(([a], [b]) => displayOrder.indexOf(a) - displayOrder.indexOf(b)).map(([name, items], index) => {
-    const find = (code: string) => items.find((row) => row.metricCode.includes(code))
+    const find = (code: string, name?: string) => items.find((row) => row.metricCode.toLowerCase().includes(code.toLowerCase()) || (name ? row.dataName.includes(name) : false))
     const metricRows = items.filter((row) => row.metricType === "metric" || row.metricType === "rate").slice(0, 2)
-    const total = find("task_total")
-    const milestoneComplete = find("milestone_complete")
-    const done = find("task_complete")
-    const doing = find("task_in_progress")
-    const pending = find("task_not_started")
+    const total = find("task_total", "重点任务总数")
+    const milestoneTotal = find("milestone_total", "里程碑目标总数")
+    const milestoneComplete = find("milestone_complete", "里程碑目标完成数")
+    const done = find("task_complete", "重点任务完成数")
+    const doing = find("task_in_progress", "重点任务进行中数量")
+    const pending = find("task_not_started", "重点任务未启动数量")
     const displayData = (row?: AiCockpitRow) => row?.data === undefined || row?.data === null ? "-" : String(row.data)
-    return { name, icon: teamIcons[index % teamIcons.length], metrics: metricRows.map((row) => [row.dataName, formatAiValue(row.data, row.unit)] as [string, string]), milestone: displayData(find("milestone_total")), task: displayData(total), done: displayData(done), doing: displayData(doing), pending: displayData(pending), milestoneComplete: displayData(milestoneComplete) }
+    return { name, icon: teamIcons[index % teamIcons.length], metrics: metricRows.map((row) => [row.dataName, formatAiValue(row.data, row.unit)] as [string, string]), milestone: displayData(milestoneTotal), task: displayData(total), done: displayData(done), doing: displayData(doing), pending: displayData(pending), milestoneComplete: displayData(milestoneComplete) }
   })
 }
 
