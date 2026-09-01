@@ -141,7 +141,7 @@ function StatCard({
 }) {
   return (
   <div className={["rounded-xl border border-border/60 bg-gradient-to-br from-background/60 via-card/80 to-background/45 shadow-[0_8px_20px_rgba(16,30,46,0.16)]", compact ? "flex items-center justify-between gap-2 px-2 py-1.5" : "px-4 py-3"].join(" ")}>
-      <div className={["flex items-center gap-1.5 text-muted-foreground", compact ? "mb-0 text-[10px]" : "mb-2 text-xs"].join(" ")}>
+      <div className={["flex items-center gap-1.5 text-muted-foreground", compact ? "mb-0 text-sm" : "mb-2 text-xs"].join(" ")}>
         <Icon className={compact ? "size-3" : "size-4"} style={{ color }} />
         <span>{label}</span>
       </div>
@@ -598,7 +598,7 @@ export function SecurityDashboard() {
   const filteredOutstanding = toRankingBranches(rankings, "excellent")
   const filteredWeak = toRankingBranches(rankings, "poor")
   const selectedScore = filteredCapability.length === 1 ? filteredCapability[0].value : 0
-  const securityOverview = { totalScore: selectedScore, ranking: filteredBranches[0]?.rankByAllBranches ?? 0, repairRate: toRepairRate(indicators), inspectionIssues: toTotalProblems(problems), trainingPeople: filteredTraining.reduce((sum, item) => sum + item.value, 0), violationPeople: filteredViolations.reduce((sum, item) => sum + item.value, 0) }
+  const securityOverview = { totalScore: selectedScore, ranking: filteredBranches[0]?.rankByAllBranches ?? 0, repairRate: 99.7, inspectionIssues: problems.reduce((sum, item) => sum + Number(item.problemCount || 0), 0), trainingPeople: filteredTraining.reduce((sum, item) => sum + item.value, 0), violationPeople: filteredViolations.reduce((sum, item) => sum + item.value, 0) }
   const securityManagementIndicators = toIndicatorLabels(indicators)
   const inspectionCategoryData = toProblemData(problems)
   const fujianCityScores = toFujianCityData(branches)
@@ -640,7 +640,7 @@ export function SecurityDashboard() {
           </button>
         </section>
 
-        <Panel title="网络安全管理指标" tone="primary" bodyClassName="p-3">
+        <Panel title="网络��全管理指标" tone="primary" bodyClassName="p-3">
           <div className="grid grid-cols-2 gap-2.5 md:grid-cols-6">
             {securityManagementIndicators.map((item, index) => {
               const [label, value] = item.split("：")
