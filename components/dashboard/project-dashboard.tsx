@@ -36,48 +36,7 @@ const tooltipStyle = {
   boxShadow: "0 8px 24px rgba(15, 23, 42, 0.16)",
 };
 const palette = ["#3157d5", "#14a89a", "#f0a33a", "#d85d70", "#7468d9"];
-const statusData = [
-  { name: "已启动", value: 67.7 },
-  { name: "已申请未批复", value: 23.7 },
-  { name: "已批复超期未启动", value: 2.7 },
-  { name: "已批复未启动", value: 5.9 },
-];
-const progressData = [
-  { name: "业务需求", value: 52 },
-  { name: "总体设计", value: 51 },
-  { name: "商务", value: 65 },
-  { name: "编码测试", value: 83 },
-  { name: "上线准备", value: 11 },
-];
-const overdueData = [
-  { name: "轻度延期项目", count: 23, value: 23 },
-  { name: "中度延期项目", count: 3, value: 3 },
-  { name: "重度延期项目", count: 3, value: 3 },
-];
-const taskData = [
-  { name: "待执行的任务数", value: 331 },
-  { name: "进行中的任务数", value: 64 },
-  { name: "延期的任务数", value: 22 },
-  { name: "已完成的任务数", value: 119 },
-];
-const keyProgressData = [
-  { name: "待启动项目", count: 98 },
-  { name: "已投产项目", count: 133 },
-  { name: "在建项目", count: 188 },
-  { name: "延期项目", count: 5 },
-];
-
-const deliveryData = [
-  { name: "2026投产项目", count: 145, days: 176 },
-  { name: "投产顺序项目", count: 40, days: 23 },
-  { name: "投产敏捷项目", count: 105, days: 107 },
-];
-const gauges = [
-  { label: "顺序项目科技实施阶段时长占比", value: 51, min: 0, max: 100 },
-  { label: "敏捷项目首版本平均交付周期", value: 107, min: 100, max: 110 },
-  { label: "敏捷项目版本平均交付周期", value: 23, min: 20, max: 25 },
-];
-const kpis = [
+const kpiIcons = [
   { indicatorId: "ID01", label: "年度需求计划", value: "329", unit: "个", icon: CalendarDays },
   { indicatorId: "ID06", label: "总行在建项目数", value: "321", unit: "个", icon: Layers3 },
   { indicatorId: "ID12", label: "总行投产项目数", value: "145", unit: "个", icon: ClipboardList },
@@ -465,7 +424,7 @@ export function ProjectDashboard() {
   const nameFor = (indicatorId: string, fallback = "暂无数据") => rowFor(indicatorId)?.dataName ?? fallback;
   const unitFor = (indicatorId: string, fallback = "") => rowFor(indicatorId)?.unit ?? fallback;
 
-  const targetFor = (indicatorId: string, fallback: number) =>
+  const targetFor = (indicatorId: string, fallback = 0) =>
     toMetricNumber(apiById.get(indicatorId)?.targetValue, fallback);
 
   const displayKpis = useMemo(() => {
@@ -475,8 +434,8 @@ export function ProjectDashboard() {
       label: row.dataName ?? "暂无数据",
       value: String(row.currentValue ?? ""),
       unit: row.unit ?? "",
-      icon: kpis[index]?.icon ?? CalendarDays,
-      danger: kpis[index]?.danger,
+      icon: kpiIcons[index]?.icon ?? CalendarDays,
+      danger: kpiIcons[index]?.danger,
     }));
   }, [apiRows]);
 
@@ -484,23 +443,23 @@ export function ProjectDashboard() {
     valueFor("ID03"),
     valueFor("ID02"),
     valueFor("ID04"),
-    valueFor("ID05", 21),
+    valueFor("ID05"),
   ];
   const statusTotal = statusCounts.reduce((sum, value) => sum + value, 0);
   const liveStatusData = [
     { name: nameFor("ID03", "已启动"), value: statusTotal > 0 ? (statusCounts[0] / statusTotal) * 100 : 0 },
     { name: nameFor("ID02", "已申请未批复"), value: statusTotal > 0 ? (statusCounts[1] / statusTotal) * 100 : 0 },
-    { name: "已批复超期未启动", value: statusTotal > 0 ? (statusCounts[2] / statusTotal) * 100 : 0 },
-    { name: "已批复未启动", value: statusTotal > 0 ? (statusCounts[3] / statusTotal) * 100 : 0 },
+    { name: nameFor("ID04", "已批复超期未启动"), value: statusTotal > 0 ? (statusCounts[2] / statusTotal) * 100 : 0 },
+    { name: nameFor("ID05", "已批复未启动"), value: statusTotal > 0 ? (statusCounts[3] / statusTotal) * 100 : 0 },
   ];
   const liveProgressData = ["业务需求", "总体设计", "商务", "编码测试", "上线准备"].map((name, index) => ({
-    name,
-    value: valueFor(`ID0${7 + index}`, progressData[index].value),
+    name: nameFor(`ID0${7 + index}`, name),
+    value: valueFor(`ID0${7 + index}`),
   }));
   const liveOverdueData = ["轻度延期项目", "中度延期项目", "重度延期项目"].map((name, index) => ({
-    name,
-    count: valueFor(`ID${16 + index}`, overdueData[index].count),
-    value: valueFor(`ID${16 + index}`, overdueData[index].value),
+    name: nameFor(`ID${16 + index}`, name),
+    count: valueFor(`ID${16 + index}`),
+    value: valueFor(`ID${16 + index}`),
   }));
   const liveTaskData = [
     { prefix: "overview_task_not", fallback: "待执行的任务数" },
@@ -521,36 +480,36 @@ export function ProjectDashboard() {
     count: valueByCode(prefix),
   }));
   const liveDeliveryData = [
-    { name: "2026投产项目", count: valueFor("ID45", 145), days: valueFor("ID46", 176) },
-    { name: "投产顺序项目", count: valueFor("ID47", 40), days: valueFor("ID48", 315) },
-    { name: "投产敏捷项目", count: valueFor("ID49", 105), days: valueFor("ID50", 126) },
+    { name: nameFor("ID45", "2026投产项目"), count: valueFor("ID45"), days: valueFor("ID46") },
+    { name: nameFor("ID47", "投产顺序项目"), count: valueFor("ID47"), days: valueFor("ID48") },
+    { name: nameFor("ID49", "投产敏捷项目"), count: valueFor("ID49"), days: valueFor("ID50") },
   ];
   const liveGauges = [
     {
-      label: "顺序项目科技实施阶段时长占比",
-      value: valueFor("ID35", 51),
-      progress: targetFor("ID35", 60),
+      label: nameFor("ID35", "顺序项目科技实施阶段时长占比"),
+      value: valueFor("ID35"),
+      progress: targetFor("ID35"),
       min: 0,
       max: 100,
     },
     {
-      label: "敏捷项目首版本平均交付周期",
-      value: valueFor("ID41", 107),
-      progress: targetFor("ID41", 105),
+      label: nameFor("ID41", "敏捷项目首版本平均交付周期"),
+      value: valueFor("ID41"),
+      progress: targetFor("ID41"),
       min: 100,
       max: 110,
     },
     {
-      label: "敏捷项目版本平均交付周期",
-      value: valueFor("ID43", 23),
-      progress: targetFor("ID43", 22.5),
+      label: nameFor("ID43", "敏捷项目版本平均交付周期"),
+      value: valueFor("ID43"),
+      progress: targetFor("ID43"),
       min: 20,
       max: 30,
     },
   ];
   const livePerformanceData = ["ID19", "ID20", "ID21", "ID22"].map((id, index) => ({
     name: ["[0,0.5)", "[0.5,1)", "[1,1.5)", "≥1.5"][index],
-    value: valueFor(id, [35, 144, 46, 4][index]),
+    value: valueFor(id),
   }));
   const liveTaskTotal = liveTaskData.reduce((total, item) => total + item.value, 0);
   const liveKeyProgressTotal = liveKeyProgressData.reduce((total, item) => total + item.count, 0);
