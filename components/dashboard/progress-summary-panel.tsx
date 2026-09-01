@@ -1,19 +1,25 @@
 "use client"
 
 import { TrendingUp, Milestone, CheckCircle2, type LucideIcon } from "lucide-react"
+import useSWR from "swr"
 import { PanelCard } from "@/components/dashboard/panel-card"
-import { overallProgress } from "@/lib/mock-data"
-import { useLiveValue } from "@/lib/use-live-value"
+import { aiCockpitApi, findByName, formatAiValue, rowsBySection } from "@/lib/ai-cockpit-api"
 
 export function ProgressSummaryPanel() {
-  const overallRate = useLiveValue(overallProgress.overallRate, { volatility: 0.02 })
+  const { data: rows = [] } = useSWR("ai-cockpit-overview", aiCockpitApi.overview)
+  const panelRows = rowsBySection(rows, "核心概览", "总体进展")
+
+  const overallRateRow = findByName(panelRows, "总体进度")
+  const milestoneRateRow = findByName(panelRows, "关键里程碑达成率")
+  const milestoneDoneRow = findByName(panelRows, "已达成")
+  const milestoneTotalRow = findByName(panelRows, "目标总数") ?? findByName(panelRows, "里程碑总数")
 
   const stats: { label: string; value: string; icon: LucideIcon }[] = [
-    { label: "总体进度", value: `${overallRate.toFixed(1)}%`, icon: TrendingUp },
-    { label: "关键里程碑达成率", value: `${overallProgress.milestoneRate}%`, icon: Milestone },
+    { label: overallRateRow?.dataName ?? "总体进度", value: overallRateRow ? formatAiValue(overallRateRow.data, overallRateRow.unit) : "-", icon: TrendingUp },
+    { label: milestoneRateRow?.dataName ?? "关键里程碑达成率", value: milestoneRateRow ? formatAiValue(milestoneRateRow.data, milestoneRateRow.unit) : "-", icon: Milestone },
     {
-      label: "关键里程碑已达成",
-      value: `${overallProgress.milestoneDone}/${overallProgress.milestoneTotal}`,
+      label: milestoneDoneRow?.dataName ?? "关键里程碑已达成",
+      value: milestoneDoneRow && milestoneTotalRow ? `${milestoneDoneRow.data}/${milestoneTotalRow.data}` : "-",
       icon: CheckCircle2,
     },
   ]

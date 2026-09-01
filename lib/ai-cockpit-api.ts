@@ -43,6 +43,16 @@ export function rowsByMetricPrefix(rows: AiCockpitRow[], prefix: string) {
   return rows.filter((row) => row.metricCode.startsWith(prefix))
 }
 
+/** 按 section + subSection（对应页面上的分区标题 / 卡片标题）筛选数据行。 */
+export function rowsBySection(rows: AiCockpitRow[], section: string, subSection?: string) {
+  return rows.filter((row) => row.section === section && (subSection === undefined || row.subSection === subSection))
+}
+
+/** 在一组数据行中按 dataName 关键字查找第一条匹配记录。 */
+export function findByName(rows: AiCockpitRow[], keyword: string) {
+  return rows.find((row) => row.dataName.includes(keyword))
+}
+
 export function toNumber(value: number | string) {
   const parsed = Number(String(value).replace(/[%，,]/g, ""))
   return Number.isFinite(parsed) ? parsed : 0

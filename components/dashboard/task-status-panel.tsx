@@ -2,10 +2,24 @@
 
 import { PieChart, Pie, Cell, ResponsiveContainer, Tooltip } from "recharts"
 import { PieChart as PieChartIcon } from "lucide-react"
+import useSWR from "swr"
 import { PanelCard } from "@/components/dashboard/panel-card"
-import { taskStatusDistribution } from "@/lib/mock-data"
+import { aiCockpitApi, rowsBySection, toNumber } from "@/lib/ai-cockpit-api"
+
+const sliceColors: [string, string][] = [
+  ["已完成", "var(--chart-1)"],
+  ["建设中", "var(--chart-2)"],
+  ["待开始", "var(--chart-3)"],
+  ["延期", "var(--chart-5)"],
+]
 
 export function TaskStatusPanel() {
+  const { data: rows = [] } = useSWR("ai-cockpit-overview", aiCockpitApi.overview)
+  const statusRows = rowsBySection(rows, "核心概览", "专班工作概览")
+  const taskStatusDistribution = sliceColors.map(([keyword, color]) => {
+    const row = statusRows.find((r) => r.dataName.includes(keyword))
+    return { key: keyword, label: row?.dataName ?? keyword, value: row ? toNumber(row.data) : 0, color }
+  })
   const total = taskStatusDistribution.reduce((sum, slice) => sum + slice.value, 0)
 
   return (
