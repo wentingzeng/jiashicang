@@ -27,7 +27,7 @@ function buildTeams(rows: AiCockpitRow[]): Team[] {
     const done = find("task_complete")
     const doing = find("task_in_progress")
     const pending = find("task_not_started")
-    return { name, icon: teamIcons[index % teamIcons.length], metrics: metricRows.map((row) => [row.dataName, formatAiValue(row.data, row.unit)] as [string, string]), milestone: formatAiValue(find("milestone_total")?.data ?? "-", find("milestone_total")?.unit), task: formatAiValue(total?.data ?? "-", total?.unit), done: formatAiValue(done?.data ?? "-", done?.unit), doing: formatAiValue(doing?.data ?? "-", doing?.unit), pending: formatAiValue(pending?.data ?? "-", pending?.unit) }
+    return { name, icon: teamIcons[index % teamIcons.length], metrics: metricRows.map((row) => [row.dataName, formatAiValue(row.data, row.unit)] as [string, string]), milestone: formatAiValue(find("milestone_total")?.data ?? "-", find("milestone_total")?.unit), task: total?.data === undefined || total?.data === null ? "-" : String(total.data), done: formatAiValue(done?.data ?? "-", done?.unit), doing: formatAiValue(doing?.data ?? "-", doing?.unit), pending: formatAiValue(pending?.data ?? "-", pending?.unit) }
   })
 }
 
