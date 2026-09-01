@@ -72,7 +72,11 @@ export function toCapabilityData(rows: BranchScore[]) {
 }
 
 export function toIndicatorLabels(rows: SecurityIndicator[]) {
-  return rows.map((row) => `${row.indicatorName}：${row.indicatorValue}${row.valueUnit}`)
+  return rows.map((row) => {
+    const unit = row.valueUnit?.toLowerCase()
+    const value = unit === "percent" ? `${normalizeRatio(row.indicatorValue)}%` : unit === "count" ? String(row.indicatorValue) : `${row.indicatorValue}${row.valueUnit ?? ""}`
+    return `${row.indicatorName}：${value}`
+  })
 }
 
 export function toProblemData(rows: InspectionProblem[]) {
@@ -80,11 +84,11 @@ export function toProblemData(rows: InspectionProblem[]) {
 }
 
 export function toTrainingData(rows: TrainingStat[]) {
-  return rows.map((row) => ({ name: row.unitName, value: row.safetyTrainingCount }))
+  return [...rows].sort((a, b) => b.safetyTrainingCount - a.safetyTrainingCount).map((row) => ({ name: row.unitName, value: row.safetyTrainingCount }))
 }
 
 export function toViolationData(rows: TrainingStat[]) {
-  return rows.map((row) => ({ name: row.unitName, value: row.violationScoreCount }))
+  return [...rows].sort((a, b) => b.violationScoreCount - a.violationScoreCount).map((row) => ({ name: row.unitName, value: row.violationScoreCount }))
 }
 
 export function toRepairRate(rows: SecurityIndicator[]) {
