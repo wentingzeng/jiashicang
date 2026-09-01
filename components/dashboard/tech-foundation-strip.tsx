@@ -53,11 +53,12 @@ export function TechFoundationStrip() {
     ;(groups[key] ??= []).push(row)
     return groups
   }, {})
-  const groups = Object.entries(groupedRows).slice(0, 4).map(([title, groupRows], index) => ({
-    ...(techGroupDefs[index] ?? { key: `foundation-${index}`, icon: Database }),
-    title,
-    rows: groupRows,
-  }))
+  const groups = techGroupDefs
+    .map((definition) => ({
+      ...definition,
+      rows: groupedRows[definition.title] ?? [],
+    }))
+    .filter((group) => group.rows.length > 0)
 
   return (
     <Card className="gap-4 p-5">

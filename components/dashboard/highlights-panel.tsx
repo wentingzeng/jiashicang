@@ -16,9 +16,9 @@ export function HighlightsPanel() {
       {highlightRows.length === 0 ? (
         <p className="flex flex-1 items-center justify-center text-xs text-muted-foreground">暂无重点关注事项</p>
       ) : (
-        <ul className="flex flex-1 flex-col justify-between gap-4">
+        <ul className="flex flex-col gap-2">
           {highlightRows.map((row) => (
-            <li key={row.metricCode} className="flex min-h-16 min-w-0 items-center gap-2 rounded-lg border border-border/70 bg-secondary/35 px-3 py-3">
+            <li key={row.metricCode} className="flex min-h-12 min-w-0 items-center gap-2 rounded-lg border border-border/70 bg-secondary/35 px-2 py-2">
               <span className="flex size-6 shrink-0 items-center justify-center rounded-lg bg-destructive/10 text-destructive">
                 <CircleAlert className="size-3" aria-hidden="true" />
               </span>
