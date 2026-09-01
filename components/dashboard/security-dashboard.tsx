@@ -231,7 +231,7 @@ function CompactDetailTable({ rows, headers, className = "", height = 204 }: { r
   return <div className={`overflow-hidden rounded-lg border border-border/50 bg-card text-[8px] shadow-sm ${className}`} style={{ height, maxHeight: height }}><div className="h-full min-h-0 overflow-y-auto overflow-x-hidden"><table className="w-full table-fixed border-separate border-spacing-0 text-left"><thead><tr>{headers.map((header, index) => <th key={header} className={`sticky top-0 z-30 border-b border-primary/20 px-2 py-1.5 font-semibold ${index === 0 ? "w-[78%] bg-card text-foreground" : "w-[22%] bg-primary text-primary-foreground text-center"}`}>{header}</th>)}</tr></thead><tbody className="divide-y divide-border/30">{rows.map((row, index) => <tr key={index} className={index % 2 ? "bg-muted/20" : "bg-card/40"}>{row.map((cell, cellIndex) => <td key={cellIndex} className={`${cellIndex === 0 ? "whitespace-normal text-foreground" : "text-center font-mono font-semibold text-primary"} px-2 py-2 leading-4`}>{cell}</td>)}</tr>)}</tbody></table></div></div>
 }
 
-function CapabilityBars({ data, label, selectedInstitutionType }: { data: { name: string; value: number }[]; label: string; selectedInstitutionType: string }) {
+function CapabilityBars({ data, label, selectedInstitutionType }: { data: { name: string; value: number; rankByAllBranches?: number | null; rankByBranchLevel?: number | null; branchLevel?: string }[]; label: string; selectedInstitutionType: string }) {
   const [selectedBranch, setSelectedBranch] = useState<string | null>(selectedInstitutionType === "全部机构" ? null : selectedInstitutionType)
   const [showAll, setShowAll] = useState(true)
   useEffect(() => {
@@ -424,7 +424,7 @@ function ChinaSecurityMap({ data, selectedInstitutionType, fujianCityScores, onD
       </div>
 
       <div className="pointer-events-none absolute bottom-8 right-2 min-w-56 rounded-lg border border-primary/20 bg-card/95 px-2.5 py-2 text-[11px] shadow-md">
-        {selectedProvince && selectedItem ? (() => { const rankingData = isFujianDetail ? fujianCityScores : data; const rank = [...rankingData].sort((a, b) => b.value - a.value).findIndex((item) => item.name === selectedItem.name) + 1; const category = selectedItem.value >= 90 ? "一等" : selectedItem.value >= 82 ? "二等" : "三等"; const categoryRank = [...rankingData].filter((item) => category === "一等" ? item.value >= 90 : category === "二等" ? item.value >= 82 && item.value < 90 : item.value < 82).sort((a, b) => b.value - a.value).findIndex((item) => item.name === selectedItem.name) + 1; return <div className="grid gap-1.5"><div className="mb-1 border-b border-border/60 pb-1.5 text-xs font-semibold text-foreground">{selectedProvince}</div><div className="grid grid-cols-[1fr_auto] gap-x-5 gap-y-1 text-muted-foreground"><span>网络安全全年合计得分</span><strong className="font-mono text-[11px] font-semibold text-primary">{selectedItem.value.toFixed(2)}</strong><span>2025年排名（按全行）</span><strong className="font-mono text-foreground">{rank}</strong><span>类别</span><strong className="text-foreground">{category}</strong><span>2025年排名（按等级行）</span><strong className="font-mono text-foreground">{categoryRank}</strong></div></div> })() : <span className="text-muted-foreground">{isFujianDetail ? "点击地市查看安全能力得分" : "点击省份查看安全能力得分"}</span>}
+        {selectedProvince && selectedItem ? (() => { const rank = "rankByAllBranches" in selectedItem ? selectedItem.rankByAllBranches : null; const category = "branchLevel" in selectedItem ? selectedItem.branchLevel : ""; const categoryRank = "rankByBranchLevel" in selectedItem ? selectedItem.rankByBranchLevel : null; return <div className="grid gap-1.5"><div className="mb-1 border-b border-border/60 pb-1.5 text-xs font-semibold text-foreground">{selectedProvince}</div><div className="grid grid-cols-[1fr_auto] gap-x-5 gap-y-1 text-muted-foreground"><span>网络安全全年合计得分</span><strong className="font-mono text-[11px] font-semibold text-primary">{selectedItem.value.toFixed(2)}</strong><span>2025年排名（按全行）</span><strong className="font-mono text-foreground">{String(rank ?? "-")}</strong><span>类别</span><strong className="text-foreground">{String(category || "-")}</strong><span>2025年排名（按等级行）</span><strong className="font-mono text-foreground">{String(categoryRank ?? "-")}</strong></div></div> })() : <span className="text-muted-foreground">{isFujianDetail ? "点击地市查看安全能力得分" : "点击省份查看安全能力得分"}</span>}
       </div>
 
       {!isFujianDetail && (() => {
@@ -573,12 +573,12 @@ export function SecurityDashboard() {
   const { data: rankings = [], error: rankingsError } = useSWR<BranchRanking[]>(["security-rankings", selectedYear], () => securityApi.rankings(selectedYear))
   const { data: training = [], error: trainingError } = useSWR<TrainingStat[]>(["security-training", selectedYear], () => securityApi.training(selectedYear))
   const years = useMemo(() => [...new Set(branches.map((row) => String(row.assessmentYear)))].sort().reverse(), [branches])
-  const institutions = useMemo(() => [...new Set(branches.map((row) => row.institutionType))], [branches])
-  const filteredBranches = selectedInstitutionType === "全部机构" ? branches : branches.filter((row) => row.institutionType === selectedInstitutionType)
+  const institutions = useMemo(() => [...new Set(branches.map((row) => row.branchName))], [branches])
+  const filteredBranches = selectedInstitutionType === "全部机构" ? branches : branches.filter((row) => row.branchName === selectedInstitutionType)
   const filteredCapability = toCapabilityData(filteredBranches)
   const mapData = [...new Map(branches.map((row) => [row.province, { name: row.province, value: Number(row.annualTotalScore ?? 0) }])).values()]
-  const filteredTraining = toTrainingData(training.filter((row) => selectedInstitutionType === "全部机构" || branches.some((branch) => branch.branchName === row.unitName && branch.institutionType === selectedInstitutionType)))
-  const filteredViolations = toViolationData(training.filter((row) => selectedInstitutionType === "全部机构" || branches.some((branch) => branch.branchName === row.unitName && branch.institutionType === selectedInstitutionType)))
+  const filteredTraining = toTrainingData(training.filter((row) => selectedInstitutionType === "全部机构" || row.unitName === selectedInstitutionType))
+  const filteredViolations = toViolationData(training.filter((row) => selectedInstitutionType === "全部机构" || row.unitName === selectedInstitutionType))
   const filteredOutstanding = toRankingBranches(rankings, "excellent")
   const filteredWeak = toRankingBranches(rankings, "poor")
   const selectedScore = filteredCapability.length === 1 ? filteredCapability[0].value : 0
@@ -608,7 +608,7 @@ export function SecurityDashboard() {
           </label>
 
           <label className="flex min-w-0 flex-1 items-center gap-3 whitespace-nowrap rounded-md border border-border/60 bg-background/35 px-3 py-2 text-sm">
-            <span className="shrink-0 whitespace-nowrap font-[100] text-muted-foreground">机构类别</span>
+            <span className="shrink-0 whitespace-nowrap font-[100] text-muted-foreground">分行名称</span>
             <select value={selectedInstitutionType} onChange={(event) => setSelectedInstitutionType(event.target.value)} className="min-w-0 w-full bg-transparent text-foreground outline-none">
               <option>全部机构</option>
               {institutions.map((name) => <option key={name}>{name}</option>)}
@@ -643,10 +643,10 @@ export function SecurityDashboard() {
 
         <div className="mt-5 grid items-start gap-2 lg:grid-cols-3 lg:grid-rows-[460px_auto]">
           <section className="order-1 flex min-h-full min-w-0 flex-col gap-4 lg:row-start-1 lg:row-span-2 lg:col-start-1">
-            <Panel title={isCapabilityDrilled ? "网络安全综合能力" : "网络安全综合能力视图"} tone="accent" className="flex h-full min-h-0 flex-col" bodyClassName="flex min-h-0 flex-1 flex-col p-4">
+            <Panel title={isCapabilityDrilled ? "网络安全综合能力" : "网络安全综合���力视图"} tone="accent" className="flex h-full min-h-0 flex-col" bodyClassName="flex min-h-0 flex-1 flex-col p-4">
               {isCapabilityDrilled ? (
                 <div className="flex min-h-0 flex-1 flex-col">
-                  <CapabilityBars data={filteredCapability} label="各分行综合能力得分" selectedInstitutionType="全部机构" />
+                  <CapabilityBars data={filteredCapability} label="各分行综合能力得分" selectedInstitutionType={selectedInstitutionType} />
                   <button
                     type="button"
                     onClick={() => setIsCapabilityDrilled(false)}
@@ -656,7 +656,7 @@ export function SecurityDashboard() {
                   </button>
                 </div>
               ) : (
-                <div className="min-h-0 flex-1"><ChinaSecurityMap data={mapData} fujianCityScores={fujianCityScores} selectedInstitutionType="全部机构" /></div>
+                <div className="min-h-0 flex-1"><ChinaSecurityMap data={mapData} fujianCityScores={fujianCityScores} selectedInstitutionType={selectedInstitutionType} /></div>
               )}
               {!isCapabilityDrilled && (
                 <button
