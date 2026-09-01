@@ -11,8 +11,12 @@ export function ProgressSummaryPanel() {
 
   const overallRateRow = findByName(panelRows, "总体进度")
   const milestoneRateRow = findByName(panelRows, "关键里程碑达成率")
-  const milestoneDoneRow = findByName(panelRows, "已达成")
-  const milestoneTotalRow = findByName(panelRows, "目标总数") ?? findByName(panelRows, "里程碑总数")
+  const milestoneDoneRow =
+    findByName(panelRows, "关键里程碑达成数") ?? findByName(panelRows, "已达成")
+  const milestoneTotalRow =
+    findByName(panelRows, "关键里程碑总数") ??
+    findByName(panelRows, "目标总数") ??
+    findByName(panelRows, "里程碑总数")
 
   const stats: { label: string; value: string; icon: LucideIcon }[] = [
     { label: overallRateRow?.dataName ?? "总体进度", value: overallRateRow ? formatAiValue(overallRateRow.data, overallRateRow.unit) : "-", icon: TrendingUp },
