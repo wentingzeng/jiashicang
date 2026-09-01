@@ -13,8 +13,11 @@ const teamIcons = [ShieldCheck, LineChart, Layers3, Landmark, UsersRound, Briefc
 
 type Team = { name: string; icon: typeof ShieldCheck; metrics: [string, string][]; milestone: string; task: string; done: string; doing: string; pending: string }
 
+const fallbackTeamNames = ["风险管理智能化专班", "资管财富智能化专班", "集中作业智能化专班", "同业金市智能化专班", "零售金融智能化专班", "企业金融智能化专班", "知识工程专班", "智能平台建设专班"]
+
 function buildTeams(rows: AiCockpitRow[]): Team[] {
   const groups = new Map<string, AiCockpitRow[]>()
+  if (!rows.length) return fallbackTeamNames.map((name, index) => ({ name, icon: teamIcons[index], metrics: [], milestone: "-", task: "-", done: "-", doing: "-", pending: "-" }))
   for (const row of rows) groups.set(row.subSection, [...(groups.get(row.subSection) ?? []), row])
   return Array.from(groups.entries()).map(([name, items], index) => {
     const find = (code: string) => items.find((row) => row.metricCode.includes(code))
@@ -56,5 +59,5 @@ function TeamCard({ team }: { team: Team }) {
 export function TeamOverview() {
   const { data: rows = [], error, isLoading } = useSWR("ai-cockpit-team", aiCockpitApi.team)
   const teams = buildTeams(rows)
-  return <main className="min-h-screen bg-background text-foreground"><TopNav /><div className="mx-auto flex max-w-[1800px] flex-col gap-3 px-4 pb-4 md:px-6"><HeroBanner title="人工智能+驾驶舱" subtitle="智能赋能 · 场景落地 · 提质增效 · 创新引领" /><div className="flex overflow-hidden rounded-lg border border-primary/20 bg-muted/50 text-sm font-semibold"><Link href="/" className="flex-1 px-4 py-2 text-center text-muted-foreground transition-colors hover:bg-primary/10">驾驶舱总览</Link><Link href="/team" className="flex-1 bg-[#2456c7] px-4 py-2 text-center text-white">专班建设概览</Link></div>{isLoading && <p className="rounded-xl border border-border p-6 text-center text-muted-foreground">正在读取人工智能数据…</p>}{error && <p className="rounded-xl border border-destructive/30 p-6 text-center text-destructive">人工智能数据读取失败，请确认本地 8080 后端已启动。</p>}<section className="grid gap-3 md:grid-cols-2 lg:grid-cols-6">{teams.map((team) => <TeamCard key={team.name} team={team} />)}</section></div></main>
+  return <main className="min-h-screen bg-background text-foreground"><TopNav /><div className="mx-auto flex max-w-[1800px] flex-col gap-3 px-4 pb-4 md:px-6"><HeroBanner title="人工智能+驾驶舱" subtitle="智能赋能 · 场景落地 · 提质增效 · 创新引领" /><div className="flex overflow-hidden rounded-lg border border-primary/20 bg-muted/50 text-sm font-semibold"><Link href="/" className="flex-1 px-4 py-2 text-center text-muted-foreground transition-colors hover:bg-primary/10">驾驶舱总览</Link><Link href="/team" className="flex-1 bg-[#2456c7] px-4 py-2 text-center text-white">专班建设概览</Link></div>{(isLoading || error) && <p className={`rounded-xl border p-3 text-center text-sm ${error ? "border-destructive/30 text-destructive" : "border-border text-muted-foreground"}`}>{isLoading ? "正在读取人工智能数据…" : "人工智能数据暂时无法读取，当前显示卡片布局占位。"}</p>}<section className="grid gap-3 md:grid-cols-2 lg:grid-cols-6">{teams.map((team) => <TeamCard key={team.name} team={team} />)}</section></div></main>
 }
