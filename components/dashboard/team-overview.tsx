@@ -11,23 +11,25 @@ import { TopNav } from "@/components/dashboard/top-nav"
 
 const teamIcons = [ShieldCheck, LineChart, Layers3, Landmark, UsersRound, BriefcaseBusiness, Database, Sparkles]
 
-type Team = { name: string; icon: typeof ShieldCheck; metrics: [string, string][]; milestone: string; task: string; done: string; doing: string; pending: string }
+type Team = { name: string; icon: typeof ShieldCheck; metrics: [string, string][]; milestone: string; milestoneComplete: string; task: string; done: string; doing: string; pending: string }
 
 const fallbackTeamNames = ["风险管理智能化专班", "资管财富智能化专班", "集中作业智能化专班", "同业金市智能化专班", "零售金融智能化专班", "企业金融智能化专班", "知识工程专班", "智能平台建设专班"]
 
 function buildTeams(rows: AiCockpitRow[]): Team[] {
   const groups = new Map<string, AiCockpitRow[]>()
-  if (!rows.length) return fallbackTeamNames.map((name, index) => ({ name, icon: teamIcons[index], metrics: [], milestone: "-", task: "-", done: "-", doing: "-", pending: "-" }))
+  if (!rows.length) return fallbackTeamNames.map((name, index) => ({ name, icon: teamIcons[index], metrics: [], milestone: "-", milestoneComplete: "-", task: "-", done: "-", doing: "-", pending: "-" }))
   for (const row of rows) groups.set(row.subSection, [...(groups.get(row.subSection) ?? []), row])
   const displayOrder = ["风险管理智能化专班", "资管财富智能化专班", "集中作业智能化专班", "同业金市智能化专班", "零售金融智能化专班", "企业金融智能化专班", "知识工程专班", "智能平台建设专班"]
   return Array.from(groups.entries()).sort(([a], [b]) => displayOrder.indexOf(a) - displayOrder.indexOf(b)).map(([name, items], index) => {
     const find = (code: string) => items.find((row) => row.metricCode.includes(code))
     const metricRows = items.filter((row) => row.metricType === "metric" || row.metricType === "rate").slice(0, 2)
     const total = find("task_total")
+    const milestoneComplete = find("milestone_complete")
     const done = find("task_complete")
     const doing = find("task_in_progress")
     const pending = find("task_not_started")
-    return { name, icon: teamIcons[index % teamIcons.length], metrics: metricRows.map((row) => [row.dataName, formatAiValue(row.data, row.unit)] as [string, string]), milestone: formatAiValue(find("milestone_total")?.data ?? "-", find("milestone_total")?.unit), task: total?.data === undefined || total?.data === null ? "-" : String(total.data), done: formatAiValue(done?.data ?? "-", done?.unit), doing: formatAiValue(doing?.data ?? "-", doing?.unit), pending: formatAiValue(pending?.data ?? "-", pending?.unit) }
+    const displayData = (row?: AiCockpitRow) => row?.data === undefined || row?.data === null ? "-" : String(row.data)
+    return { name, icon: teamIcons[index % teamIcons.length], metrics: metricRows.map((row) => [row.dataName, formatAiValue(row.data, row.unit)] as [string, string]), milestone: displayData(find("milestone_total")), task: displayData(total), done: displayData(done), doing: displayData(doing), pending: displayData(pending), milestoneComplete: displayData(milestoneComplete) }
   })
 }
 
@@ -49,7 +51,7 @@ function TeamCard({ team }: { team: Team }) {
           </div>
         </div>
         <div className="grid grid-cols-2 overflow-hidden rounded-xl border border-border/70 bg-muted/35">
-          <div className="border-r border-border/70 p-2 text-center"><p className="text-[10px] text-muted-foreground">里程碑目标数</p><strong className="font-mono text-xl text-[#2456c7]">{team.milestone}<small className="ml-1 text-xs">个</small></strong><p className="text-[10px] text-emerald-600">↑ {team.done} 个已完成</p></div>
+          <div className="border-r border-border/70 p-2 text-center"><p className="text-[10px] text-muted-foreground">里程碑目标数</p><strong className="font-mono text-xl text-[#2456c7]">{team.milestone}<small className="ml-1 text-xs">个</small></strong><p className="text-[10px] text-emerald-600">↑ {team.milestoneComplete} 个已完成</p></div>
           <div className="p-2 text-center"><p className="text-[10px] text-muted-foreground">重点任务数</p><strong className="font-mono text-xl text-[#2456c7]">{team.task}<small className="ml-1 text-xs">个</small></strong><p className="text-[10px] text-muted-foreground"><span className="text-emerald-600">{team.done} 已完成</span> / <span className="text-primary">{team.doing} 进行中</span> / <span>{team.pending} 未启动</span></p></div>
         </div>
       </div>
