@@ -91,6 +91,8 @@ type ProjectIndicatorApiRow = {
   metricCode?: string;
   dimension?: string;
   metricName: string;
+  dataName?: string;
+  unit?: string | null;
   currentValue?: number | string | null;
   currentUnit?: string | null;
   targetValue?: number | string | null;
@@ -424,6 +426,8 @@ export function ProjectDashboard() {
           currentValue: row.currentValue ?? row.data,
           targetValue: row.targetValue,
           currentUnit: row.currentUnit ?? row.unit,
+          unit: row.unit,
+          dataName: row.dataName,
           metricName: row.metricName ?? row.dataName,
         })) : []);
         setApiState("ready");
@@ -445,8 +449,11 @@ export function ProjectDashboard() {
     return result;
   }, [apiRows]);
 
+  const rowFor = (indicatorId: string) => apiById.get(indicatorId);
   const valueFor = (indicatorId: string, fallback: number) =>
-    toMetricNumber(apiById.get(indicatorId)?.currentValue, fallback);
+    toMetricNumber(rowFor(indicatorId)?.currentValue, fallback);
+  const nameFor = (indicatorId: string, fallback: string) => rowFor(indicatorId)?.dataName ?? rowFor(indicatorId)?.metricName ?? fallback;
+  const unitFor = (indicatorId: string, fallback: string) => rowFor(indicatorId)?.unit ?? rowFor(indicatorId)?.currentUnit ?? fallback;
 
   const targetFor = (indicatorId: string, fallback: number) =>
     toMetricNumber(apiById.get(indicatorId)?.targetValue, fallback);
@@ -457,8 +464,9 @@ export function ProjectDashboard() {
       if (!row) return item;
       return {
         ...item,
+        label: row.dataName ?? row.metricName ?? item.label,
         value: String(toMetricNumber(row.currentValue, Number(item.value))),
-        unit: row.currentUnit ?? item.unit,
+        unit: unitFor(item.indicatorId, item.unit),
       };
     }),
     [apiById],
@@ -472,8 +480,8 @@ export function ProjectDashboard() {
   ];
   const statusTotal = statusCounts.reduce((sum, value) => sum + value, 0);
   const liveStatusData = [
-    { name: "已启动", value: statusTotal > 0 ? (statusCounts[0] / statusTotal) * 100 : 0 },
-    { name: "已申请未批复", value: statusTotal > 0 ? (statusCounts[1] / statusTotal) * 100 : 0 },
+    { name: nameFor("ID03", "已启动"), value: statusTotal > 0 ? (statusCounts[0] / statusTotal) * 100 : 0 },
+    { name: nameFor("ID02", "已申请未批复"), value: statusTotal > 0 ? (statusCounts[1] / statusTotal) * 100 : 0 },
     { name: "已批复超期未启动", value: statusTotal > 0 ? (statusCounts[2] / statusTotal) * 100 : 0 },
     { name: "已批复未启动", value: statusTotal > 0 ? (statusCounts[3] / statusTotal) * 100 : 0 },
   ];
@@ -610,7 +618,7 @@ export function ProjectDashboard() {
 <div key={item.name} className="flex h-32 min-h-32 flex-col rounded-lg border border-border/60 bg-card p-3 shadow-sm">
   <div className="flex items-center justify-between gap-2"><span className="text-xs font-medium text-muted-foreground">{item.name}</span><span className="size-2 rounded-full" style={{ backgroundColor: palette[index] }} /></div>
   <p className="mt-2 font-mono text-2xl font-bold tracking-tight" style={{ color: palette[index] }}>{item.count}<span className="ml-1 text-sm font-medium">项</span></p>
-  <div className="mt-auto pt-4"><div className="mb-2 flex justify-between text-[10px] text-muted-foreground"><span>项目占比</span><span>{((item.count / liveKeyProgressTotal) * 100).toFixed(2)}%</span></div><div className="h-2 rounded-full bg-muted"><div className="h-full rounded-full" style={{ width: `${(item.count / liveKeyProgressTotal) * 100}%`, backgroundColor: palette[index] }} /></div></div>
+  <div className="mt-auto pt-4"><div className="mb-2 flex justify-between text-[10px] text-muted-foreground"><span>项���占比</span><span>{((item.count / liveKeyProgressTotal) * 100).toFixed(2)}%</span></div><div className="h-2 rounded-full bg-muted"><div className="h-full rounded-full" style={{ width: `${(item.count / liveKeyProgressTotal) * 100}%`, backgroundColor: palette[index] }} /></div></div>
 </div>
               ))}
             </div>
