@@ -231,6 +231,18 @@ function CompactDetailTable({ rows, headers, className = "", height = 204 }: { r
   return <div className={`overflow-hidden rounded-lg border border-border/50 bg-card text-[8px] shadow-sm ${className}`} style={{ height, maxHeight: height }}><div className="h-full min-h-0 overflow-y-auto overflow-x-hidden"><table className="w-full table-fixed border-separate border-spacing-0 text-left"><thead><tr>{headers.map((header, index) => <th key={header} className={`sticky top-0 z-30 border-b border-primary/20 px-2 py-1.5 font-semibold ${index === 0 ? "w-[78%] bg-card text-foreground" : "w-[22%] bg-primary text-primary-foreground text-center"}`}>{header}</th>)}</tr></thead><tbody className="divide-y divide-border/30">{rows.map((row, index) => <tr key={index} className={index % 2 ? "bg-muted/20" : "bg-card/40"}>{row.map((cell, cellIndex) => <td key={cellIndex} className={`${cellIndex === 0 ? "whitespace-normal text-foreground" : "text-center font-mono font-semibold text-primary"} px-2 py-2 leading-4`}>{cell}</td>)}</tr>)}</tbody></table></div></div>
 }
 
+function getBranchScore(item: Record<string, unknown>, ...keys: string[]) {
+  const normalized = Object.entries(item).reduce<Record<string, unknown>>((result, [key, value]) => {
+    result[key.replace(/[_-]/g, "").toLowerCase()] = value
+    return result
+  }, {})
+  for (const key of keys) {
+    const value = normalized[key.replace(/[_-]/g, "").toLowerCase()]
+    if (value !== undefined && value !== null && value !== "") return Number(value)
+  }
+  return 0
+}
+
 function CapabilityBars({ data, label, selectedInstitutionType }: { data: { name: string; value: number; rankByAllBranches?: number | null; rankByBranchLevel?: number | null; branchLevel?: string; [key: string]: unknown }[]; label: string; selectedInstitutionType: string }) {
   const [selectedBranch, setSelectedBranch] = useState<string | null>(selectedInstitutionType === "全部机构" ? null : selectedInstitutionType)
   const [showAll, setShowAll] = useState(true)
@@ -240,13 +252,13 @@ function CapabilityBars({ data, label, selectedInstitutionType }: { data: { name
   }, [selectedInstitutionType, data])
   const metrics = data.map((item) => ({
     ...item,
-    responsibility: Number(item.networkSecurityResponsibility ?? 0),
-    notification: Number(item.notificationAndPersonalInfo ?? 0),
-    risk: Number(item.riskDiscoveryAndRectification ?? 0),
-    research: Number(item.developmentSecurity ?? 0),
-    integrated: Number(item.integratedSecurityOperations ?? 0),
-    highlights: Number(item.branchHighlightsAndContribution ?? 0),
-    deductions: Number(item.otherDeductions ?? 0),
+    responsibility: getBranchScore(item, "networkSecurityResponsibility"),
+    notification: getBranchScore(item, "notificationAndPersonalInfo"),
+    risk: getBranchScore(item, "riskDiscoveryAndRectification"),
+    research: getBranchScore(item, "developmentSecurity"),
+    integrated: getBranchScore(item, "integratedSecurityOperations"),
+    highlights: getBranchScore(item, "branchHighlightsAndContribution"),
+    deductions: getBranchScore(item, "otherDeductions"),
   }))
   const rankedMetrics = [...metrics].sort((a, b) => b.value - a.value)
   const visibleMetrics = selectedBranch || showAll ? rankedMetrics : [...rankedMetrics.slice(0, 3), ...rankedMetrics.slice(-3)]
@@ -369,7 +381,7 @@ function ChinaSecurityMap({ data, selectedInstitutionType, fujianCityScores, ass
               const regionItem = isFujianDetail ? fujianCityScores.find((item) => normalizeRegion(item.name) === normalizeRegion(province)) : data.find((item) => normalizeRegion(provinceForBranch(item.name)) === normalizeRegion(province))
 
               const provinceItem = regionItem
-              const selected = selectedProvince === province || (selectedInstitutionType !== "全部机构" && normalizeRegion(province) === normalizeRegion(provinceForBranch(selectedInstitutionType)))
+              const selected = selectedProvince === province || (selectedInstitutionType !== "���部机构" && normalizeRegion(province) === normalizeRegion(provinceForBranch(selectedInstitutionType)))
 
               return (
                 <Geography
@@ -642,7 +654,7 @@ export function SecurityDashboard() {
 
         <div className="mt-5 grid items-start gap-2 lg:grid-cols-3 lg:grid-rows-[460px_auto]">
           <section className="order-1 flex min-h-full min-w-0 flex-col gap-4 lg:row-start-1 lg:row-span-2 lg:col-start-1">
-            <Panel title={isCapabilityDrilled ? "网络安全综合能力" : "网络安全综合���力视图"} tone="accent" className="flex h-full min-h-0 flex-col" bodyClassName="flex min-h-0 flex-1 flex-col p-4">
+            <Panel title={isCapabilityDrilled ? "网���安全综合能力" : "网络安全综合���力视图"} tone="accent" className="flex h-full min-h-0 flex-col" bodyClassName="flex min-h-0 flex-1 flex-col p-4">
               {isCapabilityDrilled ? (
                 <div className="flex min-h-0 flex-1 flex-col">
                   <CapabilityBars data={filteredCapability} label="各分行综合能力得分" selectedInstitutionType={selectedInstitutionType} />
