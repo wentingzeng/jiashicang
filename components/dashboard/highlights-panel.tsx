@@ -7,7 +7,9 @@ import { aiCockpitApi } from "@/lib/ai-cockpit-api"
 
 export function HighlightsPanel() {
   const { data: rows = [] } = useSWR("ai-cockpit-overview", aiCockpitApi.overview)
-  const highlightRows = rows.filter((row) => row.section === "重点关注").slice(0, 2)
+  const highlightRows = rows
+    .filter((row) => String(row.section ?? "").trim() === "重点关注")
+    .slice(0, 2)
 
   return (
     <PanelCard icon={AlertTriangle} title="重点关注" bodyClassName="flex h-full flex-col p-3">
@@ -22,7 +24,7 @@ export function HighlightsPanel() {
               </span>
               <div className="flex min-w-0 flex-1 items-center justify-between gap-3">
                 <div className="flex min-w-0 flex-col gap-0">
-                  <span className="truncate text-xs font-medium leading-4 text-foreground">{row.dataName}</span>
+                  <span className="truncate text-xs font-medium leading-4 text-foreground">{String(row.dataName ?? "").trim()}</span>
                 </div>
                 <ArrowUpRight className="size-4 shrink-0 text-muted-foreground/60" aria-hidden="true" />
               </div>

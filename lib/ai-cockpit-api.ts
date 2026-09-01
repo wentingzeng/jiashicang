@@ -18,7 +18,17 @@ const API_BASE = process.env.NEXT_PUBLIC_SECURITY_API_BASE_URL ?? process.env.NE
 async function request(path: string): Promise<AiCockpitRow[]> {
   const response = await fetch(`${API_BASE}${path}`, { cache: "no-store" })
   if (!response.ok) throw new Error(`人工智能数据接口请求失败：${response.status}`)
-  return response.json()
+  const payload = await response.json()
+  const rows = Array.isArray(payload) ? payload : payload.data
+  return (Array.isArray(rows) ? rows : []).map((row) => ({
+    ...row,
+    section: row.section ?? row.sectionName ?? row.section_name ?? "",
+    subSection: row.subSection ?? row.sub_section ?? row.subsection ?? "",
+    metricCode: row.metricCode ?? row.metric_code ?? String(row.id ?? ""),
+    dataName: row.dataName ?? row.data_name ?? row.name ?? "",
+    data: row.data ?? row.value ?? "",
+    unit: row.unit ?? null,
+  }))
 }
 
 export const aiCockpitApi = {
