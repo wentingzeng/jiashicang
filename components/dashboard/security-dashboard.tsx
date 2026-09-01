@@ -372,7 +372,7 @@ function ChinaSecurityMap({ data, selectedInstitution, onDrillChange }: { data: 
                       setSelectedProvince(province)
                     } else if (province.includes("福建")) {
                       setIsFujianDetail(true)
-                      setSelectedProvince("福���省")
+                      setSelectedProvince("福建省")
                       onDrillChange?.(true)
                     } else {
                       setSelectedProvince(province)
