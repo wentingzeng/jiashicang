@@ -1,24 +1,33 @@
 "use client"
 
 import { BriefcaseBusiness, Database, Landmark, Layers3, LineChart, ShieldCheck, Sparkles, UsersRound } from "lucide-react"
+import useSWR from "swr"
 
 import Link from "next/link"
+import { aiCockpitApi, formatAiValue, toNumber, type AiCockpitRow } from "@/lib/ai-cockpit-api"
 
 import { HeroBanner } from "@/components/dashboard/hero-banner"
 import { TopNav } from "@/components/dashboard/top-nav"
 
-const teams = [
-  { name: "风险管理智能化专班", icon: ShieldCheck, metrics: [["数智化授信审查使用率", "92%"], ["存续期监测客户数量", "486 个"]], milestone: 8, task: 15, done: 3, doing: 9, pending: 3 },
-  { name: "资管财富智能化专班", icon: LineChart, metrics: [["钱大理财产品购买转化率", "38%"], ["私行营销模型转化率提升", "26%"]], milestone: 6, task: 12, done: 2, doing: 8, pending: 2 },
-  { name: "集中作业智能化专班", icon: Layers3, metrics: [["平台日均调用次数", "1.8 万次"], ["推广场景数", "32 个"]], milestone: 7, task: 13, done: 4, doing: 7, pending: 2 },
-  { name: "同业金市智能化专班", icon: Landmark, metrics: [["小类兴成交总量", "42 亿元"], ["划款指令智能审核金额", "18 亿元"]], milestone: 4, task: 5, done: 1, doing: 3, pending: 1 },
-  { name: "零售金融智能化专班", icon: UsersRound, metrics: [["智能管客带动资产规模", "109.9 亿元"], ["智能管客触客人次", "1373 万人次"]], milestone: 6, task: 16, done: 1, doing: 15, pending: 0 },
-  { name: "企业金融智能化专班", icon: BriefcaseBusiness, metrics: [["AI 助前报备客户覆盖量", "3000 个"], ["产业金融AI营销沙盘触达率", "72%"]], milestone: 3, task: 14, done: 3, doing: 11, pending: 0 },
-  { name: "知识工程专班", icon: Database, metrics: [["知识检索/问答调用次数", "0 万次"], ["知识应用场景数", "0 个"]], milestone: 10, task: 13, done: 0, doing: 11, pending: 2 },
-  { name: "智能平台建设专班", icon: Sparkles, metrics: [["兴福龙AI月活", "4020 人"], ["AI共性能力场景复用数", "0 个"]], milestone: 20, task: 76, done: 4, doing: 70, pending: 2 },
-]
+const teamIcons = [ShieldCheck, LineChart, Layers3, Landmark, UsersRound, BriefcaseBusiness, Database, Sparkles]
 
-function TeamCard({ team }: { team: (typeof teams)[number] }) {
+type Team = { name: string; icon: typeof ShieldCheck; metrics: [string, string][]; milestone: string; task: string; done: string; doing: string; pending: string }
+
+function buildTeams(rows: AiCockpitRow[]): Team[] {
+  const groups = new Map<string, AiCockpitRow[]>()
+  for (const row of rows) groups.set(row.subSection, [...(groups.get(row.subSection) ?? []), row])
+  return Array.from(groups.entries()).map(([name, items], index) => {
+    const find = (code: string) => items.find((row) => row.metricCode.includes(code))
+    const metricRows = items.filter((row) => row.metricType === "metric" || row.metricType === "rate").slice(0, 2)
+    const total = find("task_total")
+    const done = find("task_complete")
+    const doing = find("task_in_progress")
+    const pending = find("task_not_started")
+    return { name, icon: teamIcons[index % teamIcons.length], metrics: metricRows.map((row) => [row.dataName, formatAiValue(row.data, row.unit)] as [string, string]), milestone: formatAiValue(find("milestone_total")?.data ?? "-", find("milestone_total")?.unit), task: formatAiValue(total?.data ?? "-", total?.unit), done: formatAiValue(done?.data ?? "-", done?.unit), doing: formatAiValue(doing?.data ?? "-", doing?.unit), pending: formatAiValue(pending?.data ?? "-", pending?.unit) }
+  })
+}
+
+function TeamCard({ team }: { team: Team }) {
   const Icon = team.icon
   const compact = team.name === "知识工程专班" || team.name === "智能平台建设专班"
   return (
@@ -45,5 +54,7 @@ function TeamCard({ team }: { team: (typeof teams)[number] }) {
 }
 
 export function TeamOverview() {
-  return <main className="min-h-screen bg-background text-foreground"><TopNav /><div className="mx-auto flex max-w-[1800px] flex-col gap-3 px-4 pb-4 md:px-6"><HeroBanner title="人工智能+驾驶舱" subtitle="智能赋能 · 场景落地 · 提质增效 · 创新引领" /><div className="flex overflow-hidden rounded-lg border border-primary/20 bg-muted/50 text-sm font-semibold"><Link href="/" className="flex-1 px-4 py-2 text-center text-muted-foreground transition-colors hover:bg-primary/10">驾驶舱总览</Link><Link href="/team" className="flex-1 bg-[#2456c7] px-4 py-2 text-center text-white">专班建设概览</Link></div><section className="grid gap-3 md:grid-cols-2 lg:grid-cols-6">{teams.map((team) => <TeamCard key={team.name} team={team} />)}</section></div></main>
+  const { data: rows = [], error, isLoading } = useSWR("ai-cockpit-team", aiCockpitApi.team)
+  const teams = buildTeams(rows)
+  return <main className="min-h-screen bg-background text-foreground"><TopNav /><div className="mx-auto flex max-w-[1800px] flex-col gap-3 px-4 pb-4 md:px-6"><HeroBanner title="人工智能+驾驶舱" subtitle="智能赋能 · 场景落地 · 提质增效 · 创新引领" /><div className="flex overflow-hidden rounded-lg border border-primary/20 bg-muted/50 text-sm font-semibold"><Link href="/" className="flex-1 px-4 py-2 text-center text-muted-foreground transition-colors hover:bg-primary/10">驾驶舱总览</Link><Link href="/team" className="flex-1 bg-[#2456c7] px-4 py-2 text-center text-white">专班建设概览</Link></div>{isLoading && <p className="rounded-xl border border-border p-6 text-center text-muted-foreground">正在读取人工智能数据…</p>}{error && <p className="rounded-xl border border-destructive/30 p-6 text-center text-destructive">人工智能数据读取失败，请确认本地 8080 后端已启动。</p>}<section className="grid gap-3 md:grid-cols-2 lg:grid-cols-6">{teams.map((team) => <TeamCard key={team.name} team={team} />)}</section></div></main>
 }
