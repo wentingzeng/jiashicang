@@ -352,6 +352,7 @@ function ChinaSecurityMap({ data, selectedInstitution, onDrillChange }: { data: 
         projection="geoMercator"
         projectionConfig={isFujianDetail ? { center: [118.3, 26.0], scale: 4200 } : { center: [104.3, 35.9], scale: 750 }}
         className="h-full w-full"
+        suppressHydrationWarning
       >
         <Geographies key={isFujianDetail ? "fujian-cities" : "china-provinces"} geography={isFujianDetail ? fujianMapUrl : chinaMapUrl}>
           {({ geographies }) =>
