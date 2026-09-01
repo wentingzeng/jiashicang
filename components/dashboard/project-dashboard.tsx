@@ -88,6 +88,7 @@ const kpis = [
 
 type ProjectIndicatorApiRow = {
   indicatorId?: string;
+  metricCode?: string;
   dimension?: string;
   metricName: string;
   currentValue?: number | string | null;
@@ -411,14 +412,20 @@ export function ProjectDashboard() {
 
   useEffect(() => {
     const controller = new AbortController();
-    fetch(`${PROJECT_API_BASE_URL}/api/project/indicators?year=2026`, { signal: controller.signal })
+    fetch(`${PROJECT_API_BASE_URL}/api/ai-cockpit/data?pageType=${encodeURIComponent("驾驶舱总览")}`, { signal: controller.signal })
       .then((response) => {
         if (!response.ok) throw new Error(`Project indicators API ${response.status}`);
         return response.json() as Promise<{ code?: number; data?: ProjectIndicatorApiRow[] } | ProjectIndicatorApiRow[]>;
       })
       .then((payload) => {
         const rows = Array.isArray(payload) ? payload : payload.data;
-        setApiRows(Array.isArray(rows) ? rows : []);
+        setApiRows(Array.isArray(rows) ? rows.map((row: any) => ({
+          indicatorId: row.indicatorId ?? row.metricCode,
+          currentValue: row.currentValue ?? row.data,
+          targetValue: row.targetValue,
+          currentUnit: row.currentUnit ?? row.unit,
+          metricName: row.metricName ?? row.dataName,
+        })) : []);
         setApiState("ready");
       })
       .catch((error: unknown) => {
@@ -430,8 +437,10 @@ export function ProjectDashboard() {
 
   const apiById = useMemo(() => {
     const result = new Map<string, ProjectIndicatorApiRow>();
-    apiRows.forEach((row) => {
+    apiRows.forEach((row, index) => {
       if (row.indicatorId) result.set(row.indicatorId, row);
+      if (row.metricCode) result.set(row.metricCode, row);
+      result.set(`ID${String(index + 1).padStart(2, "0")}`, row);
     });
     return result;
   }, [apiRows]);
