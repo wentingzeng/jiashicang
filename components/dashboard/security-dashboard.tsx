@@ -647,7 +647,7 @@ export function SecurityDashboard() {
                   </button>
                 </div>
               ) : (
-                <div className="min-h-0 flex-1"><ChinaSecurityMap data={filteredBranches} selectedInstitution={selectedInstitution} onDrillChange={setIsCapabilityDrilled} /></div>
+                <div className="min-h-0 flex-1"><ChinaSecurityMap data={filteredBranches} selectedInstitution={selectedInstitution} /></div>
               )}
               {!isCapabilityDrilled && (
                 <button
