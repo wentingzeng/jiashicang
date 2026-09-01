@@ -638,7 +638,7 @@ export function SecurityDashboard() {
           </button>
         </section>
 
-        <Panel title="网络��全管理指标" tone="primary" bodyClassName="p-3">
+        <Panel title="网络安全管理指标" tone="primary" bodyClassName="p-3">
           <div className="grid grid-cols-2 gap-2.5 md:grid-cols-6">
             {securityManagementIndicators.map((item, index) => {
               const [label, value] = item.split("：")
