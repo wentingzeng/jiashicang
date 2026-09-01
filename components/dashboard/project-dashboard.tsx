@@ -98,10 +98,10 @@ type ProjectIndicatorApiRow = {
   targetValue?: number | string | null;
 };
 
-const PROJECT_API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL ?? "http://localhost:8080";
+const PROJECT_API_BASE_URL = process.env.NEXT_PUBLIC_SECURITY_API_BASE_URL ?? process.env.NEXT_PUBLIC_API_BASE_URL ?? "http://localhost:8080";
 
-function toMetricNumber(value: number | string | null | undefined, fallback: number) {
-  const parsed = typeof value === "number" ? value : Number(value);
+function toMetricNumber(value: number | string | null | undefined, fallback = 0) {
+  const parsed = typeof value === "number" ? value : Number(String(value ?? "").replace(/[%，,]/g, ""));
   return Number.isFinite(parsed) ? parsed : fallback;
 }
 
@@ -455,10 +455,9 @@ export function ProjectDashboard() {
   const valueByCode = (prefix: string) => toMetricNumber(rowByCode(prefix)?.currentValue, 0);
   const nameByCode = (prefix: string, fallback: string) => rowByCode(prefix)?.dataName ?? fallback;
   const unitByCode = (prefix: string, fallback: string) => rowByCode(prefix)?.unit ?? rowByCode(prefix)?.currentUnit ?? fallback;
-  const valueFor = (indicatorId: string, fallback = 0) =>
-    toMetricNumber(rowFor(indicatorId)?.currentValue, fallback);
-  const nameFor = (indicatorId: string, fallback: string) => rowFor(indicatorId)?.dataName ?? rowFor(indicatorId)?.metricName ?? fallback;
-  const unitFor = (indicatorId: string, fallback: string) => rowFor(indicatorId)?.unit ?? rowFor(indicatorId)?.currentUnit ?? fallback;
+  const valueFor = (indicatorId: string, _fallback = 0) => toMetricNumber(rowFor(indicatorId)?.currentValue, 0);
+  const nameFor = (indicatorId: string, fallback = "暂无数据") => rowFor(indicatorId)?.dataName ?? fallback;
+  const unitFor = (indicatorId: string, fallback = "") => rowFor(indicatorId)?.unit ?? fallback;
 
   const targetFor = (indicatorId: string, fallback: number) =>
     toMetricNumber(apiById.get(indicatorId)?.targetValue, fallback);
@@ -478,9 +477,9 @@ export function ProjectDashboard() {
   );
 
   const statusCounts = [
-    valueFor("ID03", 221),
-    valueFor("ID02", 78),
-    valueFor("ID04", 9),
+    valueFor("ID03"),
+    valueFor("ID02"),
+    valueFor("ID04"),
     valueFor("ID05", 21),
   ];
   const statusTotal = statusCounts.reduce((sum, value) => sum + value, 0);
