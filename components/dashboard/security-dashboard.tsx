@@ -633,13 +633,7 @@ export function SecurityDashboard() {
   const [selectedYear, setSelectedYear] = useState("2025")
   const [selectedInstitutionType, setSelectedInstitutionType] = useState("全部机构")
   const [isCapabilityDrilled, setIsCapabilityDrilled] = useState(false)
-  const { data: capabilityDetails = [], error: capabilityDetailsError, isLoading: capabilityDetailsLoading } = useSWR<SecurityNetworkCapabilityDetail[]>(["security-network-capability-details"], () => securityApi.networkCapabilityDetails())
-  useEffect(() => {
-    console.log("[v0] capabilityDetailsLoading:", capabilityDetailsLoading)
-    console.log("[v0] capabilityDetailsError:", capabilityDetailsError)
-    console.log("[v0] capabilityDetails length:", capabilityDetails?.length)
-    console.log("[v0] capabilityDetails sample:", capabilityDetails?.slice(0, 2))
-  }, [capabilityDetails, capabilityDetailsError, capabilityDetailsLoading])
+  const { data: capabilityDetails = [], error: capabilityDetailsError } = useSWR<SecurityNetworkCapabilityDetail[]>(["security-network-capability-details"], () => securityApi.networkCapabilityDetails())
   const { data: branches = [], error: branchesError } = useSWR<BranchScore[]>(["security-branches", selectedYear], () => securityApi.branches(selectedYear))
   const { data: indicators = [], error: indicatorsError } = useSWR<SecurityIndicator[]>(["security-indicators", selectedYear], () => securityApi.indicators(selectedYear))
   const { data: problems = [], error: problemsError } = useSWR<InspectionProblem[]>(["security-problems", selectedYear], () => securityApi.problems(selectedYear))
@@ -658,7 +652,7 @@ export function SecurityDashboard() {
   // 不再依赖旧的 branches 表做省份匹配，避免分行命名不一致导致分数丢失或归零。
   const mapData = capabilityDetails.length > 0
     ? [...new Map(capabilityRows.map((row) => {
-        const province = branchProvinceMap[row.name] ?? normalizeBranchName(row.name)
+        const province = branchProvinceMap[row.name] ?? CITY_TO_PROVINCE[normalizeBranchName(row.name)] ?? normalizeBranchName(row.name)
         const legacyBranch = branchRankByName.get(normalizeBranchName(row.name))
         return [province, { name: province, value: Number(row.value ?? 0), rankByAllBranches: legacyBranch?.rankByAllBranches ?? null, rankByBranchLevel: legacyBranch?.rankByBranchLevel ?? null, branchLevel: row.branchLevel }]
       })).values()]
