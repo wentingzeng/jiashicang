@@ -258,13 +258,14 @@ function CapabilityBars({ data, label, selectedInstitutionType }: { data: { name
   }, [selectedInstitutionType, data])
   const metrics = data.map((item) => ({
     ...item,
-    responsibility: getBranchScore(item, "securityResourceScore"),
-    notification: getBranchScore(item, "cybersecurityAssessmentScore"),
-    risk: getBranchScore(item, "cybersecurityInspectionScore"),
-    research: getBranchScore(item, "employeeSecurityScore"),
-    integrated: getBranchScore(item, "personalInformationScore"),
-    highlights: getBranchScore(item, "securityInnovationScore"),
-    deductions: getBranchScore(item, "securityIncidentScore"),
+    value: Number(item.totalScore ?? item.value ?? 0),
+    responsibility: Number(item.securityResourceScore ?? getBranchScore(item, "securityResourceScore")),
+    notification: Number(item.cybersecurityAssessmentScore ?? getBranchScore(item, "cybersecurityAssessmentScore")),
+    risk: Number(item.cybersecurityInspectionScore ?? getBranchScore(item, "cybersecurityInspectionScore")),
+    research: Number(item.employeeSecurityScore ?? getBranchScore(item, "employeeSecurityScore")),
+    integrated: Number(item.personalInformationScore ?? getBranchScore(item, "personalInformationScore")),
+    highlights: Number(item.securityInnovationScore ?? getBranchScore(item, "securityInnovationScore")),
+    deductions: Number(item.securityIncidentScore ?? getBranchScore(item, "securityIncidentScore")),
   }))
   const rankedMetrics = [...metrics].sort((a, b) => b.value - a.value)
   const visibleMetrics = selectedBranch || showAll ? rankedMetrics : [...rankedMetrics.slice(0, 3), ...rankedMetrics.slice(-3)]
@@ -346,7 +347,7 @@ function ChinaSecurityMap({ data, selectedInstitutionType, fujianCityScores, ass
     setSelectedProvince(selectedInstitutionType === "全部机构" ? "" : provinceForBranch(selectedInstitutionType))
     setScoreThreshold(Math.max(...data.map((item) => item.value), 0))
   }, [selectedInstitutionType, data])
-  const normalizeRegion = (name: string) => name.replace(/(省|市|自治区|特别行政区)$/u, "").replace(/(壮族|回族|维吾尔)$/u, "")
+  const normalizeRegion = (name: string) => name.replace(/(省|市|自治区|特别��政区)$/u, "").replace(/(壮族|回族|维吾尔)$/u, "")
   const selectedItem = isFujianDetail ? fujianCityScores.find((item) => normalizeRegion(item.name) === normalizeRegion(selectedProvince)) : data.find((item) => normalizeRegion(selectedProvince).includes(normalizeRegion(provinceForBranch(item.name))) || normalizeRegion(provinceForBranch(item.name)).includes(normalizeRegion(selectedProvince)))
   const scores = data.map((item) => item.value)
   const minScore = Math.min(...scores)
@@ -586,10 +587,11 @@ export function SecurityDashboard() {
     ? capabilityDetails.map((row) => ({ ...row, name: row.branchName, value: Number(row.totalScore ?? 0), branchLevel: row.category }))
     : toCapabilityData(branches)
   const filteredCapability = selectedInstitutionType === "全部机构" ? capabilityRows : capabilityRows.filter((row) => row.name === selectedInstitutionType)
-  const capabilityByBranch = new Map(capabilityRows.map((row) => [row.name, row]))
+  const normalizeBranchName = (name: string) => name.replace(/分行$/u, "")
+  const capabilityByBranch = new Map(capabilityRows.map((row) => [normalizeBranchName(row.name), row]))
   const mapData = [...new Map(branches.map((row) => {
-    const capability = capabilityByBranch.get(row.branchName)
-    return [row.province, { name: row.province, value: Number(capability?.value ?? row.annualTotalScore ?? 0), rankByAllBranches: row.rankByAllBranches, rankByBranchLevel: row.rankByBranchLevel, branchLevel: capability?.branchLevel ?? row.branchLevel }]
+    const capability = capabilityByBranch.get(normalizeBranchName(row.branchName))
+    return [row.province, { name: row.province, value: Number(capability?.totalScore ?? capability?.value ?? 0), rankByAllBranches: row.rankByAllBranches, rankByBranchLevel: row.rankByBranchLevel, branchLevel: capability?.branchLevel ?? row.branchLevel }]
   })).values()]
   const filteredTraining = toTrainingData(training.filter((row) => selectedInstitutionType === "全部机构" || row.unitName === selectedInstitutionType))
   const filteredViolations = toViolationData(training.filter((row) => selectedInstitutionType === "全部机构" || row.unitName === selectedInstitutionType))
