@@ -19,7 +19,7 @@ export function TopNav() {
           ? "trusted"
           : pathname.startsWith("/resource")
             ? "resource"
-            : navItems[0].key
+            : "ai-plus"
       
 
   const routeMap: Record<string, string> = {
