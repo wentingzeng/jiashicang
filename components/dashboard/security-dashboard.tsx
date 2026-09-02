@@ -783,7 +783,7 @@ export function SecurityDashboard() {
             <Panel title={isCapabilityDrilled || selectedInstitutionType !== "全部机构" ? "网络安全综合能力" : "网络安全综合能力视图"} tone="accent" className="flex h-full min-h-0 flex-col" bodyClassName="flex min-h-0 flex-1 flex-col p-4">
               {isCapabilityDrilled || selectedInstitutionType !== "全部机构" ? (
                 <div className="flex min-h-0 flex-1 flex-col">
-                  <div className="grid min-h-0 flex-1 gap-3 lg:grid-rows-[minmax(0,1fr)_220px]">
+                  <div className="grid min-h-0 flex-1 gap-3 grid-rows-[minmax(0,1fr)_minmax(0,1fr)]">
                     <CapabilityBars data={filteredCapability} label="各分行综合能力得分" selectedInstitutionType={selectedInstitutionType} />
                     <CapabilityCategoryRadar data={capabilityCategories} />
                   </div>
