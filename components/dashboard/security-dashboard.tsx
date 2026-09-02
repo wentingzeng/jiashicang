@@ -501,7 +501,10 @@ function ChinaSecurityMap({ data, selectedInstitutionType, fujianCityScores, ass
 
       {!isFujianDetail && (() => {
         const projection = geoMercator().center([104.3, 35.9]).scale(750).translate([400, 450])
-        const p = (lon: number, lat: number) => projection([lon, lat]) ?? [0, 0]
+        const p = (lon: number, lat: number): [number, number] => {
+          const point = projection([lon, lat]) ?? [0, 0]
+          return [Number(point[0].toFixed(4)), Number(point[1].toFixed(4))]
+        }
         // 十段线（即"九段线"官方现行版本，2013年起在东侧增补台湾以东一段）真实经纬度坐标
         // 数据来源：自然资源部标准地图矢量数据（geojson.cn 公开镜像）
         const nineDashSegments: [number, number][][] = [
