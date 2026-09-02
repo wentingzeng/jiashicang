@@ -1013,11 +1013,11 @@ export function BranchDashboard() {
             </div>
 
             <div className="grid min-w-0 items-stretch gap-3 lg:grid-cols-[minmax(240px,0.34fr)_minmax(0,0.66fr)]">
-              <div className="order-2 min-w-0 lg:col-start-1 lg:row-start-1 lg:row-span-2">
+              <div className="order-2 min-w-0 max-md:col-start-1 max-md:row-start-auto max-md:row-span-1 lg:col-start-1 lg:row-start-1 lg:row-span-2">
                 <TechLevelPanel rows={techRows} selectedKey={activeTechKey} onSelect={setTechSelectedKey} />
               </div>
 
-              <div className="order-1 grid min-w-0 items-start gap-3 lg:col-start-2 lg:row-start-1 lg:row-span-2 lg:grid-cols-2 lg:grid-rows-[248px_248px_auto]">
+              <div className="order-2 grid min-w-0 items-start gap-3 max-md:col-start-1 max-md:row-start-auto max-md:row-span-1 lg:col-start-2 lg:row-start-1 lg:row-span-2 lg:grid-cols-2 lg:grid-rows-[248px_248px_auto]">
               <PanelCard className="order-3 h-full lg:col-span-2 lg:col-start-1 lg:row-start-3" title="运维指标" icon={<Gauge className="size-4" />}>
                 <div className="grid gap-2 lg:grid-cols-[minmax(0,0.72fr)_minmax(0,0.9fr)_minmax(0,0.9fr)] lg:divide-x lg:divide-dashed lg:divide-border/70">
                   <div className="grid grid-cols-2 gap-1.5">
@@ -1111,7 +1111,7 @@ export function BranchDashboard() {
                   </PanelCard>
               </div>
 
-              <PanelCard className="order-1 col-start-1 row-start-1 row-span-2 h-[512px] min-w-0 cursor-pointer max-md:h-auto max-md:overflow-visible" bodyClassName="min-w-0 p-1.5 max-md:overflow-visible" title="科技人员数量" icon={<UsersRound className="size-4" />} onClick={() => setPersonnelDetails((value) => !value)}>
+              <PanelCard className="order-1 col-start-1 row-start-1 row-span-2 max-md:col-start-1 max-md:row-start-auto max-md:row-span-1 h-[512px] min-w-0 cursor-pointer max-md:h-auto max-md:overflow-visible" bodyClassName="min-w-0 p-1.5 max-md:overflow-visible" title="科技人员数量" icon={<UsersRound className="size-4" />} onClick={() => setPersonnelDetails((value) => !value)}>
                   <div className="grid min-w-0 gap-2">
                     {!personnelDetails && <div className="grid gap-2 rounded-[10px] border border-border/80 bg-card/80 px-3 py-3 shadow-[inset_0_1px_0_oklch(0.72_0.15_220/6%)]">
   <PersonnelRing total={current.personnelTotal} roles={completePersonnelRoles(current)} />
