@@ -748,7 +748,7 @@ export function SecurityDashboard() {
           </label>
 
           <label className="flex min-w-0 flex-1 items-center gap-3 whitespace-nowrap rounded-md border border-border/60 bg-background/35 px-3 py-2 text-sm">
-            <span className="shrink-0 whitespace-nowrap font-medium text-foreground">���行名称</span>
+            <span className="shrink-0 whitespace-nowrap font-medium text-foreground">分行名称</span>
             <select value={selectedInstitutionType} onChange={(event) => setSelectedInstitutionType(event.target.value)} className="min-w-0 w-full bg-transparent text-foreground outline-none">
               <option>全部机构</option>
               {institutions.map((name) => <option key={name}>{name}</option>)}
@@ -799,7 +799,7 @@ export function SecurityDashboard() {
                     onClick={() => { setIsCapabilityDrilled(false); setSelectedInstitutionType("全部机构") }}
                     className="mt-3 w-full rounded-md border border-border/60 bg-muted/30 px-3 py-2 text-center text-xs font-medium text-muted-foreground transition-colors hover:bg-muted/50 hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/50"
                   >
-                    返回综合能��视图
+                    返回综合力视图
                   </button>
                 </div>
               ) : (
@@ -865,7 +865,7 @@ export function SecurityDashboard() {
                   <div className="grid grid-cols-2 gap-2">
                     <StatCard
                       compact
-                      label="��现问题"
+                      label="发现问题"
                       value={securityOverview.inspectionIssues}
                       unit="项"
                       icon={AlertTriangle}
@@ -873,7 +873,7 @@ export function SecurityDashboard() {
                     />
                     <StatCard
                       compact
-                      label="问��整改率"
+                      label="问题整改率"
                       value={securityOverview.repairRate}
                       unit="%"
                       icon={CheckCircle2}
