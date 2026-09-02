@@ -492,7 +492,7 @@ function ChinaSecurityMap({ data, selectedInstitutionType, fujianCityScores, ass
           <div className="absolute inset-x-0 top-1.5 h-2 rounded-full bg-gradient-to-r from-[hsl(204_58%_77%)] via-[hsl(204_58%_58%)] to-[hsl(204_58%_32%)]" aria-hidden="true" />
           <input aria-label="调整地图显示的最��分数" type="range" min={minScore} max={maxScore} step="0.1" value={scoreThreshold} onChange={(event) => setScoreThreshold(Number(event.target.value))} className="absolute inset-0 h-4 w-full cursor-pointer appearance-none bg-transparent accent-primary" />
         </div>
-        <div className="mt-1 flex items-center justify-between font-mono text-[9px] text-muted-foreground"><span>最��分 {minScore.toFixed(2)}</span><span>最高分 {maxScore.toFixed(2)}</span></div>
+        <div className="mt-1 flex items-center justify-between font-mono text-[9px] text-muted-foreground"><span>最低分 {minScore.toFixed(2)}</span><span>最高分 {maxScore.toFixed(2)}</span></div>
       </div>
 
       <div className="pointer-events-none absolute bottom-8 right-2 z-30 min-w-56 rounded-lg border border-primary/20 bg-card px-2.5 py-2 text-[11px] shadow-md">
