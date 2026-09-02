@@ -290,14 +290,14 @@ function AssessmentBars({ data }: { data: { name: string; value: number; [key: s
     .map((item) => ({
       ...item,
       shortName: item.name.replace("分行", ""),
-      assessmentScore: Number(item.cybersecurityAssessmentScore ?? 0),
-      resourceScore: Number(item.securityResourceScore ?? 0),
-      inspectionScore: Number(item.cybersecurityInspectionScore ?? 0),
-      employeeScore: Number(item.employeeSecurityScore ?? 0),
-      personalInfoScore: Number(item.personalInformationScore ?? 0),
-      innovationScore: Number(item.securityInnovationScore ?? 0),
-      incidentScore: Number(item.securityIncidentScore ?? 0),
-      totalScore: Number(item.totalScore ?? item.value ?? 0),
+      assessmentScore: getBranchScore(item, "networkSecurityAssessment", "cybersecurityAssessment", "assessmentScore", "annualAssessmentScore"),
+      resourceScore: getBranchScore(item, "networkSecurityResponsibility", "networkSecurityResponsibilityScore"),
+      inspectionScore: getBranchScore(item, "riskDiscoveryAndRectification", "riskDiscoveryAndRectificationScore"),
+      employeeScore: getBranchScore(item, "developmentSecurity", "developmentSecurityScore"),
+      personalInfoScore: getBranchScore(item, "notificationAndPersonalInfo", "notificationAndPersonalInfoScore"),
+      innovationScore: getBranchScore(item, "branchHighlightsAndContribution", "branchHighlightsAndContributionScore"),
+      incidentScore: getBranchScore(item, "otherDeductions", "otherDeductionsScore"),
+      totalScore: Number(item.value ?? item.annualTotalScore ?? 0),
     }))
     .sort((a, b) => b.assessmentScore - a.assessmentScore)
   const [details, setDetails] = useState(false)
@@ -378,7 +378,7 @@ const CITY_TO_PROVINCE: Record<string, string> = {
   成都: "四川",
   绵阳: "四川",
   贵阳: "贵州",
-  昆明: "云南",
+  昆明: "��南",
   拉萨: "西藏",
   西安: "陕西",
   兰州: "甘肃",
@@ -671,7 +671,11 @@ export function SecurityDashboard() {
   const securityOverview = { totalScore: selectedScore, ranking: filteredBranches[0]?.rankByAllBranches ?? 0, repairRate: 99.7, inspectionIssues: problems.reduce((sum, item) => sum + Number(item.problemCount || 0), 0), trainingPeople: filteredTraining.reduce((sum, item) => sum + item.value, 0), violationPeople: filteredViolations.reduce((sum, item) => sum + item.value, 0) }
   const securityManagementIndicators = toIndicatorLabels(indicators)
   const inspectionCategoryData = toProblemData(problems)
-  const fujianCityScores = toFujianCityData(branches)
+  const fujianCityScores = capabilityDetails.length > 0
+    ? capabilityDetails
+        .filter((row) => (branchProvinceMap[row.branchName] ?? CITY_TO_PROVINCE[row.branchName.replace(/分行$/u, "")]) === "福建")
+        .map((row) => ({ name: row.branchName, value: Number(row.totalScore ?? 0), branchLevel: row.category }))
+    : toFujianCityData(branches)
   const hasError = branchesError || indicatorsError || problemsError || rankingsError || trainingError
   if (hasError) {
     return <main className="min-h-screen bg-background p-6 text-foreground"><div className="mx-auto max-w-3xl rounded-xl border border-destructive/30 bg-card p-6 text-sm text-destructive">安全数据接口读取失败，请确认本地后端已启动，并检查 `NEXT_PUBLIC_SECURITY_API_BASE_URL` 配置。</div></main>
@@ -795,7 +799,11 @@ export function SecurityDashboard() {
           </section>
 
           <Panel title="网络安全考评" tone="accent" className="flex h-[460px] w-full flex-col lg:row-start-1 lg:col-start-3" bodyClassName="flex min-h-0 flex-1 flex-col p-2">
-            <AssessmentBars data={filteredCapability} />
+            <AssessmentBars data={filteredBranches.map((row) => ({
+              ...row,
+              name: row.branchName,
+              value: getBranchScore(row, "networkSecurityAssessment", "cybersecurityAssessment", "assessmentScore", "annualAssessmentScore"),
+            }))} />
           </Panel>
 
           <Panel title="检查发现问题" tone="accent" className="order-4 flex h-full min-h-0 flex-col self-start lg:row-start-2 lg:col-start-2 lg:col-span-2" bodyClassName="flex flex-col gap-4 p-3">
