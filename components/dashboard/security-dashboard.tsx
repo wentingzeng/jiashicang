@@ -660,7 +660,7 @@ function CapabilityCategoryRadar({ data }: { data: SecurityNetworkCapabilityCate
 
 export function SecurityDashboard() {
   const [selectedYear, setSelectedYear] = useState("2025")
-  const [selectedInstitutionType, setSelectedInstitutionType] = useState("全���机构")
+  const [selectedInstitutionType, setSelectedInstitutionType] = useState("全部机构")
   const [isCapabilityDrilled, setIsCapabilityDrilled] = useState(false)
   const { data: capabilityDetails = [], error: capabilityDetailsError } = useSWR<SecurityNetworkCapabilityDetail[]>(["security-network-capability-details"], () => securityApi.networkCapabilityDetails())
   const { data: capabilityCategories = [] } = useSWR<SecurityNetworkCapabilityCategory[]>(["security-network-capability-categories"], () => securityApi.networkCapabilityCategories())
