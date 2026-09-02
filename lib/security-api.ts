@@ -28,6 +28,18 @@ export type SecurityNetworkCapabilityDetail = {
   totalScore: number
 }
 
+export type SecurityNetworkCapabilityCategory = {
+  id: number
+  category: string
+  securityResourceScore: number
+  cybersecurityAssessmentScore: number
+  cybersecurityInspectionScore: number
+  securityInnovationScore: number
+  employeeSecurityScore: number
+  personalInformationScore: number
+  securityIncidentScore: number
+}
+
 export type SecurityIndicator = {
   id: number
   indicatorCategory: string
@@ -73,6 +85,7 @@ async function request<T>(path: string): Promise<T> {
 
 export const securityApi = {
   networkCapabilityDetails: () => request<SecurityNetworkCapabilityDetail[]>("/api/security/network-capability/details"),
+  networkCapabilityCategories: () => request<SecurityNetworkCapabilityCategory[]>("/api/security/network-capability/categories"),
   branches: (year: string) => request<BranchScore[]>(`/api/security/branches?year=${encodeURIComponent(year)}`),
   indicators: (year: string) => request<SecurityIndicator[]>(`/api/security/indicators?year=${encodeURIComponent(year)}`),
   problems: (year: string) => request<InspectionProblem[]>(`/api/security/inspection-problems?year=${encodeURIComponent(year)}`),

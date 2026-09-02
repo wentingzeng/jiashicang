@@ -18,6 +18,11 @@ import {
   LabelList,
   Line,
   LineChart,
+  Radar,
+  RadarChart,
+  PolarGrid,
+  PolarAngleAxis,
+  PolarRadiusAxis,
   ResponsiveContainer,
   Tooltip,
   XAxis,
@@ -44,6 +49,7 @@ import {
   normalizeRatio,
   type BranchScore,
   type SecurityNetworkCapabilityDetail,
+  type SecurityNetworkCapabilityCategory,
   type SecurityIndicator,
   type InspectionProblem,
   type BranchRanking,
@@ -629,11 +635,28 @@ function BranchList({
   )
 }
 
+function CapabilityCategoryRadar({ data }: { data: SecurityNetworkCapabilityCategory[] }) {
+  const radarRows = data.map((item) => [
+    { metric: "资源保障", value: Number(item.securityResourceScore ?? 0) },
+    { metric: "网络考评", value: Number(item.cybersecurityAssessmentScore ?? 0) },
+    { metric: "网络检查", value: Number(item.cybersecurityInspectionScore ?? 0) },
+    { metric: "员工安全", value: Number(item.employeeSecurityScore ?? 0) },
+    { metric: "个人信息", value: Number(item.personalInformationScore ?? 0) },
+    { metric: "安全创新", value: Number(item.securityInnovationScore ?? 0) },
+    { metric: "安全事件", value: Number(item.securityIncidentScore ?? 0) },
+  ])
+  return <div className="flex min-h-0 flex-1 flex-col rounded-xl border border-border/50 bg-card/30 p-2">
+    <div className="flex items-center justify-between px-2 text-xs text-muted-foreground"><span>类别综合能力雷达图</span><span>{data.length ? data.map((item) => item.category).join("、") : "暂无数据"}</span></div>
+    <div className="min-h-0 flex-1"><ResponsiveContainer width="100%" height="100%"><RadarChart data={radarRows[0] ?? []} outerRadius="68%"><PolarGrid stroke="hsl(var(--border))" /><PolarAngleAxis dataKey="metric" tick={{ fontSize: 10, fill: "hsl(var(--muted-foreground))" }} /><PolarRadiusAxis angle={90} domain={[0, 100]} tick={{ fontSize: 9 }} />{radarRows.map((row, index) => <Radar key={data[index]?.category ?? index} name={data[index]?.category ?? `类别${index + 1}`} dataKey="value" data={row} stroke={index === 0 ? "var(--primary)" : "var(--accent)"} fill={index === 0 ? "var(--primary)" : "var(--accent)"} fillOpacity={0.2} />)}</RadarChart></ResponsiveContainer></div>
+  </div>
+}
+
 export function SecurityDashboard() {
   const [selectedYear, setSelectedYear] = useState("2025")
   const [selectedInstitutionType, setSelectedInstitutionType] = useState("全部机构")
   const [isCapabilityDrilled, setIsCapabilityDrilled] = useState(false)
   const { data: capabilityDetails = [], error: capabilityDetailsError } = useSWR<SecurityNetworkCapabilityDetail[]>(["security-network-capability-details"], () => securityApi.networkCapabilityDetails())
+  const { data: capabilityCategories = [] } = useSWR<SecurityNetworkCapabilityCategory[]>(["security-network-capability-categories"], () => securityApi.networkCapabilityCategories())
   const { data: branches = [], error: branchesError } = useSWR<BranchScore[]>(["security-branches", selectedYear], () => securityApi.branches(selectedYear))
   const { data: indicators = [], error: indicatorsError } = useSWR<SecurityIndicator[]>(["security-indicators", selectedYear], () => securityApi.indicators(selectedYear))
   const { data: problems = [], error: problemsError } = useSWR<InspectionProblem[]>(["security-problems", selectedYear], () => securityApi.problems(selectedYear))
@@ -756,7 +779,10 @@ export function SecurityDashboard() {
             <Panel title={isCapabilityDrilled || selectedInstitutionType !== "全部机构" ? "网络安全综合能力" : "网络安全综合能力视图"} tone="accent" className="flex h-full min-h-0 flex-col" bodyClassName="flex min-h-0 flex-1 flex-col p-4">
               {isCapabilityDrilled || selectedInstitutionType !== "全部机构" ? (
                 <div className="flex min-h-0 flex-1 flex-col">
-                  <CapabilityBars data={filteredCapability} label="各分行综合能力得分" selectedInstitutionType={selectedInstitutionType} />
+                  <div className="grid min-h-0 flex-1 gap-3 lg:grid-rows-[minmax(0,1fr)_220px]">
+                    <CapabilityBars data={filteredCapability} label="各分行综合能力得分" selectedInstitutionType={selectedInstitutionType} />
+                    <CapabilityCategoryRadar data={capabilityCategories} />
+                  </div>
                   <button
                     type="button"
                     onClick={() => { setIsCapabilityDrilled(false); setSelectedInstitutionType("全部机构") }}
