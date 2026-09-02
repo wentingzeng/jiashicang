@@ -11,7 +11,9 @@ type BranchProgress = { id: number; statYear: number; branchName: string; includ
 type HeadquartersProgress = { id: number; statYear: number; departmentName: string; includedSystemCount: number; singleTrackCount: number; remainingCount: number; singleTrackRate: number | null }
 type MainframeProgress = { id: number; statYear: number; organizationName: string; notOfflineCount: number; offlineCount: number; offlineRate: number | null }
 type ProductReplacementProgress = { id: number; categoryName: string; replacedCount: number; unreplacedCount: number; totalCount: number; statYear: number }
-type ApiState = { branch: BranchProgress[]; headquarters: HeadquartersProgress[]; mainframe: MainframeProgress[]; products: ProductReplacementProgress[]; loading: boolean; error: string | null; source: "mock" | "api" }
+type HeadquartersAnnualProgress = { id: number; statYear: number; departmentName: string; includedSystemCount: number; singleTrackCount: number; remainingCount: number; singleTrackRate: number | null }
+type BranchAnnualProgress = { id: number; statYear: number; branchName: string; includedSystemCount: number; singleTrackCount: number; remainingCount: number; singleTrackRate: number | null }
+type ApiState = { branch: BranchProgress[]; headquarters: HeadquartersProgress[]; mainframe: MainframeProgress[]; products: ProductReplacementProgress[]; annualHeadquarters: HeadquartersAnnualProgress[]; annualBranch: BranchAnnualProgress[]; loading: boolean; error: string | null; source: "mock" | "api" }
 
 type ProgressRow = [string, number, number]
 type ProductProgressRow = [string, number, number, number]
@@ -410,28 +412,32 @@ function DetailTable({ title, rows, branch, onBack }: { title: string; rows: Arr
 export function TrustedDashboard() {
   const [systemView, setSystemView] = useState<null | "head" | "branch" | "annual-head" | "annual-branch">(null)
   const [machineView, setMachineView] = useState<null | "head" | "branch">(null)
-  const [api, setApi] = useState<ApiState>({ branch: [], headquarters: [], mainframe: [], products: [], loading: true, error: null, source: "mock" })
+  const [api, setApi] = useState<ApiState>({ branch: [], headquarters: [], mainframe: [], products: [], annualHeadquarters: [], annualBranch: [], loading: true, error: null, source: "mock" })
 
   useEffect(() => {
     const controller = new AbortController()
     const fetchData = async () => {
       try {
-        const [branchResponse, headquartersResponse, mainframeResponse, productsResponse] = await Promise.all([
+        const [branchResponse, headquartersResponse, mainframeResponse, productsResponse, annualHeadquartersResponse, annualBranchResponse] = await Promise.all([
           fetch(`${API_BASE_URL}/api/trusted/branch-system-progress?statYear=2026`, { signal: controller.signal }),
           fetch(`${API_BASE_URL}/api/trusted/headquarters-system-progress?statYear=2026`, { signal: controller.signal }),
           fetch(`${API_BASE_URL}/api/trusted/mainframe-offline-progress?statYear=2026`, { signal: controller.signal }),
           fetch(`${API_BASE_URL}/api/trusted/product-replacement-progress?statYear=2026`, { signal: controller.signal }),
+          fetch(`${API_BASE_URL}/api/trusted/headquarters-annual-progress?statYear=2026`, { signal: controller.signal }),
+          fetch(`${API_BASE_URL}/api/trusted/branch-annual-progress?statYear=2026`, { signal: controller.signal }),
         ])
-        if (!branchResponse.ok || !headquartersResponse.ok || !mainframeResponse.ok || !productsResponse.ok) throw new Error("信创接口请求失败")
-        const [branchJson, headquartersJson, mainframeJson, productsJson] = await Promise.all([
-          branchResponse.json(), headquartersResponse.json(), mainframeResponse.json(), productsResponse.json(),
+        if ([branchResponse, headquartersResponse, mainframeResponse, productsResponse, annualHeadquartersResponse, annualBranchResponse].some((response) => !response.ok)) throw new Error("信创接口请求失败")
+        const [branchJson, headquartersJson, mainframeJson, productsJson, annualHeadquartersJson, annualBranchJson] = await Promise.all([
+          branchResponse.json(), headquartersResponse.json(), mainframeResponse.json(), productsResponse.json(), annualHeadquartersResponse.json(), annualBranchResponse.json(),
         ])
         const branch = branchJson.data ?? []
         const headquarters = headquartersJson.data ?? []
         const mainframe = mainframeJson.data ?? []
         const products = productsJson.data ?? []
-        const hasApiData = branch.length > 0 || headquarters.length > 0 || mainframe.length > 0 || products.length > 0
-        setApi({ branch, headquarters, mainframe, products, loading: false, error: hasApiData ? null : "接口返回为空，当前显示页面默认数据", source: hasApiData ? "api" : "mock" })
+        const annualHeadquarters = annualHeadquartersJson.data ?? []
+        const annualBranch = annualBranchJson.data ?? []
+        const hasApiData = branch.length > 0 || headquarters.length > 0 || mainframe.length > 0 || products.length > 0 || annualHeadquarters.length > 0 || annualBranch.length > 0
+        setApi({ branch, headquarters, mainframe, products, annualHeadquarters, annualBranch, loading: false, error: hasApiData ? null : "接口返回为空，当前显示页面默认数据", source: hasApiData ? "api" : "mock" })
       } catch (error) {
         if (error instanceof DOMException && error.name === "AbortError") return
         setApi((current) => ({ ...current, loading: false, source: "mock", error: "信创接口未连接，当前显示 Mock 数据" }))
@@ -452,6 +458,8 @@ export function TrustedDashboard() {
   const mainframeBranchTotals = api.mainframe.filter((row) => row.organizationName !== "总行").reduce((sum, row) => ({ done: sum.done + numberOrZero(row.offlineCount), total: sum.total + numberOrZero(row.offlineCount) + numberOrZero(row.notOfflineCount) }), { done: 0, total: 0 })
   const mainframeHeadTotals = mainframeHead ? { done: numberOrZero(mainframeHead.offlineCount), total: numberOrZero(mainframeHead.offlineCount) + numberOrZero(mainframeHead.notOfflineCount) } : { done: 0, total: 0 }
   const productRowsFromApi = useMemo(() => api.products.map((row) => [row.categoryName, numberOrZero(row.totalCount), numberOrZero(row.replacedCount), numberOrZero(row.unreplacedCount)] as ProductProgressRow), [api.products])
+  const annualHeadRowsFromApi = useMemo(() => toProgressRows(api.annualHeadquarters, (row) => row.departmentName), [api.annualHeadquarters])
+  const annualBranchRowsFromApi = useMemo(() => toProgressRows(api.annualBranch, (row) => row.branchName), [api.annualBranch])
 
   const useApiData = api.source === "api"
   const systemHeadRows = sortProgressRows(useApiData ? headquartersRowsFromApi : headRows)
@@ -473,7 +481,7 @@ export function TrustedDashboard() {
                 <DetailTable
                   key={`system-detail-${systemView}`}
                   title={systemView === "head" ? "总行系统改造进展明细" : systemView === "branch" ? "分行系统改造进展明细" : systemView === "annual-head" ? "总行年度完成明细" : "分行年度完成明细"}
-                  rows={systemView === "head" ? systemHeadRows : systemView === "branch" ? systemBranchRows : systemView === "annual-head" ? annualHeadRows : annualBranchRows}
+                  rows={systemView === "head" ? systemHeadRows : systemView === "branch" ? systemBranchRows : systemView === "annual-head" ? (useApiData ? annualHeadRowsFromApi : annualHeadRows) : (useApiData ? annualBranchRowsFromApi : annualBranchRows)}
                   branch={systemView === "branch" || systemView === "annual-branch"}
                   onBack={() => setSystemView(null)}
                 />
@@ -511,8 +519,8 @@ export function TrustedDashboard() {
                           <ProgressPair
                             onSelect={setSystemView}
                             items={[
-                              { label: "总行任务进度", done: annualOverview.head.done, total: annualOverview.head.total, color: colors.violet, view: "annual-head" },
-                              { label: "分行任务进度", done: annualOverview.branch.done, total: annualOverview.branch.total, color: colors.amber, view: "annual-branch" },
+{ label: "总行任务进度", done: useApiData ? api.annualHeadquarters.reduce((sum, row) => sum + numberOrZero(row.singleTrackCount), 0) : annualOverview.head.done, total: useApiData ? api.annualHeadquarters.reduce((sum, row) => sum + numberOrZero(row.includedSystemCount), 0) : annualOverview.head.total, color: colors.violet, view: "annual-head" },
+                    { label: "分行任务进度", done: useApiData ? api.annualBranch.reduce((sum, row) => sum + numberOrZero(row.singleTrackCount), 0) : annualOverview.branch.done, total: useApiData ? api.annualBranch.reduce((sum, row) => sum + numberOrZero(row.includedSystemCount), 0) : annualOverview.branch.total, color: colors.amber, view: "annual-branch" },
                             ]}
                           />
                         </div>
