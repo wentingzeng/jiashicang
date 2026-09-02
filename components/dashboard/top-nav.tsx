@@ -44,6 +44,10 @@ export function TopNav() {
             <Link
               key={item.key}
               href={routeMap[item.key] ?? "/"}
+              onClick={item.key === "security" ? (event) => {
+                event.preventDefault()
+                window.location.assign("/security")
+              } : undefined}
               className={cn(
                 "relative flex items-center gap-2 whitespace-nowrap rounded-md px-3 py-2 text-sm font-medium transition-colors",
                 isActive ? "text-accent" : "text-muted-foreground hover:text-foreground",
