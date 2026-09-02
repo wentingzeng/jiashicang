@@ -284,22 +284,22 @@ function CategoryBars({ data, label, color = "#42bdb7" }: { data: { name: string
 }
 
 function AssessmentBars({ data }: { data: { name: string; value: number; [key: string]: unknown }[] }) {
-  // 该面板对应 security_network_capability_detail 表的“网络安全考评”得分，
-  // 排名与展开条目均按 cybersecurityAssessmentScore 排序和展示，而非综合能力总分。
+  // 该面板对应 security_branch_scores 表（网络安全考评），排名与展开条目均按
+  // annualTotalScore（网络安全全年合计总分）排序和展示，各分项使用该表的真实字段名。
   const sorted = [...data]
     .map((item) => ({
       ...item,
       shortName: item.name.replace("分行", ""),
-      assessmentScore: getBranchScore(item, "networkSecurityAssessment", "cybersecurityAssessment", "assessmentScore", "annualAssessmentScore"),
-      resourceScore: getBranchScore(item, "networkSecurityResponsibility", "networkSecurityResponsibilityScore"),
-      inspectionScore: getBranchScore(item, "riskDiscoveryAndRectification", "riskDiscoveryAndRectificationScore"),
-      employeeScore: getBranchScore(item, "developmentSecurity", "developmentSecurityScore"),
-      personalInfoScore: getBranchScore(item, "notificationAndPersonalInfo", "notificationAndPersonalInfoScore"),
-      innovationScore: getBranchScore(item, "branchHighlightsAndContribution", "branchHighlightsAndContributionScore"),
-      incidentScore: getBranchScore(item, "otherDeductions", "otherDeductionsScore"),
+      responsibilityScore: getBranchScore(item, "networkSecurityResponsibility"),
+      notificationScore: getBranchScore(item, "notificationAndPersonalInfo"),
+      riskScore: getBranchScore(item, "riskDiscoveryAndRectification"),
+      developmentScore: getBranchScore(item, "developmentSecurity"),
+      integratedScore: getBranchScore(item, "integratedSecurityOperations"),
+      highlightsScore: getBranchScore(item, "branchHighlightsAndContribution"),
+      deductionsScore: getBranchScore(item, "otherDeductions"),
       totalScore: Number(item.value ?? item.annualTotalScore ?? 0),
     }))
-    .sort((a, b) => b.assessmentScore - a.assessmentScore)
+    .sort((a, b) => b.totalScore - a.totalScore)
   const [details, setDetails] = useState(false)
   const [selectedBranch, setSelectedBranch] = useState<string | null>(null)
   const selected = sorted.find((item) => item.name === selectedBranch)
@@ -317,7 +317,7 @@ function AssessmentBars({ data }: { data: { name: string; value: number; [key: s
             <span className="text-sm font-semibold text-foreground">{selected.name} · 各项得分</span>
             <button type="button" onClick={() => setSelectedBranch(null)} className="rounded-md border border-primary/20 bg-card px-2 py-1 text-[10px] font-medium text-primary">返回考评</button>
           </div>
-          <CompactDetailTable height={350} className="rounded-xl bg-card/90 text-[11px] shadow-md" headers={["考评项目", "得分"]} rows={[["网络安全综合能力总分", selected.totalScore.toFixed(2)], ["网络安全考评", selected.assessmentScore.toFixed(2)], ["安全资源保障能力", selected.resourceScore.toFixed(2)], ["网络安全检查", selected.inspectionScore.toFixed(2)], ["员工安全管理能力", selected.employeeScore.toFixed(2)], ["个人信息保护能力", selected.personalInfoScore.toFixed(2)], ["安全创新能力（加分项）", selected.innovationScore.toFixed(2)], ["安全事件（扣分项）", selected.incidentScore.toFixed(2)]]} />
+          <CompactDetailTable height={350} className="rounded-xl bg-card/90 text-[11px] shadow-md" headers={["考评项目", "得分"]} rows={[["压实网络安全责任", selected.responsibilityScore.toFixed(2)], ["网络安全重要通知和工作部署落实情况及个人信息保护", selected.notificationScore.toFixed(2)], ["及时发现及整改网络安全风险隐患", selected.riskScore.toFixed(2)], ["研发安全", selected.developmentScore.toFixed(2)], ["总分行一体化安全运营落实情况", selected.integratedScore.toFixed(2)], ["分行网络安全工作亮点、集团贡献情况", selected.highlightsScore.toFixed(2)], ["其他扣分项", selected.deductionsScore.toFixed(2)], ["网络安全全年合计总分", selected.totalScore.toFixed(2)]]} />
         </div>
       ) : details ? (
         <div className="min-h-0 flex-1 overflow-y-auto overscroll-contain rounded-xl border border-border/50 bg-card shadow-md">
@@ -647,16 +647,30 @@ export function SecurityDashboard() {
     : toCapabilityData(branches)
   const filteredCapability = selectedInstitutionType === "全部机构" ? capabilityRows : capabilityRows.filter((row) => row.name === selectedInstitutionType)
   const normalizeBranchName = (name: string) => name.replace(/分行$/u, "")
+  // 省份归一化：去掉"省/市/自治区/特别行政区"等行政区划后缀，便于与地图 geo 数据的省份名对齐。
+  const normalizeProvinceName = (raw: string) =>
+    raw
+      .replace(/(壮族|回族|维吾尔)?自治区$/u, "")
+      .replace(/特别行政区$/u, "")
+      .replace(/省$/u, "")
+      .replace(/市$/u, "")
   const branchRankByName = new Map(branches.map((row) => [normalizeBranchName(row.branchName), row]))
+  // 分行 -> 省份的权威映射直接来自后端 security_branch_scores 表的真实 province 字段，
+  // 不再靠猜测的城市名单，避免地图漏色或福建下钻匹配不到分行。
+  const branchProvinceFromData = new Map(
+    branches.filter((row) => row.province).map((row) => [normalizeBranchName(row.branchName), normalizeProvinceName(row.province)]),
+  )
+  const provinceForCapabilityRow = (name: string) =>
+    branchProvinceFromData.get(normalizeBranchName(name)) ?? branchProvinceMap[name] ?? CITY_TO_PROVINCE[normalizeBranchName(name)] ?? normalizeBranchName(name)
   // 地图数据直接来源于 security_network_capability_detail（网络安全综合能力明细表），
-  // 不再依赖旧的 branches 表做省份匹配，避免分行命名不一致导致分数丢失或归零。
+  // 省份匹配则优先使用 branches 表的真实 province 字段，避免分行命名不一致导致分数丢失或归零。
   const mapData = capabilityDetails.length > 0
     ? [...new Map(capabilityRows.map((row) => {
-        const province = branchProvinceMap[row.name] ?? CITY_TO_PROVINCE[normalizeBranchName(row.name)] ?? normalizeBranchName(row.name)
+        const province = provinceForCapabilityRow(row.name)
         const legacyBranch = branchRankByName.get(normalizeBranchName(row.name))
         return [province, { name: province, value: Number(row.value ?? 0), rankByAllBranches: legacyBranch?.rankByAllBranches ?? null, rankByBranchLevel: legacyBranch?.rankByBranchLevel ?? null, branchLevel: row.branchLevel }]
       })).values()]
-    : [...new Map(branches.map((row) => [row.province, { name: row.province, value: Number(row.annualTotalScore ?? 0), rankByAllBranches: row.rankByAllBranches, rankByBranchLevel: row.rankByBranchLevel, branchLevel: row.branchLevel }])).values()]
+    : [...new Map(branches.map((row) => [normalizeProvinceName(row.province), { name: normalizeProvinceName(row.province), value: Number(row.annualTotalScore ?? 0), rankByAllBranches: row.rankByAllBranches, rankByBranchLevel: row.rankByBranchLevel, branchLevel: row.branchLevel }])).values()]
   const filteredTraining = toTrainingData(training.filter((row) => selectedInstitutionType === "全部机构" || row.unitName === selectedInstitutionType))
   const filteredViolations = toViolationData(training.filter((row) => selectedInstitutionType === "全部机构" || row.unitName === selectedInstitutionType))
   const filteredOutstanding = toRankingBranches(rankings, "excellent")
@@ -667,7 +681,7 @@ export function SecurityDashboard() {
   const inspectionCategoryData = toProblemData(problems)
   const fujianCityScores = capabilityDetails.length > 0
     ? capabilityDetails
-        .filter((row) => (branchProvinceMap[row.branchName] ?? CITY_TO_PROVINCE[row.branchName.replace(/分行$/u, "")]) === "福建")
+        .filter((row) => provinceForCapabilityRow(row.branchName) === "福建")
         .map((row) => ({ name: row.branchName, value: Number(row.totalScore ?? 0), branchLevel: row.category }))
     : toFujianCityData(branches)
   const hasError = branchesError || indicatorsError || problemsError || rankingsError || trainingError
@@ -739,7 +753,7 @@ export function SecurityDashboard() {
                     onClick={() => { setIsCapabilityDrilled(false); setSelectedInstitutionType("全部机构") }}
                     className="mt-3 w-full rounded-md border border-border/60 bg-muted/30 px-3 py-2 text-center text-xs font-medium text-muted-foreground transition-colors hover:bg-muted/50 hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/50"
                   >
-                    返回综合能力视图
+                    返回综合能��视图
                   </button>
                 </div>
               ) : (
