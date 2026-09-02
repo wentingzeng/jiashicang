@@ -575,7 +575,7 @@ function RingChart({ value, total, label, displayValue = value }: { value: numbe
         <div className="text-sm text-muted-foreground">{label}</div>
         <div className="mt-0.5 font-mono text-[20px] font-black leading-none text-primary">{displayValue}</div>
       </div>
-      <div className="absolute right-0.5 top-1 text-sm text-muted-foreground">{Math.round(percent)}%</div>
+      <div className="absolute -right-2 -top-1 text-sm text-muted-foreground">{Math.round(percent)}%</div>
     </div>
   )
 }
