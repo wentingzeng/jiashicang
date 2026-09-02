@@ -648,16 +648,16 @@ function CapabilityCategoryRadar({ data }: { data: SecurityNetworkCapabilityCate
     ["metric", label],
     ...data.map((item) => [item.category, Number(item[key] ?? 0)]),
   ]))
-  const colors = ["var(--primary)", "var(--chart-2)", "var(--chart-3)", "var(--chart-4)", "var(--chart-5)"]
+  const colors = ["var(--chart-1)", "var(--chart-2)", "var(--chart-3)", "var(--chart-4)", "var(--chart-5)"]
   return <div className="flex min-h-0 flex-1 flex-col overflow-hidden rounded-xl border border-border/50 bg-card p-2">
     <div className="flex shrink-0 items-center justify-between px-2 text-xs text-muted-foreground"><span>类别综合能力雷达图</span><span>{data.length ? data.map((item) => item.category).join("、") : "暂无数据"}</span></div>
-    <div className="h-[300px] min-h-[300px] w-full min-w-0 shrink-0 overflow-hidden"><ResponsiveContainer width="100%" height={300}><RadarChart data={radarData} outerRadius="62%"><PolarGrid stroke="hsl(var(--border))" /><PolarAngleAxis dataKey="metric" tick={{ fontSize: 10, fill: "hsl(var(--muted-foreground))" }} /><PolarRadiusAxis angle={90} domain={[0, 100]} tick={{ fontSize: 9 }} />{data.map((item, index) => <Radar key={item.category} name={item.category} dataKey={item.category} stroke={colors[index % colors.length]} fill={colors[index % colors.length]} fillOpacity={0.16} />)}</RadarChart></ResponsiveContainer></div>
+    <div className="h-[300px] min-h-[300px] w-full min-w-0 shrink-0 overflow-hidden"><ResponsiveContainer width="100%" height={300}><RadarChart data={radarData} outerRadius="58%"><PolarGrid fill="hsl(var(--muted))" fillOpacity={0.45} stroke="hsl(var(--border))" strokeWidth={1.2} /><PolarAngleAxis dataKey="metric" tick={{ fontSize: 10, fontWeight: 600, fill: "hsl(var(--foreground))" }} tickLine={false} /><PolarRadiusAxis angle={90} domain={[0, 100]} ticks={[0, 25, 50, 75, 100]} tick={{ fontSize: 10, fontWeight: 600, fill: "hsl(var(--foreground))" }} axisLine={false} tickLine={false} />{data.map((item, index) => <Radar key={item.category} name={item.category} dataKey={item.category} stroke={colors[index % colors.length]} fill={colors[index % colors.length]} fillOpacity={0.3} strokeWidth={2} dot={{ r: 2.5, fill: colors[index % colors.length], strokeWidth: 0 }} activeDot={{ r: 4 }} />)}</RadarChart></ResponsiveContainer></div>
   </div>
 }
 
 export function SecurityDashboard() {
   const [selectedYear, setSelectedYear] = useState("2025")
-  const [selectedInstitutionType, setSelectedInstitutionType] = useState("全部机构")
+  const [selectedInstitutionType, setSelectedInstitutionType] = useState("全���机构")
   const [isCapabilityDrilled, setIsCapabilityDrilled] = useState(false)
   const { data: capabilityDetails = [], error: capabilityDetailsError } = useSWR<SecurityNetworkCapabilityDetail[]>(["security-network-capability-details"], () => securityApi.networkCapabilityDetails())
   const { data: capabilityCategories = [] } = useSWR<SecurityNetworkCapabilityCategory[]>(["security-network-capability-categories"], () => securityApi.networkCapabilityCategories())
@@ -862,7 +862,7 @@ export function SecurityDashboard() {
                   <div className="grid grid-cols-2 gap-2">
                     <StatCard
                       compact
-                      label="发现问题"
+                      label="��现问题"
                       value={securityOverview.inspectionIssues}
                       unit="项"
                       icon={AlertTriangle}
