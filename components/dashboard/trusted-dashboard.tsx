@@ -462,6 +462,21 @@ export function TrustedDashboard() {
   const productRowsFromApi = useMemo(() => api.products.map((row) => [row.categoryName, numberOrZero(row.totalCount), numberOrZero(row.replacedCount), numberOrZero(row.unreplacedCount)] as ProductProgressRow), [api.products])
   const annualHeadRowsFromApi = useMemo(() => toProgressRows(api.annualHeadquarters, (row) => row.departmentName), [api.annualHeadquarters])
   const annualBranchRowsFromApi = useMemo(() => toProgressRows(api.annualBranch, (row) => row.branchName), [api.annualBranch])
+  const systemTotals = useMemo(() => {
+    if (api.source !== "api") return { done: 412, total: 626 }
+    return {
+      done: headquartersSystemTotals.done + branchSystemTotals.done,
+      total: headquartersSystemTotals.total + branchSystemTotals.total,
+    }
+  }, [api.source, branchSystemTotals, headquartersSystemTotals])
+  const annualTaskTotals = useMemo(() => {
+    if (api.source !== "api") return annualOverview.head.done + annualOverview.branch.done
+    return api.annualHeadquarters.reduce((sum, row) => sum + numberOrZero(row.singleTrackCount), 0) + api.annualBranch.reduce((sum, row) => sum + numberOrZero(row.singleTrackCount), 0)
+  }, [api.source, api.annualBranch, api.annualHeadquarters])
+  const annualTaskTotal = useMemo(() => {
+    if (api.source !== "api") return annualOverview.head.total + annualOverview.branch.total
+    return api.annualHeadquarters.reduce((sum, row) => sum + numberOrZero(row.includedSystemCount), 0) + api.annualBranch.reduce((sum, row) => sum + numberOrZero(row.includedSystemCount), 0)
+  }, [api.source, api.annualBranch, api.annualHeadquarters])
 
   const useApiData = api.source === "api"
   const systemHeadRows = sortProgressRows(useApiData ? headquartersRowsFromApi : headRows)
@@ -492,13 +507,13 @@ export function TrustedDashboard() {
                   <Panel title="一般系统信创进度">
                     <div className="grid gap-2 md:grid-cols-2">
                       <div className="rounded-lg border border-border/70 bg-card p-2">
-                        <RingStat
-                          label="已单轨"
-  ratio={(412 / 626) * 100}
-  value="412"
-  sub="总计 626 个系统"
-  color={colors.blue}
-                        />
+                          <RingStat
+                            label="已单轨"
+                            ratio={systemTotals.total > 0 ? (systemTotals.done / systemTotals.total) * 100 : 0}
+                            value={systemTotals.done.toLocaleString()}
+                            sub={`总计 ${systemTotals.total.toLocaleString()} 个系统`}
+                            color={colors.blue}
+                          />
                         <div className="mt-2 border-t border-border/60 pt-2">
                           <ProgressPair
                             onSelect={setSystemView}
@@ -510,13 +525,13 @@ export function TrustedDashboard() {
                         </div>
                       </div>
                       <div className="rounded-lg border border-border/70 bg-card p-2">
-                        <RingStat
-                          label="2026年任务进度"
-  ratio={(58 / 235) * 100}
-  value="58"
-  sub="总计 235 个系统"
-  color={colors.violet}
-                        />
+                          <RingStat
+                            label="2026年任务进度"
+                            ratio={annualTaskTotal > 0 ? (annualTaskTotals / annualTaskTotal) * 100 : 0}
+                            value={annualTaskTotals.toLocaleString()}
+                            sub={`总计 ${annualTaskTotal.toLocaleString()} 个系统`}
+                            color={colors.violet}
+                          />
                         <div className="mt-2 border-t border-border/60 pt-2">
                           <ProgressPair
                             onSelect={setSystemView}
