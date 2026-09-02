@@ -6,28 +6,28 @@
 
 /* 全项目统一字号，保持卡片尺寸和布局不变 */
 body {
-  font-size: 0.9375rem;
+  font-size: 0.875rem;
   line-height: 1.5;
 }
 
 .text-\[10px\] {
-  font-size: 0.75rem;
+  font-size: 0.6875rem;
   line-height: 1.4;
 }
 
 .text-\[11px\],
 .text-\[12px\] {
-  font-size: 0.8125rem;
+  font-size: 0.75rem;
   line-height: 1.45;
 }
 
 .text-xs {
-  font-size: 0.875rem;
+  font-size: 0.8125rem;
   line-height: 1.45;
 }
 
 .text-sm {
-  font-size: 0.9375rem;
+  font-size: 0.875rem;
   line-height: 1.5;
 }
 
