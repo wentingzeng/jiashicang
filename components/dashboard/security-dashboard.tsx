@@ -779,10 +779,10 @@ export function SecurityDashboard() {
         </Panel>
 
         <div className="mt-5 grid items-start gap-2 lg:grid-cols-3 lg:grid-rows-[460px_auto]">
-          <section className="order-1 flex h-[460px] min-h-0 min-w-0 flex-col gap-4 lg:row-start-1 lg:col-start-1">
-            <Panel title={isCapabilityDrilled || selectedInstitutionType !== "全部机构" ? "网络安全综合能力" : "网络安全综合能力视图"} tone="accent" className="flex h-[460px] min-h-0 flex-col" bodyClassName="flex min-h-0 flex-1 flex-col p-4">
+          <section className="order-1 flex min-h-full min-w-0 flex-col gap-4 lg:row-start-1 lg:row-span-2 lg:col-start-1">
+            <Panel title={isCapabilityDrilled || selectedInstitutionType !== "全部机构" ? "网络安全综合能力" : "网络安全综合能力视图"} tone="accent" className="flex h-full min-h-0 flex-col" bodyClassName="flex min-h-0 flex-1 flex-col p-4">
               {isCapabilityDrilled || selectedInstitutionType !== "全部机构" ? (
-                <div className="flex min-h-0 flex-1 flex-col overflow-hidden">
+                <div className="flex min-h-0 flex-1 flex-col">
                   <div className="grid min-h-0 flex-1 gap-3 grid-rows-[minmax(0,1fr)_minmax(0,1fr)]">
                     <CapabilityBars data={filteredCapability} label="各分行综合能力得分" selectedInstitutionType={selectedInstitutionType} />
                     <CapabilityCategoryRadar data={capabilityCategories} />
