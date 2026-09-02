@@ -583,18 +583,15 @@ export function SecurityDashboard() {
   const years = useMemo(() => [...new Set(branches.map((row) => String(row.assessmentYear)))].sort().reverse(), [branches])
   const institutions = useMemo(() => [...new Set(branches.map((row) => row.branchName))], [branches])
   const filteredBranches = selectedInstitutionType === "全部机构" ? branches : branches.filter((row) => row.branchName === selectedInstitutionType)
-  const capabilityRows = capabilityDetails.map((row) => ({
-    ...row,
-    name: row.branchName,
-    value: Number(row.totalScore),
-    branchLevel: row.category,
-  }))
+  const capabilityRows = capabilityDetails.length > 0
+    ? capabilityDetails.map((row) => ({ ...row, name: row.branchName, value: Number(row.totalScore ?? 0), branchLevel: row.category }))
+    : toCapabilityData(branches)
   const filteredCapability = selectedInstitutionType === "全部机构" ? capabilityRows : capabilityRows.filter((row) => row.name === selectedInstitutionType)
   const normalizeBranchName = (name: string) => name.replace(/分行$/u, "")
   const capabilityByBranch = new Map(capabilityRows.map((row) => [normalizeBranchName(row.name), row]))
-  const mapData = [...new Map(capabilityRows.map((row) => {
-    const province = branchProvinceMap[row.name] ?? normalizeBranchName(row.name)
-    return [province, { name: province, value: Number(row.totalScore), branchLevel: row.category }]
+  const mapData = [...new Map(branches.map((row) => {
+    const capability = capabilityByBranch.get(normalizeBranchName(row.branchName))
+    return [row.province, { name: row.province, value: Number(capability?.totalScore ?? capability?.value ?? 0), rankByAllBranches: row.rankByAllBranches, rankByBranchLevel: row.rankByBranchLevel, branchLevel: capability?.branchLevel ?? row.branchLevel }]
   })).values()]
   const filteredTraining = toTrainingData(training.filter((row) => selectedInstitutionType === "全部机构" || row.unitName === selectedInstitutionType))
   const filteredViolations = toViolationData(training.filter((row) => selectedInstitutionType === "全部机构" || row.unitName === selectedInstitutionType))
