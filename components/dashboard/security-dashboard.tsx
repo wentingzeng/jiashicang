@@ -682,7 +682,16 @@ export function SecurityDashboard() {
   const fujianCityScores = capabilityDetails.length > 0
     ? capabilityDetails
         .filter((row) => normalizeProvinceName(row.province) === "福建")
-        .map((row) => ({ name: row.city, value: Number(row.totalScore ?? 0), branchLevel: row.category }))
+        .map((row) => {
+          const legacyBranch = branches.find((branch) => branch.city === row.city || branch.branchName === row.branchName)
+          return {
+            name: row.city,
+            value: Number(row.totalScore ?? 0),
+            branchLevel: row.category,
+            rankByAllBranches: legacyBranch?.rankByAllBranches ?? null,
+            rankByBranchLevel: legacyBranch?.rankByBranchLevel ?? null,
+          }
+        })
     : toFujianCityData(branches)
   const hasError = branchesError || indicatorsError || problemsError || rankingsError || trainingError
   if (hasError) {
