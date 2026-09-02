@@ -585,7 +585,7 @@ function CloudCircle({ value }: { value: number }) {
     <div className="flex h-[104px] w-[104px] flex-col items-center justify-center rounded-full bg-gradient-to-br from-primary/15 via-accent/15 to-primary/5 shadow-[inset_0_0_0_10px_rgba(36,86,199,0.06),0_8px_20px_rgba(36,86,199,0.1)]">
       <Cloud className="mb-1 size-5 text-primary" aria-hidden="true" />
       <div className="font-mono text-[22px] font-black leading-none text-primary">{value}</div>
-      <div className="mt-1 text-xs font-medium tracking-[0.1em] text-muted-foreground">上云系统数</div>
+      <div className="mt-1 text-xs font-medium tracking-[0.1em] text-muted-foreground">上云数</div>
     </div>
   )
 }
