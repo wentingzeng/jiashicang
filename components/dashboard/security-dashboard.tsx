@@ -636,18 +636,22 @@ function BranchList({
 }
 
 function CapabilityCategoryRadar({ data }: { data: SecurityNetworkCapabilityCategory[] }) {
-  const radarRows = data.map((item) => [
-    { metric: "资源保障", value: Number(item.securityResourceScore ?? 0) },
-    { metric: "网络考评", value: Number(item.cybersecurityAssessmentScore ?? 0) },
-    { metric: "网络检查", value: Number(item.cybersecurityInspectionScore ?? 0) },
-    { metric: "员工安全", value: Number(item.employeeSecurityScore ?? 0) },
-    { metric: "个人信息", value: Number(item.personalInformationScore ?? 0) },
-    { metric: "安全创新", value: Number(item.securityInnovationScore ?? 0) },
-    { metric: "安全事件", value: Number(item.securityIncidentScore ?? 0) },
-  ])
+  const dimensions = [
+    { key: "securityResourceScore", label: "资源保障" },
+    { key: "cybersecurityAssessmentScore", label: "网络考评" },
+    { key: "cybersecurityInspectionScore", label: "网络检查" },
+    { key: "employeeSecurityScore", label: "员工安全" },
+    { key: "personalInformationScore", label: "个人信息" },
+    { key: "securityInnovationScore", label: "安全创新" },
+  ] as const
+  const radarData = dimensions.map(({ key, label }) => Object.fromEntries([
+    ["metric", label],
+    ...data.map((item) => [item.category, Number(item[key] ?? 0)]),
+  ]))
+  const colors = ["var(--primary)", "var(--chart-2)", "var(--chart-3)", "var(--chart-4)", "var(--chart-5)"]
   return <div className="flex min-h-0 flex-1 flex-col rounded-xl border border-border/50 bg-card/30 p-2">
     <div className="flex items-center justify-between px-2 text-xs text-muted-foreground"><span>类别综合能力雷达图</span><span>{data.length ? data.map((item) => item.category).join("、") : "暂无数据"}</span></div>
-    <div className="min-h-0 flex-1"><ResponsiveContainer width="100%" height="100%"><RadarChart data={radarRows[0] ?? []} outerRadius="68%"><PolarGrid stroke="hsl(var(--border))" /><PolarAngleAxis dataKey="metric" tick={{ fontSize: 10, fill: "hsl(var(--muted-foreground))" }} /><PolarRadiusAxis angle={90} domain={[0, 100]} tick={{ fontSize: 9 }} />{radarRows.map((row, index) => <Radar key={data[index]?.category ?? index} name={data[index]?.category ?? `类别${index + 1}`} dataKey="value" data={row} stroke={index === 0 ? "var(--primary)" : "var(--accent)"} fill={index === 0 ? "var(--primary)" : "var(--accent)"} fillOpacity={0.2} />)}</RadarChart></ResponsiveContainer></div>
+    <div className="min-h-0 flex-1"><ResponsiveContainer width="100%" height="100%"><RadarChart data={radarData} outerRadius="68%"><PolarGrid stroke="hsl(var(--border))" /><PolarAngleAxis dataKey="metric" tick={{ fontSize: 10, fill: "hsl(var(--muted-foreground))" }} /><PolarRadiusAxis angle={90} domain={[0, 100]} tick={{ fontSize: 9 }} />{data.map((item, index) => <Radar key={item.category} name={item.category} dataKey={item.category} stroke={colors[index % colors.length]} fill={colors[index % colors.length]} fillOpacity={0.16} />)}</RadarChart></ResponsiveContainer></div>
   </div>
 }
 
