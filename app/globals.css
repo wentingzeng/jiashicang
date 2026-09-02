@@ -7,6 +7,16 @@
 .branch-tech-table-scroll {
   scrollbar-width: auto;
   scrollbar-color: var(--primary) var(--secondary);
+  scrollbar-gutter: stable;
+}
+
+.branch-tech-table-scroll > div {
+  min-width: max-content;
+  overflow-x: visible;
+}
+
+.branch-tech-table-scroll:hover {
+  scrollbar-color: var(--primary) var(--secondary);
 }
 
 .branch-tech-table-scroll::-webkit-scrollbar {
