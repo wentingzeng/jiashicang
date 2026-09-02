@@ -21,6 +21,37 @@
   scrollbar-color: var(--primary) var(--secondary);
 }
 
+.branch-tech-table-scrollbar {
+  height: 16px;
+  margin: 0 10px 8px;
+  overflow-x: scroll;
+  overflow-y: hidden;
+  background: var(--secondary);
+  border-radius: 999px;
+  scrollbar-width: auto;
+  scrollbar-color: var(--primary) var(--secondary);
+}
+
+.branch-tech-table-scrollbar > div {
+  width: 700px;
+  height: 1px;
+}
+
+.branch-tech-table-scrollbar::-webkit-scrollbar {
+  height: 14px;
+}
+
+.branch-tech-table-scrollbar::-webkit-scrollbar-track {
+  background: var(--secondary);
+  border-radius: 999px;
+}
+
+.branch-tech-table-scrollbar::-webkit-scrollbar-thumb {
+  background: var(--primary);
+  border: 3px solid var(--secondary);
+  border-radius: 999px;
+}
+
 .branch-tech-table-scroll::-webkit-scrollbar {
   height: 12px;
 }

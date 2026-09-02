@@ -1,6 +1,6 @@
 "use client"
 
-import { useEffect, useState, type ReactNode } from "react"
+import { useEffect, useRef, useState, type ReactNode } from "react"
 import { ArrowUpRight, ChevronDown, Cloud, Gauge, ShieldCheck, UsersRound } from "lucide-react"
 import { Bar, CartesianGrid, ComposedChart, Legend, Line, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts"
 
@@ -824,9 +824,30 @@ function TechLevelPanel({ rows, selectedKey, onSelect }: { rows: Array<{ key: st
   )
 }
 
+function PersistentHorizontalScrollbar({ targetRef }: { targetRef: import("react").RefObject<HTMLDivElement | null> }) {
+  const barRef = useRef<HTMLDivElement>(null)
+
+  useEffect(() => {
+    const target = targetRef.current
+    const bar = barRef.current
+    if (!target || !bar) return
+    const syncFromTarget = () => { bar.scrollLeft = target.scrollLeft }
+    const syncToTarget = () => { target.scrollLeft = bar.scrollLeft }
+    target.addEventListener("scroll", syncFromTarget, { passive: true })
+    bar.addEventListener("scroll", syncToTarget, { passive: true })
+    return () => {
+      target.removeEventListener("scroll", syncFromTarget)
+      bar.removeEventListener("scroll", syncToTarget)
+    }
+  }, [targetRef])
+
+  return <div ref={barRef} className="branch-tech-table-scrollbar" aria-label="左右拖动查看完整表格" role="scrollbar" tabIndex={0}><div /></div>
+}
+
 export function BranchDashboard() {
   const now = useLiveClock()
   const [selectedGrade, setSelectedGrade] = useState("all")
+  const personnelTableRef = useRef<HTMLDivElement>(null)
   const [selectedBranch, setSelectedBranch] = useState("all")
   const [roomMode, setRoomMode] = useState<"central" | "disaster">("central")
   const [roomDetails, setRoomDetails] = useState(false)
@@ -1130,7 +1151,7 @@ export function BranchDashboard() {
                     </div>}
 
 {personnelDetails && <div className="min-w-0 overflow-hidden rounded-[12px] border border-border/80 bg-card/80 shadow-[inset_0_1px_0_oklch(0.72_0.15_220/6%)]">
-	<div className="branch-tech-table-scroll block h-[300px] max-h-[300px] w-full min-w-0 max-w-full overflow-x-scroll overflow-y-auto overscroll-contain [WebkitOverflowScrolling:touch]">
+	<div ref={personnelTableRef} className="branch-tech-table-scroll block h-[300px] max-h-[300px] w-full min-w-0 max-w-full overflow-x-scroll overflow-y-auto overscroll-contain [WebkitOverflowScrolling:touch]">
                           <Table className="min-w-[700px] text-[12px]">
                           <TableHeader className="bg-primary/8">
                             <TableRow className="border-transparent hover:bg-transparent">
@@ -1166,6 +1187,7 @@ export function BranchDashboard() {
                           </TableBody>
                         </Table>
                       </div>
+                      <PersistentHorizontalScrollbar targetRef={personnelTableRef} />
                       <div className="flex items-center justify-between border-t border-border/60 bg-card/80 px-3 py-1.5 text-[12px] text-muted-foreground">
                         <span>每页显示 6 条分行数据</span>
                         <div className="flex items-center gap-1.5" aria-label="科技人员数量分页" onClick={(event) => event.stopPropagation()}>
