@@ -779,7 +779,8 @@ export function SecurityDashboard() {
         </Panel>
 
         <div className="mt-5 grid items-start gap-2 lg:grid-cols-3 lg:grid-rows-[460px_auto]">
-          <section className="order-1 flex min-h-full min-w-0 flex-col gap-4 lg:row-start-1 lg:row-span-2 lg:col-start-1">
+          <div className="order-1 min-w-0 lg:relative lg:row-start-1 lg:row-span-2 lg:col-start-1">
+          <section className="flex min-h-full min-w-0 flex-col gap-4 lg:absolute lg:inset-0">
             <Panel title={isCapabilityDrilled || selectedInstitutionType !== "全部机构" ? "网络安全综合能力" : "网络安全综合能力视图"} tone="accent" className="flex h-full min-h-0 flex-col" bodyClassName="flex min-h-0 flex-1 flex-col p-4">
               {isCapabilityDrilled || selectedInstitutionType !== "全部机构" ? (
                 <div className="flex min-h-0 flex-1 flex-col">
@@ -809,6 +810,7 @@ export function SecurityDashboard() {
               )}
             </Panel>
           </section>
+          </div>
 
           <section className="order-2 flex min-w-0 flex-col self-start lg:row-start-1 lg:col-start-2">
           <Panel title="员工安全画像" tone="primary" className="flex h-[460px] w-full flex-col" bodyClassName="flex min-h-0 flex-1 flex-col p-2.5">
