@@ -4,6 +4,22 @@
 
 @custom-variant dark (&:is(.dark *));
 
+/* 项目管理界面字号，不改变卡片尺寸和布局 */
+.project-management-page .text-\[10px\] {
+  font-size: 0.8125rem;
+  line-height: 1.4;
+}
+
+.project-management-page .text-xs {
+  font-size: 0.9375rem;
+  line-height: 1.45;
+}
+
+.project-management-page .text-sm {
+  font-size: 1.0625rem;
+  line-height: 1.5;
+}
+
 /* 人工智能+两个子界面的可读性字号，不改变卡片尺寸和布局 */
 .ai-cockpit-overview .text-xs,
 .ai-cockpit-team-overview .text-xs {
