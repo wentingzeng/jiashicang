@@ -487,7 +487,7 @@ export function TrustedDashboard() {
   return (
     <main className="min-h-screen bg-background text-foreground">
       <div className="mx-auto max-w-[1800px] px-4 pb-5 md:px-6">
-        <HeroBanner title="信创管理驾驶舱" subtitle="信创改造 · 国产替代 · 系统适配 · ���稳迁移" />
+        <HeroBanner title="信创管理驾驶舱" subtitle="信创改造 · 国产替代 · 系统适配 · 平稳迁移" />
         <div className="grid items-stretch gap-3 lg:grid-cols-2">
           <div className="flex min-w-0 flex-col gap-3">
             <div className="flex h-full flex-col rounded-xl border-2 border-primary/70 bg-card p-2.5">
