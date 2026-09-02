@@ -651,7 +651,7 @@ function CapabilityCategoryRadar({ data }: { data: SecurityNetworkCapabilityCate
   const colors = ["var(--primary)", "var(--chart-2)", "var(--chart-3)", "var(--chart-4)", "var(--chart-5)"]
   return <div className="flex min-h-0 flex-1 flex-col overflow-hidden rounded-xl border border-border/50 bg-card p-2">
     <div className="flex shrink-0 items-center justify-between px-2 text-xs text-muted-foreground"><span>类别综合能力雷达图</span><span>{data.length ? data.map((item) => item.category).join("、") : "暂无数据"}</span></div>
-    <div className="min-h-0 min-w-0 flex-1 overflow-hidden"><ResponsiveContainer width="100%" height="100%"><RadarChart data={radarData} outerRadius="68%"><PolarGrid stroke="hsl(var(--border))" /><PolarAngleAxis dataKey="metric" tick={{ fontSize: 10, fill: "hsl(var(--muted-foreground))" }} /><PolarRadiusAxis angle={90} domain={[0, 100]} tick={{ fontSize: 9 }} />{data.map((item, index) => <Radar key={item.category} name={item.category} dataKey={item.category} stroke={colors[index % colors.length]} fill={colors[index % colors.length]} fillOpacity={0.16} />)}</RadarChart></ResponsiveContainer></div>
+    <div className="h-[300px] min-h-[300px] w-full min-w-0 shrink-0 overflow-hidden"><ResponsiveContainer width="100%" height={300}><RadarChart data={radarData} outerRadius="62%"><PolarGrid stroke="hsl(var(--border))" /><PolarAngleAxis dataKey="metric" tick={{ fontSize: 10, fill: "hsl(var(--muted-foreground))" }} /><PolarRadiusAxis angle={90} domain={[0, 100]} tick={{ fontSize: 9 }} />{data.map((item, index) => <Radar key={item.category} name={item.category} dataKey={item.category} stroke={colors[index % colors.length]} fill={colors[index % colors.length]} fillOpacity={0.16} />)}</RadarChart></ResponsiveContainer></div>
   </div>
 }
 
@@ -745,7 +745,7 @@ export function SecurityDashboard() {
           </label>
 
           <label className="flex min-w-0 flex-1 items-center gap-3 whitespace-nowrap rounded-md border border-border/60 bg-background/35 px-3 py-2 text-sm">
-            <span className="shrink-0 whitespace-nowrap font-medium text-foreground">分行名称</span>
+            <span className="shrink-0 whitespace-nowrap font-medium text-foreground">���行名称</span>
             <select value={selectedInstitutionType} onChange={(event) => setSelectedInstitutionType(event.target.value)} className="min-w-0 w-full bg-transparent text-foreground outline-none">
               <option>全部机构</option>
               {institutions.map((name) => <option key={name}>{name}</option>)}
