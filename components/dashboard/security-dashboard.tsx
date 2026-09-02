@@ -284,17 +284,22 @@ function CategoryBars({ data, label, color = "#42bdb7" }: { data: { name: string
 }
 
 function AssessmentBars({ data }: { data: { name: string; value: number; [key: string]: unknown }[] }) {
-  const sorted = [...data].sort((a, b) => b.value - a.value).map((item) => ({
-    ...item,
-    shortName: item.name.replace("分行", ""),
-    responsibility: getBranchScore(item, "networkSecurityResponsibility", "networkSecurityResponsibilityScore"),
-    notification: getBranchScore(item, "notificationAndPersonalInfo", "notificationAndPersonalInfoScore"),
-    risk: getBranchScore(item, "riskDiscoveryAndRectification", "riskDiscoveryAndRectificationScore"),
-    research: getBranchScore(item, "developmentSecurity", "developmentSecurityScore"),
-    integrated: getBranchScore(item, "integratedSecurityOperations", "integratedSecurityOperationsScore"),
-    highlights: getBranchScore(item, "branchHighlightsAndContribution", "branchHighlightsAndContributionScore"),
-    deductions: getBranchScore(item, "otherDeductions", "otherDeductionsScore"),
-  }))
+  // 该面板对应 security_network_capability_detail 表的“网络安全考评”得分，
+  // 排名与展开条目均按 cybersecurityAssessmentScore 排序和展示，而非综合能力总分。
+  const sorted = [...data]
+    .map((item) => ({
+      ...item,
+      shortName: item.name.replace("分行", ""),
+      assessmentScore: Number(item.cybersecurityAssessmentScore ?? 0),
+      resourceScore: Number(item.securityResourceScore ?? 0),
+      inspectionScore: Number(item.cybersecurityInspectionScore ?? 0),
+      employeeScore: Number(item.employeeSecurityScore ?? 0),
+      personalInfoScore: Number(item.personalInformationScore ?? 0),
+      innovationScore: Number(item.securityInnovationScore ?? 0),
+      incidentScore: Number(item.securityIncidentScore ?? 0),
+      totalScore: Number(item.totalScore ?? item.value ?? 0),
+    }))
+    .sort((a, b) => b.assessmentScore - a.assessmentScore)
   const [details, setDetails] = useState(false)
   const [selectedBranch, setSelectedBranch] = useState<string | null>(null)
   const selected = sorted.find((item) => item.name === selectedBranch)
@@ -312,7 +317,7 @@ function AssessmentBars({ data }: { data: { name: string; value: number; [key: s
             <span className="text-sm font-semibold text-foreground">{selected.name} · 各项得分</span>
             <button type="button" onClick={() => setSelectedBranch(null)} className="rounded-md border border-primary/20 bg-card px-2 py-1 text-[10px] font-medium text-primary">返回考评</button>
           </div>
-          <CompactDetailTable height={350} className="rounded-xl bg-card/90 text-[11px] shadow-md" headers={["考评项目", "得分"]} rows={[["全年合计得分", selected.value.toFixed(2)], ["压紧压实网络安全责任", selected.responsibility.toFixed(2)], ["重要通知和工作部署落实情况及个人信息保护", selected.notification.toFixed(2)], ["及时发现及整改网络安全隐患", selected.risk.toFixed(2)], ["研发安全", selected.research.toFixed(2)], ["总分行一体化安全运行落实情况", selected.integrated.toFixed(2)], ["分行网络安全工作亮点及集团贡献情况", selected.highlights.toFixed(2)], ["其他扣分项", selected.deductions.toFixed(2)]]} />
+          <CompactDetailTable height={350} className="rounded-xl bg-card/90 text-[11px] shadow-md" headers={["考评项目", "得分"]} rows={[["网络安全综合能力总分", selected.totalScore.toFixed(2)], ["网络安全考评", selected.assessmentScore.toFixed(2)], ["安全资源保障能力", selected.resourceScore.toFixed(2)], ["网络安全检查", selected.inspectionScore.toFixed(2)], ["员工安全管理能力", selected.employeeScore.toFixed(2)], ["个人信息保护能力", selected.personalInfoScore.toFixed(2)], ["安全创新能力（加分项）", selected.innovationScore.toFixed(2)], ["安全事件（扣分项）", selected.incidentScore.toFixed(2)]]} />
         </div>
       ) : details ? (
         <div className="min-h-0 flex-1 overflow-y-auto overscroll-contain rounded-xl border border-border/50 bg-card shadow-md">
@@ -325,21 +330,75 @@ function AssessmentBars({ data }: { data: { name: string; value: number; [key: s
   )
 }
 
-const branchProvinceMap: Record<string, string> = {
-  南京分行: "江苏",
-  杭州分行: "浙江",
-  上海分行: "上海",
-  北京分行: "北京",
-  广州分行: "广东",
-  深圳分行: "广东",
-  武汉分行: "湖北",
-  成都分行: "四川",
-  西安分行: "陕西",
-  重庆分行: "重庆",
+// 城市/分行名称 -> 省级行政区映射，覆盖全国主要城市，确保每个分行都能在地图上正确着色。
+const CITY_TO_PROVINCE: Record<string, string> = {
+  北京: "北京",
+  天津: "天津",
+  上海: "上海",
+  重庆: "重庆",
+  石家庄: "河北",
+  唐山: "河北",
+  太原: "山西",
+  大同: "山西",
+  呼和浩特: "内蒙古",
+  包头: "内蒙古",
+  沈阳: "辽宁",
+  大连: "辽宁",
+  长春: "吉林",
+  哈尔滨: "黑龙江",
+  南京: "江苏",
+  苏州: "江苏",
+  无锡: "江苏",
+  杭州: "浙江",
+  宁波: "浙江",
+  温州: "浙江",
+  合肥: "安徽",
+  芜湖: "安徽",
+  福州: "福建",
+  厦门: "福建",
+  泉州: "福建",
+  南昌: "江西",
+  济南: "山东",
+  青岛: "山东",
+  烟台: "山东",
+  郑州: "河南",
+  洛阳: "河南",
+  武汉: "湖北",
+  宜昌: "湖北",
+  长沙: "湖南",
+  广州: "广东",
+  深圳: "广东",
+  珠海: "广东",
+  东莞: "广东",
+  佛山: "广东",
+  南宁: "广西",
+  桂林: "广西",
+  海口: "海南",
+  三亚: "海南",
+  成都: "四川",
+  绵阳: "四川",
+  贵阳: "贵州",
+  昆明: "云南",
+  拉萨: "西藏",
+  西安: "陕西",
+  兰州: "甘肃",
+  西宁: "青海",
+  银川: "宁夏",
+  乌鲁木齐: "新疆",
+  香港: "香港",
+  澳门: "澳门",
+  台北: "台湾",
 }
 
+const branchProvinceMap: Record<string, string> = Object.fromEntries(
+  Object.entries(CITY_TO_PROVINCE).map(([city, province]) => [`${city}分行`, province]),
+)
+
 function ChinaSecurityMap({ data, selectedInstitutionType, fujianCityScores, assessmentYear, onDrillChange }: { data: { name: string; value: number; rankByAllBranches?: number | null; rankByBranchLevel?: number | null; branchLevel?: string }[]; selectedInstitutionType: string; fujianCityScores: { name: string; value: number; rankByAllBranches?: number | null; rankByBranchLevel?: number | null; branchLevel?: string }[]; assessmentYear: string; onDrillChange?: (drilled: boolean) => void }) {
-  const provinceForBranch = (name: string) => branchProvinceMap[name] ?? name.replace("分行", "")
+  const provinceForBranch = (name: string) => {
+    const shortName = name.replace(/分行$/u, "")
+    return branchProvinceMap[name] ?? CITY_TO_PROVINCE[shortName] ?? shortName
+  }
   const [selectedProvince, setSelectedProvince] = useState(selectedInstitutionType === "全部机构" ? "" : provinceForBranch(selectedInstitutionType))
   const [isFujianDetail, setIsFujianDetail] = useState(false)
   const [scoreThreshold, setScoreThreshold] = useState(() => Math.max(...data.map((item) => item.value)))
