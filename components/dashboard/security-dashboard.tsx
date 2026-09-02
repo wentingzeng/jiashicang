@@ -588,11 +588,16 @@ export function SecurityDashboard() {
     : toCapabilityData(branches)
   const filteredCapability = selectedInstitutionType === "全部机构" ? capabilityRows : capabilityRows.filter((row) => row.name === selectedInstitutionType)
   const normalizeBranchName = (name: string) => name.replace(/分行$/u, "")
-  const capabilityByBranch = new Map(capabilityRows.map((row) => [normalizeBranchName(row.name), row]))
-  const mapData = [...new Map(branches.map((row) => {
-    const capability = capabilityByBranch.get(normalizeBranchName(row.branchName))
-    return [row.province, { name: row.province, value: Number(capability?.totalScore ?? capability?.value ?? 0), rankByAllBranches: row.rankByAllBranches, rankByBranchLevel: row.rankByBranchLevel, branchLevel: capability?.branchLevel ?? row.branchLevel }]
-  })).values()]
+  const branchRankByName = new Map(branches.map((row) => [normalizeBranchName(row.branchName), row]))
+  // 地图数据直接来源于 security_network_capability_detail（网络安全综合能力明细表），
+  // 不再依赖旧的 branches 表做省份匹配，避免分行命名不一致导致分数丢失或归零。
+  const mapData = capabilityDetails.length > 0
+    ? [...new Map(capabilityRows.map((row) => {
+        const province = branchProvinceMap[row.name] ?? normalizeBranchName(row.name)
+        const legacyBranch = branchRankByName.get(normalizeBranchName(row.name))
+        return [province, { name: province, value: Number(row.value ?? 0), rankByAllBranches: legacyBranch?.rankByAllBranches ?? null, rankByBranchLevel: legacyBranch?.rankByBranchLevel ?? null, branchLevel: row.branchLevel }]
+      })).values()]
+    : [...new Map(branches.map((row) => [row.province, { name: row.province, value: Number(row.annualTotalScore ?? 0), rankByAllBranches: row.rankByAllBranches, rankByBranchLevel: row.rankByBranchLevel, branchLevel: row.branchLevel }])).values()]
   const filteredTraining = toTrainingData(training.filter((row) => selectedInstitutionType === "全部机构" || row.unitName === selectedInstitutionType))
   const filteredViolations = toViolationData(training.filter((row) => selectedInstitutionType === "全部机构" || row.unitName === selectedInstitutionType))
   const filteredOutstanding = toRankingBranches(rankings, "excellent")
@@ -605,6 +610,9 @@ export function SecurityDashboard() {
   const hasError = branchesError || indicatorsError || problemsError || rankingsError || trainingError
   if (hasError) {
     return <main className="min-h-screen bg-background p-6 text-foreground"><div className="mx-auto max-w-3xl rounded-xl border border-destructive/30 bg-card p-6 text-sm text-destructive">安全数据接口读取失败，请确认本地后端已启动，并检查 `NEXT_PUBLIC_SECURITY_API_BASE_URL` 配置。</div></main>
+  }
+  if (capabilityDetailsError) {
+    return <main className="min-h-screen bg-background p-6 text-foreground"><div className="mx-auto max-w-3xl rounded-xl border border-destructive/30 bg-card p-6 text-sm text-destructive">网络安全综合能力明细接口（/api/security/network-capability/details）读取失败，请确认本地后端已启动。错误信息：{String(capabilityDetailsError?.message ?? capabilityDetailsError)}</div></main>
   }
 
   return (
