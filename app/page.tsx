@@ -47,7 +47,7 @@ function SectionRail({ label, tone }: { label: string; tone: "primary" | "accent
 
 export default function Page() {
   return (
-    <main className="min-h-screen bg-background text-foreground selection:bg-primary/30">
+    <main className="ai-cockpit-overview min-h-screen bg-background text-foreground selection:bg-primary/30">
       <div
         className="pointer-events-none fixed inset-0 opacity-40"
         style={{

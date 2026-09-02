@@ -4,6 +4,27 @@
 
 @custom-variant dark (&:is(.dark *));
 
+/* 人工智能+两个子界面的可读性字号，不改变卡片尺寸和布局 */
+.ai-cockpit-overview .text-xs,
+.ai-cockpit-team-overview .text-xs {
+  font-size: 0.875rem;
+  line-height: 1.45;
+}
+
+.ai-cockpit-overview .text-\[10px\],
+.ai-cockpit-overview .text-\[11px\],
+.ai-cockpit-team-overview .text-\[10px\],
+.ai-cockpit-team-overview .text-\[11px\] {
+  font-size: 0.8125rem;
+  line-height: 1.4;
+}
+
+.ai-cockpit-overview .text-sm,
+.ai-cockpit-team-overview .text-sm {
+  font-size: 1rem;
+  line-height: 1.5;
+}
+
 .branch-tech-table-scroll::-webkit-scrollbar {
   height: 12px;
 }
