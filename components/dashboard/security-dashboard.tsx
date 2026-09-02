@@ -651,7 +651,7 @@ function CapabilityCategoryRadar({ data }: { data: SecurityNetworkCapabilityCate
   const colors = ["var(--primary)", "var(--chart-2)", "var(--chart-3)", "var(--chart-4)", "var(--chart-5)"]
   return <div className="flex min-h-0 flex-1 flex-col overflow-hidden rounded-xl border border-border/50 bg-card p-2">
     <div className="flex shrink-0 items-center justify-between px-2 text-xs text-muted-foreground"><span>类别综合能力雷达图</span><span>{data.length ? data.map((item) => item.category).join("、") : "暂无数据"}</span></div>
-    <div className="h-[350px] min-h-[350px] w-full shrink-0 overflow-hidden"><ResponsiveContainer width="100%" height="100%"><RadarChart data={radarData} outerRadius="68%"><PolarGrid stroke="hsl(var(--border))" /><PolarAngleAxis dataKey="metric" tick={{ fontSize: 10, fill: "hsl(var(--muted-foreground))" }} /><PolarRadiusAxis angle={90} domain={[0, 100]} tick={{ fontSize: 9 }} />{data.map((item, index) => <Radar key={item.category} name={item.category} dataKey={item.category} stroke={colors[index % colors.length]} fill={colors[index % colors.length]} fillOpacity={0.16} />)}</RadarChart></ResponsiveContainer></div>
+    <div className="min-h-0 min-w-0 flex-1 overflow-hidden"><ResponsiveContainer width="100%" height="100%"><RadarChart data={radarData} outerRadius="68%"><PolarGrid stroke="hsl(var(--border))" /><PolarAngleAxis dataKey="metric" tick={{ fontSize: 10, fill: "hsl(var(--muted-foreground))" }} /><PolarRadiusAxis angle={90} domain={[0, 100]} tick={{ fontSize: 9 }} />{data.map((item, index) => <Radar key={item.category} name={item.category} dataKey={item.category} stroke={colors[index % colors.length]} fill={colors[index % colors.length]} fillOpacity={0.16} />)}</RadarChart></ResponsiveContainer></div>
   </div>
 }
 
@@ -778,7 +778,7 @@ export function SecurityDashboard() {
           </div>
         </Panel>
 
-        <div className="mt-5 grid items-start gap-2 lg:grid-cols-3 lg:grid-rows-[460px_460px]">
+        <div className="mt-5 grid items-start gap-2 lg:grid-cols-3 lg:grid-rows-[460px_350px]">
           <section className="order-1 flex min-h-0 min-w-0 flex-col gap-4 lg:row-start-1 lg:row-span-2 lg:col-start-1 lg:self-stretch">
             <Panel title={isCapabilityDrilled || selectedInstitutionType !== "全部机构" ? "网络安全综合能力" : "网络安全综合能力视图"} tone="accent" className="flex h-full min-h-0 flex-col" bodyClassName="flex min-h-0 flex-1 flex-col p-4">
               {isCapabilityDrilled || selectedInstitutionType !== "全部机构" ? (
