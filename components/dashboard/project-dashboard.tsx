@@ -256,8 +256,8 @@ function GaugeCard({
             strokeLinecap="round"
           />
           <text
-            x={100 + Math.cos(targetAngle) * (targetOuterRadius + 38) + 8}
-            y={100 - Math.sin(targetAngle) * (targetOuterRadius + 38) - 6}
+            x={100 + Math.cos(targetAngle) * (targetOuterRadius + 26)}
+            y={100 - Math.sin(targetAngle) * (targetOuterRadius + 26)}
             textAnchor={
               Math.cos(targetAngle) < -0.22
                 ? "end"
