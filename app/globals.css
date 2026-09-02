@@ -5,9 +5,11 @@
 @custom-variant dark (&:is(.dark *));
 
 .branch-tech-table-scroll {
+  overflow-x: scroll !important;
   scrollbar-width: auto;
   scrollbar-color: var(--primary) var(--secondary);
-  scrollbar-gutter: stable;
+  scrollbar-gutter: stable both-edges;
+  -webkit-overflow-scrolling: touch;
 }
 
 .branch-tech-table-scroll > div {
