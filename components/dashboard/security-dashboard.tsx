@@ -819,7 +819,7 @@ export function SecurityDashboard() {
             <AssessmentBars data={filteredBranches.map((row) => ({
               ...row,
               name: row.branchName,
-              value: getBranchScore(row, "networkSecurityAssessment", "cybersecurityAssessment", "assessmentScore", "annualAssessmentScore"),
+              value: Number(row.annualTotalScore ?? 0),
             }))} />
           </Panel>
 
