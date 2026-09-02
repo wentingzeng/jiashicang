@@ -16,6 +16,8 @@ export type SecurityNetworkCapabilityDetail = {
   id: number
   category: string
   branchName: string
+  province: string
+  city: string
   securityResourceScore: number
   cybersecurityAssessmentScore: number
   cybersecurityInspectionScore: number

@@ -666,7 +666,7 @@ export function SecurityDashboard() {
   // 省份匹配则优先使用 branches 表的真实 province 字段，避免分行命名不一致导致分数丢失或归零。
   const mapData = capabilityDetails.length > 0
     ? [...new Map(capabilityRows.map((row) => {
-        const province = provinceForCapabilityRow(row.name)
+        const province = normalizeProvinceName(row.province)
         const legacyBranch = branchRankByName.get(normalizeBranchName(row.name))
         return [province, { name: province, value: Number(row.value ?? 0), rankByAllBranches: legacyBranch?.rankByAllBranches ?? null, rankByBranchLevel: legacyBranch?.rankByBranchLevel ?? null, branchLevel: row.branchLevel }]
       })).values()]
@@ -681,8 +681,8 @@ export function SecurityDashboard() {
   const inspectionCategoryData = toProblemData(problems)
   const fujianCityScores = capabilityDetails.length > 0
     ? capabilityDetails
-        .filter((row) => provinceForCapabilityRow(row.branchName) === "福建")
-        .map((row) => ({ name: row.branchName, value: Number(row.totalScore ?? 0), branchLevel: row.category }))
+        .filter((row) => normalizeProvinceName(row.province) === "福建")
+        .map((row) => ({ name: row.city, value: Number(row.totalScore ?? 0), branchLevel: row.category }))
     : toFujianCityData(branches)
   const hasError = branchesError || indicatorsError || problemsError || rankingsError || trainingError
   if (hasError) {
