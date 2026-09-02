@@ -563,13 +563,13 @@ function BranchList({
   return (
     <div className={compact ? "rounded-xl border border-border/60 bg-card/75 p-2 shadow-sm" : "rounded-xl border border-border/60 bg-card/75 p-3 shadow-sm"}>
       <div className={compact ? "mb-1.5 flex items-center justify-between gap-2" : "mb-3 flex items-center justify-between gap-2"}>
-        <div className="text-xs font-semibold text-foreground">{title}</div>
+        <div className="text-sm font-semibold text-foreground">{title}</div>
       </div>
       <div className={compact ? "grid grid-cols-3 gap-1" : "grid gap-1.5"}>
         {data.map((name, index) => (
           <div key={name} className={compact ? "flex min-w-0 items-center gap-1 rounded-lg bg-muted/45 px-1.5 py-1" : "flex items-center gap-2 rounded-lg bg-muted/45 px-2.5 py-2"}>
             <span className="flex size-5 shrink-0 items-center justify-center rounded-full font-mono text-[10px] font-bold text-background" style={{ backgroundColor: color }}>{index + 1}</span>
-            <span className={compact ? "truncate text-xs text-foreground" : "truncate text-sm text-foreground"}>{name}</span>
+            <span className={compact ? "truncate text-sm text-foreground" : "truncate text-base text-foreground"}>{name}</span>
           </div>
         ))}
       </div>
