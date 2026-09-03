@@ -813,7 +813,7 @@ export function SecurityDashboard() {
             </Panel>
           </section>
 
-          <section className="order-2 flex min-w-0 flex-col self-start lg:row-start-1 lg:col-start-3">
+          <section className="order-2 flex h-full min-h-0 min-w-0 flex-col self-stretch lg:row-start-1 lg:col-start-3">
           <Panel title="员工安全画像" tone="primary" className="flex h-full min-h-0 w-full flex-col" bodyClassName="flex min-h-0 flex-1 flex-col p-2.5">
             <div className="flex flex-col gap-3">
               <div className="grid grid-cols-2 gap-1.5">
