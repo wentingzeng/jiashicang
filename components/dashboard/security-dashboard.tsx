@@ -879,7 +879,7 @@ export function SecurityDashboard() {
                   icon={CheckCircle2}
                   color="var(--accent)"
                 />
-                <div className="flex min-h-0 flex-col gap-2 overflow-hidden">
+                <div className="grid min-h-0 min-w-0 grid-cols-2 gap-2 overflow-hidden">
                   <BranchList title="表现突出的三家分行" data={filteredOutstanding} color="var(--accent)" compact />
                   <BranchList title="表现较差的三家分行" data={filteredWeak} color="#e9ad43" compact />
                 </div>
