@@ -284,7 +284,7 @@ function CapabilityBars({ data, label, selectedInstitutionType }: { data: { name
 }
 
 function CategoryBars({ data, label, color = "#42bdb7" }: { data: { name: string; value: number }[]; label: string; color?: string }) {
-  return <div className="rounded-lg border border-border/50 bg-background/20 p-3"><div className="mb-2 text-sm font-medium text-foreground/80">{label}</div><div className="grid min-h-0 grid-cols-2 grid-rows-4 gap-1.5 overflow-y-auto">{data.map((item, index) => <div key={item.name} className="flex min-h-0 items-center justify-between gap-2 rounded-md border border-border/40 bg-card/50 px-2.5 py-1"><div className="flex min-w-0 items-center gap-2"><span className="size-2 shrink-0 rounded-full" style={{ backgroundColor: index % 2 ? color : "#4ba8d8" }} /><span className="text-sm text-foreground/80">{item.name}</span></div><div className="font-mono text-xl font-bold leading-none text-foreground">{item.value}</div></div>)}</div></div>
+  return <div className="rounded-lg border border-border/50 bg-background/20 p-3"><div className="mb-2 text-sm font-medium text-foreground/80">{label}</div><div className="grid min-h-0 grid-cols-2 grid-rows-4 gap-1.5 overflow-y-auto">{data.map((item, index) => <div key={item.name} className="flex min-h-0 items-center justify-between gap-2 rounded-md border border-border/40 bg-card/50 px-2.5 py-1"><div className="flex min-w-0 items-center gap-2"><span className="size-2 shrink-0 rounded-full" style={{ backgroundColor: index % 2 ? color : "#4ba8d8" }} /><span className="text-xs leading-5 text-foreground/80">{item.name}</span></div><div className="font-mono text-lg font-bold leading-none text-foreground">{item.value}</div></div>)}</div></div>
 }
 
 function AssessmentBars({ data }: { data: { name: string; value: number; [key: string]: unknown }[] }) {
@@ -356,7 +356,7 @@ const CITY_TO_PROVINCE: Record<string, string> = {
   杭州: "浙江",
   宁波: "浙江",
   温州: "浙江",
-  合肥: "安���",
+  合肥: "安�����",
   芜湖: "安徽",
   福州: "福建",
   厦门: "福建",
