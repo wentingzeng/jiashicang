@@ -356,7 +356,7 @@ const CITY_TO_PROVINCE: Record<string, string> = {
   杭州: "浙江",
   宁波: "浙江",
   温州: "浙江",
-  合肥: "安徽",
+  合肥: "安���",
   芜湖: "安徽",
   福州: "福建",
   厦门: "福建",
@@ -782,7 +782,7 @@ export function SecurityDashboard() {
           </div>
         </Panel>
 
-        <div className="mt-5 grid items-start gap-2 lg:grid-cols-3 lg:grid-rows-[380px_420px]">
+        <div className="mt-5 grid items-start gap-2 lg:grid-cols-3 lg:grid-rows-[460px_500px]">
           <section className="order-1 flex min-h-0 min-w-0 flex-col gap-4 lg:row-start-1 lg:row-span-2 lg:col-start-1 lg:self-stretch">
             <Panel title={isCapabilityDrilled || selectedInstitutionType !== "全部机构" ? "网络安全综合能力" : "网络安全综合能力视图"} tone="accent" className="flex h-full min-h-0 flex-col" bodyClassName="flex min-h-0 flex-1 flex-col p-4">
               {isCapabilityDrilled || selectedInstitutionType !== "全部机构" ? (
