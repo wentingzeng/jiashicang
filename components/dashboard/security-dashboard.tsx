@@ -861,10 +861,10 @@ export function SecurityDashboard() {
           </Panel>
 
           <Panel title="综合能力雷达图" tone="accent" className="order-3 flex h-full min-h-0 flex-col self-stretch overflow-hidden lg:row-start-1 lg:col-start-2" bodyClassName="flex min-h-0 flex-1 flex-col overflow-hidden p-3">
-            <div className="min-h-0 flex-1 overflow-hidden">
-              <CapabilityCategoryRadar data={capabilityCategories} />
-            </div>
-          </Panel>
+  <div className="flex min-h-0 flex-1 flex-col overflow-hidden">
+  <CapabilityCategoryRadar data={capabilityCategories} />
+  </div>
+  </Panel>
 
           <Panel title="检查发现问题" tone="accent" className="order-5 flex h-full min-h-0 flex-col self-start lg:row-start-2 lg:col-start-3" bodyClassName="grid min-h-0 flex-1 grid-cols-2 grid-rows-[auto_auto_minmax(0,1fr)] gap-2 overflow-hidden p-2">
                 <StatCard
