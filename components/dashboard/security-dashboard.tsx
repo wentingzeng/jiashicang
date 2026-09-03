@@ -321,7 +321,7 @@ function AssessmentBars({ data }: { data: { name: string; value: number; [key: s
             <span className="text-sm font-semibold text-foreground">{selected.name} · 各项得分</span>
             <button type="button" onClick={() => setSelectedBranch(null)} className="rounded-md border border-primary/20 bg-card px-2 py-1 text-[10px] font-medium text-primary">返回考评</button>
           </div>
-          <CompactDetailTable height={350} className="rounded-xl bg-card/90 text-[11px] shadow-md" headers={["考评项目", "得分"]} rows={[["压实网络安全责任", selected.responsibilityScore.toFixed(2)], ["网络安全重要通知和工作部署落实情况及个人信息保护", selected.notificationScore.toFixed(2)], ["及时发现及整改网络安全风险隐患", selected.riskScore.toFixed(2)], ["研发安全", selected.developmentScore.toFixed(2)], ["总分行一体化安全运营落实情况", selected.integratedScore.toFixed(2)], ["分行网络安全工作亮点、集团贡献情况", selected.highlightsScore.toFixed(2)], ["其他扣分项", selected.deductionsScore.toFixed(2)], ["网络安全全年合计总分", selected.totalScore.toFixed(2)]]} />
+          <CompactDetailTable height={180} className="rounded-xl bg-card/90 text-[11px] shadow-md" headers={["考评项目", "得分"]} rows={[["压实网络安全责任", selected.responsibilityScore.toFixed(2)], ["网络安全重要通知和工作部署落实情况及个人信息保护", selected.notificationScore.toFixed(2)], ["及时发现及整改网络安全风险隐患", selected.riskScore.toFixed(2)], ["研发安全", selected.developmentScore.toFixed(2)], ["总分行一体化安全运营落实情况", selected.integratedScore.toFixed(2)], ["分行网络安全工作亮点、集团贡献情况", selected.highlightsScore.toFixed(2)], ["其他扣分项", selected.deductionsScore.toFixed(2)], ["网络安全全年合计总分", selected.totalScore.toFixed(2)]]} />
         </div>
       ) : details ? (
         <div className="min-h-0 flex-1 overflow-y-auto overscroll-contain rounded-xl border border-border/50 bg-card shadow-md">
@@ -782,18 +782,13 @@ export function SecurityDashboard() {
           </div>
         </Panel>
 
-        <div className="mt-5 grid items-start gap-2 lg:grid-cols-3 lg:grid-rows-[460px_350px]">
+        <div className="mt-5 grid items-start gap-2 lg:grid-cols-3 lg:grid-rows-[230px_350px]">
           <section className="order-1 flex min-h-0 min-w-0 flex-col gap-4 lg:row-start-1 lg:row-span-2 lg:col-start-1 lg:self-stretch">
             <Panel title={isCapabilityDrilled || selectedInstitutionType !== "全部机构" ? "网络安全综合能力" : "网络安全综合能力视图"} tone="accent" className="flex h-full min-h-0 flex-col" bodyClassName="flex min-h-0 flex-1 flex-col p-4">
               {isCapabilityDrilled || selectedInstitutionType !== "全部机构" ? (
                 <div className="flex min-h-0 flex-1 flex-col">
-                  <div className="grid min-h-0 flex-1 gap-3 overflow-hidden grid-rows-[minmax(0,1fr)_minmax(0,1fr)]">
-                    <div className="min-h-0 h-full overflow-hidden">
-                      <CapabilityBars data={filteredCapability} label="各分行综合能力得分" selectedInstitutionType={selectedInstitutionType} />
-                    </div>
-                    <div className="min-h-0 overflow-hidden">
-                      <CapabilityCategoryRadar data={capabilityCategories} />
-                    </div>
+                  <div className="min-h-0 flex-1 overflow-hidden">
+                    <CapabilityBars data={filteredCapability} label="各分行综合能力得分" selectedInstitutionType={selectedInstitutionType} />
                   </div>
                   <button
                     type="button"
@@ -853,7 +848,7 @@ export function SecurityDashboard() {
 
           </section>
 
-          <Panel title="网络安全考评" tone="accent" className="order-3 flex h-[460px] w-full flex-col lg:row-start-1 lg:col-start-2" bodyClassName="flex min-h-0 flex-1 flex-col p-2">
+          <Panel title="网络安全考评" tone="accent" className="order-3 flex h-[230px] w-full min-h-0 flex-col lg:row-start-1 lg:col-start-2" bodyClassName="flex min-h-0 flex-1 flex-col overflow-hidden p-2">
             <AssessmentBars data={filteredBranches.map((row) => ({
               ...row,
               name: row.branchName,
@@ -861,7 +856,13 @@ export function SecurityDashboard() {
             }))} />
           </Panel>
 
-          <Panel title="检查发现问题" tone="accent" className="order-4 flex h-full min-h-0 flex-col self-start lg:row-start-2 lg:col-start-2 lg:col-span-2" bodyClassName="flex flex-col gap-4 p-3">
+          <Panel title="类别综合能力" tone="accent" className="order-4 flex h-full min-h-0 flex-col self-start lg:row-start-2 lg:col-start-2" bodyClassName="flex min-h-0 flex-1 flex-col p-3">
+            <div className="min-h-0 flex-1 overflow-hidden">
+              <CapabilityCategoryRadar data={capabilityCategories} />
+            </div>
+          </Panel>
+
+          <Panel title="检查发现问题" tone="accent" className="order-5 flex h-full min-h-0 flex-col self-start lg:row-start-2 lg:col-start-3" bodyClassName="flex flex-col gap-4 p-3">
                 <div className="grid gap-3">
                   <div className="grid grid-cols-2 gap-2">
                     <StatCard
