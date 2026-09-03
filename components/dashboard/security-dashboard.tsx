@@ -728,7 +728,7 @@ export function SecurityDashboard() {
     : toFujianCityData(branches)
   const hasError = branchesError || indicatorsError || problemsError || rankingsError || trainingError
   if (hasError) {
-    return <main className="min-h-screen bg-background p-6 text-foreground"><div className="mx-auto max-w-3xl rounded-xl border border-destructive/30 bg-card p-6 text-sm text-destructive">安全数据接口读取失败，请确认本地后端已启动，并检查 `NEXT_PUBLIC_API_BASE_URL` 配置。</div></main>
+    return <main className="min-h-screen bg-background p-6 text-foreground"><div className="mx-auto max-w-3xl rounded-xl border border-destructive/30 bg-card p-6 text-sm text-destructive">安全数据接口读取失败，请确认本地后端已启动，并检查 `NEXT_PUBLIC_API__BASE_URL` 配置。</div></main>
   }
   if (capabilityDetailsError) {
     return <main className="min-h-screen bg-background p-6 text-foreground"><div className="mx-auto max-w-3xl rounded-xl border border-destructive/30 bg-card p-6 text-sm text-destructive">网络安全综合能力明细接口（/api/security/network-capability/details）读取失败，请确认本地后端已启动。错误信息：{String(capabilityDetailsError?.message ?? capabilityDetailsError)}</div></main>
