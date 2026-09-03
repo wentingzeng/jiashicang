@@ -1103,7 +1103,7 @@ export function BranchDashboard() {
                   </PanelCard>
 
                   <PanelCard className="h-[248px] overflow-hidden" bodyClassName="p-2.5" title="系统上云" icon={<Cloud className="size-4" />} onClick={() => setCloudRanking((value) => !value)}>
-                    <button type="button" onClick={(event) => { event.stopPropagation(); setCloudRanking((value) => !value) }} className="w-full text-left" aria-label="切换上云系统前十名">
+                    <button type="button" onClick={(event) => { event.stopPropagation(); setCloudRanking((value) => !value) }} className="w-full text-left" aria-label="切����上云系统前十名">
                     {cloudRanking ? <div className="max-h-[166px] overflow-y-auto overflow-x-hidden overscroll-contain grid gap-2 py-1 [WebkitOverflowScrolling:touch]">{cloudRows.map(({ name, count }, index) => <div key={name} className="grid grid-cols-[1.2fr_1fr_auto] items-center gap-2 text-sm"><span>{String(index + 1).padStart(2, "0")} {name}</span><span className="h-2 rounded-full bg-gradient-to-r from-accent to-primary" style={{ width: `${Math.max(20, Number(count) / Math.max(cloudRows[0]?.count ?? 1, 1) * 100)}%` }} /><strong className="font-mono text-primary">{count}</strong></div>)}</div> : <div className="flex flex-col items-center gap-1.5">
                       <CloudCircle value={current.cloud.value} />
                       <div className="text-center text-sm text-muted-foreground">单击可查看上云系统前十名。</div></div>}
