@@ -624,11 +624,11 @@ function BranchList({
       <div className={compact ? "mb-1.5 flex items-center justify-between gap-2" : "mb-3 flex items-center justify-between gap-2"}>
         <div className="text-sm font-semibold text-foreground">{title}</div>
       </div>
-      <div className={compact ? "grid grid-cols-3 gap-1" : "grid gap-1.5"}>
+      <div className={compact ? "grid gap-1" : "grid gap-1.5"}>
         {data.map((name, index) => (
           <div key={name} className={compact ? "flex min-w-0 items-center gap-1 rounded-lg bg-muted/45 px-1.5 py-1" : "flex items-center gap-2 rounded-lg bg-muted/45 px-2.5 py-2"}>
             <span className="flex size-5 shrink-0 items-center justify-center rounded-full font-mono text-[10px] font-bold text-background" style={{ backgroundColor: color }}>{index + 1}</span>
-            <span className={compact ? "truncate text-sm text-foreground" : "truncate text-base text-foreground"}>{name}</span>
+            <span className={compact ? "min-w-0 text-sm leading-5 text-foreground" : "truncate text-base text-foreground"}>{name}</span>
           </div>
         ))}
       </div>
@@ -862,34 +862,28 @@ export function SecurityDashboard() {
             </div>
           </Panel>
 
-          <Panel title="检查发现问题" tone="accent" className="order-5 flex h-full min-h-0 flex-col self-start lg:row-start-2 lg:col-start-3" bodyClassName="flex flex-col gap-4 p-3">
-                <div className="grid gap-3">
-                  <div className="grid grid-cols-2 gap-2">
-                    <StatCard
-                      compact
-                      label="发现问题"
-                      value={securityOverview.inspectionIssues}
-                      unit="项"
-                      icon={AlertTriangle}
-                      color="#e9ad43"
-                    />
-                    <StatCard
-                      compact
-                      label="问题整改率"
-                      value={securityOverview.repairRate}
-                      unit="%"
-                      icon={CheckCircle2}
-                      color="var(--accent)"
-                    />
-                  </div>
-                  <div className="grid grid-cols-2 gap-2">
-                    <BranchList title="表现突出的三家分行" data={filteredOutstanding} color="var(--accent)" compact />
-                    <BranchList title="表现较差的三家分行" data={filteredWeak} color="#e9ad43" compact />
-                  </div>
+          <Panel title="检查发现问题" tone="accent" className="order-5 flex h-full min-h-0 flex-col self-start lg:row-start-2 lg:col-start-3" bodyClassName="grid min-h-0 flex-1 grid-cols-2 gap-3 overflow-hidden p-3">
+                <div className="flex min-h-0 flex-col gap-2">
+                  <StatCard
+                    compact
+                    label="发现问题"
+                    value={securityOverview.inspectionIssues}
+                    unit="项"
+                    icon={AlertTriangle}
+                    color="#e9ad43"
+                  />
+                  <StatCard
+                    compact
+                    label="问题整改率"
+                    value={securityOverview.repairRate}
+                    unit="%"
+                    icon={CheckCircle2}
+                    color="var(--accent)"
+                  />
+                  <BranchList title="表现突出的三家分行" data={filteredOutstanding} color="var(--accent)" compact />
+                  <BranchList title="表现较差的三家分行" data={filteredWeak} color="#e9ad43" compact />
                 </div>
-
-
-                <div className="min-h-0 flex-1 text-base"><CategoryBars data={inspectionCategoryData} color="#42bdb7" label="检查问题分类" /></div>
+                <div className="min-h-0 min-w-0 text-base"><CategoryBars data={inspectionCategoryData} color="#42bdb7" label="检查问题分类" /></div>
               </Panel>
         </div>
       </div>
