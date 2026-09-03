@@ -879,11 +879,11 @@ export function SecurityDashboard() {
                   icon={CheckCircle2}
                   color="var(--accent)"
                 />
-                <div className="grid min-h-0 min-w-0 grid-cols-2 gap-2 overflow-hidden">
+                <div className="col-span-2 grid min-h-0 min-w-0 grid-cols-2 gap-2 overflow-hidden">
                   <BranchList title="表现突出的三家分行" data={filteredOutstanding} color="var(--accent)" compact />
                   <BranchList title="表现较差的三家分行" data={filteredWeak} color="#e9ad43" compact />
                 </div>
-                <div className="min-h-0 min-w-0 overflow-hidden text-base"><CategoryBars data={inspectionCategoryData} color="#42bdb7" label="检查问题分类" /></div>
+                <div className="col-span-2 min-h-0 min-w-0 overflow-hidden text-base"><CategoryBars data={inspectionCategoryData} color="#42bdb7" label="检查问题分类" /></div>
               </Panel>
         </div>
       </div>
