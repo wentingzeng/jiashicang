@@ -8,7 +8,7 @@ export function HeroBanner({ title = "人工智能+驾驶舱", subtitle = "目�
   const timeLabel = now ? now.toTimeString().slice(0, 8) : "--:--:--"
 
   return (
-    <div className="relative overflow-hidden rounded-xl border border-border bg-gradient-to-b from-secondary/60 to-card px-6 py-8 md:px-10 md:py-10">
+    <div className="relative overflow-hidden rounded-xl border border-border bg-gradient-to-b from-secondary/60 to-card px-5 py-4 md:px-8 md:py-5">
       <div
         className="pointer-events-none absolute inset-0 opacity-40"
         style={{
@@ -34,7 +34,7 @@ export function HeroBanner({ title = "人工智能+驾驶舱", subtitle = "目�
         </p>
       </div>
 
-      <div className="relative mt-6 flex flex-col items-center justify-end gap-3 text-xs text-muted-foreground md:flex-row">
+      <div className="relative mt-3 flex flex-col items-center justify-end gap-2 text-xs text-muted-foreground md:flex-row">
         <span>{"统计周期：" + statisticsPeriod}</span>
         <span className="hidden h-3 w-px bg-border md:block" aria-hidden="true" />
         <span>{"数据更新时间：" + lastUpdatedAt}</span>

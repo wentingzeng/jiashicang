@@ -1,24 +1,14 @@
 "use client"
 
 import { Users, CheckCircle2, Target, Clock, Award, Layers, type LucideIcon } from "lucide-react"
+import useSWR from "swr"
 import { Card } from "@/components/ui/card"
-import { kpiCards, type KpiCard } from "@/lib/mock-data"
-import { useLiveValue } from "@/lib/use-live-value"
+import { aiCockpitApi, rowsByMetricCodes, rowsBySection, type AiCockpitRow } from "@/lib/ai-cockpit-api"
 
-const iconMap: Record<KpiCard["icon"], LucideIcon> = {
-  users: Users,
-  check: CheckCircle2,
-  target: Target,
-  clock: Clock,
-  award: Award,
-  layers: Layers,
-}
+const cardIcons: LucideIcon[] = [Users, CheckCircle2, Target, Clock, Award, Layers]
 
-function KpiCardItem({ card }: { card: KpiCard }) {
-  const Icon = iconMap[card.icon]
-  const liveValue = useLiveValue(card.value, { volatility: 0.01 })
-  const decimals = card.decimals ?? 0
-  const displayValue = liveValue.toFixed(decimals)
+function KpiCardItem({ row, index }: { row: AiCockpitRow; index: number }) {
+  const Icon = cardIcons[index] ?? Layers
 
   return (
     <Card className="flex-row items-center gap-3 p-4 transition-colors hover:border-primary/40">
@@ -26,10 +16,10 @@ function KpiCardItem({ card }: { card: KpiCard }) {
         <Icon className="size-5" aria-hidden="true" />
       </span>
       <div className="flex min-w-0 flex-col gap-0.5">
-        <span className="truncate text-xs text-muted-foreground">{card.label}</span>
+        <span className="truncate text-xs text-muted-foreground">{row.dataName}</span>
         <span className="flex items-baseline gap-1">
-          <span className="font-mono text-xl font-bold text-foreground tabular-nums">{displayValue}</span>
-          {card.unit && <span className="text-xs text-muted-foreground">{card.unit}</span>}
+          <span className="font-mono text-xl font-bold text-foreground tabular-nums">{String(row.data)}</span>
+          {row.unit && <span className="text-xs text-muted-foreground">{row.unit}</span>}
         </span>
       </div>
     </Card>
@@ -37,23 +27,34 @@ function KpiCardItem({ card }: { card: KpiCard }) {
 }
 
 export function KpiCards() {
-  const overviewCards = kpiCards.filter((card) => card.group === "overview")
-  const teamCards = kpiCards.filter((card) => card.group === "team")
+  const { data: rows = [] } = useSWR("ai-cockpit-overview", aiCockpitApi.overview)
+  const coreRows = rowsBySection(rows, "核心概览", "核心概览")
+  const metricCodes = [
+    "special_group_count",
+    "overview_annual_task_total",
+    "overview_task_completion_rate",
+    "overview_core_overview_delayed_task_count",
+    "overview_benchmark_project_count",
+    "overview_ai_common_capability_scene_reuse_count",
+  ]
+  const orderedRows = rowsByMetricCodes(coreRows, metricCodes)
+  const overviewRows = orderedRows.slice(0, 3)
+  const teamRows = orderedRows.slice(3, 6)
 
   return (
     <section aria-label="核心指标" className="flex flex-col gap-3">
       <div className="grid grid-cols-1 gap-3 md:grid-cols-2 lg:grid-cols-6">
         <div className="flex flex-col gap-2 lg:col-span-3">
           <div className="grid grid-cols-1 gap-3 sm:grid-cols-3">
-            {overviewCards.map((card) => (
-              <KpiCardItem key={card.key} card={card} />
+            {overviewRows.map((row, index) => (
+              <KpiCardItem key={row.metricCode} row={row} index={index} />
             ))}
           </div>
         </div>
         <div className="flex flex-col gap-2 lg:col-span-3">
           <div className="grid grid-cols-1 gap-3 sm:grid-cols-3">
-            {teamCards.map((card) => (
-              <KpiCardItem key={card.key} card={card} />
+            {teamRows.map((row, index) => (
+              <KpiCardItem key={row.metricCode} row={row} index={index + 3} />
             ))}
           </div>
         </div>

@@ -1,22 +1,25 @@
 "use client"
 
 import { Database } from "lucide-react"
+import useSWR from "swr"
 import { PanelCard } from "@/components/dashboard/panel-card"
-import { Progress } from "@/components/ui/progress"
-import { datasetProgress } from "@/lib/mock-data"
-import { useLiveValue } from "@/lib/use-live-value"
+import { aiCockpitApi, rowsBySection } from "@/lib/ai-cockpit-api"
+
+const PANEL_TITLE = "高质量数据集工程"
 
 export function DatasetPanel() {
-  const value = useLiveValue(datasetProgress.value, { volatility: 0.03 })
+  const { data: rows = [] } = useSWR("ai-cockpit-overview", aiCockpitApi.overview)
+  const panelRows = rowsBySection(rows, "工程建设", PANEL_TITLE)
+  const row = panelRows[0]
 
   return (
-    <PanelCard icon={Database} title={datasetProgress.title}>
-      <div className="flex h-full flex-col justify-center gap-3">
-        <div className="flex items-center justify-between text-xs">
-          <span className="text-muted-foreground">{datasetProgress.label}</span>
-          <span className="font-mono font-semibold text-accent tabular-nums">{value.toFixed(0)}%</span>
+    <PanelCard icon={Database} title={PANEL_TITLE} bodyClassName="flex min-h-[112px] items-center justify-center p-2">
+      <div className="flex w-full flex-col items-center justify-center gap-2 py-3">
+        <div className="relative flex size-20 shrink-0 items-center justify-center rounded-full border-[7px] border-accent/15">
+          <div className="absolute inset-0 rounded-full border-[7px] border-accent" aria-hidden="true" />
+          <span className="font-mono text-xl font-bold text-accent tabular-nums">{row ? String(row.data) : "-"}{row?.unit ?? "%"}</span>
         </div>
-        <Progress value={value} />
+        <span className="text-xs font-normal leading-5 text-foreground">{row?.dataName ?? "高质量数据集建设完成度"}</span>
       </div>
     </PanelCard>
   )

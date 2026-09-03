@@ -4,6 +4,122 @@
 
 @custom-variant dark (&:is(.dark *));
 
+/* 全项目统一字号，保持卡片尺寸和布局不变 */
+body {
+  font-size: 0.875rem;
+  line-height: 1.5;
+}
+
+.text-\[10px\] {
+  font-size: 0.6875rem;
+  line-height: 1.4;
+}
+
+.text-\[11px\],
+.text-\[12px\] {
+  font-size: 0.75rem;
+  line-height: 1.45;
+}
+
+.text-xs {
+  font-size: 0.8125rem;
+  line-height: 1.45;
+}
+
+.text-sm {
+  font-size: 0.875rem;
+  line-height: 1.5;
+}
+
+.branch-tech-table-scroll::-webkit-scrollbar {
+  height: 12px;
+}
+
+.branch-tech-table-scroll::-webkit-scrollbar-track {
+  background: var(--secondary);
+  border-radius: 999px;
+}
+
+.branch-tech-table-scroll::-webkit-scrollbar-thumb {
+  background: var(--primary);
+  border: 3px solid var(--secondary);
+  border-radius: 999px;
+}
+
+/* 移动端适配：保持桌面布局，小屏幕自动收窄并允许宽表格横向滚动 */
+@media (max-width: 767px) {
+  html,
+  body {
+    min-width: 0;
+    overflow-x: hidden;
+  }
+
+  main {
+    width: 100%;
+    min-width: 0;
+    padding-left: 0.75rem;
+    padding-right: 0.75rem;
+  }
+
+  header nav {
+    gap: 0;
+    padding-left: 0.5rem;
+    padding-right: 0.5rem;
+  }
+
+  header nav a {
+    padding-left: 0.625rem;
+    padding-right: 0.625rem;
+    font-size: 0.8125rem;
+  }
+
+  [class*="grid-cols-2"],
+  [class*="grid-cols-3"],
+  [class*="grid-cols-4"],
+  [class*="grid-cols-5"] {
+    grid-template-columns: minmax(0, 1fr) !important;
+  }
+
+  [class*="col-span-2"],
+  [class*="col-span-3"],
+  [class*="col-span-4"] {
+    grid-column: span 1 / span 1 !important;
+  }
+
+  [class*="col-start-2"],
+  [class*="col-start-3"] {
+    grid-column-start: 1 !important;
+  }
+
+  table {
+    min-width: 640px;
+  }
+
+  [class*="overflow-x-auto"],
+  [class*="overflow-x-scroll"] {
+    max-width: 100%;
+    overflow-x: auto !important;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  [role="dialog"] {
+    max-width: calc(100vw - 1rem);
+    max-height: calc(100dvh - 1rem);
+    overflow: auto;
+  }
+
+  svg {
+    max-width: 100%;
+  }
+}
+
+@media (min-width: 768px) and (max-width: 1100px) {
+  main {
+    padding-left: 1rem;
+    padding-right: 1rem;
+  }
+}
+
 @theme inline {
   --font-sans: 'Noto Sans SC', 'Microsoft YaHei', Arial, sans-serif;
   --font-mono: 'Geist Mono', 'SFMono-Regular', Consolas, monospace;

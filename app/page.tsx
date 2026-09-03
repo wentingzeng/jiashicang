@@ -47,7 +47,7 @@ function SectionRail({ label, tone }: { label: string; tone: "primary" | "accent
 
 export default function Page() {
   return (
-    <main className="min-h-screen bg-background text-foreground selection:bg-primary/30">
+    <main className="ai-cockpit-overview min-h-screen bg-background text-foreground selection:bg-primary/30">
       <div
         className="pointer-events-none fixed inset-0 opacity-40"
         style={{
@@ -71,7 +71,7 @@ export default function Page() {
           <SectionRail label="核心概览" tone="primary" />
           <div className="flex min-w-0 flex-1 flex-col gap-5">
             <KpiCards />
-            <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
+            <div className="grid items-start grid-cols-1 gap-6 lg:grid-cols-3">
               <TaskStatusPanel />
               <ProgressSummaryPanel />
               <AgentProgressPanel />

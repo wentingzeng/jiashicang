@@ -1,23 +1,37 @@
-import { AlertTriangle } from "lucide-react"
+"use client"
+
+import { AlertTriangle, ArrowUpRight, CircleAlert } from "lucide-react"
+import useSWR from "swr"
 import { PanelCard } from "@/components/dashboard/panel-card"
-import { highlights } from "@/lib/mock-data"
+import { aiCockpitApi } from "@/lib/ai-cockpit-api"
 
 export function HighlightsPanel() {
+  const { data: rows = [] } = useSWR("ai-cockpit-overview", aiCockpitApi.overview)
+  const highlightRows = rows
+    .filter((row) => [row.section, row.subSection].some((value) => String(value ?? "").trim() === "重点关注"))
+    .slice(0, 2)
+
   return (
-    <PanelCard icon={AlertTriangle} title="重点关注">
-      <ul className="flex flex-col gap-3">
-        {highlights.map((item) => (
-          <li key={item.index} className="flex gap-2.5">
-            <span className="mt-0.5 flex size-5 shrink-0 items-center justify-center rounded-full bg-destructive/20 text-[11px] font-bold text-destructive">
-              {item.index}
-            </span>
-            <div className="flex flex-col gap-0.5">
-              <span className="text-xs font-semibold text-foreground">{item.title}</span>
-              <span className="text-[11px] leading-snug text-muted-foreground">{item.description}</span>
-            </div>
-          </li>
-        ))}
-      </ul>
+    <PanelCard icon={AlertTriangle} title="重点关注" bodyClassName="flex h-full flex-col p-3">
+      {highlightRows.length === 0 ? (
+        <p className="flex flex-1 items-center justify-center text-xs text-muted-foreground">暂无重点关注事项</p>
+      ) : (
+        <ul className="flex flex-col gap-2">
+          {highlightRows.map((row) => (
+            <li key={row.metricCode} className="flex min-h-12 min-w-0 items-center gap-2 rounded-lg border border-border/70 bg-secondary/35 px-2 py-2">
+              <span className="flex size-6 shrink-0 items-center justify-center rounded-lg bg-destructive/10 text-destructive">
+                <CircleAlert className="size-3" aria-hidden="true" />
+              </span>
+              <div className="flex min-w-0 flex-1 items-center justify-between gap-3">
+                <div className="flex min-w-0 flex-col gap-0">
+                  <span className="truncate text-xs font-medium leading-4 text-foreground">{String(row.dataName ?? "").trim()}</span>
+                </div>
+                <ArrowUpRight className="size-4 shrink-0 text-muted-foreground/60" aria-hidden="true" />
+              </div>
+            </li>
+          ))}
+        </ul>
+      )}
     </PanelCard>
   )
 }
