@@ -862,28 +862,28 @@ export function SecurityDashboard() {
             </div>
           </Panel>
 
-          <Panel title="检查发现问题" tone="accent" className="order-5 flex h-full min-h-0 flex-col self-start lg:row-start-2 lg:col-start-3" bodyClassName="grid min-h-0 flex-1 grid-cols-2 gap-3 overflow-hidden p-3">
-                <div className="flex min-h-0 flex-col gap-2">
-                  <StatCard
-                    compact
-                    label="发现问题"
-                    value={securityOverview.inspectionIssues}
-                    unit="项"
-                    icon={AlertTriangle}
-                    color="#e9ad43"
-                  />
-                  <StatCard
-                    compact
-                    label="问题整改率"
-                    value={securityOverview.repairRate}
-                    unit="%"
-                    icon={CheckCircle2}
-                    color="var(--accent)"
-                  />
+          <Panel title="检查发现问题" tone="accent" className="order-5 flex h-full min-h-0 flex-col self-start lg:row-start-2 lg:col-start-3" bodyClassName="grid min-h-0 flex-1 grid-cols-2 grid-rows-[auto_minmax(0,1fr)] gap-3 overflow-hidden p-3">
+                <StatCard
+                  compact
+                  label="发现问题"
+                  value={securityOverview.inspectionIssues}
+                  unit="项"
+                  icon={AlertTriangle}
+                  color="#e9ad43"
+                />
+                <StatCard
+                  compact
+                  label="问题整改率"
+                  value={securityOverview.repairRate}
+                  unit="%"
+                  icon={CheckCircle2}
+                  color="var(--accent)"
+                />
+                <div className="flex min-h-0 flex-col gap-2 overflow-hidden">
                   <BranchList title="表现突出的三家分行" data={filteredOutstanding} color="var(--accent)" compact />
                   <BranchList title="表现较差的三家分行" data={filteredWeak} color="#e9ad43" compact />
                 </div>
-                <div className="min-h-0 min-w-0 text-base"><CategoryBars data={inspectionCategoryData} color="#42bdb7" label="检查问题分类" /></div>
+                <div className="min-h-0 min-w-0 overflow-hidden text-base"><CategoryBars data={inspectionCategoryData} color="#42bdb7" label="检查问题分类" /></div>
               </Panel>
         </div>
       </div>
