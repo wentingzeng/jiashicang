@@ -848,7 +848,7 @@ export function SecurityDashboard() {
 
           </section>
 
-          <Panel title="网络安全考评" tone="accent" className="order-3 flex h-full min-h-0 w-full flex-col lg:row-start-1 lg:col-start-2" bodyClassName="flex min-h-0 flex-1 flex-col overflow-hidden p-2">
+          <Panel title="网络安全考评" tone="accent" className="order-4 flex h-full min-h-0 w-full flex-col lg:row-start-2 lg:col-start-2" bodyClassName="flex min-h-0 flex-1 flex-col overflow-hidden p-2">
             <AssessmentBars data={filteredBranches.map((row) => ({
               ...row,
               name: row.branchName,
@@ -856,7 +856,7 @@ export function SecurityDashboard() {
             }))} />
           </Panel>
 
-          <Panel title="类别综合能力" tone="accent" className="order-4 flex h-full min-h-0 flex-col self-start lg:row-start-2 lg:col-start-2" bodyClassName="flex min-h-0 flex-1 flex-col p-3">
+          <Panel title="类别综合能力" tone="accent" className="order-3 flex h-full min-h-0 flex-col self-start lg:row-start-1 lg:col-start-2" bodyClassName="flex min-h-0 flex-1 flex-col p-3">
             <div className="min-h-0 flex-1 overflow-hidden">
               <CapabilityCategoryRadar data={capabilityCategories} />
             </div>
