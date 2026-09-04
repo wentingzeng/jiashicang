@@ -1048,18 +1048,7 @@ export function BranchDashboard() {
               <div className="order-2 col-start-2 row-start-1 row-span-2 grid h-[248px] min-w-0 items-stretch gap-2 grid-cols-2 max-md:h-auto max-md:grid-cols-1 md:[&>*]:min-w-0">
                   <PanelCard className="h-[248px] cursor-pointer overflow-hidden" bodyClassName="p-2" title="信创改造" icon={<ShieldCheck className="size-4" />} onClick={() => setInnovationRanking((value) => !value)}>
                     <button type="button" onClick={(event) => { event.stopPropagation(); setInnovationRanking((value) => !value) }} className="w-full text-left" aria-label="切换信创改���完成度排行">
-                    {innovationRanking ? <div className="max-h-[160px] overflow-y-auto overflow-x-hidden overscroll-contain py-1 [WebkitOverflowScrolling:touch]">
-                      <ResponsiveContainer width="100%" height={160} minWidth={1} minHeight={1}>
-                        <BarChart layout="vertical" data={innovationRows} margin={{ top: 4, right: 42, left: 4, bottom: 4 }}>
-                          <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" horizontal={false} />
-                          <XAxis type="number" tick={{ fontSize: 9 }} />
-                          <YAxis type="category" dataKey="name" width={62} tick={{ fontSize: 9, fill: "hsl(var(--muted-foreground))" }} />
-                          <Tooltip formatter={(value) => [value, "已完成改造数量"]} />
-                          <Bar dataKey="count" name="已完成改造数量" fill="#2dc2be" radius={[0, 3, 3, 0]} barSize={10} label={{ position: "right", fontSize: 9 }} />
-                        </BarChart>
-                      </ResponsiveContainer>
-                      <div className="text-center text-sm text-muted-foreground">信创部改造前十名数量</div>
-                    </div> : <div className="flex items-center justify-between gap-2.5">
+                    {innovationRanking ? <div className="max-h-[166px] overflow-y-auto overflow-x-hidden overscroll-contain grid gap-2 py-1 [WebkitOverflowScrolling:touch]">{innovationRows.map(({ name, count }, index) => <div key={name} className="grid grid-cols-[1.2fr_1fr_auto] items-center gap-2 text-sm"><span>{String(index + 1).padStart(2, "0")} {name}</span><span className="h-2 rounded-full bg-gradient-to-r from-accent to-primary" style={{ width: `${Math.max(20, Number(count) / Math.max(innovationRows[0]?.count ?? 1, 1) * 100)}%` }} /><strong className="font-mono text-primary">{count}</strong></div>)}</div> : <div className="flex items-center justify-between gap-2.5">
                       <div className="flex flex-1 items-center justify-center">
                         <RingChart value={current.innovation.done} total={current.innovation.done + current.innovation.remaining} displayValue={current.innovation.done + current.innovation.remaining} label="计划总数" />
                       </div>
