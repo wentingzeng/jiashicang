@@ -1162,12 +1162,12 @@ export function BranchDashboard() {
                       <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" />
                       <XAxis dataKey="year" tick={{ fontSize: 10 }} />
                       <YAxis reversed domain={[1, 10]} ticks={[1, 3, 5, 7, 10]} tickFormatter={(value) => `第${value}名`} tick={{ fontSize: 9 }} />
-                      <Tooltip formatter={(value) => [`第${value}名`, "排名"]} />
-                      <Legend wrapperStyle={{ fontSize: 9 }} formatter={(value) => ({ digital: "数字化转型", management: "科技管理", security: "网络安全", data: "数据安全" }[value] ?? value)} />
-                      <Line type="monotone" dataKey="digital" name="digital" stroke="#2456c7" strokeWidth={2} dot={{ r: 3 }} />
-                      <Line type="monotone" dataKey="management" name="management" stroke="#2dc2be" strokeWidth={2} dot={{ r: 3 }} />
-                      <Line type="monotone" dataKey="security" name="security" stroke="#e68a4a" strokeWidth={2} dot={{ r: 3 }} />
-                      <Line type="monotone" dataKey="data" name="data" stroke="#7c5cc4" strokeWidth={2} dot={{ r: 3 }} />
+                      <Tooltip formatter={(value, name) => [`第${value}名`, name]} />
+                      <Legend verticalAlign="top" height={28} wrapperStyle={{ fontSize: 9, paddingBottom: 2 }} />
+                      <Line type="monotone" dataKey="digital" name="数字化转型" stroke="#2456c7" strokeWidth={2} dot={{ r: 3 }} />
+                      <Line type="monotone" dataKey="management" name="科技管理" stroke="#2dc2be" strokeWidth={2} dot={{ r: 3 }} />
+                      <Line type="monotone" dataKey="security" name="网络安全" stroke="#e68a4a" strokeWidth={2} dot={{ r: 3 }} />
+                      <Line type="monotone" dataKey="data" name="数据安全" stroke="#7c5cc4" strokeWidth={2} dot={{ r: 3 }} />
                     </LineChart>
                   </ResponsiveContainer>
                   </div>
