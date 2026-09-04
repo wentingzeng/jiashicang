@@ -623,13 +623,13 @@ function RoleBar({ label, value, tone, maxValue }: { label: string; value: numbe
   const dot = tone === "accent" ? "bg-accent" : tone === "chart-4" ? "bg-chart-4" : "bg-primary"
 
   return (
-  <div className="flex items-center justify-between gap-3 rounded-lg bg-muted/35 px-3 py-3 text-sm">
+  <div className="flex items-center justify-between gap-2 rounded-lg bg-muted/35 px-2.5 py-1.5 text-xs">
   <div className="flex min-w-0 items-center gap-2">
   <span className={cn("size-2 shrink-0 rounded-full", dot)} aria-hidden="true" />
   <span className="truncate text-foreground">{label}</span>
   </div>
   <div className="flex shrink-0 items-baseline gap-1.5">
-  <span className="font-mono font-bold text-primary">{value}</span>
+  <span className="font-mono text-sm font-bold text-primary">{value}</span>
   <span className="text-xs text-muted-foreground">{maxValue > 0 ? `${Math.round((value / maxValue) * 100)}%` : "0%"}</span>
   </div>
   </div>
@@ -1103,7 +1103,7 @@ export function BranchDashboard() {
                   </PanelCard>
 
                   <PanelCard className="h-[248px] overflow-hidden" bodyClassName="p-2.5" title="系统上云" icon={<Cloud className="size-4" />} onClick={() => setCloudRanking((value) => !value)}>
-                    <button type="button" onClick={(event) => { event.stopPropagation(); setCloudRanking((value) => !value) }} className="w-full text-left" aria-label="切����上云系统前十名">
+                    <button type="button" onClick={(event) => { event.stopPropagation(); setCloudRanking((value) => !value) }} className="w-full text-left" aria-label="切�����上云系统前十名">
                     {cloudRanking ? <div className="max-h-[166px] overflow-y-auto overflow-x-hidden overscroll-contain grid gap-2 py-1 [WebkitOverflowScrolling:touch]">{cloudRows.map(({ name, count }, index) => <div key={name} className="grid grid-cols-[1.2fr_1fr_auto] items-center gap-2 text-sm"><span>{String(index + 1).padStart(2, "0")} {name}</span><span className="h-2 rounded-full bg-gradient-to-r from-accent to-primary" style={{ width: `${Math.max(20, Number(count) / Math.max(cloudRows[0]?.count ?? 1, 1) * 100)}%` }} /><strong className="font-mono text-primary">{count}</strong></div>)}</div> : <div className="flex flex-col items-center gap-1.5">
                       <CloudCircle value={current.cloud.value} />
                       <div className="text-center text-sm text-muted-foreground">单击可查看上云系统前十名。</div></div>}
@@ -1111,11 +1111,11 @@ export function BranchDashboard() {
                   </PanelCard>
               </div>
 
-              <PanelCard className="order-1 col-start-1 row-start-1 row-span-2 max-md:col-start-1 max-md:row-start-auto max-md:row-span-1 h-[512px] min-w-0 cursor-pointer max-md:h-auto max-md:overflow-visible" bodyClassName="min-w-0 p-1.5 max-md:overflow-visible" title="科技人员数量" icon={<UsersRound className="size-4" />} onClick={() => setPersonnelDetails((value) => !value)}>
+              <PanelCard className="order-1 col-start-1 row-start-1 max-md:col-start-1 max-md:row-start-auto h-[248px] min-w-0 cursor-pointer max-md:h-auto max-md:overflow-visible" bodyClassName="min-w-0 p-1.5 max-md:overflow-visible" title="科技人员数量" icon={<UsersRound className="size-4" />} onClick={() => setPersonnelDetails((value) => !value)}>
                   <div className="grid min-w-0 gap-2">
                     {!personnelDetails && <div className="grid gap-2 rounded-[10px] border border-border/80 bg-card/80 px-3 py-3 shadow-[inset_0_1px_0_oklch(0.72_0.15_220/6%)]">
-  <PersonnelRing total={current.personnelTotal} roles={completePersonnelRoles(current)} />
-  <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
+  <div className="flex items-baseline justify-between rounded-lg border border-primary/10 bg-primary/5 px-3 py-2"><span className="text-sm font-medium text-foreground">科技人员数量：</span><span className="font-mono text-xl font-bold text-primary">{current.personnelTotal} 人</span></div>
+  <div className="grid grid-cols-1 gap-1.5 sm:grid-cols-2">
   {completePersonnelRoles(current).map((role) => (
   <RoleBar
   key={role.label}
