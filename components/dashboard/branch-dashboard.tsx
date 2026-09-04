@@ -1047,8 +1047,8 @@ export function BranchDashboard() {
 
               <div className="order-2 col-start-2 row-start-1 row-span-2 grid h-[248px] min-w-0 items-stretch gap-2 grid-cols-2 max-md:h-auto max-md:grid-cols-1 md:[&>*]:min-w-0">
                   <PanelCard className="h-[248px] cursor-pointer overflow-hidden" bodyClassName="p-2" title="信创改造" icon={<ShieldCheck className="size-4" />} onClick={() => setInnovationRanking((value) => !value)}>
-                    <button type="button" onClick={(event) => { event.stopPropagation(); setInnovationRanking((value) => !value) }} className="block h-[194px] max-h-[194px] w-full overflow-y-auto overflow-x-hidden overscroll-contain pr-1 text-left [WebkitOverflowScrolling:touch] [scrollbar-gutter:stable] [scrollbar-width:thin]" aria-label="切换信创改���完成度排行">
-                    {innovationRanking ? <div className="max-h-[160px] overflow-y-auto overflow-x-hidden overscroll-contain py-1 [WebkitOverflowScrolling:touch]">
+                    <button type="button" onClick={(event) => { event.stopPropagation(); setInnovationRanking((value) => !value) }} className="block w-full text-left" aria-label="切换信创改���完成度排行">
+                    {innovationRanking ? <div className="h-[160px] max-h-[160px] overflow-y-auto overflow-x-hidden overscroll-contain py-1 [WebkitOverflowScrolling:touch] [scrollbar-gutter:stable] [scrollbar-width:thin]">
                       <ResponsiveContainer width="100%" height={160} minWidth={1} minHeight={1}>
                         <ComposedChart data={innovationRows} margin={{ top: 20, right: 8, left: -18, bottom: 8 }}>
                           <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" vertical={false} />
@@ -1062,7 +1062,7 @@ export function BranchDashboard() {
                         </ComposedChart>
                       </ResponsiveContainer>
                       <div className="text-center text-sm text-muted-foreground">信创部改造前十名完成度</div>
-                    </div> : <div className="flex items-center justify-between gap-2.5">
+                    </div> : <div className="h-[160px] max-h-[160px] overflow-y-auto overflow-x-hidden overscroll-contain pr-1 [WebkitOverflowScrolling:touch] [scrollbar-gutter:stable] [scrollbar-width:thin]"><div className="flex items-center justify-between gap-2.5">
                       <div className="flex flex-1 items-center justify-center">
                         <RingChart value={current.innovation.done} total={current.innovation.done + current.innovation.remaining} displayValue={current.innovation.done + current.innovation.remaining} label="计划总数" />
                       </div>
@@ -1082,7 +1082,7 @@ export function BranchDashboard() {
                           <div className="h-full rounded-full bg-gradient-to-r from-[#2dc2be] to-[#86e1de]" style={{ width: `${(current.innovation.remaining / current.innovation.value) * 100}%` }} />
                         </div>
                       </div>
-                    </div>}
+                    </div></div>}
                     </button>
                     {!innovationRanking && <><div className="mt-2 flex flex-wrap items-center justify-center gap-3 text-sm text-slate-500">
                       <div className="flex items-center gap-1.5">
