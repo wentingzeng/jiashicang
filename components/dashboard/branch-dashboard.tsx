@@ -758,7 +758,7 @@ function TechLevelPanel({ rows, selectedKey, onSelect }: { rows: Array<{ key: st
               {dimensionLabels.map((label, index) => {
                 const angle = (Math.PI * 2 * index) / points.length - Math.PI / 2
                 const x = 140 + Math.cos(angle) * 84
-                const y = 102 + Math.sin(angle) * 76
+                const y = index === 0 ? 18 : 102 + Math.sin(angle) * 76
                 const isActive = activeDim === index
                 return (
                   <text
@@ -791,8 +791,8 @@ function TechLevelPanel({ rows, selectedKey, onSelect }: { rows: Array<{ key: st
                 <text x="110" y="94" textAnchor="middle" className="fill-muted-foreground text-[8px]">点击指标查看分值</text>
               ) : (
                 <>
-                  <text x="110" y="82" textAnchor="middle" className="fill-primary font-mono text-[20px] font-bold">{points[activeDim]}</text>
-                  <text x="110" y="98" textAnchor="middle" className="fill-muted-foreground text-[8px]">{dimensionLabels[activeDim]}</text>
+                  <text x="140" y="84" textAnchor="middle" className="fill-primary font-mono text-[20px] font-bold">{points[activeDim]}</text>
+                  <text x="140" y="100" textAnchor="middle" className="fill-muted-foreground text-[8px]">{dimensionLabels[activeDim]}</text>
                 </>
               )}
             </svg>
