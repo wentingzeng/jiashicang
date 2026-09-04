@@ -623,7 +623,7 @@ function RoleBar({ label, value, tone, maxValue }: { label: string; value: numbe
   const dot = tone === "accent" ? "bg-accent" : tone === "chart-4" ? "bg-chart-4" : "bg-primary"
 
   return (
-  <div className="flex min-h-0 items-center justify-between gap-1 rounded-lg bg-muted/35 px-2 py-1 text-[11px]">
+  <div className="flex min-h-0 items-center justify-between gap-1 rounded-lg bg-muted/35 px-1.5 py-0.5 text-[10px]">
   <div className="flex min-w-0 items-center gap-1.5">
   <span className={cn("size-2 shrink-0 rounded-full", dot)} aria-hidden="true" />
   <span className="truncate text-foreground">{label}</span>
@@ -758,7 +758,7 @@ function TechLevelPanel({ rows, selectedKey, onSelect }: { rows: Array<{ key: st
               {dimensionLabels.map((label, index) => {
                 const angle = (Math.PI * 2 * index) / points.length - Math.PI / 2
                 const x = 140 + Math.cos(angle) * 84
-                const y = 90 + Math.sin(angle) * 84
+                const y = 102 + Math.sin(angle) * 76
                 const isActive = activeDim === index
                 return (
                   <text
@@ -1099,7 +1099,7 @@ export function BranchDashboard() {
               <div className="order-1 min-w-0 lg:col-start-1 lg:row-start-1 lg:row-span-2 grid gap-3">
               <PanelCard className="h-[248px] min-w-0 cursor-pointer max-md:h-auto max-md:overflow-visible" bodyClassName="min-w-0 p-1.5 max-md:overflow-visible" title="科技人员数量" icon={<UsersRound className="size-4" />} onClick={() => setPersonnelDetails((value) => !value)}>
                   <div className="flex min-w-0 -translate-y-1 flex-col gap-1">
-                    {!personnelDetails && <div className="grid h-[190px] min-h-0 max-h-[190px] grid-cols-1 gap-1 overflow-x-hidden overflow-y-auto overscroll-contain rounded-[10px] border border-border/80 bg-card/80 px-2.5 py-2 pb-3 shadow-[inset_0_1px_0_oklch(0.72_0.15_220/6%)] [scrollbar-gutter:stable] [scrollbar-width:thin]">
+                    {!personnelDetails && <div className="grid h-[166px] min-h-0 max-h-[166px] grid-cols-1 gap-1 overflow-x-hidden overflow-y-auto overscroll-contain rounded-[10px] border border-border/80 bg-card/80 px-2.5 py-2 pb-3 shadow-[inset_0_1px_0_oklch(0.72_0.15_220/6%)] [scrollbar-gutter:stable] [scrollbar-width:thin]">
   <div className="flex items-center justify-between rounded-lg border border-primary/10 bg-primary/5 px-2 py-1"><span className="whitespace-nowrap text-[11px] font-medium text-foreground">科技人员数量：</span><span className="font-mono text-base font-bold text-primary">{current.personnelTotal} 人</span></div>
   <div className="grid grid-cols-1 gap-1 sm:grid-cols-2">
   {completePersonnelRoles(current).map((role) => (
@@ -1112,7 +1112,7 @@ export function BranchDashboard() {
   />
   ))}
   </div>
-  <div className="pt-0.5 text-center text-sm text-muted-foreground">点击查看详情</div>
+  <div className="pt-0 text-center text-xs leading-4 text-muted-foreground">点击查看详情</div>
                     </div>}
 
 {personnelDetails && <div className="min-w-0 overflow-hidden rounded-[12px] border border-border/80 bg-card/80 shadow-[inset_0_1px_0_oklch(0.72_0.15_220/6%)]">
