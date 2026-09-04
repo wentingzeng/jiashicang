@@ -2,7 +2,7 @@
 
 import { useEffect, useState, type ReactNode } from "react"
 import { ArrowUpRight, ChevronDown, Cloud, Gauge, ShieldCheck, UsersRound } from "lucide-react"
-import { Bar, CartesianGrid, ComposedChart, Legend, Line, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts"
+import { Bar, BarChart, CartesianGrid, Legend, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts"
 
 import { Badge } from "@/components/ui/badge"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
@@ -1050,16 +1050,14 @@ export function BranchDashboard() {
                     <button type="button" onClick={(event) => { event.stopPropagation(); setInnovationRanking((value) => !value) }} className="w-full text-left" aria-label="切换信创改���完成度排行">
                     {innovationRanking ? <div className="max-h-[160px] overflow-y-auto overflow-x-hidden overscroll-contain py-1 [WebkitOverflowScrolling:touch]">
                       <ResponsiveContainer width="100%" height={160} minWidth={1} minHeight={1}>
-                        <ComposedChart data={innovationRows} margin={{ top: 20, right: 8, left: -18, bottom: 8 }}>
-                          <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" vertical={false} />
-                          <XAxis dataKey="name" tick={{ fontSize: 10, fill: "hsl(var(--muted-foreground))" }} interval={0} angle={-25} textAnchor="end" height={42} />
-                          <YAxis yAxisId="count" domain={[0, 4]} ticks={[0, 1, 2, 3, 4]} tick={{ fontSize: 10 }} />
-                          <YAxis yAxisId="rate" orientation="right" domain={[0, 100]} ticks={[0, 50, 100]} tickFormatter={(value) => `${value}%`} tick={{ fontSize: 10 }} />
+                        <BarChart layout="vertical" data={innovationRows} margin={{ top: 4, right: 42, left: 4, bottom: 4 }}>
+                          <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" horizontal={false} />
+                          <XAxis type="number" domain={[0, 100]} ticks={[0, 50, 100]} tickFormatter={(value) => `${value}%`} tick={{ fontSize: 9 }} />
+                          <YAxis type="category" dataKey="name" width={62} tick={{ fontSize: 9, fill: "hsl(var(--muted-foreground))" }} />
                           <Tooltip formatter={(value, name) => [name === "rate" ? `${value}%` : value, name === "rate" ? "改造完成率" : "已完成改造数量"]} />
-                          <Legend wrapperStyle={{ fontSize: 10 }} formatter={(value) => value === "count" ? "已完成改造数量" : "改造完成率"} />
-                          <Bar yAxisId="count" dataKey="count" name="count" fill="#2dc2be" radius={[3, 3, 0, 0]} label={{ position: "top", fontSize: 10 }} />
-                          <Line yAxisId="rate" type="monotone" dataKey="rate" name="rate" stroke="#e68a4a" strokeWidth={2} dot={{ r: 3, fill: "#e68a4a" }} label={{ position: "top", fontSize: 10, formatter: (value: number) => `${value}%` }} />
-                        </ComposedChart>
+                          <Legend wrapperStyle={{ fontSize: 9 }} formatter={(value) => value === "count" ? "已完成数量" : "完成率"} />
+                          <Bar dataKey="rate" name="rate" fill="#2dc2be" radius={[0, 3, 3, 0]} barSize={10} label={{ position: "right", fontSize: 9, formatter: (value: number) => `${value}%` }} />
+                        </BarChart>
                       </ResponsiveContainer>
                       <div className="text-center text-sm text-muted-foreground">信创部改造前十名完成度</div>
                     </div> : <div className="flex items-center justify-between gap-2.5">
