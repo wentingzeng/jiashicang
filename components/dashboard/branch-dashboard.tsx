@@ -1130,7 +1130,7 @@ export function BranchDashboard() {
                     </div>}
 
 {personnelDetails && <div className="min-w-0 overflow-hidden rounded-[12px] border border-border/80 bg-card/80 shadow-[inset_0_1px_0_oklch(0.72_0.15_220/6%)]">
-	<div className="branch-tech-table-scroll block h-[300px] max-h-[300px] w-full min-w-0 max-w-full overflow-auto overscroll-contain [WebkitOverflowScrolling:touch] [scrollbar-width:thin]">
+	<div className="branch-tech-table-scroll block h-[300px] max-h-[300px] w-full min-w-0 max-w-full overflow-x-auto overflow-y-scroll overscroll-contain [WebkitOverflowScrolling:touch] [scrollbar-gutter:stable] [scrollbar-width:thin]">
                           <Table className="min-w-[700px] text-sm">
                           <TableHeader className="bg-primary/8">
                             <TableRow className="border-transparent hover:bg-transparent">
