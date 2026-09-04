@@ -1052,14 +1052,13 @@ export function BranchDashboard() {
                       <ResponsiveContainer width="100%" height={160} minWidth={1} minHeight={1}>
                         <BarChart layout="vertical" data={innovationRows} margin={{ top: 4, right: 42, left: 4, bottom: 4 }}>
                           <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" horizontal={false} />
-                          <XAxis type="number" domain={[0, 100]} ticks={[0, 50, 100]} tickFormatter={(value) => `${value}%`} tick={{ fontSize: 9 }} />
+                          <XAxis type="number" tick={{ fontSize: 9 }} />
                           <YAxis type="category" dataKey="name" width={62} tick={{ fontSize: 9, fill: "hsl(var(--muted-foreground))" }} />
-                          <Tooltip formatter={(value, name) => [name === "rate" ? `${value}%` : value, name === "rate" ? "改造完成率" : "已完成改造数量"]} />
-                          <Legend wrapperStyle={{ fontSize: 9 }} formatter={(value) => value === "count" ? "已完成数量" : "完成率"} />
-                          <Bar dataKey="rate" name="rate" fill="#2dc2be" radius={[0, 3, 3, 0]} barSize={10} label={{ position: "right", fontSize: 9, formatter: (value: number) => `${value}%` }} />
+                          <Tooltip formatter={(value) => [value, "已完成改造数量"]} />
+                          <Bar dataKey="count" name="已完成改造数量" fill="#2dc2be" radius={[0, 3, 3, 0]} barSize={10} label={{ position: "right", fontSize: 9 }} />
                         </BarChart>
                       </ResponsiveContainer>
-                      <div className="text-center text-sm text-muted-foreground">信创部改造前十名完成度</div>
+                      <div className="text-center text-sm text-muted-foreground">信创部改造前十名数量</div>
                     </div> : <div className="flex items-center justify-between gap-2.5">
                       <div className="flex flex-1 items-center justify-center">
                         <RingChart value={current.innovation.done} total={current.innovation.done + current.innovation.remaining} displayValue={current.innovation.done + current.innovation.remaining} label="计划总数" />
