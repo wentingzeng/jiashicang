@@ -1104,9 +1104,9 @@ export function BranchDashboard() {
                   </PanelCard>
               </div>
 
-              <PanelCard className="order-1 col-start-1 row-start-1 max-md:col-start-1 max-md:row-start-auto h-[248px] min-w-0 cursor-pointer max-md:h-auto max-md:overflow-visible" bodyClassName="min-w-0 p-1.5 max-md:overflow-visible" title="科技人员数量" icon={<UsersRound className="size-4" />} onClick={() => { setPersonnelPage(1); setPersonnelDetails((value) => !value) }}>
+              <PanelCard className="order-1 col-start-1 row-start-1 max-md:col-start-1 max-md:row-start-auto h-[248px] min-w-0 cursor-pointer max-md:h-auto max-md:overflow-visible" bodyClassName="min-w-0 p-1.5 max-md:overflow-visible" title="科技人员数量" icon={<UsersRound className="size-4" />} onClick={() => setPersonnelDetails((value) => !value)}>
                   <div className="grid min-w-0 gap-2">
-                    {!personnelDetails && <div className="grid max-h-[190px] gap-2 overflow-y-auto overscroll-contain rounded-[10px] border border-border/80 bg-card/80 px-3 py-3 shadow-[inset_0_1px_0_oklch(0.72_0.15_220/6%)] [scrollbar-gutter:stable] [scrollbar-width:thin]">
+                    {!personnelDetails && <div className="grid h-[190px] max-h-[190px] gap-2 overflow-y-scroll overscroll-contain rounded-[10px] border border-border/80 bg-card/80 px-3 py-3 shadow-[inset_0_1px_0_oklch(0.72_0.15_220/6%)] [scrollbar-gutter:stable] [scrollbar-width:thin]">
   <div className="flex items-baseline justify-between rounded-lg border border-primary/10 bg-primary/5 px-3 py-2"><span className="text-sm font-medium text-foreground">科技人员数量：</span><span className="font-mono text-xl font-bold text-primary">{current.personnelTotal} 人</span></div>
   <div className="grid grid-cols-1 gap-1.5 sm:grid-cols-2">
   {completePersonnelRoles(current).map((role) => (
