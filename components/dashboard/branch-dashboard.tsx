@@ -1156,6 +1156,7 @@ export function BranchDashboard() {
                   </div>
                 </PanelCard>
                 <PanelCard className="h-[248px] min-w-0 overflow-hidden" bodyClassName="p-2.5" title="考评类别排名趋势" icon={<Gauge className="size-4" />}>
+                  <div className="h-[190px] min-h-0 w-full">
                   <ResponsiveContainer width="100%" height="100%" minWidth={1} minHeight={1}>
                     <LineChart data={[{ year: "2023年", digital: 5, management: 4, security: 2, data: 8 }, { year: "2024年", digital: 3, management: 5, security: 2, data: 6 }, { year: "2025年", digital: 2, management: 3, security: 1, data: 4 }]} margin={{ top: 8, right: 8, left: -18, bottom: 0 }}>
                       <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" />
@@ -1169,6 +1170,7 @@ export function BranchDashboard() {
                       <Line type="monotone" dataKey="data" name="data" stroke="#7c5cc4" strokeWidth={2} dot={{ r: 3 }} />
                     </LineChart>
                   </ResponsiveContainer>
+                  </div>
                 </PanelCard>
               </div>
             </div>
