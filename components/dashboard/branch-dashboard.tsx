@@ -2,7 +2,7 @@
 
 import { useEffect, useState, type ReactNode } from "react"
 import { ArrowUpRight, ChevronDown, Cloud, Gauge, ShieldAlert, ShieldCheck, ClipboardList, UsersRound } from "lucide-react"
-import { Bar, BarChart, CartesianGrid, Legend, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts"
+import { Bar, BarChart, CartesianGrid, Legend, Line, LineChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts"
 
 import { Badge } from "@/components/ui/badge"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
@@ -1096,7 +1096,8 @@ export function BranchDashboard() {
                   </PanelCard>
               </div>
 
-              <PanelCard className="order-1 col-start-1 row-start-1 max-md:col-start-1 max-md:row-start-auto h-[248px] min-w-0 cursor-pointer max-md:h-auto max-md:overflow-visible" bodyClassName="min-w-0 p-1.5 max-md:overflow-visible" title="科技人员数量" icon={<UsersRound className="size-4" />} onClick={() => setPersonnelDetails((value) => !value)}>
+              <div className="order-1 min-w-0 lg:col-start-1 lg:row-start-1 lg:row-span-2 grid gap-3">
+              <PanelCard className="h-[248px] min-w-0 cursor-pointer max-md:h-auto max-md:overflow-visible" bodyClassName="min-w-0 p-1.5 max-md:overflow-visible" title="科技人员数量" icon={<UsersRound className="size-4" />} onClick={() => setPersonnelDetails((value) => !value)}>
                   <div className="grid min-w-0 gap-2">
                     {!personnelDetails && <div className="grid h-[176px] min-h-0 max-h-[176px] gap-1.5 overflow-x-hidden overflow-y-scroll overscroll-contain rounded-[10px] border border-border/80 bg-card/80 px-2.5 py-2 pb-3 shadow-[inset_0_1px_0_oklch(0.72_0.15_220/6%)] [scrollbar-gutter:stable] [scrollbar-width:thin]">
   <div className="flex items-baseline justify-between rounded-lg border border-primary/10 bg-primary/5 px-3 py-2"><span className="text-sm font-medium text-foreground">科技人��数量：</span><span className="font-mono text-xl font-bold text-primary">{current.personnelTotal} 人</span></div>
@@ -1154,8 +1155,24 @@ export function BranchDashboard() {
                       </div></div>}
                   </div>
                 </PanelCard>
+                <PanelCard className="h-[248px] min-w-0 overflow-hidden" bodyClassName="p-2.5" title="考评类别排名趋势" icon={<Gauge className="size-4" />}>
+                  <ResponsiveContainer width="100%" height="100%" minWidth={1} minHeight={1}>
+                    <LineChart data={[{ year: "2023年", digital: 5, management: 4, security: 2, data: 8 }, { year: "2024年", digital: 3, management: 5, security: 2, data: 6 }, { year: "2025年", digital: 2, management: 3, security: 1, data: 4 }]} margin={{ top: 8, right: 8, left: -18, bottom: 0 }}>
+                      <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" />
+                      <XAxis dataKey="year" tick={{ fontSize: 10 }} />
+                      <YAxis reversed domain={[1, 10]} ticks={[1, 3, 5, 7, 10]} tickFormatter={(value) => `第${value}名`} tick={{ fontSize: 9 }} />
+                      <Tooltip formatter={(value) => [`第${value}名`, "排名"]} />
+                      <Legend wrapperStyle={{ fontSize: 9 }} formatter={(value) => ({ digital: "数字化转型", management: "科技管理", security: "网络安全", data: "数据安全" }[value] ?? value)} />
+                      <Line type="monotone" dataKey="digital" name="digital" stroke="#2456c7" strokeWidth={2} dot={{ r: 3 }} />
+                      <Line type="monotone" dataKey="management" name="management" stroke="#2dc2be" strokeWidth={2} dot={{ r: 3 }} />
+                      <Line type="monotone" dataKey="security" name="security" stroke="#e68a4a" strokeWidth={2} dot={{ r: 3 }} />
+                      <Line type="monotone" dataKey="data" name="data" stroke="#7c5cc4" strokeWidth={2} dot={{ r: 3 }} />
+                    </LineChart>
+                  </ResponsiveContainer>
+                </PanelCard>
               </div>
-              </div>
+            </div>
+            </div>
             </div>
         </section>
       </div>
