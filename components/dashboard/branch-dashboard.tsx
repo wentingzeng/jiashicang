@@ -675,7 +675,7 @@ function PanelCard({ title, icon, children, className, onClick }: { title: strin
 
 function TechLevelPanel({ rows, selectedKey, onSelect }: { rows: Array<{ key: string; data: BranchData }>; selectedKey: string; onSelect: (key: string) => void }) {
   const [activeDim, setActiveDim] = useState<number | null>(null)
-  const dimensionLabels = ["科技治理", "风险全区", "研发创新", "运维管理", "数据管理"]
+  const dimensionLabels = ["科技治理", "风险安全", "研发创新", "运维管理", "数据管理"]
   const selectedRow = rows.find((row) => row.key === selectedKey)
   const isAverage = !selectedRow
   const selected = selectedRow?.data
