@@ -1123,7 +1123,7 @@ export function BranchDashboard() {
                     </div>}
 
 {personnelDetails && <div className="min-w-0 overflow-hidden rounded-[12px] border border-border/80 bg-card/80 shadow-[inset_0_1px_0_oklch(0.72_0.15_220/6%)]">
-	<div className="branch-tech-table-scroll block h-[300px] max-h-[300px] w-full min-w-0 max-w-full overflow-x-auto overflow-y-auto overscroll-contain [WebkitOverflowScrolling:touch] [scrollbar-gutter:stable] [scrollbar-width:thin]">
+		<div className="branch-tech-table-scroll block h-[190px] max-h-[190px] w-full min-w-0 max-w-full overflow-x-auto overflow-y-auto overscroll-contain [WebkitOverflowScrolling:touch] [scrollbar-gutter:stable] [scrollbar-width:thin]">
                           <Table className="min-w-[700px] text-sm">
                           <TableHeader className="bg-primary/8">
                             <TableRow className="border-transparent hover:bg-transparent">
@@ -1158,9 +1158,8 @@ export function BranchDashboard() {
                             ))}
                           </TableBody>
                         </Table>
-                      </div>
                       <div className="flex items-center justify-between border-t border-border/60 px-3 py-1.5 text-xs text-muted-foreground"><span>每页显示 6 条分行数据</span><div className="flex items-center gap-1.5" onClick={(event) => event.stopPropagation()}>{Array.from({ length: Math.max(1, Math.ceil(personnelRows.length / personnelPageSize)) }, (_, index) => index + 1).map((page) => <button key={page} type="button" aria-label={`第 ${page} 页`} onClick={() => setPersonnelPage(page)} className={cn("inline-flex size-6 items-center justify-center rounded-md font-semibold", personnelPage === page ? "bg-primary text-primary-foreground" : "bg-muted text-muted-foreground hover:bg-primary/10")}>{page}</button>)}</div></div>
-                      </div>}
+                      </div></div>}
                   </div>
                 </PanelCard>
               </div>
