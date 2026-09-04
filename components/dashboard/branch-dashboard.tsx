@@ -675,7 +675,7 @@ function PanelCard({ title, icon, children, className, onClick }: { title: strin
 
 function TechLevelPanel({ rows, selectedKey, onSelect }: { rows: Array<{ key: string; data: BranchData }>; selectedKey: string; onSelect: (key: string) => void }) {
   const [activeDim, setActiveDim] = useState<number | null>(null)
-  const dimensionLabels = ["科技治理", "风险安全", "研发创新", "运维管理", "数据管理"]
+  const dimensionLabels = ["科技治理", "风险全区", "研发创新", "运维管理", "数据管理"]
   const selectedRow = rows.find((row) => row.key === selectedKey)
   const isAverage = !selectedRow
   const selected = selectedRow?.data
@@ -695,7 +695,7 @@ function TechLevelPanel({ rows, selectedKey, onSelect }: { rows: Array<{ key: st
   const vertexCoords = points.map((value, index) => {
     const angle = (Math.PI * 2 * index) / points.length - Math.PI / 2
     const radius = 18 + value * 0.42
-    return { x: 110 + Math.cos(angle) * radius, y: 90 + Math.sin(angle) * radius }
+    return { x: 140 + Math.cos(angle) * radius, y: 90 + Math.sin(angle) * radius }
   })
   const radarPoints = vertexCoords.map((point) => `${point.x},${point.y}`).join(" ")
 
@@ -752,12 +752,12 @@ function TechLevelPanel({ rows, selectedKey, onSelect }: { rows: Array<{ key: st
         </div>
         <div className="rounded-lg border border-border/70 bg-background/40 p-2">
           <div className="flex justify-center">
-            <svg viewBox="0 0 220 180" className="h-48 w-64" role="img" aria-label={`${displayLabel}科技能力雷达图`}>
-              {[30, 50, 70].map((radius) => <polygon key={radius} points={points.map((_, index) => { const angle = (Math.PI * 2 * index) / points.length - Math.PI / 2; return `${110 + Math.cos(angle) * radius},${90 + Math.sin(angle) * radius}` }).join(" ")} fill="none" stroke="currentColor" className="text-border" strokeWidth="1" />)}
+            <svg viewBox="0 0 280 180" className="h-48 w-full max-w-[320px]" role="img" aria-label={`${displayLabel}科技能力雷达图`}>
+              {[30, 50, 70].map((radius) => <polygon key={radius} points={points.map((_, index) => { const angle = (Math.PI * 2 * index) / points.length - Math.PI / 2; return `${140 + Math.cos(angle) * radius},${90 + Math.sin(angle) * radius}` }).join(" ")} fill="none" stroke="currentColor" className="text-border" strokeWidth="1" />)}
               <polygon points={radarPoints} fill="rgba(45,194,190,0.28)" stroke="#2dc2be" strokeWidth="2" />
               {dimensionLabels.map((label, index) => {
                 const angle = (Math.PI * 2 * index) / points.length - Math.PI / 2
-                const x = 110 + Math.cos(angle) * 84
+                const x = 140 + Math.cos(angle) * 84
                 const y = 90 + Math.sin(angle) * 84
                 const isActive = activeDim === index
                 return (
@@ -1098,7 +1098,7 @@ export function BranchDashboard() {
 
               <div className="order-1 min-w-0 lg:col-start-1 lg:row-start-1 lg:row-span-2 grid gap-3">
               <PanelCard className="h-[248px] min-w-0 cursor-pointer max-md:h-auto max-md:overflow-visible" bodyClassName="min-w-0 p-1.5 max-md:overflow-visible" title="科技人员数量" icon={<UsersRound className="size-4" />} onClick={() => setPersonnelDetails((value) => !value)}>
-                  <div className="flex min-w-0 flex-col gap-2">
+                  <div className="flex min-w-0 -translate-y-1 flex-col gap-1">
                     {!personnelDetails && <div className="grid h-[190px] min-h-0 max-h-[190px] grid-cols-1 gap-1 overflow-x-hidden overflow-y-auto overscroll-contain rounded-[10px] border border-border/80 bg-card/80 px-2.5 py-2 pb-3 shadow-[inset_0_1px_0_oklch(0.72_0.15_220/6%)] [scrollbar-gutter:stable] [scrollbar-width:thin]">
   <div className="flex items-center justify-between rounded-lg border border-primary/10 bg-primary/5 px-2 py-1"><span className="whitespace-nowrap text-[11px] font-medium text-foreground">科技人员数量：</span><span className="font-mono text-base font-bold text-primary">{current.personnelTotal} 人</span></div>
   <div className="grid grid-cols-1 gap-1 sm:grid-cols-2">
