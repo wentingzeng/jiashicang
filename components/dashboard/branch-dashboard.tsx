@@ -1045,7 +1045,7 @@ export function BranchDashboard() {
                 </div>
               </PanelCard>
 
-              <div className="order-2 col-start-2 row-start-1 row-span-2 grid h-[512px] min-w-0 items-stretch gap-2 grid-cols-1 max-md:h-auto md:[&>*]:min-w-0">
+              <div className="order-2 col-start-2 row-start-1 row-span-2 grid h-[248px] min-w-0 items-stretch gap-2 grid-cols-2 max-md:h-auto max-md:grid-cols-1 md:[&>*]:min-w-0">
                   <PanelCard className="h-[248px] cursor-pointer overflow-hidden" bodyClassName="p-2.5" title="信创改造" icon={<ShieldCheck className="size-4" />} onClick={() => setInnovationRanking((value) => !value)}>
                     <button type="button" onClick={(event) => { event.stopPropagation(); setInnovationRanking((value) => !value) }} className="w-full text-left" aria-label="切换信创改���完成度排行">
                     {innovationRanking ? <div className="max-h-[160px] overflow-y-auto overflow-x-hidden overscroll-contain py-1 [WebkitOverflowScrolling:touch]">
