@@ -1098,8 +1098,8 @@ export function BranchDashboard() {
 
               <div className="order-1 min-w-0 lg:col-start-1 lg:row-start-1 lg:row-span-2 grid gap-3">
               <PanelCard className="h-[248px] min-w-0 cursor-pointer max-md:h-auto max-md:overflow-visible" bodyClassName="min-w-0 p-1.5 max-md:overflow-visible" title="科技人员数量" icon={<UsersRound className="size-4" />} onClick={() => setPersonnelDetails((value) => !value)}>
-                  <div className="grid min-w-0 gap-2">
-                    {!personnelDetails && <div className="grid h-[190px] min-h-0 max-h-[190px] grid-cols-2 gap-1 overflow-x-hidden overflow-y-auto overscroll-contain rounded-[10px] border border-border/80 bg-card/80 px-2.5 py-2 pb-3 shadow-[inset_0_1px_0_oklch(0.72_0.15_220/6%)] [scrollbar-gutter:stable] [scrollbar-width:thin]">
+                  <div className="flex min-w-0 flex-col gap-2">
+                    {!personnelDetails && <div className="grid h-[190px] min-h-0 max-h-[190px] grid-cols-1 gap-1 overflow-x-hidden overflow-y-auto overscroll-contain rounded-[10px] border border-border/80 bg-card/80 px-2.5 py-2 pb-3 shadow-[inset_0_1px_0_oklch(0.72_0.15_220/6%)] [scrollbar-gutter:stable] [scrollbar-width:thin]">
   <div className="flex items-center justify-between rounded-lg border border-primary/10 bg-primary/5 px-2 py-1"><span className="whitespace-nowrap text-[11px] font-medium text-foreground">科技人员数量：</span><span className="font-mono text-base font-bold text-primary">{current.personnelTotal} 人</span></div>
   <div className="grid grid-cols-1 gap-1 sm:grid-cols-2">
   {completePersonnelRoles(current).map((role) => (
