@@ -417,6 +417,12 @@ function ChinaSecurityMap({ data, selectedInstitutionType, fujianCityScores, ass
     setScoreThreshold(Math.max(...data.map((item) => item.value), 0))
   }, [selectedInstitutionType, data])
   const normalizeRegion = (name: string) => name.replace(/(省|市|自治区|特别��政区)$/u, "").replace(/(壮族|回族|维吾尔)$/u, "")
+  useEffect(() => {
+    const selectedRegion = normalizeRegion(provinceForBranch(selectedInstitutionType))
+    const shouldShowFujian = selectedInstitutionType !== "全部机构" && selectedRegion === "福建"
+    setIsFujianDetail(shouldShowFujian)
+    if (shouldShowFujian) setSelectedProvince("福建省")
+  }, [selectedInstitutionType])
   const selectedItem = isFujianDetail ? fujianCityScores.find((item) => normalizeRegion(item.name) === normalizeRegion(selectedProvince)) : data.find((item) => normalizeRegion(selectedProvince).includes(normalizeRegion(provinceForBranch(item.name))) || normalizeRegion(provinceForBranch(item.name)).includes(normalizeRegion(selectedProvince)))
   const scores = data.map((item) => item.value)
   const minScore = Math.min(...scores)
@@ -564,7 +570,7 @@ function ChinaSecurityMap({ data, selectedInstitutionType, fujianCityScores, ass
             [119.17823197590195, 16.265658015720753],
           ],
         ]
-        // 每一段本身即为互不相连的独立短笔画（刻度线），仅取首尾两点绘制一条直线
+        // 每一段本身即为互不相连的独立短笔画（刻度线），��取首尾两点绘制一条直线
         const dashSegments = nineDashSegments.map((seg) => {
           const [sLon, sLat] = seg[0]
           const [eLon, eLat] = seg[seg.length - 1]
