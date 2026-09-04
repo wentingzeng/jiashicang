@@ -833,7 +833,6 @@ export function BranchDashboard() {
   const [disasterDetails, setDisasterDetails] = useState(false)
   const [innovationRanking, setInnovationRanking] = useState(false)
   const [cloudRanking, setCloudRanking] = useState(false)
-  const [personnelPage, setPersonnelPage] = useState(1)
   const [personnelDetails, setPersonnelDetails] = useState(false)
   const [techSelectedKey, setTechSelectedKey] = useState("all")
   const [dashboardApiData, setDashboardApiData] = useState<DashboardApiResponse | null>(null)
@@ -841,7 +840,6 @@ export function BranchDashboard() {
   const [dashboardApiError, setDashboardApiError] = useState(false)
   const [apiGradeOptions, setApiGradeOptions] = useState(gradeOptions)
   const [apiBranchOptions, setApiBranchOptions] = useState(branchOptions)
-  const personnelPageSize = 6
 
   useEffect(() => {
     const controller = new AbortController()
@@ -878,11 +876,9 @@ export function BranchDashboard() {
 
   useEffect(() => {
     setSelectedBranch("all")
-    setPersonnelPage(1)
   }, [selectedGrade])
 
   useEffect(() => {
-    setPersonnelPage(1)
     // 分行科技分级始终展示完整分行数据，不受右侧筛选条件影响。
     setTechSelectedKey("all")
   }, [selectedBranch])
@@ -932,13 +928,8 @@ export function BranchDashboard() {
     ...(currentApiBase ? { tableRows: apiScopedRows.map(apiRowToTableRow) } : {}),
     personnelRoles: completePersonnelRoles(dashboardApiData ? applyDashboardApiData(currentBase, dashboardApiData) : currentBase),
   }
-  const personnelPageCount = Math.max(1, Math.ceil(current.tableRows.length / personnelPageSize))
   const personnelRows = [...current.tableRows]
-    .sort((a, b) => toNumber(b.total) - toNumber(a.total))
-    .slice(
-      (personnelPage - 1) * personnelPageSize,
-      personnelPage * personnelPageSize,
-    )
+.sort((a, b) => toNumber(b.total) - toNumber(a.total))
   const liveTime = now ? now.toTimeString().slice(0, 8) : "--:--:--"
   const scopedRows = selectedBranch !== "all"
     ? current.tableRows.filter((row) => row.name === current.label || row.name.endsWith(current.label.replace("分行", "")))
@@ -1130,7 +1121,7 @@ export function BranchDashboard() {
                     </div>}
 
 {personnelDetails && <div className="min-w-0 overflow-hidden rounded-[12px] border border-border/80 bg-card/80 shadow-[inset_0_1px_0_oklch(0.72_0.15_220/6%)]">
-	<div className="branch-tech-table-scroll block h-[300px] max-h-[300px] w-full min-w-0 max-w-full overflow-x-auto overflow-y-scroll overscroll-contain [WebkitOverflowScrolling:touch] [scrollbar-gutter:stable] [scrollbar-width:thin]">
+	<div className="branch-tech-table-scroll block h-[300px] max-h-[300px] w-full min-w-0 max-w-full overflow-x-auto overflow-y-auto overscroll-contain [WebkitOverflowScrolling:touch] [scrollbar-gutter:stable] [scrollbar-width:thin]">
                           <Table className="min-w-[700px] text-sm">
                           <TableHeader className="bg-primary/8">
                             <TableRow className="border-transparent hover:bg-transparent">
@@ -1165,27 +1156,6 @@ export function BranchDashboard() {
                             ))}
                           </TableBody>
                         </Table>
-                      </div>
-                      <div className="flex items-center justify-between border-t border-border/60 bg-card/80 px-3 py-1.5 text-sm text-muted-foreground">
-                        <span>每页显示 6 条分行数据</span>
-                        <div className="flex items-center gap-1.5" aria-label="科技人员数量分页" onClick={(event) => event.stopPropagation()}>
-                          {Array.from({ length: personnelPageCount }, (_, index) => {
-                            const page = index + 1
-                            const isActive = personnelPage === page
-                            return (
-                              <button
-                                key={page}
-                                type="button"
-                                aria-label={`第 ${page} 页`}
-                                aria-current={isActive ? "page" : undefined}
-                                onClick={() => setPersonnelPage(page)}
-                                className={`inline-flex size-5 items-center justify-center rounded-md text-sm font-semibold transition ${isActive ? "bg-primary text-foreground" : "bg-card text-muted-foreground ring-1 ring-border/80 hover:bg-primary/10"}`}
-                              >
-                                {page}
-                              </button>
-                            )
-                          })}
-                        </div>
                       </div>
                       </div>}
                   </div>
