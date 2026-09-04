@@ -287,7 +287,7 @@ function CategoryBars({ data, label, color = "#42bdb7" }: { data: { name: string
   return <div className="rounded-lg border border-border/50 bg-background/20 p-3"><div className="mb-2 text-sm font-medium text-foreground/80">{label}</div><div className="grid min-h-0 grid-cols-2 grid-rows-4 gap-1.5 overflow-y-auto">{data.map((item, index) => <div key={item.name} className="flex min-h-0 items-center justify-between gap-2 rounded-md border border-border/40 bg-card/50 px-2.5 py-1"><div className="flex min-w-0 items-center gap-2"><span className="size-2 shrink-0 rounded-full" style={{ backgroundColor: index % 2 ? color : "#4ba8d8" }} /><span className="text-xs leading-5 text-foreground/80">{item.name}</span></div><div className="font-mono text-lg font-bold leading-none text-foreground">{item.value}</div></div>)}</div></div>
 }
 
-function AssessmentBars({ data }: { data: { name: string; value: number; [key: string]: unknown }[] }) {
+function AssessmentBars({ data, selectedInstitutionType }: { data: { name: string; value: number; [key: string]: unknown }[]; selectedInstitutionType: string }) {
   // 该面板对应 security_branch_scores 表（网络安全考评），排名与展开条目均按
   // annualTotalScore（网络安全全年合计总分）排序和展示，各分项使用该表的真实字段名。
   const sorted = [...data]
@@ -305,7 +305,11 @@ function AssessmentBars({ data }: { data: { name: string; value: number; [key: s
     }))
     .sort((a, b) => b.totalScore - a.totalScore)
   const [details, setDetails] = useState(false)
-  const [selectedBranch, setSelectedBranch] = useState<string | null>(null)
+  const [selectedBranch, setSelectedBranch] = useState<string | null>(selectedInstitutionType === "全部机构" ? null : selectedInstitutionType)
+  useEffect(() => {
+    setSelectedBranch(selectedInstitutionType === "全部机构" ? null : selectedInstitutionType)
+    setDetails(false)
+  }, [selectedInstitutionType])
   const selected = sorted.find((item) => item.name === selectedBranch)
   const podiumFallback = { name: "", shortName: "暂无数据", totalScore: 0 }
   const podiumItems = [sorted[1] ?? podiumFallback, sorted[0] ?? podiumFallback, sorted[2] ?? podiumFallback]
@@ -685,7 +689,7 @@ export function SecurityDashboard() {
     ? capabilityDetails.map((row) => ({ ...row, name: row.branchName, value: Number(row.totalScore ?? 0), branchLevel: row.category }))
     : toCapabilityData(branches)
   const filteredCapability = selectedInstitutionType === "全部机构" ? capabilityRows : capabilityRows.filter((row) => row.name === selectedInstitutionType)
-  const normalizeBranchName = (name: string) => name.replace(/分行$/u, "")
+  const normalizeBranchName = (name: string) => name.replace(/���行$/u, "")
   // 省份归一化：去掉"省/市/自治区/特别行政区"等行政区划后缀，便于与地图 geo 数据的省份名对齐。
   const normalizeProvinceName = (raw: string) =>
     raw
@@ -857,7 +861,7 @@ export function SecurityDashboard() {
           </section>
 
           <Panel title="网络安全考评" tone="accent" className="order-4 flex h-full min-h-0 w-full flex-col lg:row-start-2 lg:col-start-2" bodyClassName="flex min-h-0 flex-1 flex-col overflow-hidden p-2">
-            <AssessmentBars data={filteredBranches.map((row) => ({
+            <AssessmentBars selectedInstitutionType={selectedInstitutionType} data={filteredBranches.map((row) => ({
               ...row,
               name: row.branchName,
               value: Number(row.annualTotalScore ?? 0),
