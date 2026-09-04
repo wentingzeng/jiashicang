@@ -1046,7 +1046,7 @@ export function BranchDashboard() {
               </PanelCard>
 
               <div className="order-2 col-start-2 row-start-1 row-span-2 grid min-w-0 items-stretch gap-2 grid-cols-2 max-md:grid-cols-1 md:[&>*]:min-w-0">
-                  <PanelCard className="h-[248px] cursor-pointer overflow-hidden" bodyClassName="p-2" title="信创改造" icon={<ShieldCheck className="size-4" />} onClick={() => setInnovationRanking((value) => !value)}>
+                  <PanelCard className="order-2 h-[248px] cursor-pointer overflow-hidden" bodyClassName="p-2" title="信创改造" icon={<ShieldCheck className="size-4" />} onClick={() => setInnovationRanking((value) => !value)}>
                     <button type="button" onClick={(event) => { event.stopPropagation(); setInnovationRanking((value) => !value) }} className="w-full text-left" aria-label="切换信创改���完成度排行">
                     {innovationRanking ? <div className="max-h-[166px] overflow-y-auto overflow-x-hidden overscroll-contain grid gap-2 py-1 [WebkitOverflowScrolling:touch]">{innovationRows.map(({ name, count }, index) => <div key={name} className="grid grid-cols-[1.2fr_1fr_auto] items-center gap-2 text-sm"><span>{String(index + 1).padStart(2, "0")} {name}</span><span className="h-2 rounded-full bg-gradient-to-r from-accent to-primary" style={{ width: `${Math.max(20, Number(count) / Math.max(innovationRows[0]?.count ?? 1, 1) * 100)}%` }} /><strong className="font-mono text-primary">{count}</strong></div>)}</div> : <div className="flex items-center justify-between gap-2.5">
                       <div className="flex flex-1 items-center justify-center">
@@ -1081,23 +1081,23 @@ export function BranchDashboard() {
                     <div className="mt-1 text-center text-sm text-slate-500">单击可查看信创改造完成度排序十名。</div></>}
                   </PanelCard>
 
-                  <PanelCard className="h-[248px] overflow-hidden" bodyClassName="p-2.5" title="系统上云" icon={<Cloud className="size-4" />} onClick={() => setCloudRanking((value) => !value)}>
+                  <PanelCard className="order-4 h-[248px] overflow-hidden" bodyClassName="p-2.5" title="系统上云" icon={<Cloud className="size-4" />} onClick={() => setCloudRanking((value) => !value)}>
                     <button type="button" onClick={(event) => { event.stopPropagation(); setCloudRanking((value) => !value) }} className="w-full text-left" aria-label="切�����上云系统前十名">
                     {cloudRanking ? <div className="max-h-[166px] overflow-y-auto overflow-x-hidden overscroll-contain grid gap-2 py-1 [WebkitOverflowScrolling:touch]">{cloudRows.map(({ name, count }, index) => <div key={name} className="grid grid-cols-[1.2fr_1fr_auto] items-center gap-2 text-sm"><span>{String(index + 1).padStart(2, "0")} {name}</span><span className="h-2 rounded-full bg-gradient-to-r from-accent to-primary" style={{ width: `${Math.max(20, Number(count) / Math.max(cloudRows[0]?.count ?? 1, 1) * 100)}%` }} /><strong className="font-mono text-primary">{count}</strong></div>)}</div> : <div className="flex flex-col items-center gap-1.5">
                       <CloudCircle value={current.cloud.value} />
                       <div className="text-center text-sm text-muted-foreground">单击可查看上云系统前十名。</div></div>}
                     </button>
                   </PanelCard>
-                  <PanelCard className="h-[248px] overflow-hidden" bodyClassName="p-3" title="项目信息报备" icon={<ClipboardList className="size-4" />}>
+                  <PanelCard className="order-1 h-[248px] overflow-hidden" bodyClassName="p-3" title="项目信息报备" icon={<ClipboardList className="size-4" />}>
                     <div className="flex h-full flex-col justify-center gap-2 rounded-lg border border-primary/10 bg-primary/[0.035] p-2.5">{[["规划报备项目总数", 28], ["在建项目数", 16], ["成果报备项目数", 9]].map(([label, value], index) => <div key={label as string} className="grid min-h-0 flex-1 grid-cols-[minmax(0,1fr)_4.75rem] items-center gap-1 rounded-lg border border-border/50 bg-card/70 px-2.5 py-2.5"><div className="flex min-w-0 items-center gap-1.5"><span className="flex size-6 shrink-0 items-center justify-center rounded-full bg-primary/10 font-mono text-xs font-bold text-primary">{index + 1}</span><span className="min-w-0 whitespace-normal break-keep text-[11px] font-medium leading-5 text-foreground/85">{label}</span></div><strong className="shrink-0 whitespace-nowrap text-right font-mono text-xl font-bold leading-none text-primary">{value}<span className="ml-1 text-xs font-normal text-muted-foreground">项</span></strong></div>)}</div>
                   </PanelCard>
-                  <PanelCard className="h-[248px] overflow-hidden" bodyClassName="p-3" title="科技风险数据" icon={<ShieldAlert className="size-4" />}>
+                  <PanelCard className="order-3 h-[248px] overflow-hidden" bodyClassName="p-3" title="科技风险" icon={<ShieldAlert className="size-4" />}>
                     <div className="flex h-full min-h-0 flex-col gap-2"><div className="grid grid-cols-2 gap-2"><div className="flex min-w-0 items-center justify-between gap-1 rounded-lg bg-primary/[0.05] px-2 py-1.5"><span className="whitespace-nowrap text-[11px] text-muted-foreground">发现问题：</span><strong className="shrink-0 font-mono text-sm text-primary">23</strong></div><div className="flex min-w-0 items-center justify-between gap-1 rounded-lg bg-primary/[0.05] px-2 py-1.5"><span className="whitespace-nowrap text-[11px] text-muted-foreground">问题整改率：</span><strong className="shrink-0 font-mono text-sm text-primary">87%</strong></div></div><div className="min-h-0 flex-1 overflow-y-scroll overscroll-contain pr-1 [scrollbar-gutter:stable] [scrollbar-width:thin]"><div className="mb-1 text-xs font-semibold text-foreground">问题分类</div><div className="min-h-[210px]">{[["网络安全", 8], ["系统运维", 6], ["数据管理", 5], ["项目管理", 4], ["科技合规", 3], ["其他问题", 2]].map(([label, value], index) => <div key={label as string} className="flex items-center justify-between border-b border-border/40 py-1.5 text-xs last:border-0"><span><span className="mr-1 font-mono text-muted-foreground">{index + 1}</span>{label}</span><strong className="font-mono text-primary">{value}</strong></div>)}</div></div></div>
                   </PanelCard>
               </div>
 
               <div className="order-1 min-w-0 lg:col-start-1 lg:row-start-1 lg:row-span-2 grid gap-3">
-              <PanelCard className="h-[248px] min-w-0 cursor-pointer max-md:h-auto max-md:overflow-visible" bodyClassName="min-w-0 p-1.5 max-md:overflow-visible" title="科技人员数量" icon={<UsersRound className="size-4" />} onClick={() => setPersonnelDetails((value) => !value)}>
+              <PanelCard className="order-2 h-[248px] min-w-0 cursor-pointer max-md:h-auto max-md:overflow-visible" bodyClassName="min-w-0 p-1.5 max-md:overflow-visible" title="科技人员数量" icon={<UsersRound className="size-4" />} onClick={() => setPersonnelDetails((value) => !value)}>
                   <div className="flex min-w-0 -translate-y-1 flex-col gap-1">
                     {!personnelDetails && <div className="grid min-h-0 grid-cols-1 gap-1 px-1">
   <div className="flex items-center justify-between rounded-lg border border-primary/10 bg-primary/5 px-2 py-1"><span className="whitespace-nowrap text-xs font-medium text-foreground">科技人员数量：</span><span className="font-mono text-lg font-bold text-primary">{current.personnelTotal} 人</span></div>
@@ -1155,7 +1155,7 @@ export function BranchDashboard() {
                       </div></div>}
                   </div>
                 </PanelCard>
-                <PanelCard className="h-[248px] min-w-0 overflow-hidden" bodyClassName="p-2.5" title="考评类别排名趋势" icon={<Gauge className="size-4" />}>
+                <PanelCard className="order-1 h-[248px] min-w-0 overflow-hidden" bodyClassName="p-2.5" title="历年考评趋势图" icon={<Gauge className="size-4" />}>
                   <div className="h-[190px] min-h-0 w-full">
                   <ResponsiveContainer width="100%" height="100%" minWidth={1} minHeight={1}>
                     <LineChart data={[{ year: "2023年", digital: 5, management: 4, security: 2, data: 8 }, { year: "2024年", digital: 3, management: 5, security: 2, data: 6 }, { year: "2025年", digital: 2, management: 3, security: 1, data: 4 }]} margin={{ top: 0, right: 8, left: -18, bottom: 0 }}>
