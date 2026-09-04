@@ -321,7 +321,7 @@ function AssessmentBars({ data }: { data: { name: string; value: number; [key: s
             <span className="text-sm font-semibold text-foreground">{selected.name} · 各项得分</span>
             <button type="button" onClick={() => setSelectedBranch(null)} className="rounded-md border border-primary/20 bg-card px-2 py-1 text-[10px] font-medium text-primary">返回考评</button>
           </div>
-          <CompactDetailTable height={180} className="rounded-xl bg-card/90 text-[11px] shadow-md" headers={["考评项目", "得分"]} rows={[["压实网络安全责任", selected.responsibilityScore.toFixed(2)], ["网络安全重要通知和工作部署落实情况及个人信息保护", selected.notificationScore.toFixed(2)], ["及时发现及整改网络安全风险隐患", selected.riskScore.toFixed(2)], ["研发安全", selected.developmentScore.toFixed(2)], ["总分行一体化安全运营落实情况", selected.integratedScore.toFixed(2)], ["分行网络安全工作亮点、集团贡献情况", selected.highlightsScore.toFixed(2)], ["其他扣分项", selected.deductionsScore.toFixed(2)], ["网络安全全年合计总分", selected.totalScore.toFixed(2)]]} />
+          <CompactDetailTable height={430} className="rounded-xl bg-card/90 text-[11px] shadow-md" headers={["考评项目", "得分"]} rows={[["压实网络安全责任", selected.responsibilityScore.toFixed(2)], ["网络安全重要通知和工作部署落实情况及个人信息保护", selected.notificationScore.toFixed(2)], ["及时发现及整改网络安全风险隐患", selected.riskScore.toFixed(2)], ["研发安全", selected.developmentScore.toFixed(2)], ["总分行一体化安全运营落实情况", selected.integratedScore.toFixed(2)], ["分行网络安全工作亮点、集团贡献情况", selected.highlightsScore.toFixed(2)], ["其他扣分项", selected.deductionsScore.toFixed(2)], ["网络安全全年合计总分", selected.totalScore.toFixed(2)]]} />
         </div>
       ) : details ? (
         <div className="min-h-0 flex-1 overflow-y-auto overscroll-contain rounded-xl border border-border/50 bg-card shadow-md">
@@ -488,7 +488,7 @@ function ChinaSecurityMap({ data, selectedInstitutionType, fujianCityScores, ass
         <div className="mb-1.5 flex items-center justify-between text-[10px] font-medium text-foreground"><span>全年合计得分</span><span className="font-mono text-primary">≤ {scoreThreshold.toFixed(1)}</span></div>
         <div className="relative h-4">
           <div className="absolute inset-x-0 top-1.5 h-2 rounded-full bg-gradient-to-r from-[hsl(204_58%_77%)] via-[hsl(204_58%_58%)] to-[hsl(204_58%_32%)]" aria-hidden="true" />
-          <input aria-label="调整地图��示的最��分数" type="range" min={minScore} max={maxScore} step="0.1" value={scoreThreshold} onChange={(event) => setScoreThreshold(Number(event.target.value))} className="absolute inset-0 h-4 w-full cursor-pointer appearance-none bg-transparent accent-primary" />
+          <input aria-label="调整地图���示的最��分数" type="range" min={minScore} max={maxScore} step="0.1" value={scoreThreshold} onChange={(event) => setScoreThreshold(Number(event.target.value))} className="absolute inset-0 h-4 w-full cursor-pointer appearance-none bg-transparent accent-primary" />
         </div>
         <div className="mt-1 flex items-center justify-between font-mono text-[9px] text-muted-foreground"><span>最低分 {minScore.toFixed(2)}</span><span>最高分 {maxScore.toFixed(2)}</span></div>
       </div>
