@@ -1112,7 +1112,7 @@ export function BranchDashboard() {
   />
   ))}
   </div>
-  <div className="pt-0 text-center text-xs leading-4 text-muted-foreground">点击查看详情</div>
+  <div className="pt-0 text-center text-xs leading-4 text-muted-foreground">点击查看详情 · 分行基准人数：9 人</div>
                     </div>}
 
 {personnelDetails && <div className="min-w-0 overflow-hidden rounded-[12px] border border-border/80 bg-card/80 shadow-[inset_0_1px_0_oklch(0.72_0.15_220/6%)]">
