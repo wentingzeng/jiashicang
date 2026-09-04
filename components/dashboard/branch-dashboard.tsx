@@ -1,7 +1,7 @@
 "use client"
 
 import { useEffect, useState, type ReactNode } from "react"
-import { ArrowUpRight, ChevronDown, Cloud, Gauge, ShieldCheck, UsersRound } from "lucide-react"
+import { ArrowUpRight, ChevronDown, Cloud, Gauge, ShieldAlert, ShieldCheck, ClipboardList, UsersRound } from "lucide-react"
 import { Bar, BarChart, CartesianGrid, Legend, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts"
 
 import { Badge } from "@/components/ui/badge"
@@ -1045,7 +1045,7 @@ export function BranchDashboard() {
                 </div>
               </PanelCard>
 
-              <div className="order-2 col-start-2 row-start-1 row-span-2 grid h-[248px] min-w-0 items-stretch gap-2 grid-cols-2 max-md:h-auto max-md:grid-cols-1 md:[&>*]:min-w-0">
+              <div className="order-2 col-start-2 row-start-1 row-span-2 grid min-w-0 items-stretch gap-2 grid-cols-2 max-md:grid-cols-1 md:[&>*]:min-w-0">
                   <PanelCard className="h-[248px] cursor-pointer overflow-hidden" bodyClassName="p-2" title="信创改造" icon={<ShieldCheck className="size-4" />} onClick={() => setInnovationRanking((value) => !value)}>
                     <button type="button" onClick={(event) => { event.stopPropagation(); setInnovationRanking((value) => !value) }} className="w-full text-left" aria-label="切换信创改���完成度排行">
                     {innovationRanking ? <div className="max-h-[166px] overflow-y-auto overflow-x-hidden overscroll-contain grid gap-2 py-1 [WebkitOverflowScrolling:touch]">{innovationRows.map(({ name, count }, index) => <div key={name} className="grid grid-cols-[1.2fr_1fr_auto] items-center gap-2 text-sm"><span>{String(index + 1).padStart(2, "0")} {name}</span><span className="h-2 rounded-full bg-gradient-to-r from-accent to-primary" style={{ width: `${Math.max(20, Number(count) / Math.max(innovationRows[0]?.count ?? 1, 1) * 100)}%` }} /><strong className="font-mono text-primary">{count}</strong></div>)}</div> : <div className="flex items-center justify-between gap-2.5">
@@ -1088,12 +1088,18 @@ export function BranchDashboard() {
                       <div className="text-center text-sm text-muted-foreground">单击可查看上云系统前十名。</div></div>}
                     </button>
                   </PanelCard>
+                  <PanelCard className="h-[248px] overflow-hidden" bodyClassName="p-3" title="项目信息报备" icon={<ClipboardList className="size-4" />}>
+                    <div className="grid h-full grid-rows-3 gap-2">{[["规划报备项目总数", 28], ["在建项目数", 16], ["成果报备项目数", 9]].map(([label, value]) => <div key={label as string} className="flex items-center justify-between rounded-lg bg-primary/[0.05] px-3"><span className="text-sm text-foreground/80">{label}</span><strong className="font-mono text-xl text-primary">{value}</strong></div>)}</div>
+                  </PanelCard>
+                  <PanelCard className="h-[248px] overflow-hidden" bodyClassName="p-3" title="科技风险数据" icon={<ShieldAlert className="size-4" />}>
+                    <div className="flex h-full min-h-0 flex-col gap-2"><div className="grid grid-cols-2 gap-2"><div className="rounded-lg bg-primary/[0.05] p-2"><div className="text-xs text-muted-foreground">发现问题</div><strong className="font-mono text-xl text-primary">23</strong></div><div className="rounded-lg bg-primary/[0.05] p-2"><div className="text-xs text-muted-foreground">问题整改率</div><strong className="font-mono text-xl text-primary">87%</strong></div></div><div className="min-h-0 flex-1 overflow-y-auto overscroll-contain pr-1 [scrollbar-width:thin]"><div className="mb-1 text-xs font-semibold text-foreground">问题分类</div>{[["网络安全", 8], ["系统运维", 6], ["数据管理", 5], ["项目管理", 4], ["科技合规", 3], ["其他问题", 2]].map(([label, value], index) => <div key={label as string} className="flex items-center justify-between border-b border-border/40 py-1.5 text-xs last:border-0"><span><span className="mr-1 font-mono text-muted-foreground">{index + 1}</span>{label}</span><strong className="font-mono text-primary">{value}</strong></div>)}</div></div>
+                  </PanelCard>
               </div>
 
               <PanelCard className="order-1 col-start-1 row-start-1 max-md:col-start-1 max-md:row-start-auto h-[248px] min-w-0 cursor-pointer max-md:h-auto max-md:overflow-visible" bodyClassName="min-w-0 p-1.5 max-md:overflow-visible" title="科技人员数量" icon={<UsersRound className="size-4" />} onClick={() => setPersonnelDetails((value) => !value)}>
                   <div className="grid min-w-0 gap-2">
                     {!personnelDetails && <div className="grid h-[176px] min-h-0 max-h-[176px] gap-1.5 overflow-x-hidden overflow-y-scroll overscroll-contain rounded-[10px] border border-border/80 bg-card/80 px-2.5 py-2 pb-3 shadow-[inset_0_1px_0_oklch(0.72_0.15_220/6%)] [scrollbar-gutter:stable] [scrollbar-width:thin]">
-  <div className="flex items-baseline justify-between rounded-lg border border-primary/10 bg-primary/5 px-3 py-2"><span className="text-sm font-medium text-foreground">科技人员数量：</span><span className="font-mono text-xl font-bold text-primary">{current.personnelTotal} 人</span></div>
+  <div className="flex items-baseline justify-between rounded-lg border border-primary/10 bg-primary/5 px-3 py-2"><span className="text-sm font-medium text-foreground">科技人��数量：</span><span className="font-mono text-xl font-bold text-primary">{current.personnelTotal} 人</span></div>
   <div className="grid grid-cols-1 gap-1 sm:grid-cols-2">
   {completePersonnelRoles(current).map((role) => (
   <RoleBar
