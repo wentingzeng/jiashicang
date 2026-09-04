@@ -1047,7 +1047,7 @@ export function BranchDashboard() {
 
               <div className="order-2 col-start-2 row-start-1 row-span-2 grid h-[248px] min-w-0 items-stretch gap-2 grid-cols-2 max-md:h-auto max-md:grid-cols-1 md:[&>*]:min-w-0">
                   <PanelCard className="h-[248px] cursor-pointer overflow-hidden" bodyClassName="p-2" title="信创改造" icon={<ShieldCheck className="size-4" />} onClick={() => setInnovationRanking((value) => !value)}>
-                    <button type="button" onClick={(event) => { event.stopPropagation(); setInnovationRanking((value) => !value) }} className="w-full text-left" aria-label="切换信创改���完成度排行">
+                    <button type="button" onClick={(event) => { event.stopPropagation(); setInnovationRanking((value) => !value) }} className="block h-[194px] max-h-[194px] w-full overflow-y-auto overflow-x-hidden overscroll-contain pr-1 text-left [WebkitOverflowScrolling:touch] [scrollbar-gutter:stable] [scrollbar-width:thin]" aria-label="切换信创改���完成度排行">
                     {innovationRanking ? <div className="max-h-[160px] overflow-y-auto overflow-x-hidden overscroll-contain py-1 [WebkitOverflowScrolling:touch]">
                       <ResponsiveContainer width="100%" height={160} minWidth={1} minHeight={1}>
                         <ComposedChart data={innovationRows} margin={{ top: 20, right: 8, left: -18, bottom: 8 }}>
