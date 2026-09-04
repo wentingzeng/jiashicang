@@ -788,7 +788,7 @@ function TechLevelPanel({ rows, selectedKey, onSelect }: { rows: Array<{ key: st
                 />
               ))}
               {activeDim === null ? (
-                <text x="110" y="94" textAnchor="middle" className="fill-muted-foreground text-[8px]">点击指标查看分值</text>
+                <text x="140" y="94" textAnchor="middle" className="fill-muted-foreground text-[8px]">点击指标查看分值</text>
               ) : (
                 <>
                   <text x="140" y="84" textAnchor="middle" className="fill-primary font-mono text-[20px] font-bold">{points[activeDim]}</text>
