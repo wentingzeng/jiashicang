@@ -834,6 +834,8 @@ export function BranchDashboard() {
   const [innovationRanking, setInnovationRanking] = useState(false)
   const [cloudRanking, setCloudRanking] = useState(false)
   const [personnelDetails, setPersonnelDetails] = useState(false)
+  const [personnelPage, setPersonnelPage] = useState(1)
+  const personnelPageSize = 6
   const [techSelectedKey, setTechSelectedKey] = useState("all")
   const [dashboardApiData, setDashboardApiData] = useState<DashboardApiResponse | null>(null)
   const [dashboardApiRows, setDashboardApiRows] = useState<BranchApiRow[]>([])
@@ -1102,7 +1104,7 @@ export function BranchDashboard() {
                   </PanelCard>
               </div>
 
-              <PanelCard className="order-1 col-start-1 row-start-1 max-md:col-start-1 max-md:row-start-auto h-[248px] min-w-0 cursor-pointer max-md:h-auto max-md:overflow-visible" bodyClassName="min-w-0 p-1.5 max-md:overflow-visible" title="科技人员数量" icon={<UsersRound className="size-4" />} onClick={() => setPersonnelDetails((value) => !value)}>
+              <PanelCard className="order-1 col-start-1 row-start-1 max-md:col-start-1 max-md:row-start-auto h-[248px] min-w-0 cursor-pointer max-md:h-auto max-md:overflow-visible" bodyClassName="min-w-0 p-1.5 max-md:overflow-visible" title="科技人员数量" icon={<UsersRound className="size-4" />} onClick={() => { setPersonnelPage(1); setPersonnelDetails((value) => !value) }}>
                   <div className="grid min-w-0 gap-2">
                     {!personnelDetails && <div className="grid max-h-[190px] gap-2 overflow-y-auto overscroll-contain rounded-[10px] border border-border/80 bg-card/80 px-3 py-3 shadow-[inset_0_1px_0_oklch(0.72_0.15_220/6%)] [scrollbar-gutter:stable] [scrollbar-width:thin]">
   <div className="flex items-baseline justify-between rounded-lg border border-primary/10 bg-primary/5 px-3 py-2"><span className="text-sm font-medium text-foreground">科技人员数量：</span><span className="font-mono text-xl font-bold text-primary">{current.personnelTotal} 人</span></div>
@@ -1138,7 +1140,7 @@ export function BranchDashboard() {
                             </TableRow>
                           </TableHeader>
                           <TableBody>
-                            {personnelRows.map((row, index) => (
+                            {personnelRows.slice((personnelPage - 1) * personnelPageSize, personnelPage * personnelPageSize).map((row, index) => (
                               <TableRow key={row.name} className={cn("border-border/60 hover:bg-primary/5", index % 2 === 1 && "bg-primary/3")}>
                                 <TableCell className="px-1.5 py-1.5 font-medium text-sm text-foreground/90">{row.name}</TableCell>
                                 <TableCell className="px-1.5 py-1.5 text-center font-mono text-foreground/80">{row.development}</TableCell>
@@ -1157,6 +1159,7 @@ export function BranchDashboard() {
                           </TableBody>
                         </Table>
                       </div>
+                      <div className="flex items-center justify-between border-t border-border/60 px-3 py-1.5 text-xs text-muted-foreground"><span>每页显示 6 条分行数据</span><div className="flex items-center gap-1.5" onClick={(event) => event.stopPropagation()}>{Array.from({ length: Math.max(1, Math.ceil(personnelRows.length / personnelPageSize)) }, (_, index) => index + 1).map((page) => <button key={page} type="button" aria-label={`第 ${page} 页`} onClick={() => setPersonnelPage(page)} className={cn("inline-flex size-6 items-center justify-center rounded-md font-semibold", personnelPage === page ? "bg-primary text-primary-foreground" : "bg-muted text-muted-foreground hover:bg-primary/10")}>{page}</button>)}</div></div>
                       </div>}
                   </div>
                 </PanelCard>
