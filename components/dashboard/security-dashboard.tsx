@@ -278,9 +278,6 @@ function CapabilityBars({ data, label, selectedInstitutionType }: { data: { name
   const renderBar = (item: typeof metrics[number]) => <button key={item.name} type="button" onClick={() => setSelectedBranch(item.name)} className="grid w-full grid-cols-[72px_1fr_42px] items-center gap-2 text-left text-[10px] hover:bg-primary/5"><span className="truncate text-muted-foreground">{item.name.replace("分行", "")}</span><span className="h-3 overflow-hidden rounded-full bg-primary/10"><span className="block h-full rounded-full bg-gradient-to-r from-[#4ba8d8] to-[#42bdb7]" style={{ width: `${item.value}%` }} /></span><span className="text-right font-mono tabular-nums text-foreground">{item.value.toFixed(2)}</span></button>
     return <div className="flex h-full min-h-0 flex-col rounded-lg border border-border/50 bg-background/20 p-3"><div className="mb-3 flex items-center justify-between text-xs text-muted-foreground"><span className="text-sm font-medium text-foreground/80">{label}</span>{selectedBranch ? <span>点击分行查看各项得分</span> : <button type="button" onClick={() => setShowAll(!showAll)} className="text-sm font-medium text-primary transition-colors hover:underline">{showAll ? "" : "点击查看全部分行"}</button>}</div>{selectedBranch ? <div className="flex min-h-0 flex-1 flex-col overflow-hidden"><div className="mb-2 flex shrink-0 items-center justify-between rounded-lg border border-primary/15 bg-primary/5 px-3 py-2"><span className="text-xs font-semibold text-foreground">{selectedBranch} · 各项得分</span><button type="button" onClick={() => { setSelectedBranch(null); setShowAll(true) }} className="rounded-md border border-primary/20 bg-card px-2 py-1 text-[10px] font-medium text-primary transition-colors hover:bg-primary/10">返回总览</button></div><div className="min-h-0 flex-1 overflow-y-auto overscroll-contain rounded-xl"><CompactDetailTable height={620} className="rounded-xl bg-card/90 text-[11px] shadow-md" headers={["指标", "得分"]} rows={(() => { const item = metrics.find((entry) => entry.name === selectedBranch); return item ? [["网络安全综合能力总分", item.value.toFixed(2)], ["安全资源保障能力", item.responsibility.toFixed(2)], ["网络安全考评", item.notification.toFixed(2)], ["网络安全检查", item.risk.toFixed(2)], ["员工安全管理能力", item.research.toFixed(2)], ["个人信息保护能力", item.integrated.toFixed(2)], ["安全创新能力（加分项）", item.highlights.toFixed(2)], ["安全事件（扣分项）", item.deductions.toFixed(2)]] : []})()} /></div></div> : <div className="flex h-full min-h-0 flex-1 flex-col overflow-hidden">{showAll ? <div className="flex h-full min-h-0 flex-1 flex-col overflow-hidden"><div className="mb-1 shrink-0 text-[10px] text-muted-foreground">全部分行综合能力</div><div className="min-h-0 flex-1 overflow-y-auto overscroll-contain pr-1">{rankedMetrics.map((item, index) => <button key={item.name} type="button" onClick={() => setSelectedBranch(item.name)} className="grid w-full grid-cols-[20px_72px_1fr_42px] items-center gap-2 py-2.5 text-left text-[11px] hover:bg-primary/5"><span className="font-mono text-muted-foreground">{String(index + 1).padStart(2, "0")}</span><span className="truncate text-foreground/80">{item.name.replace("分行", "")}</span><span className="h-2 overflow-hidden rounded-full bg-primary/10"><span className="block h-full rounded-full bg-gradient-to-r from-[#4ba8d8] to-[#42bdb7]" style={{ width: `${item.value}%` }} /></span><strong className="text-right font-mono tabular-nums text-foreground">{item.value.toFixed(2)}</strong></button>)}</div></div> : <div className="space-y-2">
 <div><div className="mb-1 text-sm font-bold tracking-wide text-primary">前三名：</div><div className="space-y-1.5">{topMetrics.map(renderBar)}</div></div><div><div className="mb-1 text-sm font-bold tracking-wide text-primary">后三名：</div><div className="space-y-1.5">{bottomMetrics.map(renderBar)}</div></div></div>}</div>} </div>
-/* legacy chart body removed */
-/*<span><i className="mr-1 inline-block size-2 rounded-sm bg-[#42bdb7]" />责任落实</span><span><i className="mr-1 inline-block size-2 rounded-sm bg-[#e5b45c]" />通知部署</span><span><i className="mr-1 inline-block size-2 rounded-sm bg-[#8494d8]" />隐患整改</span></div><ResponsiveContainer width="100%" height={230}><BarChart data={metrics} margin={{ top: 8, right: 4, left: -18, bottom: 8 }}><CartesianGrid vertical={false} strokeDasharray="3 3" /><XAxis dataKey="name" tick={{ fontSize: 9 }} tickFormatter={(value) => value.replace("分行", "")} interval={0} /><YAxis domain={[0, 100]} tick={{ fontSize: 9 }} /><Tooltip content={({ active, payload, label }) => active && payload?.length ? <div className="rounded-lg border border-border/50 bg-card/95 px-2 py-1.5 text-[9px] shadow-md"><div className="mb-1 font-medium text-foreground">{label}</div>{payload.map((entry) => <div key={String(entry.dataKey)} className="flex items-center justify-between gap-3 leading-4"><span className="max-w-44 truncate text-muted-foreground">{entry.name}</span><strong className="font-mono text-foreground">{Number(entry.value).toFixed(1)}</strong></div>)}</div> : null} /><Bar dataKey="value" name="全年合计得分" fill="#4ba8d8" radius={[3, 3, 0, 0]} /><Bar dataKey="responsibility" name="压����压实网络安全责任" fill="#42bdb7" radius={[3, 3, 0, 0]} /><Bar dataKey="notification" name="重要通知和工作部署落实情况及个人信�����保护" fill="#e5b45c" radius={[3, 3, 0, 0]} /><Bar dataKey="risk" name="及���发现及整改网络安全风险隐患" fill="#8494d8" radius={[3, 3, 0, 0]} /></BarChart></ResponsiveContainer></>}</div>
-*/
 }
 
 function CategoryBars({ data, label, color = "#42bdb7" }: { data: { name: string; value: number }[]; label: string; color?: string }) {
@@ -340,7 +337,7 @@ function AssessmentBars({ data, selectedInstitutionType }: { data: { name: strin
   )
 }
 
-// 城市/分行名��� -> 省级行政区映射，覆盖全国主要城市，确保每个分行都能在地图上正确着色。
+// 城市/分行名称 -> 省级行政区映射，覆盖全国主要城市，确保每个分行都能在地图上正确着色。
 const CITY_TO_PROVINCE: Record<string, string> = {
   北京: "北京",
   天津: "天津",
@@ -369,7 +366,7 @@ const CITY_TO_PROVINCE: Record<string, string> = {
   泉州: "福建",
   南昌: "江西",
   济南: "山东",
-  青岛: "山��",
+  青岛: "山东",
   烟台: "山东",
   郑州: "河南",
   洛阳: "河南",
@@ -388,7 +385,7 @@ const CITY_TO_PROVINCE: Record<string, string> = {
   成都: "四川",
   绵阳: "四川",
   贵阳: "贵州",
-  昆明: "��南",
+  昆明: "云南",
   拉萨: "西藏",
   西安: "陕西",
   兰州: "甘肃",
@@ -416,7 +413,7 @@ function ChinaSecurityMap({ data, selectedInstitutionType, fujianCityScores, ass
     setSelectedProvince(selectedInstitutionType === "全部机构" ? "" : provinceForBranch(selectedInstitutionType))
     setScoreThreshold(Math.max(...data.map((item) => item.value), 0))
   }, [selectedInstitutionType, data])
-  const normalizeRegion = (name: string) => name.replace(/(省|市|自治区|特别��政区)$/u, "").replace(/(壮族|回族|维吾尔)$/u, "")
+  const normalizeRegion = (name: string) => name.replace(/(省|市|自治区|特别行政区)$/u, "").replace(/(壮族|回族|维吾尔)$/u, "")
   useEffect(() => {
     const selectedRegion = normalizeRegion(provinceForBranch(selectedInstitutionType))
     const shouldShowFujian = selectedInstitutionType !== "全部机构" && selectedRegion === "福建"
@@ -452,7 +449,7 @@ function ChinaSecurityMap({ data, selectedInstitutionType, fujianCityScores, ass
               const regionItem = isFujianDetail ? fujianCityScores.find((item) => normalizeRegion(item.name) === normalizeRegion(province)) : data.find((item) => normalizeRegion(provinceForBranch(item.name)) === normalizeRegion(province))
 
               const provinceItem = regionItem
-              const selected = selectedProvince === province || (selectedInstitutionType !== "���部机构" && normalizeRegion(province) === normalizeRegion(provinceForBranch(selectedInstitutionType)))
+              const selected = selectedProvince === province || (selectedInstitutionType !== "全部机构" && normalizeRegion(province) === normalizeRegion(provinceForBranch(selectedInstitutionType)))
 
               return (
                 <Geography
@@ -461,7 +458,7 @@ function ChinaSecurityMap({ data, selectedInstitutionType, fujianCityScores, ass
                   onClick={() => {
                     if (isFujianDetail) {
                       setSelectedProvince(province)
-                    } else if (normalizeRegion(province) === "���建") {
+                    } else if (normalizeRegion(province) === "福建") {
                       setIsFujianDetail(true)
                       setSelectedProvince("福建省")
                       onDrillChange?.(true)
@@ -500,7 +497,7 @@ function ChinaSecurityMap({ data, selectedInstitutionType, fujianCityScores, ass
         <div className="mb-1.5 flex items-center justify-between text-[10px] font-medium text-foreground"><span>全年合计得分</span><span className="font-mono text-primary">≤ {scoreThreshold.toFixed(1)}</span></div>
         <div className="relative h-4">
           <div className="absolute inset-x-0 top-1.5 h-2 rounded-full bg-gradient-to-r from-[hsl(204_58%_77%)] via-[hsl(204_58%_58%)] to-[hsl(204_58%_32%)]" aria-hidden="true" />
-          <input aria-label="调整地图����示的最��分数" type="range" min={minScore} max={maxScore} step="0.1" value={scoreThreshold} onChange={(event) => setScoreThreshold(Number(event.target.value))} className="absolute inset-0 h-4 w-full cursor-pointer appearance-none bg-transparent accent-primary" />
+          <input aria-label="调整地图展示的最高分数" type="range" min={minScore} max={maxScore} step="0.1" value={scoreThreshold} onChange={(event) => setScoreThreshold(Number(event.target.value))} className="absolute inset-0 h-4 w-full cursor-pointer appearance-none bg-transparent accent-primary" />
         </div>
         <div className="mt-1 flex items-center justify-between font-mono text-[9px] text-muted-foreground"><span>最低分 {minScore.toFixed(2)}</span><span>最高分 {maxScore.toFixed(2)}</span></div>
       </div>
@@ -570,7 +567,7 @@ function ChinaSecurityMap({ data, selectedInstitutionType, fujianCityScores, ass
             [119.17823197590195, 16.265658015720753],
           ],
         ]
-        // 每一段本身即为互不相连的独立短笔画（刻度线），��取首尾两点绘制一条直线
+        // 每一段本身即为互不相连的独立短笔画（刻度线），取首尾两点绘制一条直线
         const dashSegments = nineDashSegments.map((seg) => {
           const [sLon, sLat] = seg[0]
           const [eLon, eLat] = seg[seg.length - 1]
@@ -579,14 +576,14 @@ function ChinaSecurityMap({ data, selectedInstitutionType, fujianCityScores, ass
           return { sx, sy, ex, ey }
         })
         const islandGroups: [number, number][] = [
-          // 东沙群��
+          // 东沙群岛
           [116.72, 20.7],
           // 西沙群岛
           [112.33, 16.83],
           [111.6, 16.5],
           [112.0, 16.05],
           [111.2, 17.1],
-          // 中��群岛���含黄岩岛）
+          // 中沙群岛（含黄岩岛）
           [114.0, 15.5],
           [113.6, 15.0],
           [117.8, 15.4],
@@ -695,7 +692,7 @@ export function SecurityDashboard() {
     ? capabilityDetails.map((row) => ({ ...row, name: row.branchName, value: Number(row.totalScore ?? 0), branchLevel: row.category }))
     : toCapabilityData(branches)
   const filteredCapability = selectedInstitutionType === "全部机构" ? capabilityRows : capabilityRows.filter((row) => row.name === selectedInstitutionType)
-  const normalizeBranchName = (name: string) => name.replace(/���行$/u, "")
+  const normalizeBranchName = (name: string) => name.replace(/分行$/u, "")
   // 省份归一化：去掉"省/市/自治区/特别行政区"等行政区划后缀，便于与地图 geo 数据的省份名对齐。
   const normalizeProvinceName = (raw: string) =>
     raw
