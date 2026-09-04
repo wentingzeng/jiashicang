@@ -1046,7 +1046,7 @@ export function BranchDashboard() {
               </PanelCard>
 
               <div className="order-2 col-start-2 row-start-1 row-span-2 grid h-[248px] min-w-0 items-stretch gap-2 grid-cols-2 max-md:h-auto max-md:grid-cols-1 md:[&>*]:min-w-0">
-                  <PanelCard className="h-[248px] cursor-pointer overflow-hidden" bodyClassName="p-2.5" title="信创改造" icon={<ShieldCheck className="size-4" />} onClick={() => setInnovationRanking((value) => !value)}>
+                  <PanelCard className="h-[248px] cursor-pointer overflow-hidden" bodyClassName="p-2" title="信创改造" icon={<ShieldCheck className="size-4" />} onClick={() => setInnovationRanking((value) => !value)}>
                     <button type="button" onClick={(event) => { event.stopPropagation(); setInnovationRanking((value) => !value) }} className="w-full text-left" aria-label="切换信创改���完成度排行">
                     {innovationRanking ? <div className="max-h-[160px] overflow-y-auto overflow-x-hidden overscroll-contain py-1 [WebkitOverflowScrolling:touch]">
                       <ResponsiveContainer width="100%" height={160} minWidth={1} minHeight={1}>
@@ -1106,9 +1106,9 @@ export function BranchDashboard() {
 
               <PanelCard className="order-1 col-start-1 row-start-1 max-md:col-start-1 max-md:row-start-auto h-[248px] min-w-0 cursor-pointer max-md:h-auto max-md:overflow-visible" bodyClassName="min-w-0 p-1.5 max-md:overflow-visible" title="科技人员数量" icon={<UsersRound className="size-4" />} onClick={() => setPersonnelDetails((value) => !value)}>
                   <div className="grid min-w-0 gap-2">
-                    {!personnelDetails && <div className="grid h-[190px] max-h-[190px] gap-2 overflow-y-scroll overscroll-contain rounded-[10px] border border-border/80 bg-card/80 px-3 py-3 shadow-[inset_0_1px_0_oklch(0.72_0.15_220/6%)] [scrollbar-gutter:stable] [scrollbar-width:thin]">
+                    {!personnelDetails && <div className="grid h-[176px] max-h-[176px] gap-1.5 overflow-y-auto overscroll-contain rounded-[10px] border border-border/80 bg-card/80 px-2.5 py-2 shadow-[inset_0_1px_0_oklch(0.72_0.15_220/6%)] [scrollbar-gutter:stable] [scrollbar-width:thin]">
   <div className="flex items-baseline justify-between rounded-lg border border-primary/10 bg-primary/5 px-3 py-2"><span className="text-sm font-medium text-foreground">科技人员数量：</span><span className="font-mono text-xl font-bold text-primary">{current.personnelTotal} 人</span></div>
-  <div className="grid grid-cols-1 gap-1.5 sm:grid-cols-2">
+  <div className="grid grid-cols-1 gap-1 sm:grid-cols-2">
   {completePersonnelRoles(current).map((role) => (
   <RoleBar
   key={role.label}
