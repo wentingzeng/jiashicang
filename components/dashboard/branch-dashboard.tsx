@@ -623,14 +623,14 @@ function RoleBar({ label, value, tone, maxValue }: { label: string; value: numbe
   const dot = tone === "accent" ? "bg-accent" : tone === "chart-4" ? "bg-chart-4" : "bg-primary"
 
   return (
-  <div className="flex min-h-0 items-center justify-between gap-1 rounded-lg bg-muted/35 px-1.5 py-0.5 text-[10px]">
+  <div className="flex min-h-0 items-center justify-between gap-1 rounded-lg bg-muted/35 px-1.5 py-0.5 text-[11px]">
   <div className="flex min-w-0 items-center gap-1.5">
   <span className={cn("size-2 shrink-0 rounded-full", dot)} aria-hidden="true" />
   <span className="truncate text-foreground">{label}</span>
   </div>
   <div className="flex shrink-0 items-baseline gap-1.5">
-  <span className="font-mono text-xs font-bold text-primary">{value}</span>
-  <span className="text-xs text-muted-foreground">{maxValue > 0 ? `${Math.round((value / maxValue) * 100)}%` : "0%"}</span>
+  <span className="font-mono text-sm font-bold text-primary">{value}</span>
+  <span className="text-sm text-muted-foreground">{maxValue > 0 ? `${Math.round((value / maxValue) * 100)}%` : "0%"}</span>
   </div>
   </div>
   )
@@ -1100,7 +1100,7 @@ export function BranchDashboard() {
               <PanelCard className="h-[248px] min-w-0 cursor-pointer max-md:h-auto max-md:overflow-visible" bodyClassName="min-w-0 p-1.5 max-md:overflow-visible" title="科技人员数量" icon={<UsersRound className="size-4" />} onClick={() => setPersonnelDetails((value) => !value)}>
                   <div className="flex min-w-0 -translate-y-1 flex-col gap-1">
                     {!personnelDetails && <div className="grid min-h-0 grid-cols-1 gap-1 px-1">
-  <div className="flex items-center justify-between rounded-lg border border-primary/10 bg-primary/5 px-2 py-1"><span className="whitespace-nowrap text-[11px] font-medium text-foreground">科技人员数量：</span><span className="font-mono text-base font-bold text-primary">{current.personnelTotal} 人</span></div>
+  <div className="flex items-center justify-between rounded-lg border border-primary/10 bg-primary/5 px-2 py-1"><span className="whitespace-nowrap text-xs font-medium text-foreground">科技人员数量：</span><span className="font-mono text-lg font-bold text-primary">{current.personnelTotal} 人</span></div>
   <div className="grid grid-cols-1 gap-1 sm:grid-cols-2">
   {completePersonnelRoles(current).map((role) => (
   <RoleBar
